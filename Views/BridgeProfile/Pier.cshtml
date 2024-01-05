@@ -1,0 +1,65 @@
+﻿@model IEnumerable<ERA_BCMS.Models.Pier>
+
+@{
+    ViewBag.Title = "Pier";
+}
+
+<table class="table table-condensed">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.HeightOfPier)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.WidthOfPier)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FoundationDimension)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.NoOfPierPiles)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PierPileDepth)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FoundationType.FoundationTypeName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PierType.PierTypeName)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.HeightOfPier)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.WidthOfPier)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FoundationDimension)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NoOfPierPiles)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PierPileDepth)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FoundationType.FoundationTypeName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PierType.PierTypeName)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+    }
+
+</table>

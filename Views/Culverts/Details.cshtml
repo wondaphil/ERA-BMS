@@ -1,0 +1,90 @@
+﻿@model ERA_BCMS.Models.Culvert
+
+@{
+    ViewBag.Title = "Culvert Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Culvert</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.CulvertId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CulvertId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CulvertName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CulvertName)
+        </dd>
+
+        <dt>
+            District @*Label for district*@
+        </dt>
+
+        <dd>
+            @ViewBag.DistrictName @*Dispalys district name*@
+        </dd>
+
+        <dt>
+            Section @*Label for section*@
+        </dt>
+
+        <dd>
+            @ViewBag.SectionName @*Dispalys section name*@
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Segment.SegmentName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Segment.SegmentName)
+        </dd>
+        
+        <dt>
+            @Html.DisplayNameFor(model => model.RouteId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RouteId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.KMFromAddis)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.KMFromAddis)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.XCoord)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.XCoord)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.YCoord)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.YCoord)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.CulvertId }, new { @class = "btn btn-primary" })
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</p>

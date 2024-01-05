@@ -1,0 +1,50 @@
+﻿@model ERA_BCMS.Models.BridgeType
+
+@{
+    ViewBag.Title = "Bridge Type Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Bridge Type</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.BridgeTypeId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BridgeTypeId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BridgeTypeName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BridgeTypeName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BridgeTypeShortCode)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BridgeTypeShortCode)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Remark)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Remark)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.BridgeTypeId }, new { @class = "btn btn-primary" })
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</p>

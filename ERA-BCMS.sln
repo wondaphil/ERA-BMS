@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30621.155
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERA-BCMS", "ERA-BCMS.csproj", "{F5116C9A-A25E-4805-A69C-F0DA317F06B4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERA-BCMS.Tests", "..\ERA-BCMS.Tests\ERA-BCMS.Tests.csproj", "{51F740EB-5E69-47AD-B642-B6495AC2A73C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F5116C9A-A25E-4805-A69C-F0DA317F06B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5116C9A-A25E-4805-A69C-F0DA317F06B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5116C9A-A25E-4805-A69C-F0DA317F06B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5116C9A-A25E-4805-A69C-F0DA317F06B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51F740EB-5E69-47AD-B642-B6495AC2A73C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51F740EB-5E69-47AD-B642-B6495AC2A73C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51F740EB-5E69-47AD-B642-B6495AC2A73C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51F740EB-5E69-47AD-B642-B6495AC2A73C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C601CF19-6F0A-405F-B4B4-4A733348F0EF}
+	EndGlobalSection
+EndGlobal

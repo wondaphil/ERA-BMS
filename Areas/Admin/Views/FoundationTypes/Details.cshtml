@@ -1,0 +1,42 @@
+﻿@model ERA_BCMS.Models.FoundationType
+
+@{
+    ViewBag.Title = "Foundation Type Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Foundation Type</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.FoundationTypeId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FoundationTypeId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FoundationTypeName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FoundationTypeName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Remark)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Remark)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.FoundationTypeId }, new { @class = "btn btn-primary" })
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</p>

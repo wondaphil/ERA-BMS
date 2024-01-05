@@ -1,0 +1,42 @@
+﻿@model ERA_BCMS.Models.GirderType
+
+@{
+    ViewBag.Title = "Girder Type Details";
+}
+
+<h2>Girder Type</h2>
+
+<div>
+    <h4>Datails @*(@Model.GirderTypeId )*@</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.GirderTypeId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.GirderTypeId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.GirderTypeName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.GirderTypeName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Remark)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Remark)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.GirderTypeId }, new { @class = "btn btn-primary" })
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</p>

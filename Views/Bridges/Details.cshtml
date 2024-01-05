@@ -1,0 +1,130 @@
+﻿@model ERA_BCMS.Models.Bridge
+
+@{
+    ViewBag.Title = "Bridge Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Bridge</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.BridgeId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BridgeId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BridgeName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BridgeName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BridgeSerNo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BridgeSerNo)
+        </dd>
+
+        <dt>
+            District @*Label for district*@
+        </dt>
+
+        <dd>
+            @ViewBag.DistrictName @*Dispalys district name*@
+        </dd>
+
+        <dt>
+            Section @*Label for section*@
+        </dt>
+
+        <dd>
+            @ViewBag.SectionName @*Dispalys section name*@
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Segment.SegmentName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Segment.SegmentName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.KMFromAddis)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.KMFromAddis)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.XCoord)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.XCoord)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.YCoord)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.YCoord)
+        </dd>
+
+        @*<dt>
+            @Html.DisplayNameFor(model => model.BudgetYear)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BudgetYear)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BudgetYearComment)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BudgetYearComment)
+        </dd>*@
+
+        <dt>
+            @Html.DisplayNameFor(model => model.GirderType.GirderTypeName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.GirderType.GirderTypeName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Route.RouteName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Route.RouteName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Segment.SegmentName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Segment.SegmentName)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.BridgeId }, new { @class = "btn btn-primary" })
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</p>

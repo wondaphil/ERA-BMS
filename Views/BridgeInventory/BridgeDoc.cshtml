@@ -1,0 +1,51 @@
+﻿@model ERA_BCMS.Models.BridgeDoc
+
+@{
+    ViewBag.Title = "BridgeDoc";
+}
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.SerNo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SerNo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DocDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DocDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DocPath)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DocPath)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Bridge.BridgeName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Bridge.BridgeName)
+        </dd>
+
+    </dl>
+</div>

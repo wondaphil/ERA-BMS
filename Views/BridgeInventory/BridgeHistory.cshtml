@@ -1,0 +1,34 @@
+﻿@model IEnumerable<ERA_BCMS.Models.BridgeHistory>
+
+@{
+    ViewBag.Title = "BridgeHistory";
+}
+
+<table class="table table-condensed">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.LineNo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.HistoryDescr)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.LineNo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.HistoryDescr)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.BridgeHistoryId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.BridgeHistoryId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.BridgeHistoryId })
+        </td>
+    </tr>
+}
+
+</table>

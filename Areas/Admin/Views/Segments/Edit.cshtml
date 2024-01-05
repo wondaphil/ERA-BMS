@@ -1,0 +1,116 @@
+﻿@model ERA_BCMS.Models.Segment
+
+@{
+    ViewBag.Title = "Edit Segment";
+}
+
+<h2>Edit</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Segment</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.SegmentId)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.SegmentId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.SegmentId, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                @Html.ValidationMessageFor(model => model.SegmentId, "You cannot modify this value", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.SegmentName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.SegmentName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.SegmentName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">District</label>
+            <div class="col-md-10">
+                @Html.DropDownList("DistrictId", new SelectList(ViewBag.Districts, "Value", "Text", ViewBag.DistrictId), htmlAttributes: new { @class = "form-control" })
+                @*@Html.ValidationMessageFor("District", "", new { @class = "text-danger" })*@
+                <div id="distrIdDIV" style="font-weight: bolder"> <!-- District Id --> </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.SectionId, "Section", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("SectionId", (IEnumerable<SelectListItem>) ViewBag.Sections, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.SectionId, "", new { @class = "text-danger" })
+                <div id="secIdDIV" style="font-weight: bolder"> <!-- Section Id --> </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Remark, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Remark, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Remark, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-success" />
+                <input type="reset" value="Reset" class="btn btn-warning" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#distrIdDIV').text("District Id = " + $('#DistrictId option:selected').val());
+        $('#secIdDIV').text("Section Id = " + $('#SectionId option:selected').val());
+
+        $('#DistrictId').change(function () {
+            var selDistrictId = $('#DistrictId option:selected').val();
+            $('#SectionId option').remove(); //empty the section dropdown list
+            $('#secIdDIV').text(""); //clear section no. indicator
+            if (selDistrictId == "0") //if no district is selected
+            {
+                $('#distrIdDIV').text(""); //clear district no. indicator
+                $('#segmentsPartial').empty(); // clear the segments place holder
+            }
+            else {
+                $('#distrIdDIV').text("District Id = " + selDistrictId);
+                $('#segIdDIV').text(""); //empty the segment dropdown list
+
+                $.ajax({
+                    url: '@Url.Action("_GetSections", "Segments")',
+                    data: { districtid: selDistrictId },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        var markup = '<option value="0" id="noselect"> --Select Section --</option>';
+                        $.each(data, function (i, section) {
+                            markup += '<option value="' + section.Value + '">' + section.Text + '</option>'
+                            $('#SectionId').html(markup);
+                        });
+                    }
+                });
+            }
+        });
+
+        $('#SectionId').change(function () {
+            var selSectionId = $('#SectionId option:selected').val();
+            if (selSectionId == "0") //if no section is selected
+                $('#secIdDIV').text(""); //clear district no. indicator
+            else
+                $('#secIdDIV').text("Section Id = " + selSectionId);
+        });
+    });
+</script>

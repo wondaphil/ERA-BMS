@@ -1,0 +1,596 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{F5116C9A-A25E-4805-A69C-F0DA317F06B4}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ERA_BCMS</RootNamespace>
+    <AssemblyName>ERA-BCMS</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>true</UseIISExpress>
+    <Use64BitIISExpress>true</Use64BitIISExpress>
+    <IISExpressSSLPort>44387</IISExpressSSLPort>
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+    </Reference>
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>packages\Microsoft.AspNet.Mvc.5.2.7\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Optimization">
+      <HintPath>packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>packages\Microsoft.AspNet.Razor.3.2.7\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="WebGrease">
+      <Private>True</Private>
+      <HintPath>packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
+    </Reference>
+    <Reference Include="Antlr3.Runtime">
+      <Private>True</Private>
+      <HintPath>packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core">
+      <HintPath>packages\Microsoft.AspNet.Identity.Core.2.2.3\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Owin">
+      <HintPath>packages\Microsoft.AspNet.Identity.Owin.2.2.3\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework">
+      <HintPath>packages\Microsoft.AspNet.Identity.EntityFramework.2.2.3\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin">
+      <HintPath>packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin">
+      <HintPath>packages\Microsoft.Owin.4.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb">
+      <HintPath>packages\Microsoft.Owin.Host.SystemWeb.4.0.1\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security">
+      <HintPath>packages\Microsoft.Owin.Security.4.0.1\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Cookies">
+      <HintPath>packages\Microsoft.Owin.Security.Facebook.4.0.1\lib\net45\Microsoft.Owin.Security.Facebook.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Cookies">
+      <HintPath>packages\Microsoft.Owin.Security.Cookies.4.0.1\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Google">
+      <HintPath>packages\Microsoft.Owin.Security.Google.4.0.1\lib\net45\Microsoft.Owin.Security.Google.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Twitter">
+      <HintPath>packages\Microsoft.Owin.Security.Twitter.4.0.1\lib\net45\Microsoft.Owin.Security.Twitter.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.MicrosoftAccount">
+      <HintPath>packages\Microsoft.Owin.Security.MicrosoftAccount.4.0.1\lib\net45\Microsoft.Owin.Security.MicrosoftAccount.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.OAuth">
+      <HintPath>packages\Microsoft.Owin.Security.OAuth.4.0.1\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform">
+      <HintPath>packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\IdentityConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Controllers\AdminAreaRegistration.cs" />
+    <Compile Include="Areas\Admin\Controllers\AbutmentTypesController.cs" />
+    <Compile Include="Areas\Admin\Controllers\BearingTypesController.cs" />
+    <Compile Include="Areas\Admin\Controllers\BridgeTypesController.cs" />
+    <Compile Include="Areas\Admin\Controllers\DeckSlabTypesController.cs" />
+    <Compile Include="Areas\Admin\Controllers\DistrictsController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ExpansionJointTypesController.cs" />
+    <Compile Include="Areas\Admin\Controllers\FoundationTypesController.cs" />
+    <Compile Include="Areas\Admin\Controllers\GirderTypesController.cs" />
+    <Compile Include="Areas\Admin\Controllers\GuardRailingTypesController.cs" />
+    <Compile Include="Areas\Admin\Controllers\PierTypesController.cs" />
+    <Compile Include="Areas\Admin\Controllers\RoadAlignmentTypesController.cs" />
+    <Compile Include="Areas\Admin\Controllers\SectionsController.cs" />
+    <Compile Include="Areas\Admin\Controllers\SegmentsController.cs" />
+    <Compile Include="Areas\Admin\Controllers\SpanSupportTypesController.cs" />
+    <Compile Include="Areas\Admin\Controllers\SurfaceTypesController.cs" />
+    <Compile Include="Areas\Admin\ViewModels\SegmentViewModel.cs" />
+    <Compile Include="Areas\Guest\GuestAreaRegistration.cs" />
+    <Compile Include="Areas\Manager\ManagerAreaRegistration.cs" />
+    <Compile Include="Areas\User\UserAreaRegistration.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\BridgeInventoryController.cs" />
+    <Compile Include="Controllers\BridgeProfileController.cs" />
+    <Compile Include="Controllers\BridgesController.cs" />
+    <Compile Include="Controllers\CulvertsController.cs" />
+    <Compile Include="Controllers\HelpController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Abutment.cs">
+      <DependentUpon>BCMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AbutmentType.cs">
+      <DependentUpon>BCMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\BCMSModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BCMSModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BCMSModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BCMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BCMSModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BCMSModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BearingType.cs">
+      <DependentUpon>BCMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Bridge.cs">
+      <DependentUpon>BCMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BridgeDoc.cs">
+      <DependentUpon>BCMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BridgeGeneralInfo.cs">
+      <DependentUpon>BCMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BridgeHistory.cs">
+      <DependentUpon>BCMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BridgeType.cs">
+      <DependentUpon>BCMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Component.cs">
+      <DependentUpon>BCMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Culvert.cs">
+      <DependentUpon>BCMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DeckSlabType.cs">
+      <DependentUpon>BCMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\District.cs">
+      <DependentUpon>BCMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ExpansionJointType.cs">
+      <DependentUpon>BCMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FoundationType.cs">
+      <DependentUpon>BCMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GirderType.cs">
+      <DependentUpon>BCMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GuardRailingType.cs">
+      <DependentUpon>BCMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\ImageVideoDrawing.cs">
+      <DependentUpon>BCMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\Pier.cs">
+      <DependentUpon>BCMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PierType.cs">
+      <DependentUpon>BCMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\RoadAlignmentType.cs">
+      <DependentUpon>BCMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\RoadType.cs">
+      <DependentUpon>BCMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Route.cs">
+      <DependentUpon>BCMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Section.cs">
+      <DependentUpon>BCMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Segment.cs">
+      <DependentUpon>BCMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SpanSupportType.cs">
+      <DependentUpon>BCMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SuperStructure.cs">
+      <DependentUpon>BCMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SurfaceType.cs">
+      <DependentUpon>BCMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Startup.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\bootstrap-theme.css" />
+    <Content Include="Content\bootstrap-theme.min.css" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\buttons.dataTables.css" />
+    <Content Include="Content\buttons.dataTables.min.css" />
+    <Content Include="Content\dropdown-submenu.css" />
+    <Content Include="Content\jquery.dataTables.css" />
+    <Content Include="Content\jquery.dataTables.min.css" />
+    <Content Include="favicon.ico" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Global.asax" />
+    <Content Include="Content\Site.css" />
+    <Content Include="images\app-icon.jpg" />
+    <Content Include="images\era_logo.png" />
+    <Content Include="images\logo.jpg" />
+    <Content Include="images\logo.png" />
+    <Content Include="Models\BCMSModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>BCMSModel.edmx</DependentUpon>
+      <LastGenOutput>BCMSModel.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\BCMSModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>BCMSModel.edmx</DependentUpon>
+      <LastGenOutput>BCMSModel.cs</LastGenOutput>
+    </Content>
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Areas\Admin\Views\web.config" />
+    <Content Include="Areas\User\Views\web.config" />
+    <Content Include="Areas\Guest\Views\web.config" />
+    <Content Include="docs\bms_about.pdf" />
+    <Content Include="docs\bms_user_manual_dec_2020.docx" />
+    <Content Include="docs\bms_user_manual_dec_2020.pdf" />
+    <Content Include="Areas\Manager\Views\web.config" />
+    <EntityDeploy Include="Models\BCMSModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>BCMSModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\BCMSModel.edmx.diagram">
+      <DependentUpon>BCMSModel.edmx</DependentUpon>
+    </Content>
+    <Content Include="Areas\Admin\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Admin\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\Admin\Views\GirderTypes\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\GirderTypes\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\GirderTypes\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\GirderTypes\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\GirderTypes\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\RoadAlignmentTypes\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\RoadAlignmentTypes\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\RoadAlignmentTypes\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\RoadAlignmentTypes\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\RoadAlignmentTypes\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\BridgeTypes\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\BridgeTypes\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\BridgeTypes\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\BridgeTypes\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\BridgeTypes\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\SpanSupportTypes\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\SpanSupportTypes\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\SpanSupportTypes\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\SpanSupportTypes\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\SpanSupportTypes\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\DeckSlabTypes\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\DeckSlabTypes\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\DeckSlabTypes\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\DeckSlabTypes\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\DeckSlabTypes\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\AbutmentTypes\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\AbutmentTypes\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\AbutmentTypes\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\AbutmentTypes\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\AbutmentTypes\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\FoundationTypes\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\FoundationTypes\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\FoundationTypes\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\FoundationTypes\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\FoundationTypes\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\PierTypes\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\PierTypes\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\PierTypes\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\PierTypes\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\PierTypes\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\ExpansionJointTypes\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\ExpansionJointTypes\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\ExpansionJointTypes\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\ExpansionJointTypes\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\ExpansionJointTypes\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\BearingTypes\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\BearingTypes\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\BearingTypes\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\BearingTypes\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\BearingTypes\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\GuardRailingTypes\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\GuardRailingTypes\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\GuardRailingTypes\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\GuardRailingTypes\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\GuardRailingTypes\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\SurfaceTypes\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\SurfaceTypes\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\SurfaceTypes\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\SurfaceTypes\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\SurfaceTypes\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Districts\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\Districts\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\Districts\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\Districts\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Districts\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Sections\New.cshtml" />
+    <Content Include="Areas\Admin\Views\Sections\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\Sections\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\Sections\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Sections\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Sections\_GetSections.cshtml" />
+    <Content Include="Areas\Admin\Views\Sections\_Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Segments\New.cshtml" />
+    <Content Include="Areas\Admin\Views\Segments\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\Segments\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\Segments\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Segments\_Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Segments\_GetSegments.cshtml" />
+    <Content Include="Areas\Admin\Views\Segments\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Districts\Search.cshtml" />
+    <Content Include="Scripts\buttons.flash.js" />
+    <Content Include="Scripts\buttons.flash.min.js" />
+    <Content Include="Scripts\buttons.html5.js" />
+    <Content Include="Scripts\buttons.html5.min.js" />
+    <Content Include="Scripts\buttons.print.js" />
+    <Content Include="Scripts\buttons.print.min.js" />
+    <Content Include="Scripts\dataTables.buttons.js" />
+    <Content Include="Scripts\dataTables.buttons.min.js" />
+    <Content Include="Scripts\jquery-3.5.1.js" />
+    <Content Include="Scripts\jquery-3.5.1.min.js" />
+    <Content Include="Scripts\jquery.dataTables.js" />
+    <Content Include="Scripts\jquery.dataTables.min.js" />
+    <Content Include="Scripts\jszip.js" />
+    <Content Include="Scripts\jszip.min.js" />
+    <Content Include="Scripts\pdfmake.js" />
+    <Content Include="Scripts\pdfmake.min.js" />
+    <Content Include="Scripts\vfs_fonts.js" />
+    <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Areas\Admin\Views\BridgeTypes\Temp.cshtml" />
+    <Content Include="Areas\Admin\Views\BridgeTypes\_CreatePartial.cshtml" />
+    <Content Include="Areas\Admin\Views\BridgeTypes\_EditPartial.cshtml" />
+    <Content Include="Areas\Admin\Views\Sections\Index2.cshtml" />
+    <Content Include="Areas\Admin\Views\Districts\Index2.cshtml" />
+    <None Include="Scripts\jquery-3.4.1.intellisense.js" />
+    <Content Include="Scripts\jquery-3.4.1.js" />
+    <Content Include="Scripts\jquery-3.4.1.min.js" />
+    <Content Include="Scripts\jquery-3.4.1.slim.js" />
+    <Content Include="Scripts\jquery-3.4.1.slim.min.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Web.config" />
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Views\Web.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Help\About.cshtml" />
+    <Content Include="Views\Help\Contact.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Account\ForgotPassword.cshtml" />
+    <Content Include="Views\Account\ForgotPasswordConfirmation.cshtml" />
+    <Content Include="Views\Home\Login.cshtml" />
+    <Content Include="Views\Account\Register.cshtml" />
+    <Content Include="Views\Account\ResetPassword.cshtml" />
+    <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
+    <Content Include="Views\Account\Manage\AddPhoneNumber.cshtml" />
+    <Content Include="Views\Account\Manage\ChangePassword.cshtml" />
+    <Content Include="Views\Account\Manage\Index.cshtml" />
+    <Content Include="Views\Account\Manage\ManageLogins.cshtml" />
+    <Content Include="Views\Account\Manage\SetPassword.cshtml" />
+    <Content Include="Views\Account\Manage\VerifyPhoneNumber.cshtml" />
+    <Content Include="Views\Shared\Lockout.cshtml" />
+    <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\Shared\_LoginRegisterPartial.cshtml" />
+    <Content Include="Views\Bridges\New.cshtml" />
+    <Content Include="Views\Bridges\Delete.cshtml" />
+    <Content Include="Views\Bridges\Details.cshtml" />
+    <Content Include="Views\Bridges\Edit.cshtml" />
+    <Content Include="Views\Bridges\Index.cshtml" />
+    <Content Include="Views\Bridges\_GetBridges.cshtml" />
+    <Content Include="Views\Culverts\New.cshtml" />
+    <Content Include="Views\Culverts\Delete.cshtml" />
+    <Content Include="Views\Culverts\Details.cshtml" />
+    <Content Include="Views\Culverts\Edit.cshtml" />
+    <Content Include="Views\Culverts\Index.cshtml" />
+    <Content Include="Views\Culverts\_GetCulverts.cshtml" />
+    <Content Include="Views\Bridges\Index2.cshtml" />
+    <Content Include="Views\BridgeInventory\Index.cshtml" />
+    <Content Include="Views\BridgeInventory\BridgeDetail.cshtml" />
+    <Content Include="Views\BridgeInventory\BridgeEdit.cshtml" />
+    <Content Include="Views\BridgeInventory\GeneralInfo.cshtml" />
+    <Content Include="Views\BridgeInventory\SuperStructure.cshtml" />
+    <Content Include="Views\BridgeInventory\Abutment.cshtml" />
+    <Content Include="Views\BridgeInventory\Component.cshtml" />
+    <Content Include="Views\BridgeInventory\BridgeDoc.cshtml" />
+    <Content Include="Views\BridgeInventory\ImageVideoDrawing.cshtml" />
+    <Content Include="Views\BridgeInventory\BridgeHistory.cshtml" />
+    <Content Include="Views\BridgeInventory\Pier.cshtml" />
+    <Content Include="Views\BridgeProfile\Index.cshtml" />
+    <Content Include="Views\BridgeProfile\Abutment.cshtml" />
+    <Content Include="Views\BridgeProfile\BridgeDetail.cshtml" />
+    <Content Include="Views\BridgeProfile\Component.cshtml" />
+    <Content Include="Views\BridgeProfile\GeneralInfo.cshtml" />
+    <Content Include="Views\BridgeProfile\Pier.cshtml" />
+    <Content Include="Views\BridgeProfile\SuperStructure.cshtml" />
+    <Content Include="Views\Bridges\AllBridges.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="Areas\Admin\Data\" />
+    <Folder Include="Areas\Guest\Controllers\" />
+    <Folder Include="Areas\Guest\Data\" />
+    <Folder Include="Areas\Guest\Views\Shared\" />
+    <Folder Include="Areas\Manager\Controllers\" />
+    <Folder Include="Areas\Manager\Data\" />
+    <Folder Include="Areas\Manager\Views\Shared\" />
+    <Folder Include="Areas\User\Controllers\" />
+    <Folder Include="Areas\User\Data\" />
+    <Folder Include="Areas\User\Views\Shared\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\bootstrap.min.css.map" />
+    <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Content\bootstrap-theme.min.css.map" />
+    <Content Include="Content\bootstrap-theme.css.map" />
+    <None Include="packages.config" />
+    <Content Include="Scripts\jquery-3.4.1.slim.min.map" />
+    <Content Include="Scripts\jquery-3.4.1.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>49935</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>https://localhost:44387/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+</Project>

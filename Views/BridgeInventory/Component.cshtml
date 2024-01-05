@@ -1,0 +1,59 @@
+﻿@model ERA_BCMS.Models.Component
+
+@{
+    ViewBag.Title = "Component";
+}
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.BearingType.BearingTypeName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BearingType.BearingTypeName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BearingType1.BearingTypeName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BearingType1.BearingTypeName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Bridge.BridgeName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Bridge.BridgeName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ExpansionJointType.ExpansionJointTypeName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ExpansionJointType.ExpansionJointTypeName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.GuardRailingType.GuardRailingTypeName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.GuardRailingType.GuardRailingTypeName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SurfaceType.SurfaceTypeName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SurfaceType.SurfaceTypeName)
+        </dd>
+
+    </dl>
+</div>

@@ -1,0 +1,189 @@
+﻿@model ERA_BCMS.Models.Culvert
+
+@{
+    ViewBag.Title = "New Culvert";
+}
+
+<style>
+    .form-group.required .control-label:after { content: " *"; color: red; font-size: large; }
+</style>
+
+<h2>New</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Culvert</h4>
+        <hr />
+        <div class="row">
+            <div class="col-md-6">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <div class="form-group required">
+                    <label class="control-label col-md-2">District</label>
+                    <div class="col-md-10">
+                        @Html.DropDownList("DistrictId", ViewBag.Districts as SelectList, "--Select District--", htmlAttributes: new { @class = "form-control" })
+                        @*@Html.ValidationMessageFor("District", "", new { @class = "text-danger" })*@
+                        <div id="distrIdDIV" style="font-weight: bolder"> <!-- District Id --> </div>
+                    </div>
+                </div>
+
+                <div class="form-group required">
+                    <label class="control-label col-md-2">Section</label>
+                    <div class="col-md-10">
+                        @*@Html.DropDownList("SectionId", null, htmlAttributes: new { @class = "form-control" })*@
+                        @*@Html.ValidationMessageFor("Section", "", new { @class = "text-danger" })*@
+                        <select id="SectionId" class="form-control">
+                            <!-- Section list populates here -->
+                        </select>
+                        <p id="secIdDIV" style="font-weight: bolder"> <!-- Section Id --> </p>
+                    </div>
+                </div>
+
+                <div class="form-group required">
+                    @Html.LabelFor(model => model.SegmentId, "SegmentId", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownList("SegmentId", null, htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.SegmentId, "", new { @class = "text-danger" })
+                        <div id="segIdDIV" style="font-weight: bolder"> <!-- Segment Id --> </div>
+                    </div>
+                </div>
+
+                <div class="form-group required">
+                    @Html.LabelFor(model => model.CulvertId, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.CulvertId, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.CulvertId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group required">
+                    @Html.LabelFor(model => model.CulvertName, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.CulvertName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.CulvertName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group required">
+                    @Html.LabelFor(model => model.RouteId, "RouteId", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownList("RouteId", null, htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.RouteId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.KMFromAddis, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.KMFromAddis, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.KMFromAddis, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.XCoord, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.XCoord, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.XCoord, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.YCoord, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.YCoord, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.YCoord, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-success" />
+                <input type="reset" value="Reset" class="btn btn-warning" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#SegmentId option').remove(); //empty the segment dropdown list
+
+        $('#DistrictId').change(function () {
+            var selDistrictId = $('#DistrictId option:selected').val();
+            $('#SectionId option').remove(); //empty the section dropdown list
+            $('#secIdDIV').text(""); //clear section no. indicator
+            $('#SegmentId option').remove(); //empty the segment dropdown list
+            $('#segIdDIV').text(""); //clear segment no. indicator
+            if (selDistrictId == "0") //if no district is selected
+            {
+                $('#distrIdDIV').text(""); //clear district no. indicator
+                $('#segIdDIV').text(""); //clear segment no. indicator
+                $('#SegmentId option').remove(); // clear the segments dropdown list
+            }
+            else {
+                $('#distrIdDIV').text("District Id = " + selDistrictId);
+                $('#secIdDIV').text("");
+                $('#segmentsPartial').empty(); //empty the segment table
+
+                $.ajax({
+                    url: '@Url.Action("_GetSections", "Bridges")',
+                    data: { districtid: selDistrictId },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        var markup = '<option value="0" id="noselect"> --Select Section --</option>';
+                        $.each(data, function (i, section) {
+                            markup += '<option value="' + section.Value + '">' + section.Text + '</option>'
+                            $('#SectionId').html(markup);
+                        });
+                    }
+                });
+            }
+        });
+
+        $('#SectionId').change(function () {
+            var selSectionId = $('#SectionId option:selected').val();
+            $('#SegmentId option').remove(); //empty the segment dropdown list
+            $('#segIdDIV').text(""); //clear segment no. indicator
+            if (selSectionId == "0") //if no section is selected
+            {
+                $('#secIdDIV').text(""); //clear section no. indicator
+            }
+            else {
+                $('#secIdDIV').text("(Section Id = " + selSectionId + ")");
+
+                $.ajax({
+                    url: '@Url.Action("_GetSegments", "Bridges")',
+                    data: { sectionid: selSectionId },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        var markup = '<option value="0" id="noselect"> --Select Section --</option>';
+                        $.each(data, function (i, segment) {
+                            markup += '<option value="' + segment.Value + '">' + segment.Text + '</option>'
+                            $('#SegmentId').html(markup);
+                        });
+                    }
+                });
+            }
+        });
+
+        $('#SegmentId').change(function () {
+            var selSegmentId = $('#SegmentId option:selected').val();
+            if (selSegmentId == "0") //if no segment is selected
+                $('#segIdDIV').text(""); //clear segment no. indicator
+            else
+                $('#segIdDIV').text("Segment Id = " + selSegmentId);
+        });
+    });
+</script>

@@ -1,0 +1,42 @@
+﻿@model ERA_BCMS.Models.DeckSlabType
+
+@{
+    ViewBag.Title = "Deck Slab Type Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Deck Slab Type</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.DeckSlabTypeId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DeckSlabTypeId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DeckSlabTypeName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DeckSlabTypeName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Remark)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Remark)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.DeckSlabTypeId }, new { @class = "btn btn-primary" })
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</p>

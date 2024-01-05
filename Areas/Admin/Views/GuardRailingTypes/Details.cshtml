@@ -1,0 +1,42 @@
+﻿@model ERA_BCMS.Models.GuardRailingType
+
+@{
+    ViewBag.Title = "Guard Railing Type Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Guard Railing Type</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.GuardRailingTypeId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.GuardRailingTypeId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.GuardRailingTypeName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.GuardRailingTypeName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Remark)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Remark)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.GuardRailingTypeId }, new { @class = "btn btn-primary" })
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</p>

@@ -1,0 +1,42 @@
+﻿@model ERA_BCMS.Models.BearingType
+
+@{
+    ViewBag.Title = "Bearing Type Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Bearing Type</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.BearingTypeId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BearingTypeId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BearingTypeName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BearingTypeName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Remark)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Remark)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.BearingTypeId }, new { @class = "btn btn-primary" })
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</p>

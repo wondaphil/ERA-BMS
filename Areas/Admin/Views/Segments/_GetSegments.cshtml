@@ -1,0 +1,82 @@
+﻿@model IEnumerable<ERA_BCMS.Models.Segment>
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title panel-info">List of Segments</h3>
+    </div>
+    <div class="panel-body">
+        <table class="table table-striped table-condensed table-responsive display compact hover" id="segments">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.SegmentId)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.SegmentName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Remark)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Section.SectionName)
+                    </th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SegmentId)
+                        </td>
+                        <td>
+                            @Html.ActionLink(@Html.DisplayFor(modelItem => item.SegmentName).ToString(), "Details", new { id = item.SegmentId })
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Remark)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Section.SectionName)
+                        </td>
+                        <td>
+                            <!-- with Tooltips -->
+                            @Html.ActionLink(" ", "Edit", new { id = item.SegmentId }, new { @class = "glyphicon glyphicon-edit", @data_toggle = "tooltip", title = "Edit" })
+                        </td>
+                        <td>
+                            @Html.ActionLink(" ", "Delete", new { id = item.SegmentId }, new { @class = "glyphicon glyphicon-trash", @data_toggle = "tooltip", title = "Delete" })
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="panel-footer">
+        <h3 class="panel-title">Total No. of Segments: <strong>@Model.Count()</strong></h3>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+
+        $('#segments').DataTable({
+            paging: true,
+            pageLength: 15,
+            bLengthChange: true,
+            scrollY: 400,
+            searching: true,
+            select: true,
+            dom: 'lBfrtip',
+            //buttons: ['copy', 'excel', 'pdf', 'print']
+            buttons: [
+                { extend: 'copy', className: 'btn btn-sm btn-success' },
+                { extend: 'excel', className: 'btn btn-sm btn-primary', text: 'Export Excel' },
+                { extend: 'pdf', className: 'btn btn-sm btn-primary', text: 'Export PDF' },
+                { extend: 'print', className: 'btn btn-sm btn-primary' }
+            ]
+        });
+    });
+</script>

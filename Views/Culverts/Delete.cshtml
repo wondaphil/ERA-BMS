@@ -1,0 +1,80 @@
+﻿@model ERA_BCMS.Models.Culvert
+
+@{
+    ViewBag.Title = "Delete Culvert";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Culvert</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.CulvertId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CulvertId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CulvertName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CulvertName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RouteId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RouteId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.KMFromAddis)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.KMFromAddis)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.XCoord)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.XCoord)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.YCoord)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.YCoord)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Segment.SegmentName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Segment.SegmentName)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-danger" />
+            @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+        </div>
+    }
+</div>

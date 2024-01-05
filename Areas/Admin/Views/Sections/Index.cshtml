@@ -1,0 +1,77 @@
+﻿@model IEnumerable<ERA_BCMS.Models.Section>
+
+@{
+    ViewBag.Title = "Sections";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("New Section", "New", null, new { @class = "btn btn-primary" })
+</p>
+
+@using (Html.BeginForm())
+{
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title panel-info">Please select district from the dropdown list</h3>
+        </div>
+        <div class="panel-body">
+        
+            @Html.AntiForgeryToken()
+
+            <div class="form-horizontal">
+                <div class="col-sm-12">
+                    <div class="form-group form-group-sm">
+                        <label class="control-label col-md-2">District</label>
+                        <div class="col-md-5">
+                            @Html.DropDownList("ddlDistrict", (List<SelectListItem>)ViewBag.Districts, new { @class = "form-control" })
+                            <label class="control-label" id="distrIdDIV"> <!-- District id appears here --> </label>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        <div id="sectionsPartial">
+            <!-- Sections list displays here -->
+        </div>
+    </div>
+
+ }
+
+<div id="temp">
+
+</div>
+<div id="status">
+
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#ddlDistrict').change(function () {
+            var selDistrictId = $('#ddlDistrict option:selected').val();
+            
+            if (selDistrictId == "0") //if no district is selected
+            {
+                $('#sectionsPartial').empty(); //clear the sections place holder
+                selDistrictId = "";
+                $('#distrIdDIV').text(selDistrictId); //clear district no. indicator
+            }
+            else {
+                $('#distrIdDIV').text("District Id = " + selDistrictId);
+
+                $.ajax({
+                    url: '@Url.Action("_GetSections", "Sections")', //url: 'Sections/_GetSections',
+                    data: { districtid: selDistrictId },
+                    type: 'GET',
+                    dataType: 'html',
+                    success: function (data) {
+                        $('#sectionsPartial').html(data);
+                    }
+                });
+            }
+        });
+    });
+</script>

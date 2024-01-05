@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="40cfdce695194036a16197a2c57ca0b6" Name="Diagram1" ZoomLevel="77">
+        <EntityTypeShape EntityType="BCMSModel.AbutmentType" Width="1.5" PointX="18" PointY="11.25" />
+        <EntityTypeShape EntityType="BCMSModel.BearingType" Width="1.5" PointX="6.75" PointY="14.125" />
+        <EntityTypeShape EntityType="BCMSModel.BridgeType" Width="1.5" PointX="1.125" PointY="6.375" />
+        <EntityTypeShape EntityType="BCMSModel.DeckSlabType" Width="1.5" PointX="0.75" PointY="9.625" />
+        <EntityTypeShape EntityType="BCMSModel.District" Width="1.5" PointX="19.125" PointY="2.5" />
+        <EntityTypeShape EntityType="BCMSModel.ExpansionJointType" Width="1.5" PointX="4.25" PointY="16.5" />
+        <EntityTypeShape EntityType="BCMSModel.FoundationType" Width="1.5" PointX="11.125" PointY="14.375" />
+        <EntityTypeShape EntityType="BCMSModel.GuardRailingType" Width="1.5" PointX="1.25" PointY="13.25" />
+        <EntityTypeShape EntityType="BCMSModel.PierType" Width="1.5" PointX="9.25" PointY="14.625" />
+        <EntityTypeShape EntityType="BCMSModel.RoadAlignmentType" Width="1.5" PointX="7.375" PointY="1.625" />
+        <EntityTypeShape EntityType="BCMSModel.RoadType" Width="1.5" PointX="21.25" PointY="15" />
+        <EntityTypeShape EntityType="BCMSModel.Route" Width="1.5" PointX="13.125" PointY="6" />
+        <EntityTypeShape EntityType="BCMSModel.Section" Width="1.5" PointX="15.5" PointY="2.5" />
+        <EntityTypeShape EntityType="BCMSModel.Segment" Width="1.5" PointX="13.625" PointY="3.125" />
+        <EntityTypeShape EntityType="BCMSModel.SpanSupportType" Width="1.5" PointX="1.125" PointY="4.375" />
+        <EntityTypeShape EntityType="BCMSModel.SurfaceType" Width="1.5" PointX="2.125" PointY="15.375" />
+        <AssociationConnector Association="BCMSModel.FK_Section_District" />
+        <AssociationConnector Association="BCMSModel.FK_Segment_Section" />
+        <EntityTypeShape EntityType="BCMSModel.GirderType" Width="1.5" PointX="11.125" PointY="1.75" />
+        <EntityTypeShape EntityType="BCMSModel.Bridge" Width="5.625" PointX="7.125" PointY="4.625" />
+        <AssociationConnector Association="BCMSModel.FK_Bridge_GirderType" />
+        <AssociationConnector Association="BCMSModel.FK_Bridge_Route" />
+        <AssociationConnector Association="BCMSModel.FK_Bridge_Segment" ManuallyRouted="false" >
+        </AssociationConnector>
+        <EntityTypeShape EntityType="BCMSModel.Culvert" Width="2.75" PointX="15.125" PointY="6.125" />
+        <AssociationConnector Association="BCMSModel.FK_Culvert_Route" />
+        <AssociationConnector Association="BCMSModel.FK_Culvert_Segment" ManuallyRouted="false" >
+        </AssociationConnector>
+        <EntityTypeShape EntityType="BCMSModel.BridgeGeneralInfo" Width="1.5" PointX="4.875" PointY="1.125" />
+        <AssociationConnector Association="BCMSModel.FK_BridgeGeneralInfo_Bridge" />
+        <AssociationConnector Association="BCMSModel.FK_BridgeGeneralInfo_RoadAlignment" />
+        <EntityTypeShape EntityType="BCMSModel.SuperStructure" Width="2.25" PointX="13.5" PointY="10.5" />
+        <AssociationConnector Association="BCMSModel.FK_SuperStructure_Bridge" />
+        <AssociationConnector Association="BCMSModel.FK_SuperStructure_BridgeType" />
+        <AssociationConnector Association="BCMSModel.FK_SuperStructure_DeckSlabType" />
+        <AssociationConnector Association="BCMSModel.FK_SuperStructure_SpanSupportType" />
+        <EntityTypeShape EntityType="BCMSModel.Abutment" Width="1.5" PointX="20.25" PointY="7.625" />
+        <EntityTypeShape EntityType="BCMSModel.Component" Width="1.5" PointX="19.5" PointY="17.75" />
+        <EntityTypeShape EntityType="BCMSModel.BridgeDoc" Width="1.5" PointX="13.5" PointY="16.625" />
+        <EntityTypeShape EntityType="BCMSModel.BridgeHistory" Width="1.5" PointX="13.5" PointY="22.625" />
+        <EntityTypeShape EntityType="BCMSModel.Pier" Width="2.625" PointX="16.5" PointY="14.875" />
+        <AssociationConnector Association="BCMSModel.FK_Abutment_AbutmentTypeA1" />
+        <AssociationConnector Association="BCMSModel.FK_Abutment_AbutmentTypeA2" />
+        <AssociationConnector Association="BCMSModel.FK_Abutment_Bridge" />
+        <AssociationConnector Association="BCMSModel.FK_Abutment_FoundationTypeA1" />
+        <AssociationConnector Association="BCMSModel.FK_Abutment_FoundationTypeA2" />
+        <AssociationConnector Association="BCMSModel.FK_Components_BearingType" />
+        <AssociationConnector Association="BCMSModel.FK_Components_BearingType1" />
+        <AssociationConnector Association="BCMSModel.FK_BridgeDoc_Bridge" />
+        <AssociationConnector Association="BCMSModel.FK_BridgeHistory_Bridge" />
+        <AssociationConnector Association="BCMSModel.FK_Components_Bridge" />
+        <AssociationConnector Association="BCMSModel.FK_Pier_Bridge" />
+        <AssociationConnector Association="BCMSModel.FK_Components_ExpansionJointType" />
+        <AssociationConnector Association="BCMSModel.FK_Components_GuardRailingType" />
+        <AssociationConnector Association="BCMSModel.FK_Components_SurfaceType" />
+        <AssociationConnector Association="BCMSModel.FK_Pier_FoundationType" />
+        <AssociationConnector Association="BCMSModel.FK_Pier_PierType" />
+        <EntityTypeShape EntityType="BCMSModel.ImageVideoDrawing" Width="1.5" PointX="13.375" PointY="0.5" />
+        <AssociationConnector Association="BCMSModel.FK_ImageVideoDrawing_Bridge" />
+        </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

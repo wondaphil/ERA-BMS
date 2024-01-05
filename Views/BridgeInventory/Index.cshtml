@@ -1,0 +1,380 @@
+﻿@model IEnumerable<ERA_BCMS.Models.Bridge>
+
+@{
+    ViewBag.Title = "Bridge Inventory";
+}
+
+<h2>Bridge Inventory</h2>
+
+@using (Html.BeginForm())
+{
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title panel-info">Please select <b>District</b>, <b>Section</b>, <b>Segment</b> and <b>Bridge</b> from the dropdown list</h3>
+        </div>
+        <div class="panel-body">
+
+            @Html.AntiForgeryToken()
+
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group-sm">
+                            <label class="control-label col-md-2">District</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("ddlDistrict", (List<SelectListItem>)ViewBag.Districts, new { @class = "form-control" })
+                                <label class="control-label" id="distrIdDIV"> <!-- District id appears here --> </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group-sm">
+                            <label class="control-label col-md-2">Section</label>
+                            <div class="col-md-8">
+                                <select class="form-control" id="ddlSection">
+                                    <!-- Sections list populates here -->
+                                </select>
+                                <label class="control-label" id="secIdDIV"> <!-- Section id appears here --> </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group-sm">
+                            <label class="control-label col-md-2">Segment</label>
+                            <div class="col-md-8">
+                                <select class="form-control" id="ddlSegment">
+                                    <!-- Segments list populates here -->
+                                </select>
+                                <label class="control-label" id="segIdDIV"> <!-- Segment id appears here --> </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group-sm">
+                            <label class="control-label col-md-2">Bridge</label>
+                            <div class="col-md-8">
+                                <select class="form-control" id="ddlBridge">
+                                    <!-- Bridges list populates here -->
+                                </select>
+                                <label class="control-label" id="brgIdDIV"> <!-- Bridge id appears here --> </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Tab Buttons -->
+<ul id="tabstrip" class="nav nav-tabs" role="tablist">
+    <li class="active">
+        <a href="#_DetailsTab" role="tab" data-toggle="tab">Details</a>
+    </li>
+    <li>
+        <a href="#_EditTab" role="tab" data-toggle="tab">Edit</a>
+    </li>
+    <li>
+        <a href="#_GeneralInfoTab" role="tab" data-toggle="tab">General Info</a>
+    </li>
+    <li>
+        <a href="#_SuperStructureTab" role="tab" data-toggle="tab">Superstructure</a>
+    </li>
+    <li>
+        <a href="#_AbutmentTab" role="tab" data-toggle="tab">Abutment</a>
+    </li>
+    <li>
+        <a href="#_PierTab" role="tab" data-toggle="tab">Pier</a>
+    </li>
+    <li>
+        <a href="#_ComponentTab" role="tab" data-toggle="tab">Components</a>
+    </li>
+    <li>
+        <a href="#_BridgeHistoryTab" role="tab" data-toggle="tab">Bridge History</a>
+    </li>
+    <li>
+        <a href="#_BridgeDocTab" role="tab" data-toggle="tab">Bridge Doc</a>
+    </li>
+    <li>
+        <a href="#_ImageVideoDrawingTab" role="tab" data-toggle="tab">Images/Videos/Drawings</a>
+    </li>
+</ul>
+
+<!-- Tab Content Containers -->
+<div class="tab-content">
+    <div class="tab-pane fade in active" id="_DetailsTab">
+        <div id="bridgeDetail">
+            <!-- Bridges details displays here -->
+        </div>
+    </div>
+    <div class="tab-pane fade" id="_EditTab">
+        <div id="bridgeEdit">
+            <!-- Bridges edit controls displays here -->
+        </div>
+    </div>
+    <div class="tab-pane fade" id="_GeneralInfoTab">
+        <div id="generalInfo">
+            <!-- Bridges General Info displays here -->
+        </div>
+    </div>
+    <div class="tab-pane fade" id="_SuperStructureTab">
+        <div id="superStructure">
+            <!-- Super Structure displays here -->
+        </div>
+    </div>
+    <div class="tab-pane fade" id="_AbutmentTab">
+        <div id="abutment">
+            <!-- Abutment displays here -->
+        </div>
+    </div>
+    <div class="tab-pane fade" id="_PierTab">
+        <div id="pier">
+            <!-- Pier and Foundation displays here -->
+        </div>
+    </div>
+    <div class="tab-pane fade" id="_ComponentTab">
+        <div id="component">
+            <!-- Components display here -->
+        </div>
+    </div>
+    <div class="tab-pane fade" id="_BridgeHistoryTab">
+        <div id="bridgeHistory">
+            <!-- Bridge Histories display here -->
+        </div>
+    </div>
+    <div class="tab-pane fade" id="_BridgeDocTab">
+        <div id="bridgeDoc">
+            <!-- Bridge Docs display here -->
+        </div>
+    </div>
+    <div class="tab-pane fade" id="_ImageVideoDrawingTab">
+        <div id="imageVideoDrawing">
+            <!-- Images/Videos/Drawings display here -->
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#ddlDistrict').change(function () {
+            var selDistrictId = $('#ddlDistrict option:selected').val();
+            $('#ddlSection option').remove(); //empty the section dropdown list
+            $('#secIdDIV').text(""); //clear section no. indicator
+            $('#ddlSegment option').remove(); //empty the segment dropdown list
+            $('#segIdDIV').text(""); //clear segment no. indicator
+            $('#ddlBridge option').remove(); //empty the bridge dropdown list
+            $('#brgIdDIV').text(""); //clear bridge no. indicator
+            $('#bridgeDetail').empty(); // clear the bridges place holder
+            $('#bridgeEdit').empty(); // clear the bridgeEdit place holder
+            $('#generalInfo').empty(); // clear the general Info place holder
+            $('#superStructure').empty(); // clear the super tructure place holder
+            if (selDistrictId == "0") //if no district is selected
+            {
+                $('#distrIdDIV').text(""); //clear district no. indicator
+            }
+            else {
+                $('#distrIdDIV').text("District Id = " + selDistrictId );
+                $.ajax({
+                    url: '@Url.Action("_GetSections", "BridgeInventory")',
+                    data: { districtid: selDistrictId },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        var markup = '<option value="0" id="noselect"> --Select Section --</option>';
+                        $.each(data, function (i, section) {
+                            markup += '<option value="' + section.Value + '">' + section.Text + '</option>'
+                            $('#ddlSection').html(markup);
+                        });
+                    }
+                });
+            }
+        });
+
+        $('#ddlSection').change(function () {
+            var selSectionId = $('#ddlSection option:selected').val();
+            $('#ddlSegment option').remove(); //empty the segment dropdown list
+            $('#segIdDIV').text(""); //clear segment no. indicator
+            $('#ddlBridge option').remove(); //empty the bridge dropdown list
+            $('#brgIdDIV').text(""); //clear bridge no. indicator
+            $('#bridgeDetail').empty(); // clear the bridges place holder
+            $('#bridgeEdit').empty(); // clear the bridgeEdit place holder
+            $('#generalInfo').empty(); // clear the general Info place holder
+            $('#superStructure').empty(); // clear the super tructure place holder
+            if (selSectionId == "0") //if no section is selected
+            {
+                $('#secIdDIV').text(""); //clear section no. indicator
+            }
+            else {
+                $('#secIdDIV').text("Section Id = " + selSectionId);
+
+                $.ajax({
+                    url: '@Url.Action("_GetSegments", "BridgeInventory")',
+                    data: { sectionid: selSectionId },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        var markup = '<option value="0" id="noselect"> --Select Section --</option>';
+                        $.each(data, function (i, segment) {
+                            markup += '<option value="' + segment.Value + '">' + segment.Text + '</option>'
+                            $('#ddlSegment').html(markup);
+                        });
+                    }
+                });
+            }
+        });
+
+        $('#ddlSegment').change(function () {
+            var selSegmentId = $('#ddlSegment option:selected').val();
+            $('#ddlBridge option').remove(); //empty the bridge dropdown list
+            $('#brgIdDIV').text(""); //clear bridge no. indicator
+            $('#bridgeDetail').empty(); // clear the bridges place holder
+            $('#bridgeEdit').empty(); // clear the bridgeEdit place holder
+            $('#generalInfo').empty(); // clear the general Info place holder
+            $('#superStructure').empty(); // clear the super tructure place holder
+            if (selSegmentId == "0") //if no segment is selected
+            {
+                $('#segIdDIV').text(""); //clear section no. indicator
+            }
+            else {
+                $('#segIdDIV').text("Segment Id = " + selSegmentId);
+                $.ajax({
+                    url: '@Url.Action("_GetBridges", "BridgeInventory")',
+                    data: { segmentid: selSegmentId },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        var markup = '<option value="0" id="noselect"> --Select Bridge --</option>';
+                        $.each(data, function (i, bridge) {
+                            markup += '<option value="' + bridge.Value + '">' + bridge.Text + '</option>'
+                            $('#ddlBridge').html(markup);
+                        });
+                    }
+                });
+            }
+        });
+
+        $('#ddlBridge').change(function () {
+            var selBridgeId = $('#ddlBridge option:selected').val();
+            $('#bridgeDetail').empty(); //clear the bridges place holder
+            $('#bridgeEdit').empty(); // clear the bridgeEdit place holder
+            $('#generalInfo').empty(); // clear the general Info place holder
+            $('#superStructure').empty(); // clear the super tructure place holder
+            $('#brgIdDIV').text("");
+            if (selBridgeId != "0") //if no bridge is selected
+            {
+                $('#brgIdDIV').text("Bridge Id = " + selBridgeId);
+                //alert("Hello" + selBridgeId);
+
+                $.ajax({
+                    url: '@Url.Action("BridgeDetail", "BridgeInventory")',
+                    data: { bridgeid: selBridgeId },
+                    type: 'GET',
+                    dataType: 'html',
+                    success: function (data) {
+                        $('#bridgeDetail').html(data);
+                    }
+                });
+
+                $.ajax({
+                    url: '@Url.Action("BridgeEdit", "BridgeInventory")',
+                    data: { bridgeid: selBridgeId },
+                    type: 'GET',
+                    dataType: 'html',
+                    success: function (data) {
+                        $('#bridgeEdit').html(data);
+                    }
+                });
+
+                $.ajax({
+                    url: '@Url.Action("GeneralInfo", "BridgeInventory")',
+                    data: { bridgeid: selBridgeId },
+                    type: 'GET',
+                    dataType: 'html',
+                    success: function (data) {
+                        $('#generalInfo').html(data);
+                    }
+                });
+
+                $.ajax({
+                    url: '@Url.Action("SuperStructure", "BridgeInventory")',
+                    data: { bridgeid: selBridgeId },
+                    type: 'GET',
+                    dataType: 'html',
+                    success: function (data) {
+                        $('#superStructure').html(data);
+                    }
+                });
+
+                $.ajax({
+                    url: '@Url.Action("Abutment", "BridgeInventory")',
+                    data: { bridgeid: selBridgeId },
+                    type: 'GET',
+                    dataType: 'html',
+                    success: function (data) {
+                        $('#abutment').html(data);
+                    }
+                });
+
+                $.ajax({
+                    url: '@Url.Action("Pier", "BridgeInventory")',
+                    data: { bridgeid: selBridgeId },
+                    type: 'GET',
+                    dataType: 'html',
+                    success: function (data) {
+                        $('#pier').html(data);
+                    }
+                });
+
+                $.ajax({
+                    url: '@Url.Action("Component", "BridgeInventory")',
+                    data: { bridgeid: selBridgeId },
+                    type: 'GET',
+                    dataType: 'html',
+                    success: function (data) {
+                        $('#component').html(data);
+                    }
+                });
+
+                $.ajax({
+                    url: '@Url.Action("BridgeHistory", "BridgeInventory")',
+                    data: { bridgeid: selBridgeId },
+                    type: 'GET',
+                    dataType: 'html',
+                    success: function (data) {
+                        $('#bridgeHistory').html(data);
+                    }
+                });
+
+                $.ajax({
+                    url: '@Url.Action("BridgeDoc", "BridgeInventory")',
+                    data: { bridgeid: selBridgeId },
+                    type: 'GET',
+                    dataType: 'html',
+                    success: function (data) {
+                        $('#bridgeDoc').html(data);
+                    }
+                });
+
+                $.ajax({
+                    url: '@Url.Action("ImageVIdeoDrawing", "BridgeInventory")',
+                    data: { bridgeid: selBridgeId },
+                    type: 'GET',
+                    dataType: 'html',
+                    success: function (data) {
+                        $('#imageVideoDrawing').html(data);
+                    }
+                });
+            }
+        });
+    });
+
+</script>

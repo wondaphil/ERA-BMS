@@ -1,0 +1,29 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="jumbotron">
+    <table>
+        <tr>
+            <td rowspan="2">
+                <img src="~/images/era_logo.png" alt="ERA LOGO">
+            </td>
+            <td>
+                <h1>ERA-BCMS</h1>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                The Ethiopian Roads Authority Bridge and Culvert Management System (ERA-BCMS) is a system that is used by
+                the Ethiopian Roads Authority (ERA) to manage Bridges throughout the country and to maintain
+                organized information about their service conditions.
+            </td>
+        </tr>
+    </table>
+    @if (!Request.IsAuthenticated) //If user has not logged in
+    {
+        <div style="text-align: center;">
+            @Html.Partial("_LoginRegisterPartial")
+        </div>
+    }
+    </div>

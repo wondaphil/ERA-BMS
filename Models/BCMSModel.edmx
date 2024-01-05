@@ -1,0 +1,2083 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="BCMSModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Abutment">
+          <Key>
+            <PropertyRef Name="BridgeId" />
+          </Key>
+          <Property Name="BridgeId" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="AbutmentTypeIdA1" Type="int" />
+          <Property Name="AbutmentTypeIdA2" Type="int" />
+          <Property Name="AbutmentHeightA1" Type="float" />
+          <Property Name="AbutmentHeightA2" Type="float" />
+          <Property Name="AbutmentWidthA1" Type="float" />
+          <Property Name="AbutmentWidthA2" Type="float" />
+          <Property Name="WingWallLengthA1" Type="float" />
+          <Property Name="WingWallLengthA2" Type="float" />
+          <Property Name="FoundationTypeIdA1" Type="int" />
+          <Property Name="FoundationTypeIdA2" Type="int" />
+          <Property Name="FoundationSizeA1" Type="nvarchar" MaxLength="30" />
+          <Property Name="FoundationSizeA2" Type="nvarchar" MaxLength="30" />
+          <Property Name="NoOfAbutmentPilesA1" Type="int" />
+          <Property Name="NoOfAbutmentPilesA2" Type="int" />
+          <Property Name="AbutmentPileDepthA1" Type="float" />
+          <Property Name="AbutmentPileDepthA2" Type="float" />
+          <Property Name="SoilType" Type="nvarchar" MaxLength="30" />
+          <Property Name="SoilType2" Type="nvarchar" MaxLength="30" />
+          <Property Name="NoOfpier" Type="int" />
+        </EntityType>
+        <EntityType Name="AbutmentType">
+          <Key>
+            <PropertyRef Name="AbutmentTypeId" />
+          </Key>
+          <Property Name="AbutmentTypeId" Type="int" Nullable="false" />
+          <Property Name="AbutmentTypeName" Type="nvarchar" MaxLength="50" />
+          <Property Name="Remark" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="BearingType">
+          <Key>
+            <PropertyRef Name="BearingTypeId" />
+          </Key>
+          <Property Name="BearingTypeId" Type="int" Nullable="false" />
+          <Property Name="BearingTypeName" Type="nvarchar" MaxLength="50" />
+          <Property Name="Remark" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="Bridge">
+          <Key>
+            <PropertyRef Name="BridgeId" />
+          </Key>
+          <Property Name="BridgeId" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="BridgeName" Type="nvarchar" MaxLength="50" />
+          <Property Name="BridgeSerNo" Type="int" />
+          <Property Name="SegmentId" Type="int" Nullable="false" />
+          <Property Name="RouteId" Type="nvarchar" MaxLength="7" />
+          <Property Name="KMFromAddis" Type="float" />
+          <Property Name="XCoord" Type="float" />
+          <Property Name="YCoord" Type="float" />
+          <Property Name="GirderTypeId" Type="smallint" />
+          <Property Name="BudgetYear" Type="int" />
+          <Property Name="BudgetYearComment" Type="int" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'ERA_BCMS_COPY.dbo.BridgeDoc' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="BridgeDoc">
+          <Key>
+            <PropertyRef Name="BridgeId" />
+          </Key>
+          <Property Name="BridgeId" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="SerNo" Type="int" />
+          <Property Name="DocDate" Type="datetime" />
+          <Property Name="Description" Type="nvarchar" MaxLength="125" />
+          <Property Name="DocPath" Type="nvarchar" MaxLength="125" />
+        </EntityType>
+        <EntityType Name="BridgeGeneralInfo">
+          <Key>
+            <PropertyRef Name="BridgeId" />
+          </Key>
+          <Property Name="BridgeId" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="BridgeLength" Type="float" />
+          <Property Name="TotBridgeLength" Type="float" Nullable="false" />
+          <Property Name="BridgeWidth" Type="float" Nullable="false" />
+          <Property Name="RiverWidth" Type="float" Nullable="false" />
+          <Property Name="PresentWaterLevel" Type="float" />
+          <Property Name="HighestWaterLevel" Type="float" />
+          <Property Name="LoadCapacity" Type="float" />
+          <Property Name="DailyTraffic" Type="int" />
+          <Property Name="Topography" Type="nvarchar" MaxLength="30" />
+          <Property Name="Altitude" Type="float" />
+          <Property Name="RoadAlignmentId" Type="int" />
+          <Property Name="ConstructionYear" Type="int" />
+          <Property Name="BeforeYear" Type="nvarchar" MaxLength="15" />
+          <Property Name="Contractor" Type="nvarchar" MaxLength="30" />
+          <Property Name="Designer" Type="nvarchar" MaxLength="50" />
+          <Property Name="BridgeCost" Type="float" />
+          <Property Name="SafetySign" Type="bit" Nullable="false" />
+          <Property Name="Detour" Type="bit" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'ERA_BCMS_COPY.dbo.BridgeHistory' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="BridgeHistory">
+          <Key>
+            <PropertyRef Name="BridgeId" />
+          </Key>
+          <Property Name="BridgeId" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="LineNo" Type="smallint" />
+          <Property Name="HistoryDescr" Type="nvarchar" MaxLength="130" />
+        </EntityType>
+        <EntityType Name="BridgeType">
+          <Key>
+            <PropertyRef Name="BridgeTypeId" />
+          </Key>
+          <Property Name="BridgeTypeId" Type="int" Nullable="false" />
+          <Property Name="BridgeTypeName" Type="nvarchar" MaxLength="50" />
+          <Property Name="BridgeTypeShortCode" Type="nvarchar" MaxLength="30" />
+          <Property Name="Remark" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="Components">
+          <Key>
+            <PropertyRef Name="BridgeId" />
+          </Key>
+          <Property Name="BridgeId" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="ExpansionJointTypeId" Type="int" />
+          <Property Name="GuardRailingTypeId" Type="int" />
+          <Property Name="AbutmentBearingTypeId" Type="int" />
+          <Property Name="PiersBearingTypeId" Type="int" />
+          <Property Name="SurfaceTypeId" Type="int" />
+        </EntityType>
+        <EntityType Name="Culvert">
+          <Key>
+            <PropertyRef Name="CulvertId" />
+          </Key>
+          <Property Name="CulvertId" Type="nvarchar" MaxLength="15" Nullable="false" />
+          <Property Name="CulvertName" Type="nvarchar" MaxLength="50" />
+          <Property Name="SegmentId" Type="int" />
+          <Property Name="RouteId" Type="nvarchar" MaxLength="7" />
+          <Property Name="KMFromAddis" Type="float" />
+          <Property Name="XCoord" Type="float" />
+          <Property Name="YCoord" Type="float" />
+        </EntityType>
+        <EntityType Name="DeckSlabType">
+          <Key>
+            <PropertyRef Name="DeckSlabTypeId" />
+          </Key>
+          <Property Name="DeckSlabTypeId" Type="int" Nullable="false" />
+          <Property Name="DeckSlabTypeName" Type="nvarchar" MaxLength="50" />
+          <Property Name="Remark" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="District">
+          <Key>
+            <PropertyRef Name="DistrictId" />
+          </Key>
+          <Property Name="DistrictId" Type="int" Nullable="false" />
+          <Property Name="DistrictName" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="Remark" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="ExpansionJointType">
+          <Key>
+            <PropertyRef Name="ExpansionJointTypeId" />
+          </Key>
+          <Property Name="ExpansionJointTypeId" Type="int" Nullable="false" />
+          <Property Name="ExpansionJointTypeName" Type="nvarchar" MaxLength="50" />
+          <Property Name="Remark" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="FoundationType">
+          <Key>
+            <PropertyRef Name="FoundationTypeId" />
+          </Key>
+          <Property Name="FoundationTypeId" Type="int" Nullable="false" />
+          <Property Name="FoundationTypeName" Type="nvarchar" MaxLength="50" />
+          <Property Name="Remark" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="GirderType">
+          <Key>
+            <PropertyRef Name="GirderTypeId" />
+          </Key>
+          <Property Name="GirderTypeId" Type="smallint" Nullable="false" />
+          <Property Name="GirderTypeName" Type="nvarchar" MaxLength="50" />
+          <Property Name="Remark" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="GuardRailingType">
+          <Key>
+            <PropertyRef Name="GuardRailingTypeId" />
+          </Key>
+          <Property Name="GuardRailingTypeId" Type="int" Nullable="false" />
+          <Property Name="GuardRailingTypeName" Type="nvarchar" MaxLength="50" />
+          <Property Name="Remark" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'ERA_BCMS_COPY.dbo.ImageVideoDrawing' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="ImageVideoDrawing">
+          <Key>
+            <PropertyRef Name="BridgeId" />
+          </Key>
+          <Property Name="BridgeId" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="BudgetYear" Type="int" />
+          <Property Name="PictureType" Type="smallint" />
+          <Property Name="PictureId" Type="int" />
+          <Property Name="PicDate" Type="nvarchar" MaxLength="255" />
+          <Property Name="PicDescr" Type="nvarchar" MaxLength="50" />
+          <Property Name="PicFileName" Type="nvarchar" MaxLength="180" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'ERA_BCMS_COPY.dbo.Pier' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="Pier">
+          <Key>
+            <PropertyRef Name="BridgeId" />
+            <PropertyRef Name="PierNo" />
+          </Key>
+          <Property Name="BridgeId" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="PierNo" Type="int" Nullable="false" />
+          <Property Name="PierTypeId" Type="int" />
+          <Property Name="HeightOfPier" Type="float" />
+          <Property Name="WidthOfPier" Type="float" />
+          <Property Name="FoundationTypeId" Type="int" />
+          <Property Name="FoundationDimension" Type="nvarchar" MaxLength="50" />
+          <Property Name="NoOfPierPiles" Type="int" />
+          <Property Name="PierPileDepth" Type="float" />
+        </EntityType>
+        <EntityType Name="PierType">
+          <Key>
+            <PropertyRef Name="PierTypeId" />
+          </Key>
+          <Property Name="PierTypeId" Type="int" Nullable="false" />
+          <Property Name="PierTypeName" Type="nvarchar" MaxLength="50" />
+          <Property Name="Remark" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="RoadAlignmentType">
+          <Key>
+            <PropertyRef Name="RoadAlignmentTypeId" />
+          </Key>
+          <Property Name="RoadAlignmentTypeId" Type="int" Nullable="false" />
+          <Property Name="RoadAlignmentTypeName" Type="nvarchar" MaxLength="50" />
+          <Property Name="Remark" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="RoadType">
+          <Key>
+            <PropertyRef Name="RoadTypeId" />
+          </Key>
+          <Property Name="RoadTypeId" Type="int" Nullable="false" />
+          <Property Name="RoadTypeName" Type="nvarchar" MaxLength="50" />
+          <Property Name="Remark" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="Route">
+          <Key>
+            <PropertyRef Name="RouteId" />
+          </Key>
+          <Property Name="RouteId" Type="nvarchar" MaxLength="7" Nullable="false" />
+          <Property Name="RouteName" Type="nvarchar" MaxLength="30" />
+          <Property Name="RouteSerNo" Type="int" />
+          <Property Name="MainRoadId" Type="nvarchar" MaxLength="10" />
+          <Property Name="FromKm" Type="float" />
+          <Property Name="ToKm" Type="float" />
+          <Property Name="Length" Type="float" />
+          <Property Name="ADT" Type="float" />
+          <Property Name="Remark" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="Section">
+          <Key>
+            <PropertyRef Name="SectionId" />
+          </Key>
+          <Property Name="SectionId" Type="int" Nullable="false" />
+          <Property Name="SectionName" Type="nvarchar" MaxLength="50" />
+          <Property Name="DistrictId" Type="int" />
+          <Property Name="Remark" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="Segment">
+          <Key>
+            <PropertyRef Name="SegmentId" />
+          </Key>
+          <Property Name="SegmentId" Type="int" Nullable="false" />
+          <Property Name="SegmentName" Type="nvarchar" MaxLength="50" />
+          <Property Name="SectionId" Type="int" />
+          <Property Name="Remark" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="SpanSupportType">
+          <Key>
+            <PropertyRef Name="SpanSupportTypeId" />
+          </Key>
+          <Property Name="SpanSupportTypeId" Type="int" Nullable="false" />
+          <Property Name="SpanSupportTypeName" Type="nvarchar" MaxLength="50" />
+          <Property Name="Remark" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="SuperStructure">
+          <Key>
+            <PropertyRef Name="BridgeId" />
+          </Key>
+          <Property Name="BridgeId" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="BridgeTypeId" Type="int" />
+          <Property Name="NoOfSpan" Type="int" />
+          <Property Name="SpanLengthComposition" Type="nvarchar" MaxLength="30" />
+          <Property Name="TotalSpanLength" Type="float" Nullable="false" />
+          <Property Name="CarriageWayWidth" Type="float" />
+          <Property Name="SideWalkWidth" Type="float" />
+          <Property Name="NoOfLane" Type="int" />
+          <Property Name="SpanSupportTypeId" Type="int" />
+          <Property Name="DeckSlabTypeId" Type="int" />
+          <Property Name="SlabThickness" Type="float" />
+          <Property Name="NoOfGirder" Type="int" />
+          <Property Name="GirderDepth" Type="float" />
+          <Property Name="SpacingGirder" Type="float" />
+          <Property Name="BoxWidth" Type="float" />
+        </EntityType>
+        <EntityType Name="SurfaceType">
+          <Key>
+            <PropertyRef Name="SurfaceTypeId" />
+          </Key>
+          <Property Name="SurfaceTypeId" Type="int" Nullable="false" />
+          <Property Name="SurfaceTypeName" Type="nvarchar" MaxLength="50" />
+          <Property Name="Remark" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <Association Name="FK_Abutment_AbutmentTypeA1">
+          <End Role="AbutmentType" Type="Self.AbutmentType" Multiplicity="0..1" />
+          <End Role="Abutment" Type="Self.Abutment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AbutmentType">
+              <PropertyRef Name="AbutmentTypeId" />
+            </Principal>
+            <Dependent Role="Abutment">
+              <PropertyRef Name="AbutmentTypeIdA1" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Abutment_AbutmentTypeA2">
+          <End Role="AbutmentType" Type="Self.AbutmentType" Multiplicity="0..1" />
+          <End Role="Abutment" Type="Self.Abutment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AbutmentType">
+              <PropertyRef Name="AbutmentTypeId" />
+            </Principal>
+            <Dependent Role="Abutment">
+              <PropertyRef Name="AbutmentTypeIdA2" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Abutment_Bridge">
+          <End Role="Bridge" Type="Self.Bridge" Multiplicity="1" />
+          <End Role="Abutment" Type="Self.Abutment" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Bridge">
+              <PropertyRef Name="BridgeId" />
+            </Principal>
+            <Dependent Role="Abutment">
+              <PropertyRef Name="BridgeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Abutment_FoundationTypeA1">
+          <End Role="FoundationType" Type="Self.FoundationType" Multiplicity="0..1" />
+          <End Role="Abutment" Type="Self.Abutment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FoundationType">
+              <PropertyRef Name="FoundationTypeId" />
+            </Principal>
+            <Dependent Role="Abutment">
+              <PropertyRef Name="FoundationTypeIdA1" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Abutment_FoundationTypeA2">
+          <End Role="FoundationType" Type="Self.FoundationType" Multiplicity="0..1" />
+          <End Role="Abutment" Type="Self.Abutment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FoundationType">
+              <PropertyRef Name="FoundationTypeId" />
+            </Principal>
+            <Dependent Role="Abutment">
+              <PropertyRef Name="FoundationTypeIdA2" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Bridge_GirderType">
+          <End Role="GirderType" Type="Self.GirderType" Multiplicity="0..1" />
+          <End Role="Bridge" Type="Self.Bridge" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GirderType">
+              <PropertyRef Name="GirderTypeId" />
+            </Principal>
+            <Dependent Role="Bridge">
+              <PropertyRef Name="GirderTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Bridge_Route">
+          <End Role="Route" Type="Self.Route" Multiplicity="0..1" />
+          <End Role="Bridge" Type="Self.Bridge" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Route">
+              <PropertyRef Name="RouteId" />
+            </Principal>
+            <Dependent Role="Bridge">
+              <PropertyRef Name="RouteId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Bridge_Segment">
+          <End Role="Segment" Type="Self.Segment" Multiplicity="1" />
+          <End Role="Bridge" Type="Self.Bridge" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Segment">
+              <PropertyRef Name="SegmentId" />
+            </Principal>
+            <Dependent Role="Bridge">
+              <PropertyRef Name="SegmentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BridgeDoc_Bridge">
+          <End Role="Bridge" Type="Self.Bridge" Multiplicity="1" />
+          <End Role="BridgeDoc" Type="Self.BridgeDoc" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Bridge">
+              <PropertyRef Name="BridgeId" />
+            </Principal>
+            <Dependent Role="BridgeDoc">
+              <PropertyRef Name="BridgeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BridgeGeneralInfo_Bridge">
+          <End Role="Bridge" Type="Self.Bridge" Multiplicity="1" />
+          <End Role="BridgeGeneralInfo" Type="Self.BridgeGeneralInfo" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Bridge">
+              <PropertyRef Name="BridgeId" />
+            </Principal>
+            <Dependent Role="BridgeGeneralInfo">
+              <PropertyRef Name="BridgeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BridgeGeneralInfo_RoadAlignment">
+          <End Role="RoadAlignmentType" Type="Self.RoadAlignmentType" Multiplicity="0..1" />
+          <End Role="BridgeGeneralInfo" Type="Self.BridgeGeneralInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RoadAlignmentType">
+              <PropertyRef Name="RoadAlignmentTypeId" />
+            </Principal>
+            <Dependent Role="BridgeGeneralInfo">
+              <PropertyRef Name="RoadAlignmentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BridgeHistory_Bridge">
+          <End Role="Bridge" Type="Self.Bridge" Multiplicity="1" />
+          <End Role="BridgeHistory" Type="Self.BridgeHistory" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Bridge">
+              <PropertyRef Name="BridgeId" />
+            </Principal>
+            <Dependent Role="BridgeHistory">
+              <PropertyRef Name="BridgeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Components_BearingType">
+          <End Role="BearingType" Type="Self.BearingType" Multiplicity="0..1" />
+          <End Role="Components" Type="Self.Components" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BearingType">
+              <PropertyRef Name="BearingTypeId" />
+            </Principal>
+            <Dependent Role="Components">
+              <PropertyRef Name="AbutmentBearingTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Components_BearingType1">
+          <End Role="BearingType" Type="Self.BearingType" Multiplicity="0..1" />
+          <End Role="Components" Type="Self.Components" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BearingType">
+              <PropertyRef Name="BearingTypeId" />
+            </Principal>
+            <Dependent Role="Components">
+              <PropertyRef Name="PiersBearingTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Components_Bridge">
+          <End Role="Bridge" Type="Self.Bridge" Multiplicity="1" />
+          <End Role="Components" Type="Self.Components" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Bridge">
+              <PropertyRef Name="BridgeId" />
+            </Principal>
+            <Dependent Role="Components">
+              <PropertyRef Name="BridgeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Components_ExpansionJointType">
+          <End Role="ExpansionJointType" Type="Self.ExpansionJointType" Multiplicity="0..1" />
+          <End Role="Components" Type="Self.Components" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ExpansionJointType">
+              <PropertyRef Name="ExpansionJointTypeId" />
+            </Principal>
+            <Dependent Role="Components">
+              <PropertyRef Name="ExpansionJointTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Components_GuardRailingType">
+          <End Role="GuardRailingType" Type="Self.GuardRailingType" Multiplicity="0..1" />
+          <End Role="Components" Type="Self.Components" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GuardRailingType">
+              <PropertyRef Name="GuardRailingTypeId" />
+            </Principal>
+            <Dependent Role="Components">
+              <PropertyRef Name="GuardRailingTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Components_SurfaceType">
+          <End Role="SurfaceType" Type="Self.SurfaceType" Multiplicity="0..1" />
+          <End Role="Components" Type="Self.Components" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SurfaceType">
+              <PropertyRef Name="SurfaceTypeId" />
+            </Principal>
+            <Dependent Role="Components">
+              <PropertyRef Name="SurfaceTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Culvert_Route">
+          <End Role="Route" Type="Self.Route" Multiplicity="0..1" />
+          <End Role="Culvert" Type="Self.Culvert" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Route">
+              <PropertyRef Name="RouteId" />
+            </Principal>
+            <Dependent Role="Culvert">
+              <PropertyRef Name="RouteId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Culvert_Segment">
+          <End Role="Segment" Type="Self.Segment" Multiplicity="0..1" />
+          <End Role="Culvert" Type="Self.Culvert" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Segment">
+              <PropertyRef Name="SegmentId" />
+            </Principal>
+            <Dependent Role="Culvert">
+              <PropertyRef Name="SegmentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ImageVideoDrawing_Bridge">
+          <End Role="Bridge" Type="Self.Bridge" Multiplicity="1" />
+          <End Role="ImageVideoDrawing" Type="Self.ImageVideoDrawing" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Bridge">
+              <PropertyRef Name="BridgeId" />
+            </Principal>
+            <Dependent Role="ImageVideoDrawing">
+              <PropertyRef Name="BridgeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Pier_Bridge">
+          <End Role="Bridge" Type="Self.Bridge" Multiplicity="1" />
+          <End Role="Pier" Type="Self.Pier" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Bridge">
+              <PropertyRef Name="BridgeId" />
+            </Principal>
+            <Dependent Role="Pier">
+              <PropertyRef Name="BridgeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Pier_FoundationType">
+          <End Role="FoundationType" Type="Self.FoundationType" Multiplicity="0..1" />
+          <End Role="Pier" Type="Self.Pier" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FoundationType">
+              <PropertyRef Name="FoundationTypeId" />
+            </Principal>
+            <Dependent Role="Pier">
+              <PropertyRef Name="FoundationTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Pier_PierType">
+          <End Role="PierType" Type="Self.PierType" Multiplicity="0..1" />
+          <End Role="Pier" Type="Self.Pier" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PierType">
+              <PropertyRef Name="PierTypeId" />
+            </Principal>
+            <Dependent Role="Pier">
+              <PropertyRef Name="PierTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Section_District">
+          <End Role="District" Type="Self.District" Multiplicity="0..1" />
+          <End Role="Section" Type="Self.Section" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="District">
+              <PropertyRef Name="DistrictId" />
+            </Principal>
+            <Dependent Role="Section">
+              <PropertyRef Name="DistrictId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Segment_Section">
+          <End Role="Section" Type="Self.Section" Multiplicity="0..1" />
+          <End Role="Segment" Type="Self.Segment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Section">
+              <PropertyRef Name="SectionId" />
+            </Principal>
+            <Dependent Role="Segment">
+              <PropertyRef Name="SectionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SuperStructure_Bridge">
+          <End Role="Bridge" Type="Self.Bridge" Multiplicity="1" />
+          <End Role="SuperStructure" Type="Self.SuperStructure" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Bridge">
+              <PropertyRef Name="BridgeId" />
+            </Principal>
+            <Dependent Role="SuperStructure">
+              <PropertyRef Name="BridgeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SuperStructure_BridgeType">
+          <End Role="BridgeType" Type="Self.BridgeType" Multiplicity="0..1" />
+          <End Role="SuperStructure" Type="Self.SuperStructure" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BridgeType">
+              <PropertyRef Name="BridgeTypeId" />
+            </Principal>
+            <Dependent Role="SuperStructure">
+              <PropertyRef Name="BridgeTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SuperStructure_DeckSlabType">
+          <End Role="DeckSlabType" Type="Self.DeckSlabType" Multiplicity="0..1" />
+          <End Role="SuperStructure" Type="Self.SuperStructure" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DeckSlabType">
+              <PropertyRef Name="DeckSlabTypeId" />
+            </Principal>
+            <Dependent Role="SuperStructure">
+              <PropertyRef Name="DeckSlabTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SuperStructure_SpanSupportType">
+          <End Role="SpanSupportType" Type="Self.SpanSupportType" Multiplicity="0..1" />
+          <End Role="SuperStructure" Type="Self.SuperStructure" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SpanSupportType">
+              <PropertyRef Name="SpanSupportTypeId" />
+            </Principal>
+            <Dependent Role="SuperStructure">
+              <PropertyRef Name="SpanSupportTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="BCMSModelStoreContainer">
+          <EntitySet Name="Abutment" EntityType="Self.Abutment" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AbutmentType" EntityType="Self.AbutmentType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BearingType" EntityType="Self.BearingType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Bridge" EntityType="Self.Bridge" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BridgeGeneralInfo" EntityType="Self.BridgeGeneralInfo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BridgeType" EntityType="Self.BridgeType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Components" EntityType="Self.Components" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Culvert" EntityType="Self.Culvert" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DeckSlabType" EntityType="Self.DeckSlabType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="District" EntityType="Self.District" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ExpansionJointType" EntityType="Self.ExpansionJointType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FoundationType" EntityType="Self.FoundationType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GirderType" EntityType="Self.GirderType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GuardRailingType" EntityType="Self.GuardRailingType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PierType" EntityType="Self.PierType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RoadAlignmentType" EntityType="Self.RoadAlignmentType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RoadType" EntityType="Self.RoadType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Route" EntityType="Self.Route" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Section" EntityType="Self.Section" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Segment" EntityType="Self.Segment" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SpanSupportType" EntityType="Self.SpanSupportType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SuperStructure" EntityType="Self.SuperStructure" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SurfaceType" EntityType="Self.SurfaceType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BridgeDoc" EntityType="Self.BridgeDoc" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [BridgeDoc].[BridgeId] AS [BridgeId], 
+    [BridgeDoc].[SerNo] AS [SerNo], 
+    [BridgeDoc].[DocDate] AS [DocDate], 
+    [BridgeDoc].[Description] AS [Description], 
+    [BridgeDoc].[DocPath] AS [DocPath]
+    FROM [dbo].[BridgeDoc] AS [BridgeDoc]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="BridgeHistory" EntityType="Self.BridgeHistory" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [BridgeHistory].[BridgeId] AS [BridgeId], 
+    [BridgeHistory].[LineNo] AS [LineNo], 
+    [BridgeHistory].[HistoryDescr] AS [HistoryDescr]
+    FROM [dbo].[BridgeHistory] AS [BridgeHistory]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="ImageVideoDrawing" EntityType="Self.ImageVideoDrawing" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [ImageVideoDrawing].[BridgeId] AS [BridgeId], 
+    [ImageVideoDrawing].[BudgetYear] AS [BudgetYear], 
+    [ImageVideoDrawing].[PictureType] AS [PictureType], 
+    [ImageVideoDrawing].[PictureId] AS [PictureId], 
+    [ImageVideoDrawing].[PicDate] AS [PicDate], 
+    [ImageVideoDrawing].[PicDescr] AS [PicDescr], 
+    [ImageVideoDrawing].[PicFileName] AS [PicFileName]
+    FROM [dbo].[ImageVideoDrawing] AS [ImageVideoDrawing]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="Pier" EntityType="Self.Pier" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Pier].[BridgeId] AS [BridgeId], 
+    [Pier].[PierNo] AS [PierNo], 
+    [Pier].[PierTypeId] AS [PierTypeId], 
+    [Pier].[HeightOfPier] AS [HeightOfPier], 
+    [Pier].[WidthOfPier] AS [WidthOfPier], 
+    [Pier].[FoundationTypeId] AS [FoundationTypeId], 
+    [Pier].[FoundationDimension] AS [FoundationDimension], 
+    [Pier].[NoOfPierPiles] AS [NoOfPierPiles], 
+    [Pier].[PierPileDepth] AS [PierPileDepth]
+    FROM [dbo].[Pier] AS [Pier]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_Abutment_AbutmentTypeA1" Association="Self.FK_Abutment_AbutmentTypeA1">
+            <End Role="AbutmentType" EntitySet="AbutmentType" />
+            <End Role="Abutment" EntitySet="Abutment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Abutment_AbutmentTypeA2" Association="Self.FK_Abutment_AbutmentTypeA2">
+            <End Role="AbutmentType" EntitySet="AbutmentType" />
+            <End Role="Abutment" EntitySet="Abutment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Abutment_Bridge" Association="Self.FK_Abutment_Bridge">
+            <End Role="Bridge" EntitySet="Bridge" />
+            <End Role="Abutment" EntitySet="Abutment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Abutment_FoundationTypeA1" Association="Self.FK_Abutment_FoundationTypeA1">
+            <End Role="FoundationType" EntitySet="FoundationType" />
+            <End Role="Abutment" EntitySet="Abutment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Abutment_FoundationTypeA2" Association="Self.FK_Abutment_FoundationTypeA2">
+            <End Role="FoundationType" EntitySet="FoundationType" />
+            <End Role="Abutment" EntitySet="Abutment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Bridge_GirderType" Association="Self.FK_Bridge_GirderType">
+            <End Role="GirderType" EntitySet="GirderType" />
+            <End Role="Bridge" EntitySet="Bridge" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Bridge_Route" Association="Self.FK_Bridge_Route">
+            <End Role="Route" EntitySet="Route" />
+            <End Role="Bridge" EntitySet="Bridge" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Bridge_Segment" Association="Self.FK_Bridge_Segment">
+            <End Role="Segment" EntitySet="Segment" />
+            <End Role="Bridge" EntitySet="Bridge" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BridgeDoc_Bridge" Association="Self.FK_BridgeDoc_Bridge">
+            <End Role="Bridge" EntitySet="Bridge" />
+            <End Role="BridgeDoc" EntitySet="BridgeDoc" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BridgeGeneralInfo_Bridge" Association="Self.FK_BridgeGeneralInfo_Bridge">
+            <End Role="Bridge" EntitySet="Bridge" />
+            <End Role="BridgeGeneralInfo" EntitySet="BridgeGeneralInfo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BridgeGeneralInfo_RoadAlignment" Association="Self.FK_BridgeGeneralInfo_RoadAlignment">
+            <End Role="RoadAlignmentType" EntitySet="RoadAlignmentType" />
+            <End Role="BridgeGeneralInfo" EntitySet="BridgeGeneralInfo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BridgeHistory_Bridge" Association="Self.FK_BridgeHistory_Bridge">
+            <End Role="Bridge" EntitySet="Bridge" />
+            <End Role="BridgeHistory" EntitySet="BridgeHistory" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Components_BearingType" Association="Self.FK_Components_BearingType">
+            <End Role="BearingType" EntitySet="BearingType" />
+            <End Role="Components" EntitySet="Components" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Components_BearingType1" Association="Self.FK_Components_BearingType1">
+            <End Role="BearingType" EntitySet="BearingType" />
+            <End Role="Components" EntitySet="Components" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Components_Bridge" Association="Self.FK_Components_Bridge">
+            <End Role="Bridge" EntitySet="Bridge" />
+            <End Role="Components" EntitySet="Components" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Components_ExpansionJointType" Association="Self.FK_Components_ExpansionJointType">
+            <End Role="ExpansionJointType" EntitySet="ExpansionJointType" />
+            <End Role="Components" EntitySet="Components" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Components_GuardRailingType" Association="Self.FK_Components_GuardRailingType">
+            <End Role="GuardRailingType" EntitySet="GuardRailingType" />
+            <End Role="Components" EntitySet="Components" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Components_SurfaceType" Association="Self.FK_Components_SurfaceType">
+            <End Role="SurfaceType" EntitySet="SurfaceType" />
+            <End Role="Components" EntitySet="Components" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Culvert_Route" Association="Self.FK_Culvert_Route">
+            <End Role="Route" EntitySet="Route" />
+            <End Role="Culvert" EntitySet="Culvert" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Culvert_Segment" Association="Self.FK_Culvert_Segment">
+            <End Role="Segment" EntitySet="Segment" />
+            <End Role="Culvert" EntitySet="Culvert" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ImageVideoDrawing_Bridge" Association="Self.FK_ImageVideoDrawing_Bridge">
+            <End Role="Bridge" EntitySet="Bridge" />
+            <End Role="ImageVideoDrawing" EntitySet="ImageVideoDrawing" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Pier_Bridge" Association="Self.FK_Pier_Bridge">
+            <End Role="Bridge" EntitySet="Bridge" />
+            <End Role="Pier" EntitySet="Pier" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Pier_FoundationType" Association="Self.FK_Pier_FoundationType">
+            <End Role="FoundationType" EntitySet="FoundationType" />
+            <End Role="Pier" EntitySet="Pier" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Pier_PierType" Association="Self.FK_Pier_PierType">
+            <End Role="PierType" EntitySet="PierType" />
+            <End Role="Pier" EntitySet="Pier" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Section_District" Association="Self.FK_Section_District">
+            <End Role="District" EntitySet="District" />
+            <End Role="Section" EntitySet="Section" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Segment_Section" Association="Self.FK_Segment_Section">
+            <End Role="Section" EntitySet="Section" />
+            <End Role="Segment" EntitySet="Segment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SuperStructure_Bridge" Association="Self.FK_SuperStructure_Bridge">
+            <End Role="Bridge" EntitySet="Bridge" />
+            <End Role="SuperStructure" EntitySet="SuperStructure" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SuperStructure_BridgeType" Association="Self.FK_SuperStructure_BridgeType">
+            <End Role="BridgeType" EntitySet="BridgeType" />
+            <End Role="SuperStructure" EntitySet="SuperStructure" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SuperStructure_DeckSlabType" Association="Self.FK_SuperStructure_DeckSlabType">
+            <End Role="DeckSlabType" EntitySet="DeckSlabType" />
+            <End Role="SuperStructure" EntitySet="SuperStructure" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SuperStructure_SpanSupportType" Association="Self.FK_SuperStructure_SpanSupportType">
+            <End Role="SpanSupportType" EntitySet="SpanSupportType" />
+            <End Role="SuperStructure" EntitySet="SuperStructure" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="BCMSModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="BCMSEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="AbutmentTypes" EntityType="BCMSModel.AbutmentType" />
+          <EntitySet Name="BearingTypes" EntityType="BCMSModel.BearingType" />
+          <EntitySet Name="BridgeTypes" EntityType="BCMSModel.BridgeType" />
+          <EntitySet Name="DeckSlabTypes" EntityType="BCMSModel.DeckSlabType" />
+          <EntitySet Name="Districts" EntityType="BCMSModel.District" />
+          <EntitySet Name="ExpansionJointTypes" EntityType="BCMSModel.ExpansionJointType" />
+          <EntitySet Name="FoundationTypes" EntityType="BCMSModel.FoundationType" />
+          <EntitySet Name="GuardRailingTypes" EntityType="BCMSModel.GuardRailingType" />
+          <EntitySet Name="PierTypes" EntityType="BCMSModel.PierType" />
+          <EntitySet Name="RoadAlignmentTypes" EntityType="BCMSModel.RoadAlignmentType" />
+          <EntitySet Name="RoadTypes" EntityType="BCMSModel.RoadType" />
+          <EntitySet Name="Routes" EntityType="BCMSModel.Route" />
+          <EntitySet Name="Sections" EntityType="BCMSModel.Section" />
+          <EntitySet Name="Segments" EntityType="BCMSModel.Segment" />
+          <EntitySet Name="SpanSupportTypes" EntityType="BCMSModel.SpanSupportType" />
+          <EntitySet Name="SurfaceTypes" EntityType="BCMSModel.SurfaceType" />
+          <AssociationSet Name="FK_Section_District" Association="BCMSModel.FK_Section_District">
+            <End Role="District" EntitySet="Districts" />
+            <End Role="Section" EntitySet="Sections" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Segment_Section" Association="BCMSModel.FK_Segment_Section">
+            <End Role="Section" EntitySet="Sections" />
+            <End Role="Segment" EntitySet="Segments" />
+          </AssociationSet>
+          <EntitySet Name="GirderTypes" EntityType="BCMSModel.GirderType" />
+          <EntitySet Name="Bridges" EntityType="BCMSModel.Bridge" />
+          <AssociationSet Name="FK_Bridge_GirderType" Association="BCMSModel.FK_Bridge_GirderType">
+            <End Role="GirderType" EntitySet="GirderTypes" />
+            <End Role="Bridge" EntitySet="Bridges" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Bridge_Route" Association="BCMSModel.FK_Bridge_Route">
+            <End Role="Route" EntitySet="Routes" />
+            <End Role="Bridge" EntitySet="Bridges" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Bridge_Segment" Association="BCMSModel.FK_Bridge_Segment">
+            <End Role="Segment" EntitySet="Segments" />
+            <End Role="Bridge" EntitySet="Bridges" />
+          </AssociationSet>
+          <EntitySet Name="Culverts" EntityType="BCMSModel.Culvert" />
+          <AssociationSet Name="FK_Culvert_Route" Association="BCMSModel.FK_Culvert_Route">
+            <End Role="Route" EntitySet="Routes" />
+            <End Role="Culvert" EntitySet="Culverts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Culvert_Segment" Association="BCMSModel.FK_Culvert_Segment">
+            <End Role="Segment" EntitySet="Segments" />
+            <End Role="Culvert" EntitySet="Culverts" />
+          </AssociationSet>
+          <EntitySet Name="BridgeGeneralInfoes" EntityType="BCMSModel.BridgeGeneralInfo" />
+          <AssociationSet Name="FK_BridgeGeneralInfo_Bridge" Association="BCMSModel.FK_BridgeGeneralInfo_Bridge">
+            <End Role="Bridge" EntitySet="Bridges" />
+            <End Role="BridgeGeneralInfo" EntitySet="BridgeGeneralInfoes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BridgeGeneralInfo_RoadAlignment" Association="BCMSModel.FK_BridgeGeneralInfo_RoadAlignment">
+            <End Role="RoadAlignmentType" EntitySet="RoadAlignmentTypes" />
+            <End Role="BridgeGeneralInfo" EntitySet="BridgeGeneralInfoes" />
+          </AssociationSet>
+          <EntitySet Name="SuperStructures" EntityType="BCMSModel.SuperStructure" />
+          <AssociationSet Name="FK_SuperStructure_Bridge" Association="BCMSModel.FK_SuperStructure_Bridge">
+            <End Role="Bridge" EntitySet="Bridges" />
+            <End Role="SuperStructure" EntitySet="SuperStructures" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SuperStructure_BridgeType" Association="BCMSModel.FK_SuperStructure_BridgeType">
+            <End Role="BridgeType" EntitySet="BridgeTypes" />
+            <End Role="SuperStructure" EntitySet="SuperStructures" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SuperStructure_DeckSlabType" Association="BCMSModel.FK_SuperStructure_DeckSlabType">
+            <End Role="DeckSlabType" EntitySet="DeckSlabTypes" />
+            <End Role="SuperStructure" EntitySet="SuperStructures" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SuperStructure_SpanSupportType" Association="BCMSModel.FK_SuperStructure_SpanSupportType">
+            <End Role="SpanSupportType" EntitySet="SpanSupportTypes" />
+            <End Role="SuperStructure" EntitySet="SuperStructures" />
+          </AssociationSet>
+          <EntitySet Name="Abutments" EntityType="BCMSModel.Abutment" />
+          <EntitySet Name="Components" EntityType="BCMSModel.Component" />
+          <EntitySet Name="BridgeDocs" EntityType="BCMSModel.BridgeDoc" />
+          <EntitySet Name="BridgeHistories" EntityType="BCMSModel.BridgeHistory" />
+          <EntitySet Name="Piers" EntityType="BCMSModel.Pier" />
+          <AssociationSet Name="FK_Abutment_AbutmentTypeA1" Association="BCMSModel.FK_Abutment_AbutmentTypeA1">
+            <End Role="AbutmentType" EntitySet="AbutmentTypes" />
+            <End Role="Abutment" EntitySet="Abutments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Abutment_AbutmentTypeA2" Association="BCMSModel.FK_Abutment_AbutmentTypeA2">
+            <End Role="AbutmentType" EntitySet="AbutmentTypes" />
+            <End Role="Abutment" EntitySet="Abutments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Abutment_Bridge" Association="BCMSModel.FK_Abutment_Bridge">
+            <End Role="Bridge" EntitySet="Bridges" />
+            <End Role="Abutment" EntitySet="Abutments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Abutment_FoundationTypeA1" Association="BCMSModel.FK_Abutment_FoundationTypeA1">
+            <End Role="FoundationType" EntitySet="FoundationTypes" />
+            <End Role="Abutment" EntitySet="Abutments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Abutment_FoundationTypeA2" Association="BCMSModel.FK_Abutment_FoundationTypeA2">
+            <End Role="FoundationType" EntitySet="FoundationTypes" />
+            <End Role="Abutment" EntitySet="Abutments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Components_BearingType" Association="BCMSModel.FK_Components_BearingType">
+            <End Role="BearingType" EntitySet="BearingTypes" />
+            <End Role="Component" EntitySet="Components" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Components_BearingType1" Association="BCMSModel.FK_Components_BearingType1">
+            <End Role="BearingType" EntitySet="BearingTypes" />
+            <End Role="Component" EntitySet="Components" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BridgeDoc_Bridge" Association="BCMSModel.FK_BridgeDoc_Bridge">
+            <End Role="Bridge" EntitySet="Bridges" />
+            <End Role="BridgeDoc" EntitySet="BridgeDocs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BridgeHistory_Bridge" Association="BCMSModel.FK_BridgeHistory_Bridge">
+            <End Role="Bridge" EntitySet="Bridges" />
+            <End Role="BridgeHistory" EntitySet="BridgeHistories" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Components_Bridge" Association="BCMSModel.FK_Components_Bridge">
+            <End Role="Bridge" EntitySet="Bridges" />
+            <End Role="Component" EntitySet="Components" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Pier_Bridge" Association="BCMSModel.FK_Pier_Bridge">
+            <End Role="Bridge" EntitySet="Bridges" />
+            <End Role="Pier" EntitySet="Piers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Components_ExpansionJointType" Association="BCMSModel.FK_Components_ExpansionJointType">
+            <End Role="ExpansionJointType" EntitySet="ExpansionJointTypes" />
+            <End Role="Component" EntitySet="Components" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Components_GuardRailingType" Association="BCMSModel.FK_Components_GuardRailingType">
+            <End Role="GuardRailingType" EntitySet="GuardRailingTypes" />
+            <End Role="Component" EntitySet="Components" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Components_SurfaceType" Association="BCMSModel.FK_Components_SurfaceType">
+            <End Role="SurfaceType" EntitySet="SurfaceTypes" />
+            <End Role="Component" EntitySet="Components" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Pier_FoundationType" Association="BCMSModel.FK_Pier_FoundationType">
+            <End Role="FoundationType" EntitySet="FoundationTypes" />
+            <End Role="Pier" EntitySet="Piers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Pier_PierType" Association="BCMSModel.FK_Pier_PierType">
+            <End Role="PierType" EntitySet="PierTypes" />
+            <End Role="Pier" EntitySet="Piers" />
+          </AssociationSet>
+          <EntitySet Name="ImageVideoDrawings" EntityType="BCMSModel.ImageVideoDrawing" />
+          <AssociationSet Name="FK_ImageVideoDrawing_Bridge" Association="BCMSModel.FK_ImageVideoDrawing_Bridge">
+            <End Role="Bridge" EntitySet="Bridges" />
+            <End Role="ImageVideoDrawing" EntitySet="ImageVideoDrawings" />
+          </AssociationSet>
+          </EntityContainer>
+        <EntityType Name="AbutmentType">
+          <Key>
+            <PropertyRef Name="AbutmentTypeId" />
+          </Key>
+          <Property Name="AbutmentTypeId" Type="Int32" Nullable="false" />
+          <Property Name="AbutmentTypeName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Remark" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Abutments" Relationship="BCMSModel.FK_Abutment_AbutmentTypeA1" FromRole="AbutmentType" ToRole="Abutment" />
+          <NavigationProperty Name="Abutments1" Relationship="BCMSModel.FK_Abutment_AbutmentTypeA2" FromRole="AbutmentType" ToRole="Abutment" />
+          </EntityType>
+        <EntityType Name="BearingType">
+          <Key>
+            <PropertyRef Name="BearingTypeId" />
+          </Key>
+          <Property Name="BearingTypeId" Type="Int32" Nullable="false" />
+          <Property Name="BearingTypeName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Remark" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Components" Relationship="BCMSModel.FK_Components_BearingType" FromRole="BearingType" ToRole="Component" />
+          <NavigationProperty Name="Components1" Relationship="BCMSModel.FK_Components_BearingType1" FromRole="BearingType" ToRole="Component" />
+          </EntityType>
+        <EntityType Name="BridgeType">
+          <Key>
+            <PropertyRef Name="BridgeTypeId" />
+          </Key>
+          <Property Name="BridgeTypeId" Type="Int32" Nullable="false" />
+          <Property Name="BridgeTypeName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="BridgeTypeShortCode" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="Remark" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="SuperStructures" Relationship="BCMSModel.FK_SuperStructure_BridgeType" FromRole="BridgeType" ToRole="SuperStructure" />
+        </EntityType>
+        <EntityType Name="DeckSlabType">
+          <Key>
+            <PropertyRef Name="DeckSlabTypeId" />
+          </Key>
+          <Property Name="DeckSlabTypeId" Type="Int32" Nullable="false" />
+          <Property Name="DeckSlabTypeName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Remark" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="SuperStructures" Relationship="BCMSModel.FK_SuperStructure_DeckSlabType" FromRole="DeckSlabType" ToRole="SuperStructure" />
+        </EntityType>
+        <EntityType Name="District">
+          <Key>
+            <PropertyRef Name="DistrictId" />
+          </Key>
+          <Property Name="DistrictId" Type="Int32" Nullable="false" />
+          <Property Name="DistrictName" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="Remark" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Sections" Relationship="BCMSModel.FK_Section_District" FromRole="District" ToRole="Section" />
+        </EntityType>
+        <EntityType Name="ExpansionJointType">
+          <Key>
+            <PropertyRef Name="ExpansionJointTypeId" />
+          </Key>
+          <Property Name="ExpansionJointTypeId" Type="Int32" Nullable="false" />
+          <Property Name="ExpansionJointTypeName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Remark" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Components" Relationship="BCMSModel.FK_Components_ExpansionJointType" FromRole="ExpansionJointType" ToRole="Component" />
+        </EntityType>
+        <EntityType Name="FoundationType">
+          <Key>
+            <PropertyRef Name="FoundationTypeId" />
+          </Key>
+          <Property Name="FoundationTypeId" Type="Int32" Nullable="false" />
+          <Property Name="FoundationTypeName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Remark" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Abutments" Relationship="BCMSModel.FK_Abutment_FoundationTypeA1" FromRole="FoundationType" ToRole="Abutment" />
+          <NavigationProperty Name="Abutments1" Relationship="BCMSModel.FK_Abutment_FoundationTypeA2" FromRole="FoundationType" ToRole="Abutment" />
+          <NavigationProperty Name="Piers" Relationship="BCMSModel.FK_Pier_FoundationType" FromRole="FoundationType" ToRole="Pier" />
+          </EntityType>
+        <EntityType Name="GuardRailingType">
+          <Key>
+            <PropertyRef Name="GuardRailingTypeId" />
+          </Key>
+          <Property Name="GuardRailingTypeId" Type="Int32" Nullable="false" />
+          <Property Name="GuardRailingTypeName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Remark" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Components" Relationship="BCMSModel.FK_Components_GuardRailingType" FromRole="GuardRailingType" ToRole="Component" />
+        </EntityType>
+        <EntityType Name="PierType">
+          <Key>
+            <PropertyRef Name="PierTypeId" />
+          </Key>
+          <Property Name="PierTypeId" Type="Int32" Nullable="false" />
+          <Property Name="PierTypeName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Remark" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Piers" Relationship="BCMSModel.FK_Pier_PierType" FromRole="PierType" ToRole="Pier" />
+        </EntityType>
+        <EntityType Name="RoadAlignmentType">
+          <Key>
+            <PropertyRef Name="RoadAlignmentTypeId" />
+          </Key>
+          <Property Name="RoadAlignmentTypeId" Type="Int32" Nullable="false" />
+          <Property Name="RoadAlignmentTypeName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Remark" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="BridgeGeneralInfoes" Relationship="BCMSModel.FK_BridgeGeneralInfo_RoadAlignment" FromRole="RoadAlignmentType" ToRole="BridgeGeneralInfo" />
+        </EntityType>
+        <EntityType Name="RoadType">
+          <Key>
+            <PropertyRef Name="RoadTypeId" />
+          </Key>
+          <Property Name="RoadTypeId" Type="Int32" Nullable="false" />
+          <Property Name="RoadTypeName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Remark" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Route">
+          <Key>
+            <PropertyRef Name="RouteId" />
+          </Key>
+          <Property Name="RouteId" Type="String" Nullable="false" MaxLength="7" FixedLength="false" Unicode="true" />
+          <Property Name="RouteName" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="RouteSerNo" Type="Int32" />
+          <Property Name="MainRoadId" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="FromKm" Type="Double" />
+          <Property Name="ToKm" Type="Double" />
+          <Property Name="Length" Type="Double" />
+          <Property Name="ADT" Type="Double" />
+          <Property Name="Remark" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Bridges" Relationship="BCMSModel.FK_Bridge_Route" FromRole="Route" ToRole="Bridge" />
+          <NavigationProperty Name="Culverts" Relationship="BCMSModel.FK_Culvert_Route" FromRole="Route" ToRole="Culvert" />
+        </EntityType>
+        <EntityType Name="Section">
+          <Key>
+            <PropertyRef Name="SectionId" />
+          </Key>
+          <Property Name="SectionId" Type="Int32" Nullable="false" />
+          <Property Name="SectionName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DistrictId" Type="Int32" />
+          <Property Name="Remark" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="District" Relationship="BCMSModel.FK_Section_District" FromRole="Section" ToRole="District" />
+          <NavigationProperty Name="Segments" Relationship="BCMSModel.FK_Segment_Section" FromRole="Section" ToRole="Segment" />
+        </EntityType>
+        <EntityType Name="Segment">
+          <Key>
+            <PropertyRef Name="SegmentId" />
+          </Key>
+          <Property Name="SegmentId" Type="Int32" Nullable="false" />
+          <Property Name="SegmentName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="SectionId" Type="Int32" />
+          <Property Name="Remark" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Section" Relationship="BCMSModel.FK_Segment_Section" FromRole="Segment" ToRole="Section" />
+          <NavigationProperty Name="Bridges" Relationship="BCMSModel.FK_Bridge_Segment" FromRole="Segment" ToRole="Bridge" />
+          <NavigationProperty Name="Culverts" Relationship="BCMSModel.FK_Culvert_Segment" FromRole="Segment" ToRole="Culvert" />
+        </EntityType>
+        <EntityType Name="SpanSupportType">
+          <Key>
+            <PropertyRef Name="SpanSupportTypeId" />
+          </Key>
+          <Property Name="SpanSupportTypeId" Type="Int32" Nullable="false" />
+          <Property Name="SpanSupportTypeName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Remark" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="SuperStructures" Relationship="BCMSModel.FK_SuperStructure_SpanSupportType" FromRole="SpanSupportType" ToRole="SuperStructure" />
+        </EntityType>
+        <EntityType Name="SurfaceType">
+          <Key>
+            <PropertyRef Name="SurfaceTypeId" />
+          </Key>
+          <Property Name="SurfaceTypeId" Type="Int32" Nullable="false" />
+          <Property Name="SurfaceTypeName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Remark" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Components" Relationship="BCMSModel.FK_Components_SurfaceType" FromRole="SurfaceType" ToRole="Component" />
+        </EntityType>
+        <Association Name="FK_Section_District">
+          <End Type="BCMSModel.District" Role="District" Multiplicity="0..1" />
+          <End Type="BCMSModel.Section" Role="Section" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="District">
+              <PropertyRef Name="DistrictId" />
+            </Principal>
+            <Dependent Role="Section">
+              <PropertyRef Name="DistrictId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Segment_Section">
+          <End Type="BCMSModel.Section" Role="Section" Multiplicity="0..1" />
+          <End Type="BCMSModel.Segment" Role="Segment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Section">
+              <PropertyRef Name="SectionId" />
+            </Principal>
+            <Dependent Role="Segment">
+              <PropertyRef Name="SectionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="GirderType">
+          <Key>
+            <PropertyRef Name="GirderTypeId" />
+          </Key>
+          <Property Name="GirderTypeId" Type="Int16" Nullable="false" />
+          <Property Name="GirderTypeName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Remark" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Bridges" Relationship="BCMSModel.FK_Bridge_GirderType" FromRole="GirderType" ToRole="Bridge" />
+        </EntityType>
+        <EntityType Name="Bridge">
+          <Key>
+            <PropertyRef Name="BridgeId" />
+          </Key>
+          <Property Name="BridgeId" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="BridgeName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="BridgeSerNo" Type="Int32" />
+          <Property Name="SegmentId" Type="Int32" Nullable="false" />
+          <Property Name="RouteId" Type="String" MaxLength="7" FixedLength="false" Unicode="true" />
+          <Property Name="KMFromAddis" Type="Double" />
+          <Property Name="XCoord" Type="Double" />
+          <Property Name="YCoord" Type="Double" />
+          <Property Name="GirderTypeId" Type="Int16" />
+          <Property Name="BudgetYear" Type="Int32" />
+          <Property Name="BudgetYearComment" Type="Int32" />
+          <NavigationProperty Name="GirderType" Relationship="BCMSModel.FK_Bridge_GirderType" FromRole="Bridge" ToRole="GirderType" />
+          <NavigationProperty Name="Route" Relationship="BCMSModel.FK_Bridge_Route" FromRole="Bridge" ToRole="Route" />
+          <NavigationProperty Name="Segment" Relationship="BCMSModel.FK_Bridge_Segment" FromRole="Bridge" ToRole="Segment" />
+          <NavigationProperty Name="BridgeGeneralInfo" Relationship="BCMSModel.FK_BridgeGeneralInfo_Bridge" FromRole="Bridge" ToRole="BridgeGeneralInfo" />
+          <NavigationProperty Name="SuperStructure" Relationship="BCMSModel.FK_SuperStructure_Bridge" FromRole="Bridge" ToRole="SuperStructure" />
+          <NavigationProperty Name="Abutment" Relationship="BCMSModel.FK_Abutment_Bridge" FromRole="Bridge" ToRole="Abutment" />
+          <NavigationProperty Name="BridgeDoc" Relationship="BCMSModel.FK_BridgeDoc_Bridge" FromRole="Bridge" ToRole="BridgeDoc" />
+          <NavigationProperty Name="BridgeHistory" Relationship="BCMSModel.FK_BridgeHistory_Bridge" FromRole="Bridge" ToRole="BridgeHistory" />
+          <NavigationProperty Name="Component" Relationship="BCMSModel.FK_Components_Bridge" FromRole="Bridge" ToRole="Component" />
+          <NavigationProperty Name="Piers" Relationship="BCMSModel.FK_Pier_Bridge" FromRole="Bridge" ToRole="Pier" />
+          <NavigationProperty Name="ImageVideoDrawing" Relationship="BCMSModel.FK_ImageVideoDrawing_Bridge" FromRole="Bridge" ToRole="ImageVideoDrawing" />
+        </EntityType>
+        <Association Name="FK_Bridge_GirderType">
+          <End Type="BCMSModel.GirderType" Role="GirderType" Multiplicity="0..1" />
+          <End Type="BCMSModel.Bridge" Role="Bridge" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GirderType">
+              <PropertyRef Name="GirderTypeId" />
+            </Principal>
+            <Dependent Role="Bridge">
+              <PropertyRef Name="GirderTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Bridge_Route">
+          <End Type="BCMSModel.Route" Role="Route" Multiplicity="0..1" />
+          <End Type="BCMSModel.Bridge" Role="Bridge" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Route">
+              <PropertyRef Name="RouteId" />
+            </Principal>
+            <Dependent Role="Bridge">
+              <PropertyRef Name="RouteId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Bridge_Segment">
+          <End Type="BCMSModel.Segment" Role="Segment" Multiplicity="1" />
+          <End Type="BCMSModel.Bridge" Role="Bridge" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Segment">
+              <PropertyRef Name="SegmentId" />
+            </Principal>
+            <Dependent Role="Bridge">
+              <PropertyRef Name="SegmentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Culvert">
+          <Key>
+            <PropertyRef Name="CulvertId" />
+          </Key>
+          <Property Name="CulvertId" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="CulvertName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="SegmentId" Type="Int32" />
+          <Property Name="RouteId" Type="String" MaxLength="7" FixedLength="false" Unicode="true" />
+          <Property Name="KMFromAddis" Type="Double" />
+          <Property Name="XCoord" Type="Double" />
+          <Property Name="YCoord" Type="Double" />
+          <NavigationProperty Name="Route" Relationship="BCMSModel.FK_Culvert_Route" FromRole="Culvert" ToRole="Route" />
+          <NavigationProperty Name="Segment" Relationship="BCMSModel.FK_Culvert_Segment" FromRole="Culvert" ToRole="Segment" />
+        </EntityType>
+        <Association Name="FK_Culvert_Route">
+          <End Type="BCMSModel.Route" Role="Route" Multiplicity="0..1" />
+          <End Type="BCMSModel.Culvert" Role="Culvert" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Route">
+              <PropertyRef Name="RouteId" />
+            </Principal>
+            <Dependent Role="Culvert">
+              <PropertyRef Name="RouteId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Culvert_Segment">
+          <End Type="BCMSModel.Segment" Role="Segment" Multiplicity="0..1" />
+          <End Type="BCMSModel.Culvert" Role="Culvert" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Segment">
+              <PropertyRef Name="SegmentId" />
+            </Principal>
+            <Dependent Role="Culvert">
+              <PropertyRef Name="SegmentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="BridgeGeneralInfo">
+          <Key>
+            <PropertyRef Name="BridgeGenInfoId" />
+          </Key>
+          <Property Name="BridgeGenInfoId" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="BridgeLength" Type="Double" />
+          <Property Name="TotBridgeLength" Type="Double" Nullable="false" />
+          <Property Name="BridgeWidth" Type="Double" Nullable="false" />
+          <Property Name="RiverWidth" Type="Double" Nullable="false" />
+          <Property Name="PresentWaterLevel" Type="Double" />
+          <Property Name="HighestWaterLevel" Type="Double" />
+          <Property Name="LoadCapacity" Type="Double" />
+          <Property Name="DailyTraffic" Type="Int32" />
+          <Property Name="Topography" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="Altitude" Type="Double" />
+          <Property Name="RoadAlignmentId" Type="Int32" />
+          <Property Name="ConstructionYear" Type="Int32" />
+          <Property Name="BeforeYear" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="Contractor" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="Designer" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="BridgeCost" Type="Double" />
+          <Property Name="SafetySign" Type="Boolean" Nullable="false" />
+          <Property Name="Detour" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Bridge" Relationship="BCMSModel.FK_BridgeGeneralInfo_Bridge" FromRole="BridgeGeneralInfo" ToRole="Bridge" />
+          <NavigationProperty Name="RoadAlignmentType" Relationship="BCMSModel.FK_BridgeGeneralInfo_RoadAlignment" FromRole="BridgeGeneralInfo" ToRole="RoadAlignmentType" />
+        </EntityType>
+        <Association Name="FK_BridgeGeneralInfo_Bridge">
+          <End Type="BCMSModel.Bridge" Role="Bridge" Multiplicity="1" />
+          <End Type="BCMSModel.BridgeGeneralInfo" Role="BridgeGeneralInfo" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Bridge">
+              <PropertyRef Name="BridgeId" />
+            </Principal>
+            <Dependent Role="BridgeGeneralInfo">
+              <PropertyRef Name="BridgeGenInfoId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BridgeGeneralInfo_RoadAlignment">
+          <End Type="BCMSModel.RoadAlignmentType" Role="RoadAlignmentType" Multiplicity="0..1" />
+          <End Type="BCMSModel.BridgeGeneralInfo" Role="BridgeGeneralInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RoadAlignmentType">
+              <PropertyRef Name="RoadAlignmentTypeId" />
+            </Principal>
+            <Dependent Role="BridgeGeneralInfo">
+              <PropertyRef Name="RoadAlignmentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="SuperStructure">
+          <Key>
+            <PropertyRef Name="BridgeSuperStructureId" />
+          </Key>
+          <Property Name="BridgeSuperStructureId" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="BridgeTypeId" Type="Int32" />
+          <Property Name="NoOfSpan" Type="Int32" />
+          <Property Name="SpanLengthComposition" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="TotalSpanLength" Type="Double" Nullable="false" />
+          <Property Name="CarriageWayWidth" Type="Double" />
+          <Property Name="SideWalkWidth" Type="Double" />
+          <Property Name="NoOfLane" Type="Int32" />
+          <Property Name="SpanSupportTypeId" Type="Int32" />
+          <Property Name="DeckSlabTypeId" Type="Int32" />
+          <Property Name="SlabThickness" Type="Double" />
+          <Property Name="NoOfGirder" Type="Int32" />
+          <Property Name="GirderDepth" Type="Double" />
+          <Property Name="SpacingGirder" Type="Double" />
+          <Property Name="BoxWidth" Type="Double" />
+          <NavigationProperty Name="Bridge" Relationship="BCMSModel.FK_SuperStructure_Bridge" FromRole="SuperStructure" ToRole="Bridge" />
+          <NavigationProperty Name="BridgeType" Relationship="BCMSModel.FK_SuperStructure_BridgeType" FromRole="SuperStructure" ToRole="BridgeType" />
+          <NavigationProperty Name="DeckSlabType" Relationship="BCMSModel.FK_SuperStructure_DeckSlabType" FromRole="SuperStructure" ToRole="DeckSlabType" />
+          <NavigationProperty Name="SpanSupportType" Relationship="BCMSModel.FK_SuperStructure_SpanSupportType" FromRole="SuperStructure" ToRole="SpanSupportType" />
+        </EntityType>
+        <Association Name="FK_SuperStructure_Bridge">
+          <End Type="BCMSModel.Bridge" Role="Bridge" Multiplicity="1" />
+          <End Type="BCMSModel.SuperStructure" Role="SuperStructure" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Bridge">
+              <PropertyRef Name="BridgeId" />
+            </Principal>
+            <Dependent Role="SuperStructure">
+              <PropertyRef Name="BridgeSuperStructureId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SuperStructure_BridgeType">
+          <End Type="BCMSModel.BridgeType" Role="BridgeType" Multiplicity="0..1" />
+          <End Type="BCMSModel.SuperStructure" Role="SuperStructure" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BridgeType">
+              <PropertyRef Name="BridgeTypeId" />
+            </Principal>
+            <Dependent Role="SuperStructure">
+              <PropertyRef Name="BridgeTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SuperStructure_DeckSlabType">
+          <End Type="BCMSModel.DeckSlabType" Role="DeckSlabType" Multiplicity="0..1" />
+          <End Type="BCMSModel.SuperStructure" Role="SuperStructure" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DeckSlabType">
+              <PropertyRef Name="DeckSlabTypeId" />
+            </Principal>
+            <Dependent Role="SuperStructure">
+              <PropertyRef Name="DeckSlabTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SuperStructure_SpanSupportType">
+          <End Type="BCMSModel.SpanSupportType" Role="SpanSupportType" Multiplicity="0..1" />
+          <End Type="BCMSModel.SuperStructure" Role="SuperStructure" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SpanSupportType">
+              <PropertyRef Name="SpanSupportTypeId" />
+            </Principal>
+            <Dependent Role="SuperStructure">
+              <PropertyRef Name="SpanSupportTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Abutment">
+          <Key>
+            <PropertyRef Name="BridgeAbutementId" />
+          </Key>
+          <Property Name="BridgeAbutementId" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="AbutmentTypeIdA1" Type="Int32" />
+          <Property Name="AbutmentTypeIdA2" Type="Int32" />
+          <Property Name="AbutmentHeightA1" Type="Double" />
+          <Property Name="AbutmentHeightA2" Type="Double" />
+          <Property Name="AbutmentWidthA1" Type="Double" />
+          <Property Name="AbutmentWidthA2" Type="Double" />
+          <Property Name="WingWallLengthA1" Type="Double" />
+          <Property Name="WingWallLengthA2" Type="Double" />
+          <Property Name="FoundationTypeIdA1" Type="Int32" />
+          <Property Name="FoundationTypeIdA2" Type="Int32" />
+          <Property Name="FoundationSizeA1" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="FoundationSizeA2" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="NoOfAbutmentPilesA1" Type="Int32" />
+          <Property Name="NoOfAbutmentPilesA2" Type="Int32" />
+          <Property Name="AbutmentPileDepthA1" Type="Double" />
+          <Property Name="AbutmentPileDepthA2" Type="Double" />
+          <Property Name="SoilType" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="SoilType2" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="NoOfpier" Type="Int32" />
+          <NavigationProperty Name="AbutmentType" Relationship="BCMSModel.FK_Abutment_AbutmentTypeA1" FromRole="Abutment" ToRole="AbutmentType" />
+          <NavigationProperty Name="AbutmentType1" Relationship="BCMSModel.FK_Abutment_AbutmentTypeA2" FromRole="Abutment" ToRole="AbutmentType" />
+          <NavigationProperty Name="Bridge" Relationship="BCMSModel.FK_Abutment_Bridge" FromRole="Abutment" ToRole="Bridge" />
+          <NavigationProperty Name="FoundationType" Relationship="BCMSModel.FK_Abutment_FoundationTypeA1" FromRole="Abutment" ToRole="FoundationType" />
+          <NavigationProperty Name="FoundationType1" Relationship="BCMSModel.FK_Abutment_FoundationTypeA2" FromRole="Abutment" ToRole="FoundationType" />
+        </EntityType>
+        <EntityType Name="Component">
+          <Key>
+            <PropertyRef Name="BridgeComponentId" />
+          </Key>
+          <Property Name="BridgeComponentId" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="ExpansionJointTypeId" Type="Int32" />
+          <Property Name="GuardRailingTypeId" Type="Int32" />
+          <Property Name="AbutmentBearingTypeId" Type="Int32" />
+          <Property Name="PiersBearingTypeId" Type="Int32" />
+          <Property Name="SurfaceTypeId" Type="Int32" />
+          <NavigationProperty Name="BearingType" Relationship="BCMSModel.FK_Components_BearingType" FromRole="Component" ToRole="BearingType" />
+          <NavigationProperty Name="BearingType1" Relationship="BCMSModel.FK_Components_BearingType1" FromRole="Component" ToRole="BearingType" />
+          <NavigationProperty Name="Bridge" Relationship="BCMSModel.FK_Components_Bridge" FromRole="Component" ToRole="Bridge" />
+          <NavigationProperty Name="ExpansionJointType" Relationship="BCMSModel.FK_Components_ExpansionJointType" FromRole="Component" ToRole="ExpansionJointType" />
+          <NavigationProperty Name="GuardRailingType" Relationship="BCMSModel.FK_Components_GuardRailingType" FromRole="Component" ToRole="GuardRailingType" />
+          <NavigationProperty Name="SurfaceType" Relationship="BCMSModel.FK_Components_SurfaceType" FromRole="Component" ToRole="SurfaceType" />
+        </EntityType>
+        <EntityType Name="BridgeDoc">
+          <Key>
+            <PropertyRef Name="BridgeDocId" />
+          </Key>
+          <Property Name="BridgeDocId" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="SerNo" Type="Int32" />
+          <Property Name="DocDate" Type="DateTime" Precision="3" />
+          <Property Name="Description" Type="String" MaxLength="125" FixedLength="false" Unicode="true" />
+          <Property Name="DocPath" Type="String" MaxLength="125" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Bridge" Relationship="BCMSModel.FK_BridgeDoc_Bridge" FromRole="BridgeDoc" ToRole="Bridge" />
+        </EntityType>
+        <EntityType Name="BridgeHistory">
+          <Key>
+            <PropertyRef Name="BridgeHistoryId" />
+          </Key>
+          <Property Name="BridgeHistoryId" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="LineNo" Type="Int16" />
+          <Property Name="HistoryDescr" Type="String" MaxLength="130" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Bridge" Relationship="BCMSModel.FK_BridgeHistory_Bridge" FromRole="BridgeHistory" ToRole="Bridge" />
+        </EntityType>
+        <EntityType Name="Pier">
+          <Key>
+            <PropertyRef Name="BridgePierId" />
+            <PropertyRef Name="PierNo" />
+          </Key>
+          <Property Name="BridgePierId" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="PierNo" Type="Int32" Nullable="false" />
+          <Property Name="PierTypeId" Type="Int32" />
+          <Property Name="HeightOfPier" Type="Double" />
+          <Property Name="WidthOfPier" Type="Double" />
+          <Property Name="FoundationTypeId" Type="Int32" />
+          <Property Name="FoundationDimension" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="NoOfPierPiles" Type="Int32" />
+          <Property Name="PierPileDepth" Type="Double" />
+          <NavigationProperty Name="Bridge" Relationship="BCMSModel.FK_Pier_Bridge" FromRole="Pier" ToRole="Bridge" />
+          <NavigationProperty Name="FoundationType" Relationship="BCMSModel.FK_Pier_FoundationType" FromRole="Pier" ToRole="FoundationType" />
+          <NavigationProperty Name="PierType" Relationship="BCMSModel.FK_Pier_PierType" FromRole="Pier" ToRole="PierType" />
+        </EntityType>
+        <Association Name="FK_Abutment_AbutmentTypeA1">
+          <End Type="BCMSModel.AbutmentType" Role="AbutmentType" Multiplicity="0..1" />
+          <End Type="BCMSModel.Abutment" Role="Abutment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AbutmentType">
+              <PropertyRef Name="AbutmentTypeId" />
+            </Principal>
+            <Dependent Role="Abutment">
+              <PropertyRef Name="AbutmentTypeIdA1" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Abutment_AbutmentTypeA2">
+          <End Type="BCMSModel.AbutmentType" Role="AbutmentType" Multiplicity="0..1" />
+          <End Type="BCMSModel.Abutment" Role="Abutment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AbutmentType">
+              <PropertyRef Name="AbutmentTypeId" />
+            </Principal>
+            <Dependent Role="Abutment">
+              <PropertyRef Name="AbutmentTypeIdA2" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Abutment_Bridge">
+          <End Type="BCMSModel.Bridge" Role="Bridge" Multiplicity="1" />
+          <End Type="BCMSModel.Abutment" Role="Abutment" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Bridge">
+              <PropertyRef Name="BridgeId" />
+            </Principal>
+            <Dependent Role="Abutment">
+              <PropertyRef Name="BridgeAbutementId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Abutment_FoundationTypeA1">
+          <End Type="BCMSModel.FoundationType" Role="FoundationType" Multiplicity="0..1" />
+          <End Type="BCMSModel.Abutment" Role="Abutment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FoundationType">
+              <PropertyRef Name="FoundationTypeId" />
+            </Principal>
+            <Dependent Role="Abutment">
+              <PropertyRef Name="FoundationTypeIdA1" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Abutment_FoundationTypeA2">
+          <End Type="BCMSModel.FoundationType" Role="FoundationType" Multiplicity="0..1" />
+          <End Type="BCMSModel.Abutment" Role="Abutment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FoundationType">
+              <PropertyRef Name="FoundationTypeId" />
+            </Principal>
+            <Dependent Role="Abutment">
+              <PropertyRef Name="FoundationTypeIdA2" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Components_BearingType">
+          <End Type="BCMSModel.BearingType" Role="BearingType" Multiplicity="0..1" />
+          <End Type="BCMSModel.Component" Role="Component" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BearingType">
+              <PropertyRef Name="BearingTypeId" />
+            </Principal>
+            <Dependent Role="Component">
+              <PropertyRef Name="AbutmentBearingTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Components_BearingType1">
+          <End Type="BCMSModel.BearingType" Role="BearingType" Multiplicity="0..1" />
+          <End Type="BCMSModel.Component" Role="Component" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BearingType">
+              <PropertyRef Name="BearingTypeId" />
+            </Principal>
+            <Dependent Role="Component">
+              <PropertyRef Name="PiersBearingTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BridgeDoc_Bridge">
+          <End Type="BCMSModel.Bridge" Role="Bridge" Multiplicity="1" />
+          <End Type="BCMSModel.BridgeDoc" Role="BridgeDoc" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Bridge">
+              <PropertyRef Name="BridgeId" />
+            </Principal>
+            <Dependent Role="BridgeDoc">
+              <PropertyRef Name="BridgeDocId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BridgeHistory_Bridge">
+          <End Type="BCMSModel.Bridge" Role="Bridge" Multiplicity="1" />
+          <End Type="BCMSModel.BridgeHistory" Role="BridgeHistory" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Bridge">
+              <PropertyRef Name="BridgeId" />
+            </Principal>
+            <Dependent Role="BridgeHistory">
+              <PropertyRef Name="BridgeHistoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Components_Bridge">
+          <End Type="BCMSModel.Bridge" Role="Bridge" Multiplicity="1" />
+          <End Type="BCMSModel.Component" Role="Component" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Bridge">
+              <PropertyRef Name="BridgeId" />
+            </Principal>
+            <Dependent Role="Component">
+              <PropertyRef Name="BridgeComponentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Pier_Bridge">
+          <End Type="BCMSModel.Bridge" Role="Bridge" Multiplicity="1" />
+          <End Type="BCMSModel.Pier" Role="Pier" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Bridge">
+              <PropertyRef Name="BridgeId" />
+            </Principal>
+            <Dependent Role="Pier">
+              <PropertyRef Name="BridgePierId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Components_ExpansionJointType">
+          <End Type="BCMSModel.ExpansionJointType" Role="ExpansionJointType" Multiplicity="0..1" />
+          <End Type="BCMSModel.Component" Role="Component" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ExpansionJointType">
+              <PropertyRef Name="ExpansionJointTypeId" />
+            </Principal>
+            <Dependent Role="Component">
+              <PropertyRef Name="ExpansionJointTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Components_GuardRailingType">
+          <End Type="BCMSModel.GuardRailingType" Role="GuardRailingType" Multiplicity="0..1" />
+          <End Type="BCMSModel.Component" Role="Component" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GuardRailingType">
+              <PropertyRef Name="GuardRailingTypeId" />
+            </Principal>
+            <Dependent Role="Component">
+              <PropertyRef Name="GuardRailingTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Components_SurfaceType">
+          <End Type="BCMSModel.SurfaceType" Role="SurfaceType" Multiplicity="0..1" />
+          <End Type="BCMSModel.Component" Role="Component" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SurfaceType">
+              <PropertyRef Name="SurfaceTypeId" />
+            </Principal>
+            <Dependent Role="Component">
+              <PropertyRef Name="SurfaceTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Pier_FoundationType">
+          <End Type="BCMSModel.FoundationType" Role="FoundationType" Multiplicity="0..1" />
+          <End Type="BCMSModel.Pier" Role="Pier" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FoundationType">
+              <PropertyRef Name="FoundationTypeId" />
+            </Principal>
+            <Dependent Role="Pier">
+              <PropertyRef Name="FoundationTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Pier_PierType">
+          <End Type="BCMSModel.PierType" Role="PierType" Multiplicity="0..1" />
+          <End Type="BCMSModel.Pier" Role="Pier" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PierType">
+              <PropertyRef Name="PierTypeId" />
+            </Principal>
+            <Dependent Role="Pier">
+              <PropertyRef Name="PierTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ImageVideoDrawing">
+          <Key>
+            <PropertyRef Name="BridgeImageId" />
+          </Key>
+          <Property Name="BridgeImageId" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="BudgetYear" Type="Int32" />
+          <Property Name="PictureType" Type="Int16" />
+          <Property Name="PictureId" Type="Int32" />
+          <Property Name="PicDate" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="PicDescr" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PicFileName" Type="String" MaxLength="180" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Bridge" Relationship="BCMSModel.FK_ImageVideoDrawing_Bridge" FromRole="ImageVideoDrawing" ToRole="Bridge" />
+        </EntityType>
+        <Association Name="FK_ImageVideoDrawing_Bridge">
+          <End Type="BCMSModel.Bridge" Role="Bridge" Multiplicity="1" />
+          <End Type="BCMSModel.ImageVideoDrawing" Role="ImageVideoDrawing" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Bridge">
+              <PropertyRef Name="BridgeId" />
+            </Principal>
+            <Dependent Role="ImageVideoDrawing">
+              <PropertyRef Name="BridgeImageId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="BCMSModelStoreContainer" CdmEntityContainer="BCMSEntities">
+          <EntitySetMapping Name="AbutmentTypes">
+            <EntityTypeMapping TypeName="BCMSModel.AbutmentType">
+              <MappingFragment StoreEntitySet="AbutmentType">
+                <ScalarProperty Name="Remark" ColumnName="Remark" />
+                <ScalarProperty Name="AbutmentTypeName" ColumnName="AbutmentTypeName" />
+                <ScalarProperty Name="AbutmentTypeId" ColumnName="AbutmentTypeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BearingTypes">
+            <EntityTypeMapping TypeName="BCMSModel.BearingType">
+              <MappingFragment StoreEntitySet="BearingType">
+                <ScalarProperty Name="Remark" ColumnName="Remark" />
+                <ScalarProperty Name="BearingTypeName" ColumnName="BearingTypeName" />
+                <ScalarProperty Name="BearingTypeId" ColumnName="BearingTypeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BridgeTypes">
+            <EntityTypeMapping TypeName="BCMSModel.BridgeType">
+              <MappingFragment StoreEntitySet="BridgeType">
+                <ScalarProperty Name="Remark" ColumnName="Remark" />
+                <ScalarProperty Name="BridgeTypeShortCode" ColumnName="BridgeTypeShortCode" />
+                <ScalarProperty Name="BridgeTypeName" ColumnName="BridgeTypeName" />
+                <ScalarProperty Name="BridgeTypeId" ColumnName="BridgeTypeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DeckSlabTypes">
+            <EntityTypeMapping TypeName="BCMSModel.DeckSlabType">
+              <MappingFragment StoreEntitySet="DeckSlabType">
+                <ScalarProperty Name="Remark" ColumnName="Remark" />
+                <ScalarProperty Name="DeckSlabTypeName" ColumnName="DeckSlabTypeName" />
+                <ScalarProperty Name="DeckSlabTypeId" ColumnName="DeckSlabTypeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Districts">
+            <EntityTypeMapping TypeName="BCMSModel.District">
+              <MappingFragment StoreEntitySet="District">
+                <ScalarProperty Name="Remark" ColumnName="Remark" />
+                <ScalarProperty Name="DistrictName" ColumnName="DistrictName" />
+                <ScalarProperty Name="DistrictId" ColumnName="DistrictId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ExpansionJointTypes">
+            <EntityTypeMapping TypeName="BCMSModel.ExpansionJointType">
+              <MappingFragment StoreEntitySet="ExpansionJointType">
+                <ScalarProperty Name="Remark" ColumnName="Remark" />
+                <ScalarProperty Name="ExpansionJointTypeName" ColumnName="ExpansionJointTypeName" />
+                <ScalarProperty Name="ExpansionJointTypeId" ColumnName="ExpansionJointTypeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FoundationTypes">
+            <EntityTypeMapping TypeName="BCMSModel.FoundationType">
+              <MappingFragment StoreEntitySet="FoundationType">
+                <ScalarProperty Name="Remark" ColumnName="Remark" />
+                <ScalarProperty Name="FoundationTypeName" ColumnName="FoundationTypeName" />
+                <ScalarProperty Name="FoundationTypeId" ColumnName="FoundationTypeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GuardRailingTypes">
+            <EntityTypeMapping TypeName="BCMSModel.GuardRailingType">
+              <MappingFragment StoreEntitySet="GuardRailingType">
+                <ScalarProperty Name="Remark" ColumnName="Remark" />
+                <ScalarProperty Name="GuardRailingTypeName" ColumnName="GuardRailingTypeName" />
+                <ScalarProperty Name="GuardRailingTypeId" ColumnName="GuardRailingTypeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PierTypes">
+            <EntityTypeMapping TypeName="BCMSModel.PierType">
+              <MappingFragment StoreEntitySet="PierType">
+                <ScalarProperty Name="Remark" ColumnName="Remark" />
+                <ScalarProperty Name="PierTypeName" ColumnName="PierTypeName" />
+                <ScalarProperty Name="PierTypeId" ColumnName="PierTypeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RoadAlignmentTypes">
+            <EntityTypeMapping TypeName="BCMSModel.RoadAlignmentType">
+              <MappingFragment StoreEntitySet="RoadAlignmentType">
+                <ScalarProperty Name="Remark" ColumnName="Remark" />
+                <ScalarProperty Name="RoadAlignmentTypeName" ColumnName="RoadAlignmentTypeName" />
+                <ScalarProperty Name="RoadAlignmentTypeId" ColumnName="RoadAlignmentTypeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RoadTypes">
+            <EntityTypeMapping TypeName="BCMSModel.RoadType">
+              <MappingFragment StoreEntitySet="RoadType">
+                <ScalarProperty Name="Remark" ColumnName="Remark" />
+                <ScalarProperty Name="RoadTypeName" ColumnName="RoadTypeName" />
+                <ScalarProperty Name="RoadTypeId" ColumnName="RoadTypeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Routes">
+            <EntityTypeMapping TypeName="BCMSModel.Route">
+              <MappingFragment StoreEntitySet="Route">
+                <ScalarProperty Name="Remark" ColumnName="Remark" />
+                <ScalarProperty Name="ADT" ColumnName="ADT" />
+                <ScalarProperty Name="Length" ColumnName="Length" />
+                <ScalarProperty Name="ToKm" ColumnName="ToKm" />
+                <ScalarProperty Name="FromKm" ColumnName="FromKm" />
+                <ScalarProperty Name="MainRoadId" ColumnName="MainRoadId" />
+                <ScalarProperty Name="RouteSerNo" ColumnName="RouteSerNo" />
+                <ScalarProperty Name="RouteName" ColumnName="RouteName" />
+                <ScalarProperty Name="RouteId" ColumnName="RouteId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Sections">
+            <EntityTypeMapping TypeName="BCMSModel.Section">
+              <MappingFragment StoreEntitySet="Section">
+                <ScalarProperty Name="Remark" ColumnName="Remark" />
+                <ScalarProperty Name="DistrictId" ColumnName="DistrictId" />
+                <ScalarProperty Name="SectionName" ColumnName="SectionName" />
+                <ScalarProperty Name="SectionId" ColumnName="SectionId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Segments">
+            <EntityTypeMapping TypeName="BCMSModel.Segment">
+              <MappingFragment StoreEntitySet="Segment">
+                <ScalarProperty Name="Remark" ColumnName="Remark" />
+                <ScalarProperty Name="SectionId" ColumnName="SectionId" />
+                <ScalarProperty Name="SegmentName" ColumnName="SegmentName" />
+                <ScalarProperty Name="SegmentId" ColumnName="SegmentId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SpanSupportTypes">
+            <EntityTypeMapping TypeName="BCMSModel.SpanSupportType">
+              <MappingFragment StoreEntitySet="SpanSupportType">
+                <ScalarProperty Name="Remark" ColumnName="Remark" />
+                <ScalarProperty Name="SpanSupportTypeName" ColumnName="SpanSupportTypeName" />
+                <ScalarProperty Name="SpanSupportTypeId" ColumnName="SpanSupportTypeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SurfaceTypes">
+            <EntityTypeMapping TypeName="BCMSModel.SurfaceType">
+              <MappingFragment StoreEntitySet="SurfaceType">
+                <ScalarProperty Name="Remark" ColumnName="Remark" />
+                <ScalarProperty Name="SurfaceTypeName" ColumnName="SurfaceTypeName" />
+                <ScalarProperty Name="SurfaceTypeId" ColumnName="SurfaceTypeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GirderTypes">
+            <EntityTypeMapping TypeName="BCMSModel.GirderType">
+              <MappingFragment StoreEntitySet="GirderType">
+                <ScalarProperty Name="Remark" ColumnName="Remark" />
+                <ScalarProperty Name="GirderTypeName" ColumnName="GirderTypeName" />
+                <ScalarProperty Name="GirderTypeId" ColumnName="GirderTypeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Bridges">
+            <EntityTypeMapping TypeName="BCMSModel.Bridge">
+              <MappingFragment StoreEntitySet="Bridge">
+                <ScalarProperty Name="BudgetYearComment" ColumnName="BudgetYearComment" />
+                <ScalarProperty Name="BudgetYear" ColumnName="BudgetYear" />
+                <ScalarProperty Name="GirderTypeId" ColumnName="GirderTypeId" />
+                <ScalarProperty Name="YCoord" ColumnName="YCoord" />
+                <ScalarProperty Name="XCoord" ColumnName="XCoord" />
+                <ScalarProperty Name="KMFromAddis" ColumnName="KMFromAddis" />
+                <ScalarProperty Name="RouteId" ColumnName="RouteId" />
+                <ScalarProperty Name="SegmentId" ColumnName="SegmentId" />
+                <ScalarProperty Name="BridgeSerNo" ColumnName="BridgeSerNo" />
+                <ScalarProperty Name="BridgeName" ColumnName="BridgeName" />
+                <ScalarProperty Name="BridgeId" ColumnName="BridgeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Culverts">
+            <EntityTypeMapping TypeName="BCMSModel.Culvert">
+              <MappingFragment StoreEntitySet="Culvert">
+                <ScalarProperty Name="YCoord" ColumnName="YCoord" />
+                <ScalarProperty Name="XCoord" ColumnName="XCoord" />
+                <ScalarProperty Name="KMFromAddis" ColumnName="KMFromAddis" />
+                <ScalarProperty Name="RouteId" ColumnName="RouteId" />
+                <ScalarProperty Name="SegmentId" ColumnName="SegmentId" />
+                <ScalarProperty Name="CulvertName" ColumnName="CulvertName" />
+                <ScalarProperty Name="CulvertId" ColumnName="CulvertId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BridgeGeneralInfoes">
+            <EntityTypeMapping TypeName="BCMSModel.BridgeGeneralInfo">
+              <MappingFragment StoreEntitySet="BridgeGeneralInfo">
+                <ScalarProperty Name="Detour" ColumnName="Detour" />
+                <ScalarProperty Name="SafetySign" ColumnName="SafetySign" />
+                <ScalarProperty Name="BridgeCost" ColumnName="BridgeCost" />
+                <ScalarProperty Name="Designer" ColumnName="Designer" />
+                <ScalarProperty Name="Contractor" ColumnName="Contractor" />
+                <ScalarProperty Name="BeforeYear" ColumnName="BeforeYear" />
+                <ScalarProperty Name="ConstructionYear" ColumnName="ConstructionYear" />
+                <ScalarProperty Name="RoadAlignmentId" ColumnName="RoadAlignmentId" />
+                <ScalarProperty Name="Altitude" ColumnName="Altitude" />
+                <ScalarProperty Name="Topography" ColumnName="Topography" />
+                <ScalarProperty Name="DailyTraffic" ColumnName="DailyTraffic" />
+                <ScalarProperty Name="LoadCapacity" ColumnName="LoadCapacity" />
+                <ScalarProperty Name="HighestWaterLevel" ColumnName="HighestWaterLevel" />
+                <ScalarProperty Name="PresentWaterLevel" ColumnName="PresentWaterLevel" />
+                <ScalarProperty Name="RiverWidth" ColumnName="RiverWidth" />
+                <ScalarProperty Name="BridgeWidth" ColumnName="BridgeWidth" />
+                <ScalarProperty Name="TotBridgeLength" ColumnName="TotBridgeLength" />
+                <ScalarProperty Name="BridgeLength" ColumnName="BridgeLength" />
+                <ScalarProperty Name="BridgeGenInfoId" ColumnName="BridgeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SuperStructures">
+            <EntityTypeMapping TypeName="BCMSModel.SuperStructure">
+              <MappingFragment StoreEntitySet="SuperStructure">
+                <ScalarProperty Name="BoxWidth" ColumnName="BoxWidth" />
+                <ScalarProperty Name="SpacingGirder" ColumnName="SpacingGirder" />
+                <ScalarProperty Name="GirderDepth" ColumnName="GirderDepth" />
+                <ScalarProperty Name="NoOfGirder" ColumnName="NoOfGirder" />
+                <ScalarProperty Name="SlabThickness" ColumnName="SlabThickness" />
+                <ScalarProperty Name="DeckSlabTypeId" ColumnName="DeckSlabTypeId" />
+                <ScalarProperty Name="SpanSupportTypeId" ColumnName="SpanSupportTypeId" />
+                <ScalarProperty Name="NoOfLane" ColumnName="NoOfLane" />
+                <ScalarProperty Name="SideWalkWidth" ColumnName="SideWalkWidth" />
+                <ScalarProperty Name="CarriageWayWidth" ColumnName="CarriageWayWidth" />
+                <ScalarProperty Name="TotalSpanLength" ColumnName="TotalSpanLength" />
+                <ScalarProperty Name="SpanLengthComposition" ColumnName="SpanLengthComposition" />
+                <ScalarProperty Name="NoOfSpan" ColumnName="NoOfSpan" />
+                <ScalarProperty Name="BridgeTypeId" ColumnName="BridgeTypeId" />
+                <ScalarProperty Name="BridgeSuperStructureId" ColumnName="BridgeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Abutments">
+            <EntityTypeMapping TypeName="BCMSModel.Abutment">
+              <MappingFragment StoreEntitySet="Abutment">
+                <ScalarProperty Name="NoOfpier" ColumnName="NoOfpier" />
+                <ScalarProperty Name="SoilType2" ColumnName="SoilType2" />
+                <ScalarProperty Name="SoilType" ColumnName="SoilType" />
+                <ScalarProperty Name="AbutmentPileDepthA2" ColumnName="AbutmentPileDepthA2" />
+                <ScalarProperty Name="AbutmentPileDepthA1" ColumnName="AbutmentPileDepthA1" />
+                <ScalarProperty Name="NoOfAbutmentPilesA2" ColumnName="NoOfAbutmentPilesA2" />
+                <ScalarProperty Name="NoOfAbutmentPilesA1" ColumnName="NoOfAbutmentPilesA1" />
+                <ScalarProperty Name="FoundationSizeA2" ColumnName="FoundationSizeA2" />
+                <ScalarProperty Name="FoundationSizeA1" ColumnName="FoundationSizeA1" />
+                <ScalarProperty Name="FoundationTypeIdA2" ColumnName="FoundationTypeIdA2" />
+                <ScalarProperty Name="FoundationTypeIdA1" ColumnName="FoundationTypeIdA1" />
+                <ScalarProperty Name="WingWallLengthA2" ColumnName="WingWallLengthA2" />
+                <ScalarProperty Name="WingWallLengthA1" ColumnName="WingWallLengthA1" />
+                <ScalarProperty Name="AbutmentWidthA2" ColumnName="AbutmentWidthA2" />
+                <ScalarProperty Name="AbutmentWidthA1" ColumnName="AbutmentWidthA1" />
+                <ScalarProperty Name="AbutmentHeightA2" ColumnName="AbutmentHeightA2" />
+                <ScalarProperty Name="AbutmentHeightA1" ColumnName="AbutmentHeightA1" />
+                <ScalarProperty Name="AbutmentTypeIdA2" ColumnName="AbutmentTypeIdA2" />
+                <ScalarProperty Name="AbutmentTypeIdA1" ColumnName="AbutmentTypeIdA1" />
+                <ScalarProperty Name="BridgeAbutementId" ColumnName="BridgeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Components">
+            <EntityTypeMapping TypeName="BCMSModel.Component">
+              <MappingFragment StoreEntitySet="Components">
+                <ScalarProperty Name="SurfaceTypeId" ColumnName="SurfaceTypeId" />
+                <ScalarProperty Name="PiersBearingTypeId" ColumnName="PiersBearingTypeId" />
+                <ScalarProperty Name="AbutmentBearingTypeId" ColumnName="AbutmentBearingTypeId" />
+                <ScalarProperty Name="GuardRailingTypeId" ColumnName="GuardRailingTypeId" />
+                <ScalarProperty Name="ExpansionJointTypeId" ColumnName="ExpansionJointTypeId" />
+                <ScalarProperty Name="BridgeComponentId" ColumnName="BridgeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BridgeDocs">
+            <EntityTypeMapping TypeName="BCMSModel.BridgeDoc">
+              <MappingFragment StoreEntitySet="BridgeDoc">
+                <ScalarProperty Name="DocPath" ColumnName="DocPath" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="DocDate" ColumnName="DocDate" />
+                <ScalarProperty Name="SerNo" ColumnName="SerNo" />
+                <ScalarProperty Name="BridgeDocId" ColumnName="BridgeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BridgeHistories">
+            <EntityTypeMapping TypeName="BCMSModel.BridgeHistory">
+              <MappingFragment StoreEntitySet="BridgeHistory">
+                <ScalarProperty Name="HistoryDescr" ColumnName="HistoryDescr" />
+                <ScalarProperty Name="LineNo" ColumnName="LineNo" />
+                <ScalarProperty Name="BridgeHistoryId" ColumnName="BridgeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Piers">
+            <EntityTypeMapping TypeName="BCMSModel.Pier">
+              <MappingFragment StoreEntitySet="Pier">
+                <ScalarProperty Name="PierPileDepth" ColumnName="PierPileDepth" />
+                <ScalarProperty Name="NoOfPierPiles" ColumnName="NoOfPierPiles" />
+                <ScalarProperty Name="FoundationDimension" ColumnName="FoundationDimension" />
+                <ScalarProperty Name="FoundationTypeId" ColumnName="FoundationTypeId" />
+                <ScalarProperty Name="WidthOfPier" ColumnName="WidthOfPier" />
+                <ScalarProperty Name="HeightOfPier" ColumnName="HeightOfPier" />
+                <ScalarProperty Name="PierTypeId" ColumnName="PierTypeId" />
+                <ScalarProperty Name="PierNo" ColumnName="PierNo" />
+                <ScalarProperty Name="BridgePierId" ColumnName="BridgeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ImageVideoDrawings">
+            <EntityTypeMapping TypeName="BCMSModel.ImageVideoDrawing">
+              <MappingFragment StoreEntitySet="ImageVideoDrawing">
+                <ScalarProperty Name="PicFileName" ColumnName="PicFileName" />
+                <ScalarProperty Name="PicDescr" ColumnName="PicDescr" />
+                <ScalarProperty Name="PicDate" ColumnName="PicDate" />
+                <ScalarProperty Name="PictureId" ColumnName="PictureId" />
+                <ScalarProperty Name="PictureType" ColumnName="PictureType" />
+                <ScalarProperty Name="BudgetYear" ColumnName="BudgetYear" />
+                <ScalarProperty Name="BridgeImageId" ColumnName="BridgeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

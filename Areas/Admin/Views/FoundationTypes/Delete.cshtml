@@ -1,0 +1,48 @@
+﻿@model ERA_BCMS.Models.FoundationType
+
+@{
+    ViewBag.Title = "Delete Foundation Type";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Foundation Type</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.FoundationTypeId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FoundationTypeId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FoundationTypeName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FoundationTypeName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Remark)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Remark)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-danger" />
+            @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+        </div>
+    }
+</div>

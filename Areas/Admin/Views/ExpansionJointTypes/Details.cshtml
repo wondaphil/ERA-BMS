@@ -1,0 +1,42 @@
+﻿@model ERA_BCMS.Models.ExpansionJointType
+
+@{
+    ViewBag.Title = "Expansion Joint Type";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Expansion Joint Type</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ExpansionJointTypeId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ExpansionJointTypeId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ExpansionJointTypeName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ExpansionJointTypeName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Remark)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Remark)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ExpansionJointTypeId }, new { @class = "btn btn-primary" })
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</p>

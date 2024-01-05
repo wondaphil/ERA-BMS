@@ -1,0 +1,45 @@
+﻿@model IEnumerable<ERA_BCMS.Models.Segment>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.SegmentName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Remark)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Section.SectionName)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.SegmentName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Remark)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Section.SectionName)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.SegmentId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.SegmentId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.SegmentId })
+        </td>
+    </tr>
+}
+
+</table>

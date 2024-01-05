@@ -1,0 +1,42 @@
+﻿@model ERA_BCMS.Models.PierType
+
+@{
+    ViewBag.Title = "Pier Type";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Pier Type</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.PierTypeId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PierTypeId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PierTypeName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PierTypeName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Remark)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Remark)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.PierTypeId }, new { @class = "btn btn-primary" })
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</p>
