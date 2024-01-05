@@ -1,20 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Entity;
+using System.Data.Entity; using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using ERA_BCMS.Models;
+using ERA_BMS.Models;
 
-namespace ERA_BCMS.Areas.Admin.Controllers
+namespace ERA_BMS.Areas.Admin.Controllers
 {
     //Only Admins should have access
     [Authorize(Roles = "Admin")]
     public class BearingTypesController : Controller
     {
-        private BCMSEntities db = new BCMSEntities();
+        private BMSEntities db = new BMSEntities();
 
         // GET: Admin/BearingTypes
         public ActionResult Index()
@@ -39,23 +39,32 @@ namespace ERA_BCMS.Areas.Admin.Controllers
             return View(bearingType);
         }
 
-        // GET: Admin/BearingTypes/Create
-        public ActionResult Create()
+        // GET: Admin/BearingTypes/New
+        public ActionResult New()
         {
             return View();
         }
 
-        // POST: Admin/BearingTypes/Create
+        // POST: Admin/BearingTypes/New
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "BearingTypeId,BearingTypeName")] BearingType bearingType)
+        public ActionResult New([Bind(Include = "BearingTypeId,BearingTypeName")] BearingType bearingType)
         {
             if (ModelState.IsValid)
             {
                 db.BearingTypes.Add(bearingType);
-                db.SaveChanges();
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch (Exception e) when (e.InnerException?.InnerException is SqlException sqlEx
+                                            && (sqlEx.Number == 2601 || sqlEx.Number == 2627))
+                {
+                    return RedirectToAction("DuplicateError", "ErrorHandler", new { area = "" });
+                }
+
                 return RedirectToAction("Details", new { id = bearingType.BearingTypeId });
             }
 

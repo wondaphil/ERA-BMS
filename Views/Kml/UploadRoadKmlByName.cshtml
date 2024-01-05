@@ -1,0 +1,79 @@
+﻿
+@{
+    ViewBag.Title = "Upload Road Kml By Name";
+}
+
+<h2>Upload Road Kml By Name</h2>
+
+<div class="row">
+    <hr />
+
+    <div class="col-md-6 col-xs-12">
+        <table>
+            <tr id="bysegmentno">
+                <td style="padding: 5px; font-size:medium"><b>Type Road Segment Name: </b></td>
+                <td style="padding: 5px; font-size:medium">@Html.TextBox("Term", null, new { @class = "control-control" })</td>
+                <td style="padding: 5px">
+                    <button type="button" id="search" class="btn btn-primary glyphicon glyphicon-search"></button>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div class="col-xs-12">
+    <div id="segmenKmlUploadPartial">
+        <!-- Segment/culvert info displays here -->
+    </div>
+</div>
+
+<div id="wait" align="center" style="display: none">
+    <img src="~/images/searching.gif" width="65" height="65" />
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#Term').autocomplete({
+            source: '@Url.Action("GetSegmentListContaining", "Kml")',
+            minLength: 2, // works only after 2 character are entered
+            select: function (event, ui) {
+                $('#Term').val(ui.item.value);
+                $('#search').trigger('click');
+            }
+        });
+
+        // Select all text on focus
+        $("#Term").click(function () {
+            $(this).select();
+        });
+
+        $('#search').click(function () {
+            var enteredTerm = $('#Term').val();
+
+            $('#error').text("");
+            $('#segmenKmlUploadPartial').empty(); // clear the segment/culvert info place holder
+            $('#mapdiv').hide();
+            
+            if (enteredTerm == "") // if input is not entered
+            {
+                $('#error').text("Please enter Segment Id or Name!");
+            }
+            else {
+                $.ajax({
+                    url: '@Url.Action("_FindSegmentByName", "Kml")',
+                    data: { term: enteredTerm },
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () { $('#wait').show(); },
+                    complete: function () { $('#wait').hide(); },
+                    success: function (data) {
+                        $('#segmenKmlUploadPartial').html(data);
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+
+

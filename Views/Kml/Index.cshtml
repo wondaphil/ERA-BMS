@@ -1,0 +1,184 @@
+﻿@model ERA_BMS.Models.Segment
+
+@{
+    ViewBag.Title = "Upload Kml File";
+}
+
+<h2>Upload Kml File</h2>
+
+@using (Html.BeginForm())
+{
+    <div class="panel panel-default">
+        <div class="panel-body">
+
+            @Html.AntiForgeryToken()
+
+            <div class="row">
+                <div class="col-sm-4 col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group">
+                            <label class="control-label col-md-2">District</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("ddlDistrict", new SelectList(ViewBag.Districts, "Value", "Text", ViewBag.DistrictId), htmlAttributes: new { @class = "form-control" })
+                                <div class="clearfix visible-lg visible-md visible-sm visible-xs"></div> <!-- Add clearfix (or new line break) for only the sm -->
+                                <br />
+                                <button type="button" class="btn btn-primary" id="uploaddistrictkml" data-toggle="tooltip" title="Upload District Kml File"><span class="glyphicon glyphicon-upload"></span> District Kml</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-4 col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group">
+                            <label class="control-label col-md-2">Section</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("ddlSection", new SelectList(ViewBag.Sections, "Value", "Text", ViewBag.SectionId), htmlAttributes: new { @class = "form-control" })
+                                <div class="clearfix visible-lg visible-md visible-sm visible-xs"></div> <!-- Add clearfix (or new line break) for only the sm -->
+                                <br />
+                                <button type="button" class="btn btn-primary" id="uploadsectionkml" data-toggle="tooltip" title="Upload Section Kml File"><span class="glyphicon glyphicon-upload"></span> Section Kml</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="clearfix visible-xs"></div> <!-- Add clearfix (or new line break) for only the xs -->
+
+                <div class="col-sm-4 col-xs-12">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group">
+                            <label class="control-label col-md-2 col-sm-6 col-xs-6">Road Segment</label>
+                            <div class="clearfix visible-xs"></div> <!-- Add clearfix (or new line break) for only the xs -->
+                            <div class="col-md-8 col-sm-12 col-xs-6">
+                                @Html.DropDownList("ddlSegment", new SelectList(ViewBag.Segments, "Value", "Text", ViewBag.SegmentId), htmlAttributes: new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="uploadKmlPartial">
+        <!-- Road Segment list displays here -->
+        @if (Model != null)
+        {
+            @Html.Partial("_GetSegmentKmlUpload", Model, new ViewDataDictionary());
+        }
+    </div>
+}
+
+<div id="wait" align="center" style="display: none">
+    <img src="~/images/ajax-loader-big.gif" />
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#ddlDistrict').change(function () {
+            var selDistrictId = $('#ddlDistrict option:selected').val();
+            $('#ddlSection option').remove(); //empty the section dropdown list
+            $('#ddlSegment option').remove(); //empty the segment dropdown list
+            $('#uploadKmlPartial').empty(); // clear the upload kml place holder
+
+            if (selDistrictId != "0") //if some district is selected
+            {
+                $.ajax({
+                    url: '@Url.Action("_GetSections", "LocationsDDL")',
+                    data: { districtid: selDistrictId },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        var markup = '<option value="0" id="noselect"> --Select Section --</option>';
+                        $.each(data, function (i, section) {
+                            markup += '<option value="' + section.Value + '">' + section.Text + '</option>'
+                            $('#ddlSection').html(markup);
+                        });
+                    }
+                });
+            }
+        });
+
+        $('#ddlSection').change(function () {
+            var selSectionId = $('#ddlSection option:selected').val();
+            $('#ddlSegment option').remove(); //empty the segment dropdown list
+            $('#uploadKmlPartial').empty(); // clear the upload kml place holder
+
+            if (selSectionId != "0") //if some section is selected
+            {
+                $.ajax({
+                    url: '@Url.Action("_GetSegments", "LocationsDDL")',
+                    data: { sectionid: selSectionId },
+                    type: 'GET',
+                    ataType: 'json',
+                    success: function (data) {
+                        var markup = '<option value="0" id="noselect"> --Select Segment --</option>';
+                        $.each(data, function (i, segment) {
+                            markup += '<option value="' + segment.Value + '">' + segment.Text + '</option>'
+                            $('#ddlSegment').html(markup);
+                        });
+                    }
+                });
+            }
+        });
+
+        $('#ddlSegment').change(function () {
+            var selSegmentId = $('#ddlSegment option:selected').val();
+            $('#uploadKmlPartial').empty(); // clear the segment place holder
+            
+            if (selSegmentId != "0") //if some segment is selected
+            {
+                $.ajax({
+                    url: '@Url.Action("_GetSegmentKmlUpload", "Kml")',
+                    data: { segmentid: selSegmentId },
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () { $('#wait').show(); },
+                    complete: function () { $('#wait').hide(); },
+                    success: function (data) {
+                        $('#uploadKmlPartial').html(data);
+                    }
+                });
+            }
+        });
+
+        $('#uploaddistrictkml').click(function () {
+            var selDistrictId = $('#ddlDistrict option:selected').val();
+            $('#uploadKmlPartial').empty(); // clear the upload kml place holder
+
+            if (selDistrictId != "0" && typeof selDistrictId != 'undefined') //if some district is selected
+            {
+                $.ajax({
+                    url: '@Url.Action("_GetDistrictKmlUpload", "Kml")',
+                    data: { districtId: selDistrictId },
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () { $('#wait').show(); },
+                    complete: function () { $('#wait').hide(); },
+                    success: function (data) {
+                        $('#uploadKmlPartial').html(data);
+                    }
+                });
+            }
+        });
+
+        $('#uploadsectionkml').click(function () {
+            var selSectionId = $('#ddlSection option:selected').val();
+            $('#uploadKmlPartial').empty(); // clear the upload kml place holder
+
+            if (selSectionId != "0" && typeof selSectionId != 'undefined') //if some section is selected
+            {
+                $.ajax({
+                    url: '@Url.Action("_GetSectionKmlUpload", "Kml")',
+                    data: { sectionId: selSectionId },
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () { $('#wait').show(); },
+                    complete: function () { $('#wait').hide(); },
+                    success: function (data) {
+                        $('#uploadKmlPartial').html(data);
+                    }
+                });
+            }
+        });
+    });
+
+</script>

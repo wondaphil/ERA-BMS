@@ -1,0 +1,36 @@
+﻿@model ERA_BMS.ViewModels.ImageGalleryModel
+
+@{
+    ViewBag.Title = "Culvert Image Gallery";
+}
+
+<h2>Culvert: <b>@TempData["CulvertNo"]</b></h2>
+
+@if (Model == null)
+{
+    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-10" align="center">
+        <h4><b>No Culvert selected</b></h4>
+    </div>
+}
+else
+{
+
+    <fieldset align="center">
+        <div id="galleryview">
+            @{ Html.RenderPartial("_ImagePartial", Model); }
+        </div>
+    </fieldset>
+
+    <fieldset align="center">
+        @using (Ajax.BeginForm("GetNextOrPrevCulvertAllImage", "ImageGallery", new { culvertid = TempData["CulvertId"] },
+                                        new AjaxOptions { HttpMethod = "Post", UpdateTargetId = "galleryview" }))
+        {
+
+            <button type="submit" id="btnPrev" name="ButtonType" value="prev" class="btn btn-primary" data-toggle="tooltip" title="Previous" ><span class="glyphicon glyphicon-backward"></span> </button>
+            <span>&nbsp; &nbsp; &nbsp;</span>
+            <button type="submit" id="btnNext" name="ButtonType" value="next" class="btn btn-primary" data-toggle="tooltip" title="Next" ><span class="glyphicon glyphicon-forward"></span> </button>
+        }
+    </fieldset>
+
+}
+

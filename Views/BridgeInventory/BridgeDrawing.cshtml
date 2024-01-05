@@ -1,0 +1,263 @@
+﻿@model IEnumerable<ERA_BMS.Models.BridgeMedia>
+
+@{
+    ViewBag.Title = "Bridge Drawing Inventory";
+    ViewBag.BridgeId = TempData["BridgeId"].ToString();
+}
+
+<table class="table table-striped table-condensed table-responsive" id="tblDistricts">
+    <tr>
+        <th style="width:100px">SerNo</th>
+        <th style="width:150px">DocDate</th>
+        <th style="width:150px">Description</th>
+        <th style="width:100px">DocFilePath</th>
+        <th style="width:150px"></th>
+    </tr>
+    @foreach (var bridgeDrawing in Model)
+    {
+        <tr>
+            <td class="MediaId">
+                <span>@bridgeDrawing.MediaTypeId</span>
+                <input type="text" value="@bridgeDrawing.MediaTypeId" style="display:none" />
+            </td>
+            <td class="Description">
+                <span>@bridgeDrawing.Description</span>
+                <input type="text" value="@bridgeDrawing.Description" style="display:none" />
+            </td>
+             <td class="MediaFilePath">
+                <span>@bridgeDrawing.MediaFilePath</span>
+                <input type="text" value="@bridgeDrawing.MediaFilePath" style="display:none" />
+            </td>
+            <td class="MediaDate">
+                <span>@bridgeDrawing.MediaDate</span>
+                <input type="text" value="@bridgeDrawing.MediaDate" style="display:none" />
+            </td>
+            <td>
+                <a class="Edit btn btn-default" href="javascript:;">Edit</a>
+                <a class="Update btn btn-default" href="javascript:;" style="display:none">Update</a>
+                <a class="Confirm btn btn-default" href="javascript:;" style="display:none">Confirm</a>
+                <a class="Cancel btn btn-default" href="javascript:;" style="display:none">Cancel</a>
+                <a class="Delete btn btn-default" href="javascript:;">Delete</a>
+            </td>
+        </tr>
+    }
+</table>
+
+<table class="table">
+    <tr>
+        <td style="width: 150px">
+            Media Id:<br />
+            <input type="text" id="txtMediaId" style="width:140px" />
+        </td>
+        <td style="width: 150px">
+            Discription:<br />
+            <input type="text" id="txtDescription" style="width:140px" />
+        </td>
+        <td style="width: 150px">
+            Media File Path:<br />
+            <input type="text" id="txtMediaFilePath" style="width:140px" />
+        </td>
+        <td style="width: 150px">
+            Media Date:<br />
+            <input type="text" id="txtMediaDate" style="width:140px" />
+        </td>
+        <td style="width: 200px">
+            <br />
+            @*<input type="button" id="btnAddBridgeDrawing" value="Add" class=" btn btn-default" />*@
+            <button type="button" id="btnAddBridgeDrawing" class="btn btn-primary"><span class="glyphicon glyphicon-save"></span> Save</button>
+        </td>
+    </tr>
+</table>
+
+<div id="status"></div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var today = new Date().toJSON().slice(0, 10);
+        $('#txtMediaDate').val(today);
+
+        //Add event handler
+        $("#btnAddBridgeDrawing").on("click", function () {
+            var BridgeId = $("#bridgeId");
+            var MediaId = $("#txtMediaId");
+            var MediaTypeId = $("#ddlMediaTypeId");
+            var MediaDate = $("#txtMediaDate");
+            var Description = $("#txtDescription");
+            var MediaFilePath = $("#txtMediaFilePath");
+            var mediaFileName = MediaFilePath.val().replace(/^.*[\\\/]/, '');
+            var fullMediaPath = '@ViewBag.MediaPath' + mediaFileName;
+            //alert(fullMediaPath);
+            //alert("Hello");
+            //alert('{BridgeId: "' + BridgeId.val() + '", MediaId: "' + MediaId.val() + '", MediaTypeId: "' + MediaTypeId.val() + '", Description: "' + Description.val() + '", MediaFilePath: "' + fullMediaPath + '", MediaDate: "' + MediaDate.val() + '" }',);
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("BridgeMediaInsert", "BridgeInventory")',
+                data: '{BridgeId: "' + BridgeId.val() + '", MediaId: "' + MediaId.val() + '", MediaTypeId: "' + MediaTypeId.val() + '", Description: "' + Description.val() + '", MediaFilePath: "' + fullMediaPath + '", MediaDate: "' + MediaDate.val() + '" }',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (data) {
+                    //alert("first success");
+                    $.ajax({
+                        type: 'GET',
+                        url: '@Url.Action("GetLastBridgeMedia", "BridgeInventory")',
+                        data: { bridgeid: BridgeId.val() },
+                        datatype: 'json',
+                        success: function (data) {
+                            //alert("Second success");
+                            var row = $("#tblBridgeMedia tr:last-child");
+                            if ($("#tblBridgeMedia tr:last-child span").eq(0).html() != "&nbsp;") {
+                                row = row.clone();
+                            }
+                            var Id = data.Id;
+                            //alert(row);
+                            //Bind Id
+                            row.find('input[type=hidden]').val(Id);
+
+                            //Bind all rows
+                            $(".MediaId", row).find("span").html(MediaId.val());
+
+                            $(".MediaTypeId", row).find("span").html(MediaTypeId.val());
+
+                            $(".MediaDate", row).find("span").html(MediaDate.val());
+                            $(".MediaDate", row).find("input").val(MediaDate.val());
+
+                            $(".Description", row).find("span").html(Description.val());
+                            $(".Description", row).find("input").val(Description.val());
+
+                            $(".MediaFilePath", row).find("span").html(fullMediaPath);
+
+                            row.find(".Edit").show();
+                            row.find(".Delete").show();
+                            //alert(row);
+
+                            $("#tblBridgeMedia").append(row);
+
+                            MediaId.val("");
+                            MediaTypeId.val(1);
+                            var today = new Date().toJSON().slice(0, 10);
+                            MediaDate.val(today);
+                            Description.val("");
+                            MediaFilePath.val("");
+                        },
+                        error: function (xhr) {
+                            //$('#status').text(xhr.status);
+                            //alert("Second error: " + xhr.status);
+                        }
+                    });
+                },
+                error: function (xhr) {
+                    //$('#status').text(xhr.status);
+                }
+            });
+        });
+
+        //Edit event handler.
+        $("body").on("click", "#tblBridgeMedia .Edit", function () {
+            var row = $(this).closest("tr");
+            $("td", row).each(function () {
+                if ($(this).find("input").length > 0) {
+                    $(this).find("input").show();
+                    $(this).find("span").hide();
+                }
+            });
+            row.find(".Update").show();
+            row.find(".Cancel").show();
+            row.find(".Delete").hide();
+            $(this).hide();
+        });
+
+        //Update event handler.
+        $("body").on("click", "#tblBridgeMedia .Update", function () {
+            var row = $(this).closest("tr");
+            $("td", row).each(function () {
+                if ($(this).find("input").length > 0) {
+                    var span = $(this).find("span");
+                    var input = $(this).find("input");
+                    span.html(input.val());
+                    span.show();
+                    input.hide();
+                }
+            });
+            row.find(".Edit").show();
+            row.find(".Delete").show();
+            row.find(".Cancel").hide();
+            $(this).hide();
+
+            var bridgeMedia = {};
+            bridgeMedia.BridgeId = $("#bridgeId").val();
+            bridgeMedia.Id = row.find('input[type=hidden]').val();
+            bridgeMedia.Description = row.find(".Description").find("span").html();
+            bridgeMedia.MediaFilePath = row.find(".MediaFilePath").find("span").html();
+            //alert(JSON.stringify(bridgeMedia));
+            //$('#status').text(JSON.stringify(bridgeMedia));
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("BridgeMediaUpdate", "Bridgeinventory")',
+                data: '{bridgeMedia:' + JSON.stringify(bridgeMedia) + '}',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'text', //'html',
+                error: function (xhr) {
+                    //$('#status').text(xhr.status);
+                }
+            });
+        });
+
+        //Cancel event handler.
+        $("body").on("click", "#tblBridgeMedia .Cancel", function () {
+            var row = $(this).closest("tr");
+            $("td", row).each(function () {
+                if ($(this).find("input").length > 0) {
+                    var span = $(this).find("span");
+                    var input = $(this).find("input");
+                    input.val(span.html());
+                    span.show();
+                    input.hide();
+                }
+            });
+            row.find(".Edit").show();
+            row.find(".Delete").show();
+            row.find(".Update").hide();
+            row.find(".Confirm").hide();
+            $(this).hide();
+        });
+
+        //Delete event handler.
+        $("body").on("click", "#tblBridgeMedia .Delete", function () {
+            var row = $(this).closest("tr");
+            row.find(".Edit").hide();
+            row.find(".Confirm").show();
+            row.find(".Cancel").show();
+            row.find(".Delete").hide();
+            $(this).hide();
+        });
+
+        //Confirm event handler.
+        $("body").on("click", "#tblBridgeMedia .Confirm", function () {
+            var row = $(this).closest("tr");
+            var id = row.find('input[type=hidden]').val();
+            //alert(id);
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("BridgeMediaDelete", "Bridgeinventory")',
+                data: '{id: "' + id + '"}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (response) {
+                    if ($("#tblBridgeMedia tr").length > 2) {
+                        row.remove();
+
+                    } else {
+                        row.find(".Edit").hide();
+                        row.find(".Delete").hide();
+                        row.find(".Confirm").hide();
+                        row.find(".Cancel").hide();
+                        row.find("span").html('&nbsp;');
+                    }
+                },
+                error: function (xhr) {
+                    //$('#status').text(xhr.status);
+                }
+            });
+        });
+    });
+</script>

@@ -1,0 +1,98 @@
+﻿@model ERA_BMS.Models.CulvertStructure
+
+@{
+    ViewBag.Title = "Culvert Structure Info";
+}
+
+<table class="table table-condensed">
+    <tr>
+        <td>
+            @Html.DisplayNameFor(model => model.CulvertType.CulvertTypeName)
+        </td>
+
+        <th>
+            @Html.DisplayFor(model => model.CulvertType.CulvertTypeName)
+        </th>
+    </tr>
+    <tr>
+        <td>
+            @Html.DisplayNameFor(model => model.Height)
+        </td>
+
+        <th>
+            @Html.DisplayFor(model => model.Height)
+        </th>
+    </tr>
+    <tr>
+        <td>
+            @Html.DisplayNameFor(model => model.LengthTotal)
+        </td>
+
+        <th>
+            @Html.DisplayFor(model => model.LengthTotal)
+        </th>
+    </tr>
+    <tr>
+        <td>
+            @Html.DisplayNameFor(model => model.LengthInside)
+        </td>
+
+        <th>
+            @Html.DisplayFor(model => model.LengthInside)
+        </th>
+    </tr>
+    <tr>
+        <td>
+            @Html.DisplayNameFor(model => model.NoOfBarrels)
+        </td>
+
+        <th>
+            @Html.DisplayFor(model => model.NoOfBarrels)
+        </th>
+    </tr>
+    <tr>
+        <td>
+            @Html.DisplayNameFor(model => model.BarrelsDistance)
+        </td>
+
+        <th>
+            @Html.DisplayFor(model => model.BarrelsDistance)
+        </th>
+    </tr>
+    <tr>
+        <td>
+            @Html.DisplayNameFor(model => model.AbutmentHeight)
+        </td>
+
+        <th>
+            @Html.DisplayFor(model => model.AbutmentHeight)
+        </th>
+    </tr>
+    <tr>
+        <td>
+            @Html.DisplayNameFor(model => model.AbutmentType.AbutmentTypeName)
+        </td>
+
+        <th>
+            @Html.DisplayFor(model => model.AbutmentType.AbutmentTypeName)
+        </th>
+    </tr>
+    <tr>
+        <td>
+            @Html.DisplayNameFor(model => model.culEndWallType.EndWallTypeName)
+        </td>
+
+        <th>
+            @Html.DisplayFor(model => model.culEndWallType.EndWallTypeName)
+        </th>
+    </tr>
+    <tr>
+        <td>
+            @Html.DisplayNameFor(model => model.culEndWallType1.EndWallTypeName)
+        </td>
+
+        <th>
+            @Html.DisplayFor(model => model.culEndWallType1.EndWallTypeName)
+        </th>
+    </tr>
+</table>

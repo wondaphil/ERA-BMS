@@ -1,65 +1,474 @@
-﻿@model IEnumerable<ERA_BCMS.Models.Pier>
+﻿@model IEnumerable<ERA_BMS.Models.Pier>
 
 @{
     ViewBag.Title = "Pier";
 }
 
-<table class="table table-condensed">
+@*<input type="hidden" id="bridgeId" value="@TempData["BridgeId"]" />*@ <!-- Bridge Id -->
+<table class="table table-striped table-condensed table-responsive table-bordered" id="tblPier">
     <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.HeightOfPier)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.WidthOfPier)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.FoundationDimension)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.NoOfPierPiles)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PierPileDepth)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.FoundationType.FoundationTypeName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PierType.PierTypeName)
-        </th>
+        <th></th>
+        <th>Pier No</th>
+        <th>Pier Type</th>
+        <th>Hight</th>
+        <th>Width</th>
+        <th>Foundation Type</th>
+        <th>Foundation Dimension (L X W)</th>
+        <th>No. of Piles</th>
+        <th>Pile Depth</th>
         <th></th>
     </tr>
 
-    @foreach (var item in Model)
+    @foreach (var pier in Model)
     {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.HeightOfPier)
+        <tr class="form-group form-group-sm">
+            <td class="Id">
+                <input type="hidden" id="Id" value="@pier.Id" size="3" /> <!-- Unique Identity (key) -->
+            </td>
+            <td class="PierNo">
+                <span>@pier.PierNo</span>
+                <input type="text" value="@pier.PierNo" style="display:none" size="3" />
+            </td>
+            <td class="PierTypeId">
+                <span>@pier.PierType.PierTypeName</span>
+                @Html.DropDownList("ddlPierTypeId", new SelectList((List<SelectListItem>)TempData["PierTypesSelectList"], "Value", "Text", @pier.PierTypeId), new { @class = "form-control", style = "display: none" })
+            </td>
+            <td class="HeightOfPier">
+                <span>@pier.HeightOfPier</span>
+                <input type="text" value="@pier.HeightOfPier" style="display:none" size="3" />
+            </td>
+            <td class="WidthOfPier">
+                <span>@pier.WidthOfPier</span>
+                <input type="text" value="@pier.WidthOfPier" style="display:none" size="3" />
+            </td>
+            <td class="FoundationTypeId">
+                <span>@pier.FoundationType.FoundationTypeName</span>
+                @Html.DropDownList("ddlFoundationTypeId", new SelectList((List<SelectListItem>)TempData["FoundationTypesSelectList"], "Value", "Text", @pier.FoundationTypeId), new { @class = "form-control", style = "display: none" })
+            </td>
+            <td class="FoundationDimension">
+                <span>@pier.FoundationDimension</span>
+                <input type="text" value="@pier.FoundationDimension" style="display:none" size="5" />
+            </td>
+            <td class="NoOfPierPiles">
+                <span>@pier.NoOfPierPiles</span>
+                <input type="text" value="@pier.NoOfPierPiles" style="display:none" size="3" />
+            </td>
+            <td class="PierPileDepth">
+                <span>@pier.PierPileDepth</span>
+                <input type="text" value="@pier.PierPileDepth" style="display:none" size="3" />
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.WidthOfPier)
+                <a class="Edit glyphicon glyphicon-edit" href="javascript:;" data-toggle="tooltip" title="Edit"></a>
+                <a class="Update glyphicon glyphicon-ok" href="javascript:;" style="display:none" data-toggle="tooltip" title="Update"></a>
+                <a class="Confirm glyphicon glyphicon-ok" href="javascript:;" style="display:none" data-toggle="tooltip" title="Confirm"></a>
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.FoundationDimension)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NoOfPierPiles)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PierPileDepth)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FoundationType.FoundationTypeName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PierType.PierTypeName)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                <a class="Cancel glyphicon glyphicon-remove" href="javascript:;" style="display:none" data-toggle="tooltip" title="Cancel"></a>
+                <a class="Delete glyphicon glyphicon-trash" href="javascript:;" data-toggle="tooltip" title="Delete"></a>
             </td>
         </tr>
     }
-
 </table>
+
+
+<div class="form-horizontal">
+    <div class="row">
+        <div class="col-lg-1 col-md-2 col-sm-2 col-xs-3">
+            <div class="form-group form-group-sm">
+                <label for="txtPierNo" class="col-xs-10">Pier No</label>
+                <input type="text" class="col-md-10 col-sm-10 col-xs-11" id="txtPierNo" size="3" />
+            </div>
+        </div>
+
+        <div class="col-lg-2 col-md-3 col-sm-3 col-xs-4">
+            <div class="form-group form-group-sm">
+                <label for="ddlNewPierTypeId" class="col-xs-10">Pier Type</label>
+                <div class="col-md-10 col-sm-12">
+                    @*@Html.DropDownList("ddlNewPierTypeId", (List<SelectListItem>)ViewBag.PierTypesSelectList, new { @class = "form-control" })*@
+                    @Html.DropDownList("ddlNewPierTypeId", (List<SelectListItem>)TempData["PierTypesSelectList"], htmlAttributes: new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-1 col-md-1 col-sm-2 col-xs-3">
+            <div class="form-group form-group-sm">
+                <label for="txtHeightOfPier" class="col-xs-10">Height</label>
+                <input type="text" class="col-md-10 col-sm-10 col-xs-11" id="txtHeightOfPier" size="3" />
+            </div>
+        </div>
+
+        <div class="clearfix visible-xs"></div> <!-- Add clearfix (or new line break) for only the xs -->
+
+        <div class="col-lg-1 col-md-1 col-sm-2 col-xs-3">
+            <div class="form-group form-group-sm">
+                <label for="txtWidthOfPier" class="col-xs-10">Width</label>
+                <input type="text" class="col-md-10 col-sm-10 col-xs-11" id="txtWidthOfPier" size="3" />
+            </div>
+        </div>
+
+        <div class="clearfix visible-sm"></div> <!-- Add clearfix (or new line break) for only the sm -->
+
+        <div class="col-lg-2 col-md-3 col-sm-3 col-xs-4">
+            <div class="form-group form-group-sm">
+                <label for="ddlNewFoundationTypeId" class="col-xs-10">Foundation Type</label>
+                <div class="col-md-10 col-sm-12">
+                    @*@Html.DropDownList("ddlNewFoundationTypeId", (List<SelectListItem>)ViewBag.FoundationTypesSelectList, new { @class = "form-control" })*@
+                    @Html.DropDownList("ddlNewFoundationTypeId", (List<SelectListItem>)TempData["FoundationTypesSelectList"], htmlAttributes: new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-2 col-md-2 col-sm-3 col-xs-3">
+            <div class="form-group form-group-sm">
+                <label for="txtFoundationDimension" class="col-xs-10">Foundation LXW</label>
+                <input type="text" class="col-md-10 col-sm-10 col-xs-11" id="txtFoundationDimension" size="10" />
+            </div>
+        </div>
+
+        <div class="clearfix visible-md visible-xs"></div> <!-- Add clearfix (or new line break) for md and xs -->
+
+        <div class="col-lg-1 col-md-2 col-sm-2 col-xs-3">
+            <div class="form-group form-group-sm">
+                <label for="txtNoOfPierPiles" class="col-xs-10">Piles</label>
+                <input type="text" class="col-md-8 col-sm-10 col-xs-11" id="txtNoOfPierPiles" size="3" />
+            </div>
+        </div>
+
+        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-3">
+            <div class="form-group form-group-sm">
+                <label for="txtPierPileDepth" class="col-xs-10">Pile Depth</label>
+                <input type="text" class="col-lg-5 col-md-8 col-sm-10 col-xs-11" id="txtPierPileDepth" size="3" />
+            </div>
+        </div>
+
+        <div class="col-lg-1 col-md-2 col-sm-2 col-xs-4">
+            <div class="form-group form-group-sm">
+                <br />
+                <button type="button" id="btnAddPier" class="btn btn-primary"><span class="glyphicon glyphicon-save"></span> Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*<div id="status"></div>*@
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var emptyRow = "<td class='Id'>" + 
+	                        "<input type='hidden' id='Id' size='3' /> <!-- Unique Identity (key) -->" +
+                        "</td>" +
+                        "<td class='PierNo'>" +
+	                        "<span>&nbsp;</span>" +
+	                        "<input type='text' value='' style='display:none' size='3' />" +
+                        "</td>" +
+                        "<td class='PierTypeId'>" +
+	                        "<span>&nbsp;</span>" +
+	                        "<select class='form-control' id='ddlPierTypeId' name='ddlPierTypeId' style='display: none'>" +
+		                       "<option value='1'>Masonry Wall</option>" +
+		                        "<option value='2'>RC Column</option>" +
+		                       " <option value='3'>RC Wall</option>" +
+		                        "<option value='4'>RC Rigid-Frame</option>" +
+	                        "</select>" +
+                        "</td>" +
+                        "<td class='HeightOfPier'>" +
+	                        "<span>&nbsp;</span>" +
+	                        "<input type='text' style='display:none' size='3' />" +
+                        "</td>" +
+                        "<td class='WidthOfPier'>" +
+	                        "<span>&nbsp;</span>" +
+	                        "<input type='text' style='display:none' size='3' />" +
+                        "</td>" +
+                        "<td class='FoundationTypeId'>" +
+	                        "<span>&nbsp;</span>" +
+	                       " <select class='form-control' id='ddlFoundationTypeId' name='ddlFoundationTypeId' style='display: none'>" +
+		                        "<option value='1'>Class C Concrete</option>" +
+		                        "<option value='2'>RC Direct/Mat</option>" +
+		                        "<option value='3'>RC Pile</option>" +
+		                        "<option value='4'>PC Pile</option>" +
+		                        "<option value='5'>Steel-Pipe Pile</option>" +
+		                        "<option value='6'>Caisson</option>" +
+		                        "<option value='7'>Masonry</option>" +
+	                        "</select>" +
+                        "</td>" +
+                        "<td class='FoundationDimension'>" +
+	                        "<span>&nbsp;</span>" +
+	                        "<input type='text'style='display:none' size='5' />" +
+                        "</td>" +
+                        "<td class='NoOfPierPiles'>" +
+	                        "<span>&nbsp;</span>" +
+	                        "<input type='text'style='display:none' size='3' />" +
+                        "</td>" +
+                        "<td class='PierPileDepth'>" +
+	                        "<span>&nbsp;</span>" +
+	                        "<input type='text'style='display:none' size='3' />" +
+                        "</td>" +
+                        "<td>" +
+	                        "<a class='Edit glyphicon glyphicon-edit' href='javascript:;' style='display:none' data-toggle='tooltip' title='Edit'></a>" +
+                            "<a class='Update glyphicon glyphicon-ok' href='javascript:;' style='display:none' data-toggle='tooltip' title='Update'></a>" +
+                            "<a class='Confirm glyphicon glyphicon-ok' href='javascript:;' style='display:none' data-toggle='tooltip' title='Confirm'></a>" +
+                        "</td>" +
+                        "<td>" +
+                            "<a class='Cancel glyphicon glyphicon-remove' href='javascript:;' style='display:none' data-toggle='tooltip' title='Cancel'></a>" +
+                            "<a class='Delete glyphicon glyphicon-trash' href='javascript:;' style='display:none' data-toggle='tooltip' title='Delete'></a>" +
+                        "</td>";
+
+        addEmptyRow();
+
+        function addEmptyRow() {
+            if ($("#tblPier tr").length == 1) {
+                $("#tblPier").append("<tr>" + emptyRow + "</tr>");
+            }
+        }
+
+        var today = new Date().toJSON().slice(0, 10);
+        $('#txtMediaDate').val(today);
+
+        //Add event handler
+        $("#btnAddPier").on("click", function () {
+            var BridgeId = '@TempData["BridgeId"]';
+            var PierNo = $("#txtPierNo");
+            var HeightOfPier = $("#txtHeightOfPier");
+            var WidthOfPier = $("#txtWidthOfPier");
+            var FoundationDimension = $("#txtFoundationDimension");
+            var NoOfPierPiles = $("#txtNoOfPierPiles");
+            var PierPileDepth = $("#txtPierPileDepth");
+            var PierTypeId = $("#ddlNewPierTypeId option:selected");
+            var FoundationTypeId = $("#ddlNewFoundationTypeId option:selected");
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("PierInsert", "BridgeInventory")',
+                data: '{BridgeId: "' + BridgeId + '", PierNo: "' + PierNo.val() + '", HeightOfPier: "' + HeightOfPier.val() + '", WidthOfPier: "' + WidthOfPier.val() + '", FoundationDimension: "' + FoundationDimension.val() + '", NoOfPierPiles: "' + NoOfPierPiles.val() + '", PierPileDepth: "' + PierPileDepth.val() + '", PierTypeId: "' + PierTypeId.val() + '", FoundationTypeId: "' + FoundationTypeId.val() + '" }',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (data) {
+                    //alert("first success");
+                    $.ajax({
+                        type: 'GET',
+                        url: '@Url.Action("GetLastPier", "BridgeInventory")',
+                        data: { bridgeid: BridgeId },
+                        datatype: 'json',
+                        success: function (data) {
+                            //alert("Second success");
+                            var row = $("#tblPier tr:last-child");
+                            if ($("#tblPier tr:last-child span").eq(0).html() != "&nbsp;") {
+                                row = row.clone();
+                            }
+
+                            var Id = data.Id;
+                            
+                            //Bind Id
+                            row.find('input[type=hidden]').val(Id);
+
+                            //Bind all rows
+                            $(".PierNo", row).find("span").html(PierNo.val());
+
+                            $(".HeightOfPier", row).find("span").html(HeightOfPier.val());
+                            $(".HeightOfPier", row).find("input").val(HeightOfPier.val());
+
+                            $(".WidthOfPier", row).find("span").html(WidthOfPier.val());
+                            $(".WidthOfPier", row).find("input").val(WidthOfPier.val());
+
+                            $(".FoundationDimension", row).find("span").html(FoundationDimension.val());
+                            $(".FoundationDimension", row).find("input").val(FoundationDimension.val());
+
+                            $(".NoOfPierPiles", row).find("span").html(NoOfPierPiles.val());
+                            $(".NoOfPierPiles", row).find("input").val(NoOfPierPiles.val());
+
+                            $(".PierPileDepth", row).find("span").html(PierPileDepth.val());
+                            $(".PierPileDepth", row).find("input").val(PierPileDepth.val());
+
+                            $(".PierTypeId", row).find("span").html(PierTypeId.text());
+                            $(".PierTypeId", row).find("select").val(PierTypeId.val());
+
+                            $(".FoundationTypeId", row).find("span").html(FoundationTypeId.text());
+                            $(".FoundationTypeId", row).find("select").val(FoundationTypeId.val());
+
+                            row.find(".Edit").show();
+                            row.find(".Delete").show();
+                            //alert("<tr>" + row.html() + "</tr>");
+
+                            $("#tblPier > tbody").append(row);
+
+                            PierNo.val("");
+                            PierTypeId.val(1);
+                            HeightOfPier.val("");
+                            WidthOfPier.val("");
+                            FoundationTypeId.val(1);
+                            FoundationDimension.val("");
+                            NoOfPierPiles.val("");
+                            PierPileDepth.val("");
+                        },
+                        error: function (xhr) {
+                            //$('#status').text(xhr.status);
+                            //alert("Second error: " + xhr.status);
+                        }
+                    });
+                },
+                error: function (xhr) {
+                    //$('#status').text(xhr.status);
+                }
+            });
+        });
+
+        //Edit event handler.
+        $("body").on("click", "#tblPier .Edit", function () {
+            var row = $(this).closest("tr");
+            $("td", row).each(function () {
+                if ($(this).find("input").length > 0) {
+                    $(this).find("input").show();
+                    $(this).find("span").hide();
+                }
+                if ($(this).find("select").length > 0) {
+                    $(this).find("select").show();
+                    $(this).find("span").hide();
+                }
+            });
+            row.find(".Update").show();
+            row.find(".Cancel").show();
+            row.find(".Delete").hide();
+            $(this).hide();
+        });
+
+        //var PierTypeName;
+        //var FoundationTypeName;
+
+        //Update event handler.
+        $("body").on("click", "#tblPier .Update", function () {
+            var row = $(this).closest("tr");
+
+            $("td", row).each(function () {
+                // assign all input box's texts in the current row to the corresponding span
+                if ($(this).find("input").length > 0) {
+                    var span = $(this).find("span");
+                    var input = $(this).find("input");
+                    span.html(input.val());
+                    span.show();
+                    input.hide();
+                }
+
+                // assign the pier and foundation dropdown list's text in the current row to the corresponding span
+                if ($(this).find("select").length > 0) {
+                    var span = $(this).find("span");
+                    var select = $(this).find("select");
+                    span.html(select.find(':selected').text());
+                    span.show();
+                    select.hide();
+                }
+            });
+
+            row.find(".Edit").show();
+            row.find(".Delete").show();
+            row.find(".Cancel").hide();
+            $(this).hide();
+
+            // Iterate through pier type list to find the corresponding PierTypeId of the PierTypeName
+            var PierTypeName = row.find(".PierTypeId").find("span").html();
+            var pierJsonObj = @Html.Raw(Json.Encode(TempData["PierTypeList"]));
+            for (i = 0; i < pierJsonObj.length; i++) {
+                if (pierJsonObj[i].Name == PierTypeName)
+                    pierTypeId = pierJsonObj[i].Id;
+            }
+
+            // Iteraet through foundation type list to find the corresponding FoundationTypeId of the FoundationTypeName
+            var FoundationTypeName = row.find(".FoundationTypeId").find("span").html();
+            var foundationJsonObj = @Html.Raw(Json.Encode(TempData["FoundationTypeList"]));
+            for (i = 0; i < foundationJsonObj.length; i++) {
+                if (foundationJsonObj[i].Name == FoundationTypeName)
+                    foundationTypeId = foundationJsonObj[i].Id;
+            }
+
+            var pier = {};
+            pier.BridgeId = '@TempData["BridgeId"]';
+            pier.Id = row.find('input[type=hidden]').val();
+            pier.PierNo = row.find(".PierNo").find("span").html();
+            pier.HeightOfPier = row.find(".HeightOfPier").find("span").html();
+            pier.WidthOfPier = row.find(".WidthOfPier").find("span").html();
+            pier.FoundationDimension = row.find(".FoundationDimension").find("span").html();
+            pier.NoOfPierPiles = row.find(".NoOfPierPiles").find("span").html();
+            pier.PierPileDepth = row.find(".PierPileDepth").find("span").html();
+            pier.PierTypeId = pierTypeId;
+            pier.FoundationTypeId = foundationTypeId;
+
+            //alert(JSON.stringify(pier));
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("PierUpdate", "Bridgeinventory")',
+                data: '{pier:' + JSON.stringify(pier) + '}',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'text', //'html',
+                success: function (data) {
+                    //alert("Success");
+                },
+                error: function (xhr) {
+                    //$('#status').text(xhr.status);
+                    //alert("Fail");
+                }
+            });
+        });
+
+        //Cancel event handler.
+        $("body").on("click", "#tblPier .Cancel", function () {
+            var row = $(this).closest("tr");
+            $("td", row).each(function () {
+                if ($(this).find("input").length > 0) {
+                    var span = $(this).find("span");
+                    var input = $(this).find("input");
+                    input.val(span.html());
+                    span.show();
+                    input.hide();
+                }
+                if ($(this).find("select").length > 0) {
+                    $(this).find("select").hide();
+                    $(this).find("span").show();
+                }
+            });
+            row.find(".Edit").show();
+            row.find(".Delete").show();
+            row.find(".Update").hide();
+            row.find(".Confirm").hide();
+            $(this).hide();
+        });
+
+        //Delete event handler.
+        $("body").on("click", "#tblPier .Delete", function () {
+            var row = $(this).closest("tr");
+            row.find(".Edit").hide();
+            row.find(".Confirm").show();
+            row.find(".Cancel").show();
+            row.find(".Delete").hide();
+            $(this).hide();
+        });
+
+        //Confirm event handler.
+        $("body").on("click", "#tblPier .Confirm", function () {
+            var row = $(this).closest("tr");
+            //alert(row.html());
+            var id = row.find('input[type=hidden]').val();
+            //alert(id);
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("PierDelete", "Bridgeinventory")',
+                data: '{id: "' + id + '"}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (response) {
+                    if ($("#tblPier tr").length > 2) {
+                        row.remove();
+
+                    } else {
+                        row.find(".Edit").hide();
+                        row.find(".Delete").hide();
+                        row.find(".Confirm").hide();
+                        row.find(".Cancel").hide();
+                        row.find("span").html('&nbsp;');
+                    }
+                },
+                error: function (xhr) {
+                    //$('#status').text(xhr.status);
+                }
+            });
+        });
+    });
+</script>

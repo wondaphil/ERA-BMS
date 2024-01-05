@@ -1,0 +1,64 @@
+﻿
+@{
+    ViewBag.Title = "Bridges Count By Section";
+}
+
+<h2>Bridges Count By Section</h2>
+
+@using (Html.BeginForm())
+{
+    <div class="panel panel-default">
+        <div class="panel-body">
+
+            @Html.AntiForgeryToken()
+
+            <div class="form-horizontal">
+                <div class="col-sm-12">
+                    <div class="form-group form-group-sm">
+                        <label class="control-label col-md-2">District</label>
+                        <div class="col-md-5">
+                            @Html.DropDownList("ddlDistrict", (List<SelectListItem>)ViewBag.Districts, new { @class = "form-control" })
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div id="sectionsPartial">
+            <!-- Sections list displays here -->
+        </div>
+    </div>
+
+}
+
+<div id="wait" align="center" style="display: none">
+    <img src="~/images/ajax-loader-big.gif" />
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#ddlDistrict').change(function () {
+            var selDistrictId = $('#ddlDistrict option:selected').val();
+            $('#sectionsPartial').empty(); //clear the sections place holder
+            $('#distrIdDIV').text(selDistrictId); //clear district no. indicator
+
+            if (selDistrictId != "0") //if some district is selected
+            {
+                $('#distrIdDIV').text("District No. = " + selDistrictId);
+
+                $.ajax({
+                    url: '@Url.Action("_GetBridgesCountBySection", "BridgeReportsCensus")', //url: 'Sections/_GetSections',
+                    data: { districtid: selDistrictId },
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () { $('#wait').show(); },
+                    complete: function () { $('#wait').hide(); },
+                    success: function (data) {
+                        $('#sectionsPartial').html(data);
+                    }
+                });
+            }
+        });
+    });
+</script>

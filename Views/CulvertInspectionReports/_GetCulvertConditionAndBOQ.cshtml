@@ -1,0 +1,208 @@
+﻿@using ERA_BMS.Models
+@using ERA_BMS.ViewModels
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title panel-info">Culvert Condition & BOQ (District: <b>@ViewBag.District</b>, Section: <b>@ViewBag.Section</b>, Road Segment: <b>@ViewBag.Segment</b>, Culvert: <b>@ViewBag.CulvertNo</b>)</h3>
+    </div>
+
+    <div class="panel-body">
+        <br />
+        <br />
+        <table class="table table-striped table-condensed table-responsive table-bordered display compact hover" id="damageinspmajor">
+            <thead>
+                <tr><th colspan="10" align="center">CULVERT STRUCTURE DAMAGE</th></tr>
+                <tr>
+                    <th>Structure Item</th>
+                    <th>Damage Type</th>
+                    <th>Unit</th>
+                    <th>Qty</th>
+                    <th>Unit Repair Cost</th>
+                    <th>Total Repair Cost</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @{
+                    var culStrCost = 0.0;
+                    var culStrDmgPerc = 0.0;
+                }
+                @for (int i = 0; i < ViewBag.CulvertStructure.Count; i++)
+                {
+                    var strItemCost = 0.0;
+                    
+                    for (int j = 0; j < ViewBag.CulvertStructure[i].Count; j++)
+                    {
+                        // If Quantity = 0, then exit from inner loop (damage type) and go to outer loop (structure item)
+                        if (ViewBag.CulvertStructure[i][j].Quantity == 0)
+                        {
+                            break;
+                        }
+                        <tr>
+                            <td>
+                                @{ var strItemName = "";
+                                    if (j == 0)
+                                    {
+                                        strItemName = ViewBag.CulvertStructure[i][j].culDamageRateAndCost.StructureItemId + " " + ViewBag.CulvertStructure[i][j].culDamageRateAndCost.culStructureItem.StructureItemName;
+                                    }
+                                }
+                                <b>@strItemName</b>
+                            </td>
+                            <td>
+                                @ViewBag.CulvertStructure[i][j].culDamageRateAndCost.DamageTypeName
+                            </td>
+                            <td>
+                                @{ var index = ViewBag.CulvertStructure[i][j].culDamageRateAndCost.Id;
+                                }
+                                @ViewBag.DamageRateCulvert[i][index - 1].Unit
+                            </td>
+                            <td>
+                                @{ var dmgArea = ViewBag.CulvertStructure[i][j].Quantity;
+                                }
+                                @dmgArea.ToString("0.00")  @*format it to two decimal places*@
+                            </td>
+                            <td>
+                                @ViewBag.DamageRateCulvert[i][index - 1].UnitRepairCost.ToString("#,0.00")
+                            </td>
+                            <td>
+                                @*@ViewBag.CulvertStructure[i][j].DamageRank.DamageRankName*@
+                                @{ var cost = ViewBag.DamageRateCulvert[i][index - 1].UnitRepairCost * ViewBag.CulvertStructure[i][j].Quantity;
+                                    strItemCost += cost;
+                                }
+                                @cost.ToString("#,0.00")
+                            </td>
+                        </tr>
+                    }
+                    // If cost of structure item is zero, skip the entire row
+                    if (strItemCost != 0)
+                    {
+                        <tr>
+                            <td colspan="5"></td>
+                            <td><b>@strItemCost.ToString("#,0.00")</b></td>
+                            @{
+                                culStrCost += strItemCost;
+                            }
+                        </tr>
+                    }
+                }
+                <tr>
+                    <td class="panel-title" colspan="5" align="right"><b>Culvert Total Repair Cost</b></td>
+                    @{
+                        double totCulvertDmgPerc = (double)culStrDmgPerc;
+                    }
+
+                    <td class="panel-title"><b>@culStrCost.ToString("#,0.00")</b></td>
+                </tr>
+            </tbody>
+
+        </table>
+    </div>
+
+    <div class="panel-body">
+        <table class="table table-striped table-condensed table-responsive display compact hover">
+             <tr><th colspan="10" align="center">CULVERT HYDRAULIC AND CHANNEL DAMAGE</th></tr>
+        </table>
+    </div>
+    @{
+        string GetHydrDamageName(int val)
+        {
+            switch (val)
+            {
+                case 0:
+                    return "Unknown";
+                case 1:
+                    return "Yes";
+                case 2:
+                    return "No";
+                default:
+                    return "";
+
+            }
+        }
+    }
+    <div class="row">
+        <div class="col-md-4 col-xs-6">
+            <dl class="dl-horizontal">
+                <dt>Over topping</dt>
+                <dd>@GetHydrDamageName(ViewBag.HydraulicAndChannelDamage.OverTopping)</dd>
+
+                <dt>Constriction</dt>
+                <dd>@GetHydrDamageName(ViewBag.HydraulicAndChannelDamage.Constriction)</dd>
+
+                <dt>Embankment Scour</dt>
+                <dd>@GetHydrDamageName(ViewBag.HydraulicAndChannelDamage.EmbankmentScour)</dd>
+            </dl>
+        </div>
+        <div class="col-md-4 col-xs-6">
+            <dl class="dl-horizontal">
+                <dt>Channel Scour</dt>
+                <dd>@GetHydrDamageName(ViewBag.HydraulicAndChannelDamage.ChannelScour)</dd>
+
+                <dt>Channel Obstruction</dt>
+                <dd>@GetHydrDamageName(ViewBag.HydraulicAndChannelDamage.ChannelObstruction)</dd>
+            </dl>
+        </div>
+        <div class="col-md-4 col-xs-6">
+            <dl class="dl-horizontal">
+                <dt>Siltation</dt>
+                <dd>@GetHydrDamageName(ViewBag.HydraulicAndChannelDamage.Siltation)</dd>
+
+                <dt>Vegitation</dt>
+                <dd>@GetHydrDamageName(ViewBag.HydraulicAndChannelDamage.Vegitation)</dd>
+            </dl>
+        </div>
+    </div>
+
+    <div class="panel-body">
+        <table class="table table-striped table-condensed table-responsive display compact hover" id="damageinspmajor">
+            <tr><th colspan="10" align="center">RECOMMENDATION ADN COMMENTS</th></tr>
+        </table>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-6">
+            <dl class="dl-horizontal">
+                <dt>Inspector's Recommendation</dt>
+                <dd>@ViewBag.InterventionType</dd>
+            </dl>
+        </div>
+        <div class="col-xs-6">
+            <dl class="dl-horizontal">
+                <dt>Comments</dt>
+                <dd>@ViewBag.Recommendation</dd>
+            </dl>
+        </div>
+    </div>
+
+    <div class="panel-footer">
+        <h5>Culvert Condition & BOQ for '@ViewBag.CulvertnO'</h5>
+    </div>
+</div>
+
+
+
+<script>
+    $(document).ready(function () {
+        
+
+        $('#culverts').dataTable({
+            paging: true,
+            pageLength: 15,
+            bLengthChange: true,
+            scrollY: 400,
+            
+            searching: true,
+            select: true,
+            dom: 'lBfrtip',
+            //buttons: ['copy', 'excel', 'pdf', 'print']
+            buttons: [
+                { extend: 'copy', className: 'btn btn-sm btn-primary' },
+                { extend: 'excel', className: 'btn btn-sm btn-primary', text: 'Export Excel' },
+                { extend: 'pdf', className: 'btn btn-sm btn-primary', text: 'Export PDF' },
+                { extend: 'print', className: 'btn btn-sm btn-primary' }
+            ]
+        });
+    });
+</script>
+

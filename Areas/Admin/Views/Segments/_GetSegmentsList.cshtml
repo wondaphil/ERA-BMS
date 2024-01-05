@@ -1,0 +1,634 @@
+﻿@model IEnumerable<ERA_BMS.Models.Segment>
+
+<br />
+@{
+    string textColor = "text-success";
+    if (ViewBag.StatusMessage.Contains("error"))
+    {
+        textColor = "text-danger";
+    }
+}
+
+<p id="statusmessage" class="@textColor" style="font-size: 15px">@ViewBag.StatusMessage</p>
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title panel-info">List of Segments</h3>
+    </div>
+    <div class="panel-body">
+        <table class="table table-striped table-condensed table-responsive table-bordered display centeredtable compact hover" id="segments">
+            <thead>
+                <tr>
+                    @*<th>
+                            @Html.DisplayNameFor(model => model.SegmentId)
+                        </th>*@
+                    <th>
+                        @Html.DisplayNameFor(model => model.SegmentNo)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.RoadId)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.RevisedRoadId)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.SegmentName)
+                    </th>
+                    <th>
+                        @*@Html.DisplayNameFor(model => model.Length)*@
+                        GIS Traced Length (Km)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Width)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.RoadClass.RoadClassName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.DesignStandard.DesignStandardName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.RoadSurfaceType.RoadSurfaceTypeName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.AverageDailyTraffic)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.RegionalGovernment.RegionalGovernmentName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Remark)
+                    </th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @{
+                    double totalRoadLength = 0.0;
+                }
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            <span class="SegmentNo" name="@item.SegmentId">@item.SegmentNo</span>
+                        </td>
+                        <td>
+                            <span class="RoadId" name="@item.SegmentId">@item.RoadId</span>
+                        </td>
+                        <td>
+                            <span class="RevisedRoadId" name="@item.SegmentId">@item.RevisedRoadId</span>
+                        </td>
+                        <td>
+                            <span class="SegmentName" name="@item.SegmentId">@item.SegmentName</span>
+                        </td>
+                        <td>
+                            <span class="Length" name="@item.SegmentId">@item.Length</span>
+                            @{
+                                totalRoadLength += (item.Length == null) ? 0.0 : (double)item.Length;
+                            }
+                        </td>
+                        <td>
+                            <span class="Width" name="@item.SegmentId">@item.Width</span>
+                        </td>
+                        <td>
+                            @{
+                                string roadclass = (item.RoadClass != null) ? item.RoadClass.RoadClassName : "";
+                            }
+                            <span class="RoadClass" name="@item.SegmentId">@roadclass</span>
+                        </td>
+                        <td>
+                            @{
+                                string designstd = (item.DesignStandard != null) ? item.DesignStandard.DesignStandardName : "";
+                            }
+                            <span class="DesignStandard" name="@item.SegmentId">@designstd</span>
+                        </td>
+                        <td>
+                            @{
+                                string surfacetype = (item.RoadSurfaceType != null) ? item.RoadSurfaceType.RoadSurfaceTypeName : "";
+                            }
+                            <span class="RoadSurfaceType" name="@item.SegmentId">@surfacetype</span>
+                        </td>
+                        <td>
+                            <span class="AverageDailyTraffic" name="@item.SegmentId">@item.AverageDailyTraffic</span>
+                        </td>
+                        <td>
+                            @{
+                                string regionalgov = (item.RegionalGovernment != null) ? item.RegionalGovernment.RegionalGovernmentName : "";
+                            }
+                            <span class="RegionalGovernment" name="@item.SegmentId">@regionalgov</span>
+                        </td>
+                        <td>
+                            @*@Html.DisplayFor(modelItem => item.Remark)*@
+                            <span class="Remark" name="@item.SegmentId">@item.Remark</span>
+                        </td>
+                        <td align="center">
+                            <!-- with Tooltips -->
+                            @Html.ActionLink(" ", "Edit", new { area = "Admin", id = item.SegmentId }, new { @class = "glyphicon glyphicon-edit", @data_toggle = "tooltip", title = "Edit" })
+                        </td>
+                        <td align="center">
+                            @Html.ActionLink(" ", "Delete", new { area = "Admin", id = item.SegmentId }, new { @class = "glyphicon glyphicon-trash", @data_toggle = "tooltip", title = "Delete" })
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="panel-footer">
+        <h3 class="panel-title">Total No. of Road Segments: <b>@Model.Count()</b> | Total Road Length: <b>@totalRoadLength.ToString("#,0.0") km</b></h3>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        makeSegmentNoEditable();
+        makeRoadIdEditable();
+        makeNewRoadIdEditable();
+        makeSegmentNameEditable();
+        makeLengthEditable();
+        makeWidthEditable();
+        makeRoadClassEditable();
+        makeDesignStandardEditable();
+        makeSurfaceTypeEditable();
+        makeAverageDailyTrafficEditable();
+        makeRegionalGovernmentEditable();
+        makeRemarkEditable();
+
+        $('#segments').DataTable({
+            paging: false,
+            //pageLength: 15,
+            bLengthChange: true,
+            //scrollY: 400,
+
+            searching: true,
+            select: true,
+            dom: 'lBfrtip',
+            //order: [[1, "asc"]], // order by Road Segment No (the 2nd column)
+            buttons: [
+                { extend: 'copy', className: 'btn btn-sm btn-primary' },
+                { extend: 'excel', className: 'btn btn-sm btn-primary', text: 'Export Excel' },
+                { extend: 'pdf', className: 'btn btn-sm btn-primary', text: 'Export PDF' },
+                { extend: 'print', className: 'btn btn-sm btn-primary' }
+            ]
+        });
+
+        // A function that makes "SegmentNo" editable
+        function makeSegmentNoEditable() {
+            $(".SegmentNo").each(function () {
+                $(this).editable("/Admin/Segments/UpdateSegmentNo", {
+                    callback: function (value, settings) {
+                        var obj = JSON.parse(value);
+                        $(this).html(obj.value);
+
+                        var msg = obj.Message;
+
+                        $('#statusmessage').removeClass("text-success");
+                        $('#statusmessage').removeClass("text-danger");
+                        if (msg.toLowerCase().includes("error"))
+                            $('#statusmessage').addClass("text-danger");
+                        else
+                            $('#statusmessage').addClass("text-success");
+                        $('#statusmessage').text(obj.Message);
+                    },
+                    submitdata: function () {
+                        return {
+                            // Pass parameters to "UpdateSegmentNo" action in "Segments" controller action
+                            id: $(this).attr("name"),
+                            origvalue: this.revert,
+                        };
+                    },
+                    before: function () {
+                        // clear the status message
+                        $('#statusmessage').text("");
+                    },
+                    before: function () {
+                        // clear the status message
+                        $('#statusmessage').text("");
+                    },
+                    tooltip: 'Click or Tap to edit...',
+                    placeholder: '-',
+                    indicator: 'Saving...',
+                    label: "** Be careful!",
+                    cssclass: "redtextbox",
+                    size: 10
+                });
+            });
+        }
+
+        // A function that makes "RoadId" editable
+        function makeRoadIdEditable() {
+            $(".RoadId").each(function () {
+                $(this).editable("/Admin/Segments/UpdateRoadId", {
+                    callback: function (value, settings) {
+                        var obj = JSON.parse(value);
+                        $(this).html(obj.value);
+
+                        var msg = obj.Message;
+
+                        $('#statusmessage').removeClass("text-success");
+                        $('#statusmessage').removeClass("text-danger");
+                        if (msg.toLowerCase().includes("error"))
+                            $('#statusmessage').addClass("text-danger");
+                        else
+                            $('#statusmessage').addClass("text-success");
+                        $('#statusmessage').text(obj.Message);
+                    },
+                    submitdata: function () {
+                        return {
+                            // Pass parameters to "UpdateRoadId" action in "Segments" controller action
+                            id: $(this).attr("name"),
+                            origvalue: this.revert,
+                        };
+                    },
+                    before: function () {
+                        // clear the status message
+                        $('#statusmessage').text("");
+                    },
+                    tooltip: 'Click or Tap to edit...',
+                    placeholder: '-',
+                    indicator: 'Saving...',
+                    size: 15
+                });
+            });
+        }
+
+        // A function that makes "RevisedRoadId" editable
+        function makeNewRoadIdEditable() {
+            $(".RevisedRoadId").each(function () {
+                $(this).editable("/Admin/Segments/UpdateNewRoadId", {
+                    callback: function (value, settings) {
+                        var obj = JSON.parse(value);
+                        $(this).html(obj.value);
+
+                        var msg = obj.Message;
+
+                        $('#statusmessage').removeClass("text-success");
+                        $('#statusmessage').removeClass("text-danger");
+                        if (msg.toLowerCase().includes("error"))
+                            $('#statusmessage').addClass("text-danger");
+                        else
+                            $('#statusmessage').addClass("text-success");
+                        $('#statusmessage').text(obj.Message);
+                    },
+                    submitdata: function () {
+                        return {
+                            // Pass parameters to "UpdateNewRoadId" action in "Segments" controller action
+                            id: $(this).attr("name"),
+                            origvalue: this.revert,
+                        };
+                    },
+                    before: function () {
+                        // clear the status message
+                        $('#statusmessage').text("");
+                    },
+                    tooltip: 'Click or Tap to edit...',
+                    placeholder: '-',
+                    indicator: 'Saving...',
+                    size: 15
+                });
+            });
+        }
+
+        // A function that makes "SegmentName" editable
+        function makeSegmentNameEditable() {
+            $(".SegmentName").each(function () {
+                $(this).editable("/Admin/Segments/UpdateSegmentName", {
+                    callback: function (value, settings) {
+                        var obj = JSON.parse(value);
+                        $(this).html(obj.value);
+
+                        var msg = obj.Message;
+
+                        $('#statusmessage').removeClass("text-success");
+                        $('#statusmessage').removeClass("text-danger");
+                        if (msg.toLowerCase().includes("error"))
+                            $('#statusmessage').addClass("text-danger");
+                        else
+                            $('#statusmessage').addClass("text-success");
+                        $('#statusmessage').text(obj.Message);
+                    },
+                    submitdata: function () {
+                        return {
+                            // Pass parameters to "UpdateSegmentName" action in "Segments" controller action
+                            id: $(this).attr("name"),
+                            origvalue: this.revert,
+                        };
+                    },
+                    before: function () {
+                        // clear the status message
+                        $('#statusmessage').text("");
+                    },
+                    tooltip: 'Click or Tap to edit...',
+                    placeholder: '-',
+                    indicator: 'Saving...',
+                    size: 30
+                });
+            });
+        }
+
+        // A function that makes "Length" editable
+        function makeLengthEditable() {
+            $(".Length").each(function () {
+                $(this).editable("/Admin/Segments/UpdateLength", {
+                    callback: function (value, settings) {
+                        var obj = JSON.parse(value);
+                        $(this).html(obj.value);
+
+                        var msg = obj.Message;
+
+                        $('#statusmessage').removeClass("text-success");
+                        $('#statusmessage').removeClass("text-danger");
+                        if (msg.toLowerCase().includes("error"))
+                            $('#statusmessage').addClass("text-danger");
+                        else
+                            $('#statusmessage').addClass("text-success");
+                        $('#statusmessage').text(obj.Message);
+                    },
+                    submitdata: function () {
+                        return {
+                            // Pass parameters to "UpdateLength" action in "Segments" controller action
+                            id: $(this).attr("name"),
+                            origvalue: this.revert,
+                        };
+                    },
+                    before: function () {
+                        // clear the status message
+                        $('#statusmessage').text("");
+                    },
+                    tooltip: 'Click or Tap to edit...',
+                    placeholder: '-',
+                    indicator: 'Saving...',
+                    size: 5
+                });
+            });
+        }
+
+        // A function that makes "Width" editable
+        function makeWidthEditable() {
+            $(".Width").each(function () {
+                $(this).editable("/Admin/Segments/UpdateWidth", {
+                    callback: function (value, settings) {
+                        var obj = JSON.parse(value);
+                        $(this).html(obj.value);
+
+                        var msg = obj.Message;
+
+                        $('#statusmessage').removeClass("text-success");
+                        $('#statusmessage').removeClass("text-danger");
+                        if (msg.toLowerCase().includes("error"))
+                            $('#statusmessage').addClass("text-danger");
+                        else
+                            $('#statusmessage').addClass("text-success");
+                        $('#statusmessage').text(obj.Message);
+                    },
+                    submitdata: function () {
+                        return {
+                            // Pass parameters to "UpdateWidth" action in "Segments" controller action
+                            id: $(this).attr("name"),
+                            origvalue: this.revert,
+                        };
+                    },
+                    before: function () {
+                        // clear the status message
+                        $('#statusmessage').text("");
+                    },
+                    tooltip: 'Click or Tap to edit...',
+                    placeholder: '-',
+                    indicator: 'Saving...',
+                    size: 5
+                });
+            });
+        }
+
+        // A function that makes "DesignStandard" editable
+        function makeDesignStandardEditable() {
+            $(".DesignStandard").each(function () {
+                $(this).editable("/Admin/Segments/UpdateDesignStandard", {
+                    type: "select", // drop down
+                    loadurl: '/Admin/Segments/SelectDesignStandard', // list all design standards
+                    callback: function (value, settings) {
+                        var obj = JSON.parse(value);
+                        $(this).html(obj.value);
+
+                        var msg = obj.Message;
+
+                        $('#statusmessage').removeClass("text-success");
+                        $('#statusmessage').removeClass("text-danger");
+                        if (msg.toLowerCase().includes("error"))
+                            $('#statusmessage').addClass("text-danger");
+                        else
+                            $('#statusmessage').addClass("text-success");
+                        $('#statusmessage').text(obj.Message);
+                    },
+                    submitdata: function () {
+                        return {
+                            // Pass parameters to "UpdateDesignStandard" action in "Segments" controller action
+                            id: $(this).attr("name"),
+                            origvalue: this.revert,
+                        };
+                    },
+                    before: function () {
+                        // clear the status message
+                        $('#statusmessage').text("");
+                    },
+                    tooltip: 'Click or Tap to edit...',
+                    placeholder: '-',
+                    indicator: 'Saving...',
+                    size: 30
+                });
+            });
+        }
+
+        // A function that makes "RoadClass" editable
+        function makeRoadClassEditable() {
+            $(".RoadClass").each(function () {
+                $(this).editable("/Admin/Segments/UpdateRoadClass", {
+                    type: "select", // drop down
+                    loadurl: '/Admin/Segments/SelectRoadClass', // list all design standards
+                    callback: function (value, settings) {
+                        var obj = JSON.parse(value);
+                        $(this).html(obj.value);
+
+                        var msg = obj.Message;
+
+                        $('#statusmessage').removeClass("text-success");
+                        $('#statusmessage').removeClass("text-danger");
+                        if (msg.toLowerCase().includes("error"))
+                            $('#statusmessage').addClass("text-danger");
+                        else
+                            $('#statusmessage').addClass("text-success");
+                        $('#statusmessage').text(obj.Message);
+                    },
+                    submitdata: function () {
+                        return {
+                            // Pass parameters to "UpdateRoadClass" action in "Segments" controller action
+                            id: $(this).attr("name"),
+                            origvalue: this.revert,
+                        };
+                    },
+                    before: function () {
+                        // clear the status message
+                        $('#statusmessage').text("");
+                    },
+                    tooltip: 'Click or Tap to edit...',
+                    placeholder: '-',
+                    indicator: 'Saving...',
+                    size: 30
+                });
+            });
+        }
+
+        // A function that makes "SurfaceType" editable
+        function makeSurfaceTypeEditable() {
+            $(".RoadSurfaceType").each(function () {
+                $(this).editable("/Admin/Segments/UpdateSurfaceType", {
+                    type: "select", // drop down
+                    loadurl: '/Admin/Segments/SelectSurfaceType', // list all design standards
+                    callback: function (value, settings) {
+                        var obj = JSON.parse(value);
+                        $(this).html(obj.value);
+
+                        var msg = obj.Message;
+
+                        $('#statusmessage').removeClass("text-success");
+                        $('#statusmessage').removeClass("text-danger");
+                        if (msg.toLowerCase().includes("error"))
+                            $('#statusmessage').addClass("text-danger");
+                        else
+                            $('#statusmessage').addClass("text-success");
+                        $('#statusmessage').text(obj.Message);
+                    },
+                    submitdata: function () {
+                        return {
+                            // Pass parameters to "UpdateSurfaceType" action in "Segments" controller action
+                            id: $(this).attr("name"),
+                            origvalue: this.revert,
+                        };
+                    },
+                    before: function () {
+                        // clear the status message
+                        $('#statusmessage').text("");
+                    },
+                    tooltip: 'Click or Tap to edit...',
+                    placeholder: '-',
+                    indicator: 'Saving...',
+                    size: 30
+                });
+            });
+        }
+
+        // A function that makes "AverageDailyTraffic" editable
+        function makeAverageDailyTrafficEditable() {
+            $(".AverageDailyTraffic").each(function () {
+                $(this).editable("/Admin/Segments/UpdateAverageDailyTraffic", {
+                    callback: function (value, settings) {
+                        var obj = JSON.parse(value);
+                        $(this).html(obj.value);
+
+                        var msg = obj.Message;
+
+                        $('#statusmessage').removeClass("text-success");
+                        $('#statusmessage').removeClass("text-danger");
+                        if (msg.toLowerCase().includes("error"))
+                            $('#statusmessage').addClass("text-danger");
+                        else
+                            $('#statusmessage').addClass("text-success");
+                        $('#statusmessage').text(obj.Message);
+                    },
+                    submitdata: function () {
+                        return {
+                            // Pass parameters to "UpdateAverageDailyTraffic" action in "Segments" controller action
+                            id: $(this).attr("name"),
+                            origvalue: this.revert,
+                        };
+                    },
+                    before: function () {
+                        // clear the status message
+                        $('#statusmessage').text("");
+                    },
+                    tooltip: 'Click or Tap to edit...',
+                    placeholder: '-',
+                    indicator: 'Saving...',
+                    size: 5
+                });
+            });
+        }
+
+        // A function that makes "RegionalGovernment" editable
+        function makeRegionalGovernmentEditable() {
+            $(".RegionalGovernment").each(function () {
+                $(this).editable("/Admin/Segments/UpdateRegionalGovernment", {
+                    type: "select", // drop down
+                    loadurl: '/Admin/Segments/SelectRegionalGovernment', // list all design standards
+                    callback: function (value, settings) {
+                        var obj = JSON.parse(value);
+                        $(this).html(obj.value);
+
+                        var msg = obj.Message;
+
+                        $('#statusmessage').removeClass("text-success");
+                        $('#statusmessage').removeClass("text-danger");
+                        if (msg.toLowerCase().includes("error"))
+                            $('#statusmessage').addClass("text-danger");
+                        else
+                            $('#statusmessage').addClass("text-success");
+                        $('#statusmessage').text(obj.Message);
+                    },
+                    submitdata: function () {
+                        return {
+                            // Pass parameters to "UpdateRegionalGovernment" action in "Segments" controller action
+                            id: $(this).attr("name"),
+                            origvalue: this.revert,
+                        };
+                    },
+                    before: function () {
+                        // clear the status message
+                        $('#statusmessage').text("");
+                    },
+                    tooltip: 'Click or Tap to edit...',
+                    placeholder: '-',
+                    indicator: 'Saving...',
+                    size: 30
+                });
+            });
+        }
+
+        // A function that makes "Remark" editable
+        function makeRemarkEditable() {
+            $(".Remark").each(function () {
+                $(this).editable("/Admin/Segments/UpdateRemark", {
+                    callback: function (value, settings) {
+                        var obj = JSON.parse(value);
+                        $(this).html(obj.value);
+
+                        var msg = obj.Message;
+
+                        $('#statusmessage').removeClass("text-success");
+                        $('#statusmessage').removeClass("text-danger");
+                        if (msg.toLowerCase().includes("error"))
+                            $('#statusmessage').addClass("text-danger");
+                        else
+                            $('#statusmessage').addClass("text-success");
+                        $('#statusmessage').text(obj.Message);
+                    },
+                    submitdata: function () {
+                        return {
+                            // Pass parameters to "UpdateRemark" action in "Segments" controller action
+                            id: $(this).attr("name"),
+                            origvalue: this.revert,
+                        };
+                    },
+                    before: function () {
+                        // clear the status message
+                        $('#statusmessage').text("");
+                    },
+                    tooltip: 'Click or Tap to edit...',
+                    placeholder: '-',
+                    indicator: 'Saving...',
+                    size: 30
+                });
+            });
+        }
+    });
+</script>

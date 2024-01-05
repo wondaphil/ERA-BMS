@@ -1,0 +1,332 @@
+﻿
+@{
+    ViewBag.Title = "Asset Value";
+}
+
+<h2>Bridge/Culvert Asset Value</h2>
+
+@using (Html.BeginForm())
+{
+    <div class="panel panel-default">
+        <div class="panel-body">
+
+            @Html.AntiForgeryToken()
+
+            <div class="row">
+                <div class="col-sm-4 col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group">
+                            <label class="control-label col-md-2">District</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("ddlDistrict", new SelectList(ViewBag.Districts, "Value", "Text"), new { @class = "form-control" })
+                                <!--<label class="control-label col-lg-6 col-md-8" id="distrIdDIV">--> <!-- District id appears here --> <!--</label>-->
+                                <div class="clearfix visible-lg visible-md visible-sm visible-xs"></div> <!-- Add clearfix (or new line break) for only the sm -->
+                                <button type="button" class="btn btn-primary glyphicon glyphicon-search" id="searchbydistrict" data-toggle="tooltip" title="Search by District"></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-4 col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group">
+                            <label class="control-label col-md-2">Section</label>
+                            <div class="col-md-8">
+                                <select class="form-control" id="ddlSection">
+                                    <!-- Sections list populates here -->
+                                </select>
+                                <!--<label class="control-label col-lg-7 col-md-9" id="secIdDIV">--> <!-- Section id appears here --> <!--</label>-->
+                                <div class="clearfix visible-lg visible-md visible-sm visible-xs"></div> <!-- Add clearfix (or new line break) for only the sm -->
+                                <button type="button" class="btn btn-primary glyphicon glyphicon-search" id="searchbysection" data-toggle="tooltip" title="Search by Section"></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="clearfix visible-xs"></div> <!-- Add clearfix (or new line break) for only the xs -->
+
+                <div class="col-sm-4 col-xs-12">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group">
+                            <label class="control-label col-md-2 col-sm-6 col-xs-6">Road Segment</label>
+                            <div class="clearfix visible-xs"></div> <!-- Add clearfix (or new line break) for only the xs -->
+                            <div class="col-md-8 col-sm-12 col-xs-6">
+                                <select class="form-control" id="ddlSegment">
+                                    <!-- Segments list populates here -->
+                                </select>
+                                <!--<label class="control-label" id="segIdDIV">--> <!-- Segment id appears here --> <!--</label>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Tab Buttons -->
+<ul id="tabstrip" class="nav nav-tabs" role="tablist">
+    <li class="active">
+        <a href="#_BridgeCurrentValueTab" role="tab" data-toggle="tab">Bridge Current Value</a>
+    </li>
+    <li>
+        <a href="#_CulvertCurrentValueTab" role="tab" data-toggle="tab">Culvert Current Value</a>
+    </li>
+    <li>
+        <a href="#_TotalAssetValueTab" role="tab" data-toggle="tab">Total Asset Value</a>
+    </li>
+    <li>
+        <a href="#_BridgeValuePerLmTab" role="tab" data-toggle="tab">Bridge Value Per LM</a>
+    </li>
+    <li>
+        <a href="#_CulvertValuePerLmTab" role="tab" data-toggle="tab">Culvert Value Per LM</a>
+    </li>
+</ul>
+
+<!-- Tab Content Containers -->
+<div class="tab-content">
+    <div class="tab-pane fade in active" id="_BridgeCurrentValueTab">
+        <div id="bridgeCurrentValue">
+            <!-- Bridge Current Value display here -->
+        </div>
+        <div id="waitBridgeCV" align="center" style="display: none">
+            <hr />
+            <img src="~/images/ajax-loader-big-1.gif" />
+        </div>
+    </div>
+    <div class="tab-pane fade" id="_CulvertCurrentValueTab">
+        <div id="culvertCurrentValue">
+            <!-- Culvert Current Value displays here -->
+        </div>
+        <div id="waitCulvertCV" align="center" style="display: none">
+            <hr />
+            <img src="~/images/ajax-loader-big-2.gif" />
+        </div>
+    </div>
+    <div class="tab-pane fade" id="_TotalAssetValueTab">
+        <div id="totalAssetValue">
+            <!-- >Total Asset Value By District displays here -->
+        </div>
+        <div id="waitTotalAsset" align="center" style="display: none">
+            <hr />
+            <img src="~/images/ajax-loader-big-3.gif" />
+        </div>
+    </div>
+    <div class="tab-pane fade" id="_BridgeValuePerLmTab">
+        <div id="bridgeValuePerLm">
+            <!-- Bridge Value Per Lm displays here -->
+        </div>
+        <div id="waitBridgeLM" align="center" style="display: none">
+            <hr />
+            <img src="~/images/ajax-loader-big-4.gif" />
+        </div>
+    </div>
+    <div class="tab-pane fade" id="_CulvertValuePerLmTab">
+        <div id="culvertValuePerLm">
+            <!-- Culvert Value Per Lm displays here -->
+        </div>
+        <div id="waitCulvertLM" align="center" style="display: none">
+            <hr />
+            <img src="~/images/ajax-loader-big-5.gif" />
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            url: '@Url.Action("_GetTotalAssetValue", "AssetValue")',
+            type: 'GET',
+            dataType: 'html',
+            beforeSend: function () { $('#waitTotalAsset').show(); },
+            complete: function () { $('#waitTotalAsset').hide(); },
+            success: function (data) {
+                $('#totalAssetValue').html(data);
+            }
+        });
+
+        $.ajax({
+            url: '@Url.Action("_GetBridgeValuePerLm", "AssetValue")',
+            type: 'GET',
+            dataType: 'html',
+            beforeSend: function () { $('#waitBridgeLM').show(); },
+            complete: function () { $('#waitBridgeLM').hide(); },
+            success: function (data) {
+                $('#bridgeValuePerLm').html(data);
+            }
+        });
+
+        $.ajax({
+            url: '@Url.Action("_GetCulvertValuePerLm", "AssetValue")',
+            type: 'GET',
+            dataType: 'html',
+            beforeSend: function () { $('#waitCulvertLM').show(); },
+            complete: function () { $('#waitCulvertLM').hide(); },
+            success: function (data) {
+                $('#culvertValuePerLm').html(data);
+            }
+        });
+
+        $('#ddlDistrict').change(function () {
+            var selDistrictId = $('#ddlDistrict option:selected').val();
+            $('#ddlSection option').remove(); //empty the section dropdown list
+            $('#secIdDIV').text(""); //clear section no. indicator
+            $('#ddlSegment option').remove(); //empty the segment dropdown list
+            $('#segIdDIV').text(""); //clear segment no. indicator
+            $('#bridgeCurrentValue').empty(); // clear the bridges current value place holder
+            $('#culvertCurrentValue').empty(); // clear the bridges current value place holder
+            if (selDistrictId == "0") //if no district is selected
+            {
+                $('#distrIdDIV').text(""); //clear district no. indicator
+            }
+            else {
+                $('#distrIdDIV').text("District No. = " + selDistrictId );
+                $.ajax({
+                    url: '@Url.Action("_GetSections", "LocationsDDL", new { area = "" })',
+                    data: { districtid: selDistrictId },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        var markup = '<option value="0" id="noselect"> --Select Section --</option>';
+                        $.each(data, function (i, section) {
+                            markup += '<option value="' + section.Value + '">' + section.Text + '</option>'
+                            $('#ddlSection').html(markup);
+                        });
+                    }
+                });
+            }
+        });
+
+        $('#ddlSection').change(function () {
+            var selSectionId = $('#ddlSection option:selected').val();
+            $('#ddlSegment option').remove(); //empty the segment dropdown list
+            $('#segIdDIV').text(""); //clear segment no. indicator
+            $('#bridgeCurrentValue').empty(); // clear the bridges current value place holder
+            $('#culvertCurrentValue').empty(); // clear the bridges current value place holder
+
+            if (selSectionId == "0") //if no section is selected
+            {
+                $('#secIdDIV').text(""); //clear section no. indicator
+            }
+            else {
+                $('#secIdDIV').text("Section No. = " + selSectionId);
+
+                $.ajax({
+                    url: '@Url.Action("_GetSegments", "LocationsDDL", new { area = "" })',
+                    data: { sectionid: selSectionId },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        var markup = '<option value="0" id="noselect"> --Select Segment --</option>';
+                        $.each(data, function (i, segment) {
+                            markup += '<option value="' + segment.Value + '">' + segment.Text + '</option>'
+                            $('#ddlSegment').html(markup);
+                        });
+                    }
+                });
+            }
+        });
+
+        $('#ddlSegment').change(function () {
+            var selSegmentId = $('#ddlSegment option:selected').val();
+            $('#bridgeCurrentValue').empty(); // clear the bridges current value place holder
+            $('#culvertCurrentValue').empty(); // clear the bridges current value place holder
+            $('#SegIdDIV').text("");
+
+            if (selSegmentId != "0") //if some segment is selected
+            {
+                $('#segIdDIV').text("Road Id = " + selSegmentId);
+                $.ajax({
+                    url: '@Url.Action("_GetBridgeCurrentValueBySegment", "AssetValue")',
+                    data: { segmentid: selSegmentId },
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () { $('#waitBridgeCV').show(); },
+                    complete: function () { $('#waitBridgeCV').hide(); },
+                    success: function (data) {
+                        $('#bridgeCurrentValue').html(data);
+                    }
+                });
+
+                $.ajax({
+                    url: '@Url.Action("_GetCulvertCurrentValueBySegment", "AssetValue")',
+                    data: { segmentid: selSegmentId },
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () { $('#waitCulvertCV').show(); },
+                    complete: function () { $('#waitCulvertCV').hide(); },
+                    success: function (data) {
+                        $('#culvertCurrentValue').html(data);
+                    }
+                });
+            }
+        });
+
+        $('#searchbydistrict').click(function () {
+            var selDistrictId = $('#ddlDistrict option:selected').val();
+            if (selDistrictId != "0") //if some district is selected
+            {
+                $('#bridgeCurrentValue').empty(); // clear the bridges asset value place holder
+                $('#culvertCurrentValue').empty(); // clear the culvert asset value place holder
+
+                $.ajax({
+                    url: '@Url.Action("_GetBridgeCurrentValueByDistrict", "AssetValue")',
+                    data: { districtid: selDistrictId },
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () { $('#waitBridgeCV').show(); },
+                    complete: function () { $('#waitBridgeCV').hide(); },
+                    success: function (data) {
+                        $('#bridgeCurrentValue').html(data);
+                    }
+                });
+
+                $.ajax({
+                    url: '@Url.Action("_GetCulvertCurrentValueByDistrict", "AssetValue")',
+                    data: { districtid: selDistrictId },
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () { $('#waitCulvertCV').show(); },
+                    complete: function () { $('#waitCulvertCV').hide(); },
+                    success: function (data) {
+                        $('#culvertCurrentValue').html(data);
+                    }
+                });
+            }
+        });
+
+        $('#searchbysection').click(function () {
+            var selSectionId = $('#ddlSection option:selected').val();
+            if (selSectionId != "0") //if some section is selected
+            {
+                $('#bridgeCurrentValue').empty(); // clear the bridges asset value place holder
+                $('#culvertCurrentValue').empty(); // clear the culvert asset value place holder
+
+                $.ajax({
+                    url: '@Url.Action("_GetBridgeCurrentValueBySection", "AssetValue")',
+                    data: { sectionid: selSectionId },
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () { $('#waitBridgeCV').show(); },
+                    complete: function () { $('#waitBridgeCV').hide(); },
+                    success: function (data) {
+                        $('#bridgeCurrentValue').html(data);
+                    }
+                });
+
+                $.ajax({
+                    url: '@Url.Action("_GetCulvertCurrentValueBySection", "AssetValue")',
+                    data: { sectionid: selSectionId },
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () { $('#waitCulvertCV').show(); },
+                    complete: function () { $('#waitCulvertCV').hide(); },
+                    success: function (data) {
+                        $('#culvertCurrentValue').html(data);
+                    }
+                });
+            }
+        });
+    });
+</script>

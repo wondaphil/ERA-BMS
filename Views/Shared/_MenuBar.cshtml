@@ -1,0 +1,358 @@
+﻿@* Menu Bar *@
+
+@*<style>
+    .login-logout {
+        background-color: transparent;
+    }
+
+    .login-logout:hover {
+        text-decoration: none;
+    }
+</style>*@
+
+<div class="navbar navbar-inverse navbar-fixed-top bg-info">
+    <div class="container">
+        <nav>
+            <a class="navbar-brand" href="@Url.Action("Index", "Home")">
+                <img src="~/images/logo.png" alt="ERA BMS" class="menulogo" />
+            </a>
+        </nav>
+        <div class="navbar-header">
+
+            @*<form class="form-inline" action="/action_page.php">
+                    <input class="form-control mr-sm-2" type="text" placeholder="Search">
+                    <button class="btn btn-success" type="submit">Search</button>
+                </form>*@
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            @*@Html.ActionLink("ERA BMS", "#", "Home", new { area = "" }, new { @class = "navbar-brand" })*@
+        </div>
+        <div class="collapse navbar-collapse">
+            @* Disable all data entry menu if user has not logged in *@
+            @{ string menuItem = "menuitem";
+                if (!User.Identity.IsAuthenticated)
+                {
+                    menuItem = "disabled";
+                }
+            }
+
+            @* Disable "AdminMenuItem" menu items if user is not Admin *@
+            @{ string AdminMenuItem = "menuitem";
+                if (!User.IsInRole("Admin"))
+                {
+                    AdminMenuItem = "disabled";
+                }
+            }
+
+            @* Enable some "Setting" menu items if user is Admin or Manager *@
+            @{ string managerMenuItem = "menuitem";
+                if (!User.IsInRole("Admin") && !User.IsInRole("Manager"))
+                {
+                    managerMenuItem = "disabled";
+                }
+            }
+            <div class="navbar-collapse collapse left">
+                <ul class="nav navbar-nav tree" id="menu">
+                    <li class="dropdown mainmenu">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            HOME <b class="caret"> </b>
+                        </a>
+                        <ul class="dropdown-menu multi-level" role="menu">
+                            <li class="menuitem">@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "menuitem", id = "home" })</li>
+                            <li role="separator" class="divider"></li>
+                            <li class="menuitem">
+                                @using (Html.BeginForm("LogOff", "Account", new { area = "" }, FormMethod.Post, new { @class = "form-inline", id = "logoutForm" }))
+                                {
+                                    @Html.AntiForgeryToken()
+
+
+                                    if (Request.IsAuthenticated)
+                                    {
+                                        <a href="javascript:document.getElementById('logoutForm').submit()" class="login-logout"> <span class="glyphicon glyphicon-log-out"></span> Log out</a>
+                                    }
+                                    else
+                                    {
+                                        @*@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })*@
+                                        <a href="/Account/Login" id="loginLink" class="login-logout"><span class="glyphicon glyphicon-log-in"></span>  Log in</a>
+                                    }
+                                }
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="dropdown mainmenu">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            DATA ENTRY <b class="caret"> </b>
+                        </a>
+                        <ul class="dropdown-menu multi-level" role="menu">
+                            <li class="@menuItem"><a href="@Url.Action("New", "Bridges", new { area = "" })">Bridge Registration <span class="glyphicon glyphicon-plus navbar-right" style="font-size: 13px;"></span></a></li> <!-- Data Entry -> Bridge Registation -->
+                            <li class="@menuItem"><a href="@Url.Action("Index", "Bridges", new { area = "" })">Modify Bridge Data <span class="glyphicon glyphicon-edit navbar-right" style="font-size: 13px;"></span></a></li> <!-- Data Entry -> Bridge Inventory -->
+                            <li class="@menuItem"><a href="@Url.Action("Index", "BridgeInventory", new { area = "" })">Bridge Inventory <span class="glyphicon glyphicon-tasks navbar-right" style="font-size: 13px;"></span></a></li> <!-- Data Entry -> Bridge Inventory -->
+
+                            <li role="separator" class="divider"></li>
+
+                            <li class="@menuItem"><a href="@Url.Action("Index", "DamageInspVisual", new { area = "" })">Bridge Visual Inspection <span class="glyphicon glyphicon-tasks navbar-right" style="font-size: 13px;"></span></a></li> <!-- Data Entry -> Bridge -> Bridge Visual Inspection -->
+                            <li class="@menuItem"><a href="@Url.Action("Index", "DamageInspMajor", new { area = "" })">Bridge Major Inspection <span class="glyphicon glyphicon-tasks navbar-right" style="font-size: 13px;"></span></a></li> <!-- Data Entry -> Bridge -> Bridge Major Inspection -->
+                            <li class="@AdminMenuItem">@Html.ActionLink("* Process Bridge Inspection Data", "ProcessBridgeInspectionData", "DamageInspMajor", new { area = "" }, null)</li> <!-- Data Entry -> Bridge Inspection Major -->
+
+                            <li role="separator" class="divider"></li>
+
+                            <li class="@menuItem"><a href="@Url.Action("Index", "TrafficData", new { area = "" })">Traffic Data <span class="glyphicon glyphicon-road navbar-right" style="font-size: 13px;"></span></a></li> <!-- Data Entry -> Bridge Registation -->
+
+                            <li role="separator" class="divider"></li>
+
+                            <li class="@menuItem"><a href="@Url.Action("New", "Culverts", new { area = "" })">Culvert Registration <span class="glyphicon glyphicon-plus navbar-right" style="font-size: 13px;"></span></a></li> <!-- Data Entry -> Culvert Registation -->
+                            <li class="@menuItem"><a href="@Url.Action("Index", "Culverts", new { area = "" })">Modify Culvert Data <span class="glyphicon glyphicon-edit navbar-right" style="font-size: 13px;"></span></a></li> <!-- Data Entry -> Bridge Inventory -->
+                            <li class="@menuItem"><a href="@Url.Action("Index", "CulvertInventory", new { area = "" })">Culvert Inventory <span class="glyphicon glyphicon-tasks navbar-right" style="font-size: 13px;"></span></a></li> <!-- Data Entry -> Culvert Inventory -->
+
+                            <li role="separator" class="divider"></li>
+
+                            <!--<li class="disabled">@Html.ActionLink("Repair History", "#", "Home", new { area = "" }, null)</li>--> <!-- Data Entry -> Culvert -> Repair History -->
+                            <li class="menuitem"><a href="@Url.Action("Index", "DamageInspCulvert", new { area = "" })">Culvert Inspection <span class="glyphicon glyphicon-tasks navbar-right" style="font-size: 13px;"></span></a></li> <!-- Data Entry -> Culvert -> Culvert Inspection -->
+                        </ul>
+                    </li>
+
+                    <li class="dropdown mainmenu">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            IMPROVEMENT
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu multi-level">
+                            @*<li class="dropdown dropdown-submenu">
+                                <a class="dropdown-toggle">Bridge Priority for Improvement</a>
+                                <ul class="dropdown-menu">
+                                    <li class="disabled">@Html.ActionLink("By Bridge Parts Damage", "#", "BridgePriority", new { area = "" }, null)</li>
+                                    <li class="disabled">@Html.ActionLink("By Repair Cost", "#", "BridgePriority", new { area = "" }, null)</li>
+
+                                </ul>
+                            </li>*@
+                            <li class="menuitem">@Html.ActionLink("Bridge Priority By Intervention Req.", "BridgePriorityByInterventionRequirement", "BridgePriority", new { area = "" }, null)</li>
+                            <li role="separator" class="divider"></li>
+                            <li class="@menuItem">@Html.ActionLink("Bridge Improvement Registration", "Index", "BridgeImprovement", new { area = "" }, null)</li> <!-- Improvement -> Bridge Improvement Registration -->
+                            <li class="menuitem">@Html.ActionLink("Bridge Improvement Action Records", "BridgeImprovementActionRecords", "BridgeImprovement", new { area = "" }, null)</li> <!-- Improvement -> Bridge Improvement Action Records -->
+                            <li class="menuitem">@Html.ActionLink("Bridge Improvement History", "BridgeImprovementHistory", "BridgeImprovement", new { area = "" }, null)</li> <!-- Improvement -> Bridge Improvement History -->
+                            @*<li class="disabled">@Html.ActionLink("Bridge Work Plan/Progress", "#", "Home", new { area = "" }, null)</li>*@ <!-- Improvemen -> Bridge Work Plan/Progress -->
+
+                            <li role="separator" class="divider"></li>
+                            
+                            <li class="menuitem"><a href="@Url.Action("BridgeImprovementCost", "BridgeImprovement", new { area = "" })">Bridge Improvement Cost <span class="glyphicon glyphicon-usd navbar-right" style="font-size: 13px;"></span></a></li>
+                            <li class="menuitem"><a href="@Url.Action("BridgesAndCulvertsRepairCostByDistrict", "BridgeImprovement", new { area = "" })">Bridge & Culvert Repair Cost <span class="glyphicon glyphicon-usd navbar-right" style="font-size: 13px;"></span></a></li>
+                            
+                            <li role="separator" class="divider"></li>
+                            
+                            <li class="@menuItem">@Html.ActionLink("Culvert Improvement Registration", "Index", "CulvertImprovement", new { area = "" }, null)</li> <!-- Improvement -> Culvert Improvement Registration -->
+                            <li class="menuitem">@Html.ActionLink("Culvert Improvement Action Records", "CulvertImprovementActionRecords", "CulvertImprovement", new { area = "" }, null)</li> <!-- Improvement -> Culvert Improvement Action Records -->
+
+                            <li role="separator" class="divider"></li>
+
+                            <li class="menuitem">@Html.ActionLink("Culverts for Upgrading", "CulvertsForUpgrading", "CulvertImprovement", new { area = "" }, null)</li> <!-- Improvement -> Culverts For Upgrading -->
+
+                            <li role="separator" class="divider"></li>
+
+                            <li class="dropdown dropdown-submenu">
+                                <a class="dropdown-toggle">Advanced</a>
+                                <ul class="dropdown-menu">
+                                    <li class="menuitem">@Html.ActionLink("Bridge Priority By Highest Damge Rank", "BridgePriorityByHighestDamageRank", "BridgePriority", new { area = "" }, null)</li>
+                                    <li class="menuitem">@Html.ActionLink("Bridge Priority By Average", "BridgePriorityByAverage", "BridgePriority", new { area = "" }, null)</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="dropdown mainmenu">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            VIEW
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu multi-level" role="menu">
+                            <li class="menuitem"><a href="@Url.Action("BridgeList", "Bridges", new { area = "" })">Bridge List <span class="glyphicon glyphicon-list-alt navbar-right" style="font-size: 13px;"></span></a></li>
+                            <li class="menuitem"><a href="@Url.Action("Index", "BridgeProfile", new { area = "" })">Bridge Profile & Media <span class="glyphicon glyphicon-picture navbar-right" style="font-size: 13px;"></span></a></li>
+
+                            <li role="separator" class="divider"></li>
+
+                            <li class="menuitem"><a href="@Url.Action("Index", "Search", new { area = "" })">Search Bridge / Culvert <span class="glyphicon glyphicon-search navbar-right" style="font-size: 13px;"></span></a></li>
+
+                            <li role="separator" class="divider"></li>
+
+                            <li class="menuitem"><a href="@Url.Action("CulvertList", "Culverts", new { area = "" })">Culvert List <span class="glyphicon glyphicon-list-alt navbar-right" style="font-size: 13px;"></span></a></li>
+                            <li class="menuitem"><a href="@Url.Action("Index", "CulvertProfile", new { area = "" })">Culvert Profile & Media <span class="glyphicon glyphicon-picture navbar-right" style="font-size: 13px;"></span></a></li>
+
+                            <li role="separator" class="divider"></li>
+
+                            <li class="menuitem"><a href="@Url.Action("Index", "BridgeLocation", new { area = "" })">Bridge Map <span class="glyphicon glyphicon-map-marker navbar-right" style="font-size: 13px;"></span></a></li>
+                            <li class="menuitem"><a href="@Url.Action("Index", "CulvertLocation", new { area = "" })">Culvert Map <span class="glyphicon glyphicon-map-marker navbar-right" style="font-size: 13px;"></span></a></li>
+                            
+                            <li role="separator" class="divider"></li>
+
+                            <li class="dropdown dropdown-submenu">
+                                <a class="dropdown-toggle">Census Reports</a>
+                                <ul class="dropdown-menu">
+                                    <li class="menuitem"><a href="@Url.Action("BridgeTypeCensusByLocation", "BridgeReportsCensus", new { area = "" })">Bridge Type Census <span class="glyphicon glyphicon-th-list navbar-right" style="font-size: 13px;"></span></a></li>
+                                    <li class="menuitem"><a href="@Url.Action("CulvertTypeCensusByLocation", "CulvertReportsCensus", new { area = "" })">Culvert Type Census <span class="glyphicon glyphicon-th-list navbar-right" style="font-size: 13px;"></span></a></li>
+                                    <li class="menuitem"><a href="@Url.Action("CountReport", "BridgeReportsCensus", new { area = "" })">Count Reports <span class="glyphicon glyphicon-th-list navbar-right" style="font-size: 13px;"></span></a></li>
+                                </ul>
+                            </li>
+                            <li class="dropdown dropdown-submenu">
+                                <a class="dropdown-toggle">Group By List</a>
+                                <ul class="dropdown-menu">
+                                    <li class="menuitem">@Html.ActionLink("All Bridges", "AllBridges", "BridgeReportsCensus", new { area = "" }, null)</li>
+                                    <li class="menuitem">@Html.ActionLink("All Culverts by District", "AllCulvertsByDistrict", "CulvertReportsCensus", new { area = "" }, null)</li>
+                                </ul>
+                            </li>
+                            <li class="dropdown dropdown-submenu">
+                                <a class="dropdown-toggle">Other</a>
+                                <ul class="dropdown-menu">
+                                    <li class="menuitem"><a href="@Url.Action("AbandonedBridges", "BridgeReportsCensus", new { area = "" })">Abandoned Bridges<span class="glyphicon glyphicon-th-list navbar-right" style="font-size: 13px;"></span></a></li>
+                                    <li class="menuitem"><a href="@Url.Action("PileFoundationBridges", "BridgeReportsCensus", new { area = "" })">Pile Foundation Bridges<span class="glyphicon glyphicon-th-list navbar-right" style="font-size: 13px;"></span></a></li>
+                                </ul>
+                            </li>
+                            
+                            <li role="separator" class="divider"></li>
+
+                            <li class="menuitem"><a href="@Url.Action("Index", "ChartGraph", new { area = "" })">Graphs <span class="glyphicon glyphicon-stats navbar-right" style="font-size: 13px;"></span></a></li>
+                            <li role="separator" class="divider"></li>
+
+                            <li class="menuitem"><a href="@Url.Action("Index", "BridgeInspectionReports", new { area = "" })">Bridge Inspection Reports <span class="glyphicon glyphicon-th-list navbar-right" style="font-size: 13px;"></span></a></li>
+                            <li class="menuitem"><a href="@Url.Action("Index", "CulvertInspectionReports", new { area = "" })">Culvert Inspection Reports <span class="glyphicon glyphicon-th-list navbar-right" style="font-size: 13px;"></span></a></li>
+                            <li role="separator" class="divider"></li>
+
+                            <li class="menuitem"><a href="@Url.Action("Index", "RoadList", new { area = "" })">Road List & Length <span class="glyphicon glyphicon-road navbar-right" style="font-size: 13px;"></span></a></li>
+
+                            <li class="dropdown dropdown-submenu">
+                                <a class="dropdown-toggle">Advanced</a>
+                                <ul class="dropdown-menu">
+                                    <li class="@AdminMenuItem"><a href="@Url.Action("Index", "BridgeBook", new { area = "Admin" })">Bridge Book <span class="glyphicon glyphicon-book navbar-right" style="font-size: 13px;"></span></a></li>
+                                    <li class="@AdminMenuItem"><a href="@Url.Action("AnnualBridgeBook", "BridgeBook", new { area = "Admin" })">Annual Book <span class="glyphicon glyphicon-book navbar-right" style="font-size: 13px;"></span></a></li>
+                                    <li class="@AdminMenuItem"><a href="@Url.Action("Index", "AssetValue", new { area = "Admin" })">Asset Value <span class="glyphicon glyphicon-usd navbar-right" style="font-size: 13px;"></span></a></li>
+                                    <li class="@AdminMenuItem"><a href="@Url.Action("BearingCapacity", "BridgeInventory", new { area = "" })">Bearing Capacity <span class="glyphicon glyphicon-alert navbar-right" style="font-size: 13px;"></span></a></li>
+                                    <li class="@AdminMenuItem"><a href="@Url.Action("Index", "RoadMap", new { area = "" })">Road Map <span class="glyphicon glyphicon-map-marker navbar-right" style="font-size: 13px;"></span></a></li>
+                                    <li class="menuitem"><a href="@Url.Action("NoMapSegments", "Kml", new { area = "" })">No Map Roads List<span class="glyphicon glyphicon-map-marker navbar-right" style="font-size: 13px;"></span></a></li>
+                                </ul>
+                            </li>
+
+                            @*<li class="menuitem"><a href="@Url.Action("InvalidCulvertInspectionDate", "CulvertInspectionReports", new { area = "" })">Invalid Inspection Date <span class="glyphicon glyphicon-th-list navbar-right" style="font-size: 13px;"></span></a></li>*@
+                            @*<li class="dropdown dropdown-submenu">
+            <a class="dropdown-toggle">Brg Work Plan Progress</a>
+            <ul class="dropdown-menu">
+                <li class="disabled">@Html.ActionLink("Repair Work Plan", "#", "Home", new { area = "" }, null)</li>
+                <li class="disabled">@Html.ActionLink("Repair Work Progress", "#", "Home", new { area = "" }, null)</li>
+                <li class="disabled">@Html.ActionLink("Repair Activities", "#", "Home", new { area = "" }, null)</li>
+            </ul>
+        </li>*@
+                        </ul>
+                    </li>
+
+
+                    <li class="dropdown mainmenu">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            SETTINGS
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu multi-level" role="menu">
+                            <li class="dropdown dropdown-submenu">
+                                <a class="dropdown-toggle">District / Section / Segment</a>
+                                <ul class="dropdown-menu">
+                                    <li class="@AdminMenuItem">@Html.ActionLink("Districts", "Index", "Districts", new { area = "Admin" }, null)</li>
+                                    <li class="@AdminMenuItem">@Html.ActionLink("Sections", "Index", "Sections", new { area = "Admin" }, null)</li>
+                                    <li class="@AdminMenuItem">@Html.ActionLink("Road Segments", "Index", "Segments", new { area = "Admin" }, null)</li>
+                                </ul>
+                            </li>
+                            <li class="@AdminMenuItem">@Html.ActionLink("Main / Sub Routes", "Index", "Routes", new { area = "Admin" }, null)</li>
+                            <li role="separator" class="divider"></li>
+
+                            <li class="dropdown dropdown-submenu">
+                                <a class="dropdown-toggle">Super Structure Types</a>
+                                <ul class="dropdown-menu">
+                                    <li class="@managerMenuItem">@Html.ActionLink("Bridge Types", "Index", "BridgeTypes", new { area = "Admin" }, null)</li>
+                                    <li class="@managerMenuItem">@Html.ActionLink("Girder Types", "Index", "GirderTypes", new { area = "Admin" }, null)</li>
+                                    <li class="@managerMenuItem">@Html.ActionLink("Deck Slab Types", "Index", "DeckSlabTypes", new { area = "Admin" }, null)</li>
+                                    <li class="@managerMenuItem">@Html.ActionLink("Span Support Types", "Index", "SpanSupportTypes", new { area = "Admin" }, null)</li>
+                                </ul>
+                            </li>
+
+                            <li class="dropdown dropdown-submenu">
+                                <a class="dropdown-toggle">Sub Structure Types</a>
+                                <ul class="dropdown-menu">
+                                    <li class="@managerMenuItem">@Html.ActionLink("Abutment Types", "Index", "AbutmentTypes", new { area = "Admin" }, null)</li>
+                                    <li class="@managerMenuItem">@Html.ActionLink("Foundation Types", "Index", "FoundationTypes", new { area = "Admin" }, null)</li>
+                                    <li class="@managerMenuItem">@Html.ActionLink("Pier Types", "Index", "PierTypes", new { area = "Admin" }, null)</li>
+                                    <li class="@managerMenuItem">@Html.ActionLink("Soil Types", "Index", "SoilTypes", new { area = "Admin" }, null)</li>
+                                </ul>
+                            </li>
+
+                            <li class="dropdown dropdown-submenu">
+                                <a class="dropdown-toggle">Ancillary Types</a>
+                                <ul class="dropdown-menu">
+                                    <li class="@managerMenuItem">@Html.ActionLink("Expansion Joint Type", "Index", "ExpansionJointTypes", new { area = "Admin" }, null)</li>
+                                    <li class="@managerMenuItem">@Html.ActionLink("Bearing Types", "Index", "BearingTypes", new { area = "Admin" }, null)</li>
+                                    <li class="@managerMenuItem">@Html.ActionLink("Guard Railing Types", "Index", "GuardRailingTypes", new { area = "Admin" }, null)</li>
+                                    <li class="@managerMenuItem">@Html.ActionLink("Surface Types", "Index", "SurfaceTypes", new { area = "Admin" }, null)</li>
+                                    <li class="@managerMenuItem">@Html.ActionLink("Road Alignment Types", "Index", "RoadAlignmentTypes", new { area = "Admin" }, null)</li>
+                                </ul>
+                            </li>
+
+                            <li class="dropdown dropdown-submenu">
+                                <a class="dropdown-toggle">Culvert Structure</a>
+                                <ul class="dropdown-menu">
+                                    <li class="@managerMenuItem">@Html.ActionLink("Culvert Types", "Index", "CulvertTypes", new { area = "Admin" }, null)</li>
+                                    <li class="@managerMenuItem">@Html.ActionLink("End Wall Types", "Index", "EndWallTypes", new { area = "Admin" }, null)</li>
+                                    <li class="@managerMenuItem">@Html.ActionLink("Parapet Material Types", "Index", "ParapetMaterialTypes", new { area = "Admin" }, null)</li>
+                                </ul>
+                            </li>
+                            
+                            <li role="separator" class="divider"></li>
+
+                            <li class="@AdminMenuItem"><a href="@Url.Action("Index", "DamagePriority", new { area = "Admin" })">Prioritization Criteria <span class="navbar-right" style="font-size: 13px; font-weight:900">%</span></a></li>
+                            <li class="@AdminMenuItem"><a href="@Url.Action("Index", "DamageWeightAndCostRate", new { area = "Admin" })">Damage Weight & Cost <span class="navbar-right" style="font-size: 13px; font-weight:900">%</span></a></li>
+                            <li class="@AdminMenuItem"><a href="@Url.Action("Index", "CulvertDamageRateAndCost", new { area = "Admin" })">Culvert Dmg Rate & Cost <span class="navbar-right" style="font-size: 13px; font-weight:900">%</span></a></li>
+
+                            <li role="separator" class="divider"></li>
+
+                            @*<li class="@AdminMenuItem">@Html.ActionLink("Road Function Class", "Index", "RoadFunctionClass", new { area = "Admin" }, null)</li>*@
+                            <li class="@AdminMenuItem">@Html.ActionLink("Media Types", "Index", "MediaTypes", new { area = "Admin" }, null)</li>
+                            <li class="@AdminMenuItem">@Html.ActionLink("Structure Length Ranges", "Index", "BridgeLengthRanges", new { area = "Admin" }, null)</li>
+                            <li class="@AdminMenuItem">@Html.ActionLink("Construction Year Ranges", "Index", "ConstructionYearRanges", new { area = "Admin" }, null)</li>
+                            <li class="@AdminMenuItem">@Html.ActionLink("Major Inspection Years", "Index", "MajorInspectionYear", new { area = "Admin" }, null)</li> <!-- Data Entry -> Bridge -> Bridge Inspection Major -->
+
+                            <li role="separator" class="divider"></li>
+
+                            @*<li class="@AdminMenuItem">@Html.ActionLink("Change Current User Password", "ChangePassword", "Manage", new { area = "" }, null)</li>*@
+
+
+                            <li class="dropdown dropdown-submenu">
+                                <a class="dropdown-toggle">Advanced</a> <!-- Settings -> Advanced -->
+                                <ul class="dropdown-menu">
+                                    <li class="@AdminMenuItem"><a href="@Url.Action("Index", "UserManagement", new { area = "Admin" })">User Management <span class="glyphicon glyphicon-user navbar-right" style="font-size: 13px;"></span></a></li> <!-- Settings -> Advanced -> User Management -->
+                                    <li class="@AdminMenuItem"><a href="@Url.Action("DeleteBridge", "Bridges", new { area = "" })">Delete Bridge Including Detail <span class="glyphicon glyphicon-trash navbar-right" style="font-size: 13px;"></span></a></li> <!-- Settings -> Advanced -> Delete Bridge -->
+                                    <li class="@AdminMenuItem"><a href="@Url.Action("DeleteCulvert", "Culverts", new { area = "" })">Delete Culvert Including Detail <span class="glyphicon glyphicon-trash navbar-right" style="font-size: 13px;"></span></a></li> <!-- Settings -> Advanced -> Delete Culvert -->
+                                </ul>
+                            </li>
+
+                            @*<li role="separator" class="divider"></li>
+        <li class="@AdminMenuItem">@Html.ActionLink("Check Error", "Index", "ErrorChecker", new { area = "" }, null)</li>*@
+                        </ul>
+                    </li>
+
+                    <li class="dropdown mainmenu">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            HELP
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="~/docs/bms_software_develeopment_history.pdf" target="_blank">Software Development History</a></li> <!-- opens pdf file in another tab -->
+                            <li class="menuitem"><a href="~/docs/ERA_BMS_Version_8_User_Manual_March_2023.pdf">User Manual <span class="glyphicon glyphicon-question-sign navbar-right" style="font-size: 13px;"></span></a></li> <!-- opens pdf file in another tab -->
+                            <li role="separator" class="divider"></li>
+                            <li class="menuitem"><a href="@Url.Action("Contact", "Help", new { area = "" })">Contact <span class="glyphicon glyphicon-earphone navbar-right" style="font-size: 13px;"></span></a></li> <!-- Help -> About -->
+                            <li class="menuitem"><a href="@Url.Action("About", "Help", new { area = "" })">About <span class="glyphicon glyphicon-info-sign navbar-right" style="font-size: 13px;"></span></a></li> <!-- Help -> About -->
+
+                        </ul>
+                    </li>
+                </ul>
+                @*@Html.Partial("_LoginPartial")*@
+            </div>
+        </div>
+    </div>
+</div>

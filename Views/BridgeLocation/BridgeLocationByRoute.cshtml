@@ -1,0 +1,153 @@
+﻿
+@{
+    ViewBag.Title = "Bridge Location Information By Route";
+}
+
+<h2>Bridge Location Information (By Route)</h2>
+
+@using (Html.BeginForm())
+{
+    <div class="panel panel-default">
+        <div class="panel-body">
+
+            @Html.AntiForgeryToken()
+
+            <div class="row">
+                <div class="col-md-4 col-sm-3 col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group-sm">
+                            <label class="control-label col-md-3">Main Route</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("ddlMainRoute", new SelectList(ViewBag.MainRoutes, "Value", "Text"), new { @class = "form-control" })
+                                <div class="clearfix visible-lg visible-md visible-sm visible-xs"></div> <!-- Add clearfix (or new line break) for only the sm -->
+                                <button type="button" class="btn btn-primary glyphicon glyphicon-search search" id="searchbymainroute" data-toggle="tooltip" title="Search by Main Route"></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-4 col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group-sm">
+                            <label class="control-label col-md-3">Sub Route</label>
+                            <div class="col-md-8">
+                                <select class="form-control" id="ddlSubRoute">
+                                    <!-- Sub Routes list populates here -->
+                                </select>
+                                <div class="clearfix visible-lg visible-md visible-sm visible-xs"></div> <!-- Add clearfix (or new line break) for only the sm -->
+                                <button type="button" class="btn btn-primary glyphicon glyphicon-search" id="searchbysubroute" data-toggle="tooltip" title="Search by Sub Route"></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="clearfix visible-xs"></div> <!-- Add clearfix (or new line break) for only the xs -->
+
+                <div class="col-md-3 col-sm-5 col-xs-4" align="right">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group-sm">
+                            <div class="col-xs-6" id="mapdiv" style="display: none">
+                                <a href="" target="_blank" class="btn btn-primary" data-toggle="tooltip" id="mapbysubroute" title="Map by Road Segment" align="right"><span class="glyphicon glyphicon-map-marker"></span> Map</a>
+                            </div>
+                            <div class="col-xs-6">
+                                <a href="@Url.Action("Index", "BridgeLocation")" class="btn btn-primary" id="bylocation" data-toggle="tooltip" title="Bridge List by District/Section/Segment"><span class="glyphicon glyphicon-new-window"></span> By Location</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="bridgesPartial">
+        <!-- Bridges list displays here -->
+    </div>
+}
+
+<div id="wait" align="center" style="display: none">
+    <img src="~/images/ajax-loader-big.gif" />
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#ddlMainRoute').change(function () {
+            var selMainRouteId = $('#ddlMainRoute option:selected').val();
+            $('#ddlSubRoute option').remove(); //empty the sub route dropdown list
+            $('#bridgesPartial').empty(); // clear the bridges place holder
+            $('#mapdiv').hide();
+
+            if (selMainRouteId != "0") //if some mainroute is selected
+            {
+                $.ajax({
+                    url: '@Url.Action("_GetSubRoutes", "LocationsDDL")',
+                    data: { mainrouteid: selMainRouteId },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        var markup = '<option value="0" id="noselect"> --Select Sub Route --</option>';
+                        $.each(data, function (i, subroute) {
+                            markup += '<option value="' + subroute.Value + '">' + subroute.Text + '</option>'
+                            $('#ddlSubRoute').html(markup);
+                        });
+                    }
+                });
+            }
+        });
+
+        $('#ddlSubRoute').change(function () {
+            var selSubRouteId = $('#ddlSubRoute option:selected').val();
+            $('#bridgesPartial').empty(); //clear the bridges  place holder
+            $('#mapdiv').hide();
+
+            if (selSubRouteId != "0") // some sub route is selected
+            {
+                $.ajax({
+                    url: '@Url.Action("_GetBridgeLocationBySubRoute", "BridgeLocation")',
+                    data: { subrouteid: selSubRouteId },
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () { $('#wait').show(); },
+                    complete: function () { $('#wait').hide(); },
+                    success: function (data) {
+                        // Unhide the 'Map' button and set it's link
+                        $('#mapdiv').show();
+                        var url = '@Url.Action("BridgeMapBySubRoute", "BridgeLocation", new { id = "subrouteid" })'
+                            .replace("subrouteid", encodeURIComponent(selSubRouteId));
+
+                        $('#mapbysubroute').attr("href", url);
+
+                        $('#bridgesPartial').html(data);
+                    }
+                });
+            }
+        });
+
+        $('#searchbymainroute').click(function () {
+            var selMainRouteId = $('#ddlMainRoute option:selected').val();
+            $('#bridgesPartial').empty(); //clear the bridges  place holder
+
+            if (selMainRouteId != "0") // some main route is selected
+            {
+                $.ajax({
+                    url: '@Url.Action("_GetBridgeLocationByMainRoute", "BridgeLocation")', //url: 'Routes/_GetSubRouteList',
+                    data: { mainrouteid: selMainRouteId },
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () { $('#wait').show(); },
+                    complete: function () { $('#wait').hide(); },
+                    success: function (data) {
+                        $('#bridgesPartial').html(data);
+                    }
+                });
+            }
+        });
+
+        $('#searchbysubroute').click(function () {
+            var selSubRouteId = $('#ddlSubRoute option:selected').val();
+            if (selSubRouteId != "0" && typeof selSubRouteId != 'undefined') //if some subroute is selected
+            {
+                $('#ddlSubRoute').trigger('change');
+            }
+        });
+    });
+</script>
+

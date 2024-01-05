@@ -1,0 +1,188 @@
+﻿@model IEnumerable<ERA_BMS.Models.StructureItemDmgWt>
+@using ERA_BMS.Models
+@using ERA_BMS.ViewModels
+@using System.Linq
+
+@{
+    ViewBag.Title = "Structure Items Damage Weight";
+}
+
+
+<table class="table table-striped table-condensed table-responsive display compact hover" id="structureitemdmgwt">
+    <thead>
+        <tr>
+            <th>
+                Bridge Part
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StructureItemId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StructureItem.StructureItemName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ConcreteDmgWt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SteelDmgWt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BridgePartDmgWt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TotalStructureDmgWt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Remark)
+            </th>
+            <th>Edit</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                @{
+                    int brgprtid = (int)ViewBag.StructureItems.Find(item.StructureItemId).BridgePartId;
+                    var brprt = ViewBag.BridgeParts.Find(brgprtid);
+                }
+                <td class="BridgePart">
+                    <span>@brprt.BridgePartId - @brprt.BridgePartName</span>
+                </td>
+                <td class="StructureItemId">
+                    <span>@item.StructureItemId</span>
+                </td>
+                <td class="StructureItemName">
+                    <span>@item.StructureItem.StructureItemName</span>
+                </td>
+                <td class="ConcreteDmgWt">
+                    <span>@item.ConcreteDmgWt</span>
+                    <input type="text" value="@item.ConcreteDmgWt" style="display:none" size="3" />
+                </td>
+                <td class="SteelDmgWt">
+                    <span>@item.SteelDmgWt</span>
+                    <input type="text" value="@item.SteelDmgWt" style="display:none" size="3" />
+                </td>
+                <td class="BridgePartDmgWt">
+                    <span>@item.BridgePartDmgWt</span>
+                    <input type="text" value="@item.BridgePartDmgWt" style="display:none" size="3" />
+                </td>
+                <td class="TotalStructureDmgWt">
+                    <span>@item.TotalStructureDmgWt</span>
+                    <input type="text" value="@item.TotalStructureDmgWt" style="display:none" size="3" />
+                </td>
+                <td class="Remark">
+                    <span>@item.Remark</span>
+                    <input type="text" value="@item.Remark" style="display:none" />
+                </td>
+                <!--<td>-->
+                <!-- with Tooltips -->
+                <!--@Html.ActionLink(" ", "Edit", new { id = item.StructureItemId }, new { @class = "glyphicon glyphicon-edit", @data_toggle = "tooltip", title = "Edit" })
+    </td>-->
+                <td>
+                    <a class="Edit glyphicon glyphicon-edit" href="javascript:;" data-toggle="tooltip" title="Edit"></a>
+                    <a class="Update glyphicon glyphicon-ok" href="javascript:;" style="display:none" data-toggle="tooltip" title="Update"></a>
+                </td>
+                <td>
+                    <a class="Cancel glyphicon glyphicon-remove" href="javascript:;" style="display:none" data-toggle="tooltip" title="Cancel"></a>
+                </td>
+            </tr>
+        }
+
+</table>
+<div class="panel-footer">
+    <h3 class="panel-title">No. of Structure Items: <b>@Model.Count()</b> </h3>
+</div>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        //Edit event handler.
+        $("body").on("click", "#structureitemdmgwt .Edit", function () {
+            var row = $(this).closest("tr");
+            $("td", row).each(function () {
+                if ($(this).find("input").length > 0) {
+                    $(this).find("input").show();
+                    $(this).find("span").hide();
+                }
+                if ($(this).find("textarea").length > 0) {
+                    $(this).find("textarea").show();
+                    $(this).find("span").hide();
+                }
+            });
+            row.find(".Update").show();
+            row.find(".Cancel").show();
+            $(this).hide();
+        });
+
+        //Update event handler.
+        $("body").on("click", "#structureitemdmgwt .Update", function () {
+            var row = $(this).closest("tr");
+            $("td", row).each(function () {
+                if ($(this).find("input").length > 0) {
+                    var span = $(this).find("span");
+                    var input = $(this).find("input");
+                    span.html(input.val());
+                    span.show();
+                    input.hide();
+                }
+                if ($(this).find("textarea").length > 0) {
+                    var span = $(this).find("span");
+                    var textarea = $(this).find("textarea");
+                    span.html(textarea.html());
+                    $('#status').text(textarea.html());
+                    span.show();
+                    textarea.hide();
+                }
+            });
+            row.find(".Edit").show();
+            row.find(".Cancel").hide();
+            $(this).hide();
+
+            var StructureItemDmgWt = {};
+            StructureItemDmgWt.StructureItemId = row.find(".StructureItemId").find("span").html();
+            StructureItemDmgWt.ConcreteDmgWt = row.find(".ConcreteDmgWt").find("span").html();
+            StructureItemDmgWt.SteelDmgWt = row.find(".SteelDmgWt").find("span").html();
+            StructureItemDmgWt.BridgePartDmgWt = row.find(".BridgePartDmgWt").find("span").html();
+            StructureItemDmgWt.TotalStructureDmgWt = row.find(".TotalStructureDmgWt").find("span").html();
+            StructureItemDmgWt.Remark = row.find(".Remark").find("span").html();
+
+            //alert(JSON.stringify(StructureItemDmgWt));
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("UpdateStructureItemDmgWt", "DamageWeightAndCostRate")',
+                data: '{structureItemDmgWt:' + JSON.stringify(StructureItemDmgWt) + '}',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'text', //'html',
+                error: function (xhr) {
+                    //$('#status').text(xhr.status);
+                }
+            });
+        });
+
+        //Cancel event handler.
+        $("body").on("click", "#structureitemdmgwt .Cancel", function () {
+            var row = $(this).closest("tr");
+            $("td", row).each(function () {
+                if ($(this).find("input").length > 0) {
+                    var span = $(this).find("span");
+                    var input = $(this).find("input");
+                    input.val(span.html());
+                    span.show();
+                    input.hide();
+                }
+                if ($(this).find("textarea").length > 0) {
+                    var span = $(this).find("span");
+                    var textarea = $(this).find("textarea");
+                    textarea.html(span.html());
+                    span.show();
+                    textarea.hide();
+                }
+            });
+            row.find(".Edit").show();
+            row.find(".Update").hide();
+            $(this).hide();
+        });
+    });
+</script>

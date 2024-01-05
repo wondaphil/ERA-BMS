@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace ERA_BCMS.Controllers
+namespace ERA_BMS.Controllers
 {
     public class HomeController : Controller
     {

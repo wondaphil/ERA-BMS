@@ -1,0 +1,749 @@
+﻿
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - ERA BMS</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        function openNav() {
+            document.getElementById("leftmenu").style.width = "25em";
+            document.getElementById("main").style.marginLeft = "25em";
+            //document.getElementById("leftmenu").toggleAttribute("visibility");
+        }
+
+        function closeNav() {
+            document.getElementById("leftmenu").style.width = "0";
+            document.getElementById("main").style.marginLeft = "0";
+        }
+
+        function showhideMenu() {
+            var menu = document.getElementById("leftmenu");
+            //if (menu.style.display === "none") {
+            //    //menu.fadeIn();
+            //    //menu.style.display = "block";
+            //    //menu.style.opacity = 0.2;
+            //    alert("if");
+            //    $("#leftmenu").stop().show(500);
+            //    //menu.style.display = "block";
+            //}
+            //else {
+            //    //menu.fadeOut();
+            //    //menu.style.display = "none";
+            //    //alert("else");
+            //    $("#leftmenu").stop().hide();
+            //    //menu.style.display = "none";
+            //}
+            menu.classList.toggle("showmenu");
+        }
+
+        $(document).ready(function () {
+            // This function traverses all "link" elements and checks two things
+            //		1. If href of the "link" element is the page itself
+            //		2. If the parent of the "link" element has class "action"
+            // If both condictions are fullfilled (i.e. the "link" is the current menu item), it adds it to "highlight" class
+            $("[href]").each(function () {
+                if (this.href == window.location.href && $(this).parent().hasClass("action")) {
+                    $(this).addClass("highlight"); // highlight currently selected menu item
+                    $(this).closest("li.menuparent").children("label").addClass("highlightparent"); // highlight the parent of currently selected menu item
+                    $(this).closest("li.menuparent").children("input").attr('checked', true); // change the state of parent of currently selected menu item to 'checked'
+                    $(this).closest("li.menusubparent").children("input").attr('checked', true); // change the state of sub parent of currently selected menu item to 'checked'
+                }
+            });
+
+
+        });
+    </script>
+</head>
+<body style="font-size:small">
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="@Url.Action("Index", "Home")">
+                        <img src="~/images/logo.png" alt="Site Logo" style="height:60px; width: 120px" />
+                    </a>
+                </div>
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @*@Html.ActionLink("ERA BMS", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })*@
+            </div>
+
+            @*  Hide the menu items if used not logged in *@
+            @if (User.Identity.IsAuthenticated)
+            {
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li>@Html.ActionLink("Home", "Index", "Home", new { area = "" }, null)</li>
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                Data Entry <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu multi-level" role="menu">
+                                <li class="dropdown dropdown-submenu">
+                                    <a class="dropdown-toggle">Bridge</a>
+                                    <ul class="dropdown-menu">
+                                        <li>@Html.ActionLink("Bridge Registration", "New", "Bridges", new { area = "" }, null)</li> <!-- Data Entry -> Bridge -> Bridge Registation -->
+                                        <li>@Html.ActionLink("Bridge Inventory", "Index", "BridgeInventory", new { area = "" }, null)</li> <!-- Data Entry -> Bridge -> Bridge Inventory -->
+                                        <li role="separator" class="divider"></li>
+                                        <li>@Html.ActionLink("Inspection Regular/Visual", "Index", "DamageInspVisual", new { area = "" }, null)</li> <!-- Data Entry -> Bridge -> Bridge Inspection Regular/Emergency -->
+                                        <li>@Html.ActionLink("Inspection Major", "Index", "DamageInspMajor", new { area = "" }, null)</li> <!-- Data Entry -> Bridge -> Bridge Inspection Major -->
+                                    </ul>
+                                </li>
+
+                                <li role="separator" class="divider"></li>
+
+                                <li class="dropdown dropdown-submenu">
+                                    <a class="dropdown-toggle">Culvert</a>
+                                    <ul class="dropdown-menu">
+                                        <li>@Html.ActionLink("Culvert Registration", "New", "Culverts", new { area = "" }, null)</li> <!-- Data Entry -> Culvert -> Culvert Registation -->
+                                        <li>@Html.ActionLink("Culvert Inventory", "Index", "CulvertInventory", new { area = "" }, null)</li> <!-- Data Entry -> Culvert -> Culvert Inventory -->
+                                        <li role="separator" class="divider"></li>
+                                        <li class="disabled">@Html.ActionLink("Repair History", "#", "Home", new { area = "" }, null)</li> <!-- Data Entry -> Culvert -> Repair History -->
+                                        <li>@Html.ActionLink("Inspection", "Index", "DamageInspCulvert", new { area = "" }, null)</li> <!-- Data Entry -> Culvert -> Inspection -->
+                                    </ul>
+                                </li>
+                                <li role="separator" class="divider"></li>
+                            </ul>
+                        </li>
+
+                        <li class="dropdown mainmenu">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                Improvement
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu multi-level" role="menu">
+                                <li class="dropdown dropdown-submenu">
+                                    <a class="dropdown-toggle">Improvement Action</a>
+                                    <ul class="dropdown-menu">
+                                        <li class="disabled">@Html.ActionLink("Improvement History Records", "Index", "Home", new { area = "" }, null)</li> <!-- Data Entry -> Bridge -> Bridge Registation -->
+                                        <li class="disabled">@Html.ActionLink("Work Plan/Progress", "#", "Home", new { area = "" }, null)</li> <!-- Data Entry -> Bridge -> Bridge Inventory -->
+                                    </ul>
+                                </li>
+
+                                <li role="separator" class="divider"></li>
+
+                                <li class="dropdown dropdown-submenu">
+                                    <a class="dropdown-toggle">Priority for Improvement</a>
+                                    <ul class="dropdown-menu">
+                                        <li class="disabled">@Html.ActionLink("By Bridge Parts Damage", "Index", "Home", new { area = "" }, null)</li> <!-- Data Entry -> Culvert -> Culvert Registation -->
+                                        <li class="disabled">@Html.ActionLink("By Highest Rank Damge (A+)", "Index", "Home", new { area = "" }, null)</li> <!-- Data Entry -> Culvert -> Culvert Inventory -->
+                                    </ul>
+                                </li>
+                                <li role="separator" class="divider"></li>
+                            </ul>
+                        </li>
+
+                        <li class="dropdown mainmenu">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                View
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu multi-level" role="menu">
+                                <li>@Html.ActionLink("Bridge", "Index", "Bridges", new { area = "" }, null)</li>
+                                <li>@Html.ActionLink("Bridge Profile", "Index", "BridgeProfile", new { area = "" }, null)</li>
+                                <li class="disabled">@Html.ActionLink("Bridge Book", "#", "Home", new { area = "" }, null)</li>
+                                <li role="separator" class="divider"></li>
+                                <li>@Html.ActionLink("All Bridges", "AllBridges", "Bridges", new { area = "" }, null)</li>
+                                <li>@Html.ActionLink("Bridge List by District", "BridgesByDistrict", "Bridges", new { area = "" }, null)</li>
+
+                                <li class="dropdown dropdown-submenu">
+                                    <a class="dropdown-toggle">Bridge Count</a>
+                                    <ul class="dropdown-menu">
+                                        <li>@Html.ActionLink("By District", "BridgesCountByDistrict", "Bridges", new { area = "" }, null)</li>
+                                        <li>@Html.ActionLink("By Section", "BridgesCountBySection", "Bridges", new { area = "" }, null)</li>
+                                    </ul>
+                                </li>
+                                <li role="separator" class="divider"></li>
+                                <li>@Html.ActionLink("Culvert", "Index", "Culverts", new { area = "" }, null)</li>
+                                <li>@Html.ActionLink("Culvert Profile", "Index", "CulvertProfile", new { area = "" }, null)</li>
+                                <li role="separator" class="divider"></li>
+                                <li>@Html.ActionLink("All Culverts", "AllCulverts", "Culverts", new { area = "" }, null)</li>
+
+                                <li class="dropdown dropdown-submenu">
+                                    <a class="dropdown-toggle">Culvert Count</a>
+                                    <ul class="dropdown-menu">
+                                        <li>@Html.ActionLink("By District", "CulvertsCountByDistrict", "Culverts", new { area = "" }, null)</li>
+                                        <li>@Html.ActionLink("By Section", "CulvertsCountBySection", "Culverts", new { area = "" }, null)</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+
+                        @*  Hide the Settings menu if used is not admin *@
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                    Settings
+                                    <b class="caret"></b>
+                                </a>
+                                <ul class="dropdown-menu multi-level" role="menu">
+                                    <li class="dropdown dropdown-submenu">
+                                        <a class="dropdown-toggle">Damage Weight % and Cost</a>
+                                        <ul class="dropdown-menu">
+                                            <li>@Html.ActionLink("Main Parts Dmg Wt", "Index", "BridgePartDmgWts", new { area = "Admin" }, null)</li>
+                                            <li>@Html.ActionLink("Structure Items Dmg Wt", "Index", "StructureItemDmgWts", new { area = "Admin" }, null)</li>
+                                            <li>@Html.ActionLink("Damage Rate and Cost", "Index", "DamageRateAndCosts", new { area = "Admin" }, null)</li>
+                                            <li>@Html.ActionLink("Bridge Damage Range", "Index", "DamageRanges", new { area = "Admin" }, null)</li>
+                                        </ul>
+                                    </li>
+                                    <li>@Html.ActionLink("Damage Priority", "Index", "DamagePriority", new { area = "Admin" }, null)</li>
+                                    <li role="separator" class="divider"></li>
+
+                                    <li class="dropdown dropdown-submenu">
+                                        <a class="dropdown-toggle">Culvert Structure Type Material</a>
+                                        <ul class="dropdown-menu">
+                                            <li>@Html.ActionLink("Culvert Types", "Index", "CulvertTypes", new { area = "Admin" }, null)</li>
+                                            <li>@Html.ActionLink("Abutment Types", "Index", "culAbutmentTypes", new { area = "Admin" }, null)</li>
+                                            <li>@Html.ActionLink("Pier Types", "Index", "culPierTypes", new { area = "Admin" }, null)</li>
+                                            <li>@Html.ActionLink("End Wall Types", "Index", "EndWallTypes", new { area = "Admin" }, null)</li>
+                                            <li>@Html.ActionLink("Water Way Types", "Index", "WaterWayTypes", new { area = "Admin" }, null)</li>
+                                            <li>@Html.ActionLink("Soil Types", "Index", "SoilTypes", new { area = "Admin" }, null)</li>
+                                        </ul>
+                                    </li>
+
+                                    <li class="disabled">@Html.ActionLink("Culvert Structure", "#", "Home", new { area = "Admin" }, null)</li>
+                                    <li class="disabled">@Html.ActionLink("Culvert Damage Type and Unit Rate", "#", "Home", new { area = "Admin" }, null)</li>
+                                    <li role="separator" class="divider"></li>
+
+                                    <li class="dropdown dropdown-submenu">
+                                        <a class="dropdown-toggle">Locations</a>
+                                        <ul class="dropdown-menu">
+                                            <li>@Html.ActionLink("Districts", "Index", "Districts", new { area = "Admin" }, null)</li>
+                                            <li>@Html.ActionLink("Sections", "Index", "Sections", new { area = "Admin" }, null)</li>
+                                            <li>@Html.ActionLink("Segments", "Index", "Segments", new { area = "Admin" }, null)</li>
+                                            <li role="separator" class="divider"></li>
+                                            <li class="disabled">@Html.ActionLink("Route", "#", "Home", new { area = "Admin" }, null)</li>
+                                        </ul>
+                                    </li>
+
+                                    <li role="separator" class="divider"></li>
+
+                                    <li class="dropdown dropdown-submenu">
+                                        <a class="dropdown-toggle">Super Structure</a>
+                                        <ul class="dropdown-menu">
+                                            <li>@Html.ActionLink("Bridge Types", "Index", "BridgeTypes", new { area = "Admin" }, null)</li>
+                                            <li>@Html.ActionLink("Deck Slab Types", "Index", "DeckSlabTypes", new { area = "Admin" }, null)</li>
+                                            <li>@Html.ActionLink("Span Support Types", "Index", "SpanSupportTypes", new { area = "Admin" }, null)</li>
+                                        </ul>
+                                    </li>
+
+                                    <li class="dropdown dropdown-submenu">
+                                        <a class="dropdown-toggle">Abutment</a>
+                                        <ul class="dropdown-menu">
+                                            <li>@Html.ActionLink("Abutment Types", "Index", "AbutmentTypes", new { area = "Admin" }, null)</li>
+                                            <li>@Html.ActionLink("Foundation Types", "Index", "FoundationTypes", new { area = "Admin" }, null)</li>
+                                        </ul>
+                                    </li>
+
+                                    <li class="dropdown dropdown-submenu">
+                                        <a class="dropdown-toggle">Pier</a>
+                                        <ul class="dropdown-menu">
+                                            <li>@Html.ActionLink("Pier Types", "Index", "PierTypes", new { area = "Admin" }, null)</li>
+                                            <li>@Html.ActionLink("Foundation Types", "Index", "FoundationTypes", new { area = "Admin" }, null)</li>
+                                        </ul>
+                                    </li>
+
+                                    <li class="dropdown dropdown-submenu">
+                                        <a class="dropdown-toggle">Component Types</a>
+                                        <ul class="dropdown-menu">
+                                            <li>@Html.ActionLink("Expansion Joint Type", "Index", "ExpansionJointTypes", new { area = "Admin" }, null)</li>
+                                            <li>@Html.ActionLink("Bearing Types", "Index", "BearingTypes", new { area = "Admin" }, null)</li>
+                                            <li>@Html.ActionLink("Guard Railing Types", "Index", "GuardRailingTypes", new { area = "Admin" }, null)</li>
+                                            <li>@Html.ActionLink("Surface Types", "Index", "SurfaceTypes", new { area = "Admin" }, null)</li>
+                                        </ul>
+                                    </li>
+
+                                    <li role="separator" class="divider"></li>
+
+                                    <li>@Html.ActionLink("Girder Types", "Index", "GirderTypes", new { area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("Road Alignment Types", "Index", "RoadAlignmentTypes", new { area = "Admin" }, null)</li>
+
+                                    <li role="separator" class="divider"></li>
+                                    <li class="dropdown dropdown-submenu">
+                                        <a class="dropdown-toggle">Culvert Structure</a>
+                                        <ul class="dropdown-menu">
+                                            <li>@Html.ActionLink("Culvert Types", "Index", "CulvertTypes", new { area = "Admin" }, null)</li>
+                                            <li>@Html.ActionLink("Abutment Types", "Index", "culAbutmentTypes", new { area = "Admin" }, null)</li>
+                                            <li>@Html.ActionLink("Pier Types", "Index", "culPierTypes", new { area = "Admin" }, null)</li>
+                                            <li>@Html.ActionLink("End Wall Types", "Index", "EndWallTypes", new { area = "Admin" }, null)</li>
+                                            <li>@Html.ActionLink("Water Way Types", "Index", "WaterWayTypes", new { area = "Admin" }, null)</li>
+                                            <li>@Html.ActionLink("Soil Types", "Index", "SoilTypes", new { area = "Admin" }, null)</li>
+                                        </ul>
+                                    </li>
+
+                                    <li>@Html.ActionLink("Parapet Material Types", "Index", "ParapetMaterialTypes", new { area = "Admin" }, null)</li>
+                                    <li role="separator" class="divider"></li>
+
+                                    <li role="separator" class="divider"></li>
+
+                                    <li>@Html.ActionLink("Media Types", "Index", "MediaTypes", new { area = "Admin" }, null)</li>
+
+                                    <li role="separator" class="divider"></li>
+
+                                    <li class="dropdown dropdown-submenu">
+                                        <a class="dropdown-toggle">User Administration</a> <!-- Settings -> User Administration -->
+                                        <ul class="dropdown-menu">
+                                            <li>@Html.ActionLink("All Users", "Create", "Bridges", new { area = "" }, null)</li> <!-- Settings -> User Administratio -> All Users -->
+                                            <li>@Html.ActionLink("Add New User", "Register", "Account", new { area = "" }, null)</li> <!-- Settings -> User Administratio -> Add New User -->
+                                            <li role="separator" class="divider"></li>
+                                            <li>@Html.ActionLink("User Roles", "#", "Home", new { area = "" }, null)</li> <!-- Settings -> User Administratio -> User Roles -->
+                                        </ul>
+                                    </li>
+                                    <li role="separator" class="divider"></li>
+                                </ul>
+                            </li>
+                        }
+
+                        <li class="dropdown mainmenu">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                Reports/Graphs
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li class="dropdown dropdown-submenu">
+                                    <a class="dropdown-toggle">Bridge Reports</a>
+                                    <ul class="dropdown-menu">
+                                        <li class="dropdown dropdown-submenu">
+                                            <a class="dropdown-toggle">Inventory Census</a>
+                                            <ul class="dropdown-menu">
+                                                <li>@Html.ActionLink("Registration List by District", "Index", "Home", new { area = "" }, null)</li>
+                                                <li>@Html.ActionLink("General Information", "BridgeInfo", "BridgeReportsCensus", new { area = "" }, null)</li>
+                                                <li>@Html.ActionLink("Census Bridge Type by Segment", "BridgeTypeBySegment", "BridgeReportsCensus", new { area = "" }, null)</li>
+                                                <li>@Html.ActionLink("Census Bridge Type by District", "BridgeTypeByDistrict", "BridgeReportsCensus", new { area = "" }, null)</li>
+                                            </ul>
+                                        </li>
+                                        <li class="dropdown dropdown-submenu">
+                                            <a class="dropdown-toggle">Inspection Result</a>
+                                            <ul class="dropdown-menu">
+                                                <li>@Html.ActionLink("Regular Inspection", "VisualInspectionDetails", "BridgeInspectionReports", new { area = "" }, null)</li>
+                                                <li>@Html.ActionLink("Major Inspection Details", "MajorInspectionDetails", "BridgeInspectionReports", new { area = "" }, null)</li>
+                                                <li>@Html.ActionLink("Damage % By Main Parts", "BridgeDamageByMainParts", "BridgeInspectionReports", new { area = "" }, null)</li>
+                                                <li>@Html.ActionLink("Bill of Quantity", "BillOfQuantity", "BridgeInspectionReports", new { area = "" }, null)</li>
+                                                <li>@Html.ActionLink("Bridge Conditions", "BridgeDamageCondition", "BridgeInspectionReports", new { area = "" }, null)</li>
+                                            </ul>
+                                        </li>
+                                        <li class="dropdown dropdown-submenu">
+                                            <a class="dropdown-toggle">Work Plan Progress</a>
+                                            <ul class="dropdown-menu">
+                                                <li>@Html.ActionLink("Repair Work Plan", "Index", "Home", new { area = "" }, null)</li>
+                                                <li>@Html.ActionLink("Repair Work Progress", "Index", "Home", new { area = "" }, null)</li>
+                                                <li>@Html.ActionLink("Repair Activities", "Index", "Home", new { area = "" }, null)</li>
+                                            </ul>
+                                        </li>
+                                        <li class="dropdown dropdown-submenu">
+                                            <a class="dropdown-toggle">Improvement History</a>
+                                            <ul class="dropdown-menu">
+                                                <li>@Html.ActionLink("Rehabilitation", "Index", "Home", new { area = "" }, null)</li>
+                                                <li>@Html.ActionLink("Improvement", "Index", "Home", new { area = "" }, null)</li>
+                                                <li>@Html.ActionLink("Rehabilitation/Improvement", "Index", "Home", new { area = "" }, null)</li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="dropdown dropdown-submenu">
+                                    <a class="dropdown-toggle">Bridge Graphs</a>
+                                    <ul class="dropdown-menu">
+                                        <li>@Html.ActionLink("No. of Bridges vs District", "Index", "Home", new { area = "" }, null)</li>
+                                        <li>@Html.ActionLink("No. of Bridges vs Bridge Type", "Index", "Home", new { area = "" }, null)</li>
+                                    </ul>
+                                </li>
+
+                                <li role="separator" class="divider"></li>
+
+                                <li class="dropdown dropdown-submenu">
+                                    <a class="dropdown-toggle">Culvert Reports</a>
+                                    <ul class="dropdown-menu">
+                                        <li class="dropdown dropdown-submenu">
+                                            <a class="dropdown-toggle">Inventory Census</a>
+                                            <ul class="dropdown-menu">
+                                                <li>@Html.ActionLink("General Information", "CulvertInfo", "CulvertReportsCensus", new { area = "" }, null)</li>
+                                                <li>@Html.ActionLink("Culverts Count by District", "CulvertsCountByDistrict", "CulvertReportsCensus", new { area = "" }, null)</li>
+                                                <li>@Html.ActionLink("Census Culvert Type by Segment", "CulvertTypeBySegment", "CulvertReportsCensus", new { area = "" }, null)</li>
+                                                <li>@Html.ActionLink("Census Culvert Type by District", "CulvertTypeByDistrict", "CulvertReportsCensus", new { area = "" }, null)</li>
+                                            </ul>
+                                        </li>
+                                        <li class="dropdown dropdown-submenu">
+                                            <a class="dropdown-toggle">Culvert Inspection</a>
+                                            <ul class="dropdown-menu">
+                                                <li>@Html.ActionLink("Culvert Condition", "Index", "Home", new { area = "" }, null)</li>
+                                                <li>@Html.ActionLink("Bill of Quantity", "Index", "Home", new { area = "" }, null)</li>
+                                                <li>@Html.ActionLink("Comments & Recommendations", "Index", "Home", new { area = "" }, null)</li>
+                                                <li>@Html.ActionLink("Culvert Priority", "Index", "Home", new { area = "" }, null)</li>
+                                                <li>@Html.ActionLink("Condition & Repair for Budget By Section", "Index", "Home", new { area = "" }, null)</li>
+                                                <li>@Html.ActionLink("Summary of Condition and Budget By District", "Index", "Home", new { area = "" }, null)</li>
+                                                <li>@Html.ActionLink("Culvert Repair History", "Index", "Home", new { area = "" }, null)</li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="dropdown dropdown-submenu">
+                                    <a class="dropdown-toggle">Culvert Graphs</a>
+                                    <ul class="dropdown-menu">
+                                        <li>@Html.ActionLink("No. of Culvert vs District", "Index", "Home", new { area = "" }, null)</li>
+                                        <li>@Html.ActionLink("No. of Culvert vs Culvert Type", "Index", "Home", new { area = "" }, null)</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="dropdown mainmenu">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                Help
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="~/docs/bms_about.pdf" target="_blank">Software Development History</a></li> <!-- opens pdf file in another tab -->
+                                <li><a href="~/docs/bms_user_manual_dec_2020.pdf" target="_blank">User Manual</a></li> <!-- opens pdf file in another tab -->
+                                <li role="separator" class="divider"></li>
+                                <li>@Html.ActionLink("Contact", "Contact", "Help", new { area = "" }, null)</li>
+                                <li>@Html.ActionLink("About", "About", "Help", new { area = "" }, null)</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    @Html.Partial("_LoginPartial")
+                </div>
+            }
+        </div>
+    </div>
+
+    @*<div>
+            <button class="openbtn" onclick="showhideMenu()"> ☰ Menu</button>
+        </div>*@
+
+
+    @*<div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Dropdown button <b class="caret"> </b>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <li><a class="dropdown-item" href="#">Action</a></li>
+                <li><a class="dropdown-item" href="#">Another action</a></li>
+                <li><a class="dropdown-item" href="#">Something else here</a></li>
+            </ul>
+        </div>*@
+
+
+
+    <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Data Entry <b class="caret"> </b>
+        </button>
+        <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenuButton">
+            <li class="dropdown dropdown-submenu">
+                <a class="dropdown-toggle">Bridge</a>
+                <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenuButton">
+                    <li class="dropdown-item">@Html.ActionLink("Bridge Registration", "New", "Bridges", new { area = "" }, null)</li> <!-- Data Entry -> Bridge -> Bridge Registation -->
+                    <li class="dropdown-item">@Html.ActionLink("Bridge Inventory", "Index", "BridgeInventory", new { area = "" }, null)</li> <!-- Data Entry -> Bridge -> Bridge Inventory -->
+                    <li role="separator" class="divider"></li>
+                    <li class="dropdown-item">@Html.ActionLink("Inspection Regular/Visual", "Index", "DamageInspVisual", new { area = "" }, null)</li> <!-- Data Entry -> Bridge -> Bridge Inspection Regular/Emergency -->
+                    <li class="dropdown-item">@Html.ActionLink("Inspection Major", "Index", "DamageInspMajor", new { area = "" }, null)</li> <!-- Data Entry -> Bridge -> Bridge Inspection Major -->
+                </ul>
+            </li>
+            <li role="separator" class="divider"></li>
+
+            <li class="dropdown dropdown-submenu">
+                <a class="dropdown-toggle">Culvert</a>
+                <ul class="dropdown-menu">
+                    <li>@Html.ActionLink("Culvert Registration", "New", "Culverts", new { area = "" }, null)</li> <!-- Data Entry -> Culvert -> Culvert Registation -->
+                    <li>@Html.ActionLink("Culvert Inventory", "Index", "CulvertInventory", new { area = "" }, null)</li> <!-- Data Entry -> Culvert -> Culvert Inventory -->
+                    <li role="separator" class="divider"></li>
+                    <li class="disabled">@Html.ActionLink("Repair History", "#", "Home", new { area = "" }, null)</li> <!-- Data Entry -> Culvert -> Repair History -->
+                    <li>@Html.ActionLink("Inspection", "Index", "DamageInspCulvert", new { area = "" }, null)</li> <!-- Data Entry -> Culvert -> Inspection -->
+                </ul>
+            </li>
+            <li role="separator" class="divider"></li>
+        </ul>
+    </div>
+
+    <div id="leftmenu" class="showmenu">
+        <a href="javascript:void(0)" class="closebtn " onclick="closeNav()" style="font-size: 36px; margin-left: 150px;">×</a>
+        <ol class="tree" id="menu">
+            <li class="menuparent">
+                <label for="home">Home</label> <input type="checkbox" id="home" />
+                <ol>
+                    <li class="action" id="index">@Html.ActionLink("Index", "Index", "Home", new { area = "" }, null)</li>
+                </ol>
+            </li>
+            <li class="menuparent">
+                <label for="dataentry">Data Entry</label> <input type="checkbox" id="dataentry" />
+                <ol>
+                    <li class="menusubparent">
+                        <label for="bridge">Bridge</label> <input type="checkbox" id="bridge" />
+                        <ol>
+                            <li class="action" id="bridge_registration">@Html.ActionLink("Bridge Registration", "New", "Bridges", new { area = "" }, null)</li>  @*Data Entry -> Bridge -> Bridge Registation*@
+                            <li class="action" id="bridge_inventory">@Html.ActionLink("Bridge Inventory", "Index", "BridgeInventory", new { area = "" }, null)</li>  @*Data Entry -> Bridge -> Bridge Inventory*@
+                            <li class="action" id="damage_insp_visual">@Html.ActionLink("Inspection Regular/Visual", "Index", "DamageInspVisual", new { area = "" }, null)</li>  @*Data Entry -> Bridge -> Bridge Inspection Regular/Emergency*@
+                            <li class="action" id="damage_insp_major">@Html.ActionLink("Inspection Major", "Index", "DamageInspMajor", new { area = "" }, null)</li>  @*Data Entry -> Bridge -> Bridge Inspection Major*@
+                        </ol>
+                    </li>
+                    <li class="menusubparent">
+                        <label for="culvert">Culvert</label> <input type="checkbox" id="culvert" />
+                        <ol>
+                            <li class="action" id="culvert_registration">@Html.ActionLink("Culvert Registration", "New", "Culverts", new { area = "" }, null)</li>
+                            <li class="action" id="culvert_inventory">@Html.ActionLink("Culvert Inventory", "Index", "CulvertInventory", new { area = "" }, null)</li>
+                            <li class="action" id="culvert_repair_history">@Html.ActionLink("Repair History", "#", "Home", new { area = "" }, null)</li>
+                            <li class="action" id="damage_insp_culvert">@Html.ActionLink("Culvert Inspection", "Index", "DamageInspCulvert", new { area = "" }, null)</li>
+                        </ol>
+                    </li>
+                </ol>
+            </li>
+
+            <li class="menuparent">
+                <label for="improvement">Improvement</label> <input type="checkbox" id="improvement" />
+                <ol>
+                    <li class="action" id="add_course"><a href="add_course.php">Add course</a></li>
+                    <li class="action" id="edit_course"><a href="edit_course.php">Edit course</a></li>
+                    <li class="action" id="delete_course"><a href="delete_course.php">Delete course</a></li>
+                    <li class="action" id="find_course"><a href="find_course.php">Find course</a></li>
+                    <li class="menusubparent">
+                        <label for="coursereport">Report</label> <input type="checkbox" id="coursereport" />
+                        <ol>
+                            <li class="action" id="report_course"><a href="report_course.php">All courses</a></li>
+                            <li class="action" id="report_course_paginated"><a href="report_course_paginated.php">By Page</a></li>
+                            <li class="action" id="report_course_alpha_paginated"><a href="report_course_alpha_paginated.php">By Alphabet</a></li>
+                        </ol>
+                    </li>
+                    <li class="menusubparent">
+                        <label for="coursecount">Count</label> <input type="checkbox" id="coursecount" />
+                        <ol>
+                            <li class="action" id="course_count_by_student"><a href="course_count_by_student.php">By Student</a></li>
+                            <li class="action" id="course_count_by_instructor"><a href="course_count_by_instructor.php">By Instructor</a></li>
+                            <li class="action" id="course_count_by_semester"><a href="course_count_by_semester.php">By Semester</a></li>
+                            <li class="action" id="course_count_by_semester_by_student"><a href="course_count_by_semester_by_student.php">By Sem. & Stud.</a></li>
+                        </ol>
+                    <li class="menusubparent">
+                        <label for="courselist">List</label> <input type="checkbox" id="courselist" />
+                        <ol>
+                            <li class="action" id="course_list_by_student"><a href="course_list_by_student.php">By Student</a></li>
+                            <li class="action" id="course_list_by_instructor"><a href="course_list_by_instructor.php">By Instructor</a></li>
+                            <li class="action" id="course_list_by_semester"><a href="course_list_by_semester.php">By Semester</a></li>
+                            <li class="action" id="course_list_by_semester_by_student"><a href="course_list_by_semester_by_student.php">By Sem. & Stud.</a></li>
+                        </ol>
+                    </li>
+                </ol>
+            </li>
+
+            <li class="menuparent">
+                <label for="view">View</label> <input type="checkbox" id="view" />
+                <ol>
+                    <li class="action" id="add_major"><a href="add_major.php">Add major</a></li>
+                    <li class="action" id="edit_major"><a href="edit_major.php">Edit major</a></li>
+                    <li class="action" id="delete_major"><a href="delete_major.php">Delete major</a></li>
+                    <li class="action" id="find_major"><a href="find_major.php">Find major</a></li>
+                    <li class="menusubparent">
+                        <label for="majorreport">Report</label> <input type="checkbox" id="majorreport" />
+                        <ol>
+                            <li class="action" id="report_major"><a href="report_major.php">All majors</a></li>
+                            <li class="action" id="report_major_paginated"><a href="report_major_paginated.php">By Page</a></li>
+                        </ol>
+                    </li>
+                </ol>
+            </li>
+
+            <li class="menuparent">
+                <label for="settings">Settings</label> <input type="checkbox" id="settings" />
+                <ol>
+                    <li class="menusubparent">
+                        <label for="damageweightpercentandcost">Damage Weight % and Cost</label> <input type="checkbox" id="damageweightpercentandcost" />
+                        <ol>
+                            <li class="action" id="bridge_part_dmg_wts">@Html.ActionLink("Main Parts Dmg Wt", "Index", "BridgePartDmgWts", new { area = "Admin" }, null)</li>
+                            <li class="action" id="structure_item_dmg_wts">@Html.ActionLink("Structure Items Dmg Wt", "Index", "StructureItemDmgWts", new { area = "Admin" }, null)</li>
+                            <li class="action" id="bridge_damage_rate_and_costs">@Html.ActionLink("Damage Rate and Cost", "Index", "DamageRateAndCosts", new { area = "Admin" }, null)</li>
+                            <li class="action" id="bridge_damage_ranges">@Html.ActionLink("Bridge Damage Range", "Index", "DamageRanges", new { area = "Admin" }, null)</li>
+                        </ol>
+                    </li>
+                    <li class="action" id="damage_priority">@Html.ActionLink("Damage Priority", "Index", "DamagePriority", new { area = "Admin" }, null)</li>
+                    <li class="action" id="culvert_damage_type_and_unit_rate">@Html.ActionLink("Culvert Damage Type and Unit Rate", "#", "Home", new { area = "Admin" }, null)</li>
+                    <li class="menusubparent">
+                        <label for="semestercount">Locations</label> <input type="checkbox" id="semestercount" />
+                        <ol>
+                            <li class="action" id="districts_menu">@Html.ActionLink("Districts", "Index", "Districts", new { area = "Admin" }, null)</li>
+                            <li class="action" id="sections_menu">@Html.ActionLink("Sections", "Index", "Sections", new { area = "Admin" }, null)</li>
+                            <li class="action" id="segments_menu">@Html.ActionLink("Segments", "Index", "Segments", new { area = "Admin" }, null)</li>
+                            <li class="action" id="routes_menu">@Html.ActionLink("Routes", "#", "Home", new { area = "Admin" }, null)</li>
+                        </ol>
+                    </li>
+                    <li class="menusubparent">
+                        <label for="semesterlist">Super Structure</label> <input type="checkbox" id="semesterlist" />
+                        <ol>
+                            <li class="action" id="bridge_types">@Html.ActionLink("Bridge Types", "Index", "BridgeTypes", new { area = "Admin" }, null)</li>
+                            <li class="action" id="deck_slab_types">@Html.ActionLink("Deck Slab Types", "Index", "DeckSlabTypes", new { area = "Admin" }, null)</li>
+                            <li class="action" id="Span_support_types">@Html.ActionLink("Span Support Types", "Index", "SpanSupportTypes", new { area = "Admin" }, null)</li>
+                        </ol>
+                    </li>
+                    <li class="menusubparent">
+                        <label for="abutment">Abutment</label> <input type="checkbox" id="abutment" />
+                        <ol>
+                            <li class="action" id="abutment_types">@Html.ActionLink("Abutment Types", "Index", "AbutmentTypes", new { area = "Admin" }, null)</li>
+                            <li class="action" id="foundaton_types">@Html.ActionLink("Foundation Types", "Index", "FoundationTypes", new { area = "Admin" }, null)</li>
+                        </ol>
+                    </li>
+                    <li class="menusubparent">
+                        <label for="pier">Pier</label> <input type="checkbox" id="pier" />
+                        <ol>
+                            <li class="action" id="pier_types">@Html.ActionLink("Pier Types", "Index", "PierTypes", new { area = "Admin" }, null)</li>
+                            <li class="action" id="foundaton_types">@Html.ActionLink("Foundation Types", "Index", "FoundationTypes", new { area = "Admin" }, null)</li>
+                        </ol>
+                    </li>
+                    <li class="menusubparent">
+                        <label for="component_types">Component Types</label> <input type="checkbox" id="component_types" />
+                        <ol>
+                            <li class="action" id="expansion_joint_types">@Html.ActionLink("Expansion Joint Type", "Index", "ExpansionJointTypes", new { area = "Admin" }, null)</li>
+                            <li class="action" id="bearing_types">@Html.ActionLink("Bearing Types", "Index", "BearingTypes", new { area = "Admin" }, null)</li>
+                            <li class="action" id="guard_railing_types">@Html.ActionLink("Guard Railing Types", "Index", "GuardRailingTypes", new { area = "Admin" }, null)</li>
+                            <li class="action" id="surface_types">@Html.ActionLink("Surface Types", "Index", "SurfaceTypes", new { area = "Admin" }, null)</li>
+                        </ol>
+                    </li>
+                    <li class="action" id="girder_types">@Html.ActionLink("Girder Types", "Index", "GirderTypes", new { area = "Admin" }, null)</li>
+                    <li class="action" id="road_alignment_types">@Html.ActionLink("Road Alignment Types", "Index", "RoadAlignmentTypes", new { area = "Admin" }, null)</li>
+                    <li class="menusubparent">
+                        <label for="culvertstructure">Culvert Structure</label> <input type="checkbox" id="culvertstructure" />
+                        <ol>
+                            <li class="action" id="culvert_types">@Html.ActionLink("Culvert Types", "Index", "CulvertTypes", new { area = "Admin" }, null)</li>
+                            <li class="action" id="cul_abutment_types">@Html.ActionLink("Abutment Types", "Index", "culAbutmentTypes", new { area = "Admin" }, null)</li>
+                            <li class="action" id="cul_pier_types">@Html.ActionLink("Pier Types", "Index", "culPierTypes", new { area = "Admin" }, null)</li>
+                            <li class="action" id="end_wall_types">@Html.ActionLink("End Wall Types", "Index", "EndWallTypes", new { area = "Admin" }, null)</li>
+                            <li class="action" id="water_way_types">@Html.ActionLink("Water Way Types", "Index", "WaterWayTypes", new { area = "Admin" }, null)</li>
+                            <li class="action" id="soil_types">@Html.ActionLink("Soil Types", "Index", "SoilTypes", new { area = "Admin" }, null)</li>
+                        </ol>
+                    </li>
+                    <li class="action" id="parapet_material_types">@Html.ActionLink("Parapet Material Types", "Index", "ParapetMaterialTypes", new { area = "Admin" }, null)</li>
+                    <li class="action" id="media_types">@Html.ActionLink("Media Types", "Index", "MediaTypes", new { area = "Admin" }, null)</li>
+                    <li class="menusubparent">
+                        <label for="user_administration">User Administration</label> <input type="checkbox" id="user_administration" />
+                        <ol>
+                            <li class="action" id="all_users">@Html.ActionLink("All Users", "#", "Home", new { area = "" }, null)</li> <!-- Settings -> User Administratio -> All Users -->
+                            <li class="action" id="add_new_user">@Html.ActionLink("Add New User", "Register", "Account", new { area = "" }, null)</li> <!-- Settings -> User Administratio -> Add New User -->
+                            <li class="action" id="user_roles">@Html.ActionLink("User Roles", "#", "Home", new { area = "" }, null)</li> <!-- Settings -> User Administratio -> User Roles -->
+                        </ol>
+                    </li>
+                </ol>
+            </li>
+
+            <li class="menuparent">
+                <label for="bridgereport">Bridge Report</label> <input type="checkbox" id="bridgereport" />
+                <ol>
+                    <li class="menusubparent">
+                        <label for="bridgeinventorycensus">Inventory Census</label> <input type="checkbox" id="bridgeinventorycensus" />
+                        <ol>
+                            <li class="action" id="bridge_general_information">@Html.ActionLink("General Information", "BridgeInfo", "BridgeReportsCensus", new { area = "" }, null)</li>
+                            <li class="action" id="census_bridge_type_by_segment">@Html.ActionLink("Census Bridge Type by Segment", "BridgeTypeBySegment", "BridgeReportsCensus", new { area = "" }, null)</li>
+                            <li class="action" id="census_bridge_type_by_district">@Html.ActionLink("Census Bridge Type by District", "BridgeTypeByDistrict", "BridgeReportsCensus", new { area = "" }, null)</li>
+                        </ol>
+                    </li>
+                    <li class="menusubparent">
+                        <label for="bridgeinspectionresult">Inspection Result</label> <input type="checkbox" id="bridgeinspectionresult" />
+                        <ol>
+                            <li class="action" id="visual_inspection_details">@Html.ActionLink("Regular Inspection", "VisualInspectionDetails", "BridgeInspectionReports", new { area = "" }, null)</li>
+                            <li class="action" id="major_inspection_details">@Html.ActionLink("Major Inspection Details", "MajorInspectionDetails", "BridgeInspectionReports", new { area = "" }, null)</li>
+                            <li class="action" id="damage_perc_by_main_parts">@Html.ActionLink("Damage % By Main Parts", "BridgeDamageByMainParts", "BridgeInspectionReports", new { area = "" }, null)</li>
+                            <li class="action" id="bridge_bill_of_quantity">@Html.ActionLink("Bill of Quantity", "BillOfQuantity", "BridgeInspectionReports", new { area = "" }, null)</li>
+                            <li class="action" id="bridge_conditions">@Html.ActionLink("Bridge Conditions", "BridgeDamageCondition", "BridgeInspectionReports", new { area = "" }, null)</li>
+                        </ol>
+                    </li>
+                    <li class="menusubparent">
+                        <label for="workplanprogress">Work Plan Progress</label> <input type="checkbox" id="workplanprogress" />
+                        <ol>
+                            <li class="action" id="repair_work_plan">@Html.ActionLink("Repair Work Plan", "#", "Home", new { area = "" }, null)</li>
+                            <li class="action" id="repair_work_progress">@Html.ActionLink("Repair Work Progress", "#", "Home", new { area = "" }, null)</li>
+                            <li class="action" id="repair_activities">@Html.ActionLink("Repair Activities", "#", "Home", new { area = "" }, null)</li>
+                        </ol>
+                    </li>
+                    <li class="menusubparent">
+                        <label for="improvementhistory">Improvement History</label> <input type="checkbox" id="improvementhistory" />
+                        <ol>
+                            <li class="action" id="rehabilitation">@Html.ActionLink("Rehabilitation", "#", "Home", new { area = "" }, null)</li>
+                            <li class="action" id="improvement">@Html.ActionLink("Improvement", "#", "Home", new { area = "" }, null)</li>
+                            <li class="action" id="rehab_improv">@Html.ActionLink("Rehabilitation/Improvement", "#", "Home", new { area = "" }, null)</li>
+                        </ol>
+                    </li>
+                </ol>
+            </li>
+
+            <li class="menuparent">
+                <label for="registrationreport">Bridge Graph</label> <input type="checkbox" id="registrationreport" />
+                <ol>
+                    <li class="action" id="no_of_bridges_vs_district">@Html.ActionLink("No. of Bridges vs District", "#", "Home", new { area = "" }, null)</li>
+                    <li class="action" id="no_of_bridges_vs_bridge_types">@Html.ActionLink("No. of Bridges vs Bridge Types", "#", "Home", new { area = "" }, null)</li>
+                </ol>
+            </li>
+            <li class="menuparent">
+                <label for="culvertreport">Culvert Report</label> <input type="checkbox" id="culvertreport" />
+                <ol>
+                    <li class="menusubparent">
+                        <label for="culvertinventorycensus">Inventory Census</label> <input type="checkbox" id="culvertinventorycensus" />
+                        <ol>
+                            <li class="action" id="culvert_general_information">@Html.ActionLink("General Information", "CulvertInfo", "CulvertReportsCensus", new { area = "" }, null)</li>
+                            <li class="action" id="census_culvert_type_by_segment">@Html.ActionLink("Census Culvert Type by Segment", "CulvertTypeBySegment", "CulvertReportsCensus", new { area = "" }, null)</li>
+                            <li class="action" id="census_culvert_type_by_district">@Html.ActionLink("Census Culvert Type by District", "CulvertTypeByDistrict", "CulvertReportsCensus", new { area = "" }, null)</li>
+                        </ol>
+                    </li>
+                    <li class="menusubparent">
+                        <label for="culvertinspectionresult">Inspection Result</label> <input type="checkbox" id="culvertinspectionresult" />
+                        <ol>
+                            <li class="action" id="culvert_condition">@Html.ActionLink("Culvert Condition", "#", "Home", new { area = "" }, null)</li>
+                            <li class="action" id="culvert_bill_of_quantity">@Html.ActionLink("Bill of Quantity", "#", "Home", new { area = "" }, null)</li>
+                            <li class="action" id="comments_and_recommendations">@Html.ActionLink("Comments & Recommendations", "#", "Home", new { area = "" }, null)</li>
+                            <li class="action" id="culvert_priority">@Html.ActionLink("Culvert Priority", "#", "Home", new { area = "" }, null)</li>
+                            <li class="action" id="condition_and_repair_for_budget_by_section">@Html.ActionLink("Condition & Repair for Budget By Section", "#", "Home", new { area = "" }, null)</li>
+                            <li class="action" id="summary_of_condition_and_budget_by_district">@Html.ActionLink("Summary of Condition and Budget By District", "#", "Home", new { area = "" }, null)</li>
+                            <li class="action" id="culvert_repair_history">@Html.ActionLink("Culvert Repair History", "#", "Home", new { area = "" }, null)</li>
+                        </ol>
+                    </li>
+                </ol>
+            </li>
+
+            <li class="menuparent">
+                <label for="culvertgraph">Culvert Graph</label> <input type="checkbox" id="culvertgraph" />
+                <ol>
+                    <li class="action" id="no_of_culverts_vs_district">@Html.ActionLink("No. of Culverts vs District", "#", "Home", new { area = "" }, null)</li>
+                    <li class="action" id="no_of_culverts_vs_culvert_types">@Html.ActionLink("No. of Culverts vs Culvert Types", "#", "Home", new { area = "" }, null)</li>
+                </ol>
+            </li>
+
+            <li class="menuparent">
+                <label for="help">Help</label> <input type="checkbox" id="help" />
+                <ol>
+                    <li class="action" id="software_development_history"><a href="~/docs/bms_about.pdf">Software Dev't History</a></li>
+                    <li class="action" id="user_manual"><a href="~/docs/bms_user_manual_dec_2020.pdf">User Manual</a></li>
+                    <li class="action" id="contact">@Html.ActionLink("Contact", "Contact", "Help", new { area = "" }, null)</li>
+                    <li class="action" id="about">@Html.ActionLink("About", "About", "Help", new { area = "" }, null)</li>
+                </ol>
+            </li>
+        </ol>
+    </div>
+
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <hr />
+        <footer style="text-align: center;">
+            <p>&copy; @DateTime.Now.Year - Ethiopian Roads Administration - BMS. All rights reserved.</p>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Styles.Render("~/Content/dataTables") @*my bundles*@
+    @Scripts.Render("~/bundles/dataTables") @*my bundles*@
+    @Styles.Render("~/Content/dropdownsubmenu") @*my bundles*@
+    @Styles.Render("~/Content/css") @*my bundles*@
+    @Styles.Render("~/Content/themes/base/css") @*my bundles*@
+    @Scripts.Render("~/bundles/modernizr") @*my bundles*@
+    @Styles.Render("~/Content/jqueryui") @*my bundles*@
+    @Scripts.Render("~/bundles/jqueryui") @*my bundles*@
+    @Scripts.Render("~/bundles/jeditable") @*my bundles*@
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>

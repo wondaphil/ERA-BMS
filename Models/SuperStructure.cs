@@ -7,21 +7,19 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ERA_BCMS.Models
+namespace ERA_BMS.Models
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-
+    
     public partial class SuperStructure
     {
-        [Key, ForeignKey("Bridge")]
-        public string BridgeSuperStructureId { get; set; }
+        public string BridgeId { get; set; }
         public Nullable<int> BridgeTypeId { get; set; }
+        public Nullable<short> GirderTypeId { get; set; }
         public Nullable<int> NoOfSpan { get; set; }
         public string SpanLengthComposition { get; set; }
-        public double TotalSpanLength { get; set; }
+        public Nullable<double> TotalSpanLength { get; set; }
         public Nullable<double> CarriageWayWidth { get; set; }
         public Nullable<double> SideWalkWidth { get; set; }
         public Nullable<int> NoOfLane { get; set; }
@@ -31,11 +29,14 @@ namespace ERA_BCMS.Models
         public Nullable<int> NoOfGirder { get; set; }
         public Nullable<double> GirderDepth { get; set; }
         public Nullable<double> SpacingGirder { get; set; }
-        public Nullable<double> BoxWidth { get; set; }
+        public Nullable<double> GirderBoxWidth { get; set; }
+        public Nullable<System.DateTime> ModifiedOn { get; set; }
+        public byte[] Flag { get; set; }
     
-        public virtual Bridge Bridge { get; set; }
         public virtual BridgeType BridgeType { get; set; }
         public virtual DeckSlabType DeckSlabType { get; set; }
+        public virtual GirderType GirderType { get; set; }
         public virtual SpanSupportType SpanSupportType { get; set; }
+        public virtual Bridge Bridge { get; set; }
     }
 }

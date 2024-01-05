@@ -1,0 +1,68 @@
+﻿
+@{
+    ViewBag.Title = "Delete Bridge";
+}
+
+<h2>Delete Bridge Including Details</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <hr />
+
+    <table>
+        <tr>
+            <td style="padding: 5px"><b>Type Bridge No: </b></td>
+            <td style="padding: 5px">@Html.TextBox("BridgeNo", null, new { @class = "control-control" })</td>
+            <td style="padding: 5px">
+                <button type="button" id="showLocation" class="btn btn-primary"><span class="glyphicon glyphicon-search"></span> Search Bridge</button>
+            </td>
+        </tr>
+    </table>
+    <hr />
+    <div class="col-xs-12">
+        <div id="bridgePartial">
+            <!-- Brige location info displays here -->
+        </div>
+    </div>
+}
+
+<div id="wait" align="center" style="display: none">
+    <img src="~/images/searching.gif" width="65" height="65" />
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#showLocation').click(function () {
+            var enteredBridgeNo = $('#BridgeNo').val();
+            $('#error').text("");
+            $('#bridgePartial').empty(); // clear the bridge location place holder
+
+            if (enteredBridgeNo == "") // if input is not entered
+            {
+                $('#error').text("Please enter Bridge No");
+            }
+            else {
+                //alert("Hello");
+                $.ajax({
+                    url: '@Url.Action("Delete", "Bridges")',
+                    data: { revisedbridgeno: enteredBridgeNo },
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () { $('#wait').show(); },
+                    complete: function () { $('#wait').hide(); },
+                    success: function (data) {
+                        $('#bridgePartial').html(data);
+                    }
+                });
+            }
+        });
+
+        $('#BridgeNo').autocomplete({
+            source: '@Url.Action("GetBridgeNoListContaining", "Search")',
+            minLength: 5, // works only after 5 character are entered
+        });
+    });
+</script>
+
+

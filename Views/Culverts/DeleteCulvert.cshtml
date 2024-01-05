@@ -1,0 +1,69 @@
+﻿
+@{
+    ViewBag.Title = "Delete Culvert";
+}
+
+<h2>Delete Culvert Including Details</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <hr />
+
+    <table>
+        <tr>
+            <td style="padding: 5px"><b>Type Culvert No: </b></td>
+            <td style="padding: 5px">@Html.TextBox("CulvertNo", null, new { @class = "control-control" })</td>
+            <td style="padding: 5px">
+                <button type="button" id="showLocation" class="btn btn-primary"><span class="glyphicon glyphicon-search"></span> Search Culvert</button>
+            </td>
+        </tr>
+    </table>
+    <hr />
+    <div class="col-xs-12">
+        <div id="culvertPartial">
+            <!-- Culvert info displays here -->
+        </div>
+    </div>
+}
+
+<div id="wait" align="center" style="display: none">
+    <img src="~/images/searching.gif" width="65" height="65" />
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#showLocation').click(function () {
+            var enteredCulvertNo = $('#CulvertNo').val();
+            $('#error').text("");
+            $('#culvertPartial').empty(); // clear the culvert info place holder
+
+            if (enteredCulvertNo == "") // if input is not entered
+            {
+                $('#error').text("Please enter culvert No.!");
+            }
+            else {
+                //alert("Hello");
+                $.ajax({
+                    url: '@Url.Action("Delete", "Culverts")',
+                    data: { revisedculvertno: enteredCulvertNo },
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () { $('#wait').show(); },
+                    complete: function () { $('#wait').hide(); },
+                    success: function (data) {
+                        $('#culvertPartial').html(data);
+                    }
+                });
+            }
+        });
+
+         $('#CulvertNo').autocomplete({
+            source: '@Url.Action("GetCulvertNoListContaining", "Bridges")',
+            minLength: 5, // works only after 5 character are entered
+        });
+    });
+</script>
+
+
+

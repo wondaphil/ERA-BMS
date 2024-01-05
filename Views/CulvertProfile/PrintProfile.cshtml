@@ -1,0 +1,27 @@
+﻿@model ERA_BMS.Models.Culvert
+
+<div class="container-fluid">
+    <div class="row">
+        @if (Model != null)
+        {
+            <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12">@Html.Partial("Location", Model)</div>
+        }
+        @if (Model.CulvertGeneralInfo != null)
+        {
+            <div class="col-lg-6 col-md-6 col-sm-8 col-xs-12">@Html.Partial("GeneralInfo", Model.CulvertGeneralInfo)</div>
+        }
+        <div class="clearfix visible-sm"></div> <!-- Add clearfix (or new line break) for only the sm -->
+
+        @if (Model.CulvertStructure != null)
+        {
+            <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12">@Html.Partial("StructuralInfo", Model.CulvertStructure)</div>
+        }
+    </div>
+</div>
+
+
+
+
+
+
+

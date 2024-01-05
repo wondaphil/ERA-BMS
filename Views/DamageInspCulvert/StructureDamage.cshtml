@@ -1,0 +1,303 @@
+﻿@model ERA_BMS.ViewModels.InspCulvertStructureViewModel
+
+<!--Change TempData to ViewBag for easy use-->
+@{
+    ViewBag.CulvertDamageTypeList = (List<string[]>)TempData["CulvertDamageTypeList"];
+    ViewBag.AbutmentDamageTypeList = (List<string[]>)TempData["AbutmentDamageTypeList"];
+    ViewBag.GuardParapetDamageTypeList = (List<string[]>)TempData["GuardParapetDamageTypeList"];
+    ViewBag.WingWallDamageTypeList = (List<string[]>)TempData["WingWallDamageTypeList"];
+    ViewBag.HeadWallDamageTypeList = (List<string[]>)TempData["HeadWallDamageTypeList"];
+    ViewBag.PavedWaterWayDamageTypeList = (List<string[]>)TempData["PavedWaterWayDamageTypeList"];
+
+    ViewBag.DamageRankList = (List<string>)TempData["DamageRankList"];
+}
+
+<input type="hidden" id="culvertId" value="@TempData["CulvertId"]" /> <!-- Bridge Id -->
+<input type="hidden" id="inspectionDate" value="@TempData["InspectionDate"]" /> <!-- Inspection Date -->
+<div class="row">
+    <div class="panel panel-default panel-collapse col-lg-2 col-md-2 col-sm-3 col-xs-6">
+        <div class="panel-heading" id="heading-1">
+            <h5 class="panel-title panel-info" style="text-align: center">Culvert</h5>
+        </div>
+        <div class="panel-body">
+            <table class="table table-striped table-condensed table-responsive small" id="tblCulvert" style="border: 1px solid black;">
+                <tr id="heading-1">
+                    <th></th>
+                    <th>DamageType</th>
+                    <th>Quantity</th>
+                    @*<th>Unit</th>*@
+                </tr>
+                @for (int i = 0; i < ViewBag.CulvertDamageTypeList.Count; i++)
+                {
+                    @: <tr>
+                        <td></td>
+                        <td>
+                            @ViewBag.CulvertDamageTypeList[i][1]
+                        </td>
+                        // set default values
+                        float damageQuantity = 0;
+                        string damageid = "-1";
+                        string fontStyle = "";
+
+                        foreach (var item in Model.Culvert)
+                        {
+                            if (ViewBag.CulvertDamageTypeList[i][0] == item.DamageTypeId.ToString())
+                            {
+                                damageQuantity = (float)item.Quantity;
+                                damageid = item.Id;
+                                fontStyle = "color:red;font-weight: bold;";
+                            }
+                        }
+                        @: <td><span class="damage-qty" name="@damageid" data-damagetype="@ViewBag.CulvertDamageTypeList[i][0]" data-structureitem="1" style="@fontStyle">@damageQuantity</span></td>
+                    @: </tr>
+                }
+            </table>
+        </div>
+    </div>
+
+    <div class="panel panel-default col-lg-2 col-md-2 col-sm-3 col-xs-6">
+        <div class="panel-heading" id="heading-2">
+            <h5 class="panel-title panel-info" style="text-align: center">Abutment</h5>
+        </div>
+        <div class="panel-body">
+            <table class="table table-striped table-condensed table-responsive small" id="tblAbutment" style="border: 1px solid black;">
+                <tr id="heading-2">
+                    <th></th>
+                    <th>DamageType</th>
+                    <th>Quantity</th>
+                    @*<th>Unit</th>*@
+                </tr>
+                @for (int i = 0; i < ViewBag.AbutmentDamageTypeList.Count; i++)
+                {
+                    @: <tr>
+                        <td></td>
+                        <td>
+                            @ViewBag.AbutmentDamageTypeList[i][1]
+                        </td>
+                        // set default values
+                        float damageQuantity = 0;
+                        string damageid = "-1";
+                        string fontStyle = "";
+
+                        foreach (var item in Model.Abutment)
+                        {
+                            if (ViewBag.AbutmentDamageTypeList[i][0] == item.DamageTypeId.ToString())
+                            {
+                                damageQuantity = (float)item.Quantity;
+                                damageid = item.Id;
+                                fontStyle = "color:red;font-weight: bold;";
+                            }
+                        }
+                        @: <td><span class="damage-qty" name="@damageid" data-damagetype="@ViewBag.AbutmentDamageTypeList[i][0]" data-structureitem="2" style="@fontStyle">@damageQuantity</span></td>
+                    @: </tr>
+                }
+            </table>
+        </div>
+    </div>
+
+    <div class="clearfix visible-xs"></div> <!-- Add clearfix (or new line break) for only the xs -->
+
+    <div class="panel panel-default col-lg-2 col-md-2 col-sm-3 col-xs-6">
+        <div class="panel-heading" id="heading-1">
+            <h5 class="panel-title panel-info" style="text-align: center">Guard/Parapet</h5>
+        </div>
+        <div class="panel-body">
+            <table class="table table-striped table-condensed table-responsive small" id="tblGuardParapet" style="border: 1px solid black;">
+                <tr id="heading-1">
+                    <th></th>
+                    <th>DamageType</th>
+                    <th>Quantity</th>
+                    @*<th>Unit</th>*@
+                </tr>
+
+                @for (int i = 0; i < ViewBag.GuardParapetDamageTypeList.Count; i++)
+                {
+                    @: <tr>
+                        <td></td>
+                        <td>
+                            @ViewBag.GuardParapetDamageTypeList[i][1]
+                        </td>
+                        // set default values
+                        float damageQuantity = 0;
+                        string damageid = "-1";
+                        string fontStyle = "";
+
+                        foreach (var item in Model.GuardParapet)
+                        {
+                            if (ViewBag.GuardParapetDamageTypeList[i][0] == item.DamageTypeId.ToString())
+                            {
+                                damageQuantity = (float)item.Quantity;
+                                damageid = item.Id;
+                                fontStyle = "color:red;font-weight: bold;";
+                            }
+                        }
+                        @: <td><span class="damage-qty" name="@damageid" data-damagetype="@ViewBag.GuardParapetDamageTypeList[i][0]" data-structureitem="3" style="@fontStyle">@damageQuantity</span></td>
+                    @: </tr>
+                }
+            </table>
+        </div>
+    </div>
+
+    <div class="panel panel-default col-lg-2 col-md-2 col-sm-3 col-xs-6">
+        <div class="panel-heading" id="heading-2">
+            <h5 class="panel-title panel-info" style="text-align: center">Wing Wall</h5>
+        </div>
+        <div class="panel-body">
+            <table class="table table-striped table-condensed table-responsive small" id="tblWingWall" style="border: 1px solid black;">
+                <tr id="heading-1">
+                    <th></th>
+                    <th>DamageType</th>
+                    <th>Quantity</th>
+                    @*<th>Unit</th>*@
+                </tr>
+
+                @for (int i = 0; i < ViewBag.WingWallDamageTypeList.Count; i++)
+                {
+                    @: <tr>
+                        <td></td>
+                        <td>
+                            @ViewBag.WingWallDamageTypeList[i][1]
+                        </td>
+                        // set default values
+                        float damageQuantity = 0;
+                        string damageid = "-1";
+                        string fontStyle = "";
+
+                        foreach (var item in Model.WingWall)
+                        {
+                            if (ViewBag.WingWallDamageTypeList[i][0] == item.DamageTypeId.ToString())
+                            {
+                                damageQuantity = (float)item.Quantity;
+                                damageid = item.Id;
+                                fontStyle = "color:red;font-weight: bold;";
+                            }
+                        }
+                        @: <td><span class="damage-qty" name="@damageid" data-damagetype="@ViewBag.WingWallDamageTypeList[i][0]" data-structureitem="4" style="@fontStyle">@damageQuantity</span></td>
+                    @: </tr>
+                }
+            </table>
+        </div>
+    </div>
+
+    <div class="clearfix visible-sm"></div> <!-- Add clearfix (or new line break) for only the sm -->
+
+    <div class="panel panel-default col-lg-2 col-md-2 col-sm-3 col-xs-6">
+        <div class="panel-heading" id="heading-2">
+            <h5 class="panel-title panel-info" style="text-align: center">Head Wall</h5>
+        </div>
+        <div class="panel-body">
+            <table class="table table-striped table-condensed table-responsive small" id="tblHeadWall" style="border: 1px solid black;">
+                <tr id="heading-2">
+                    <th></th>
+                    <th>DamageType</th>
+                    <th>Quantity</th>
+                    @*<th>Unit</th>*@
+                </tr>
+
+                @for (int i = 0; i < ViewBag.HeadWallDamageTypeList.Count; i++)
+                {
+                    @: <tr>
+                        <td></td>
+                        <td>
+                            @ViewBag.HeadWallDamageTypeList[i][1]
+                        </td>
+                        // set default values
+                        float damageQuantity = 0;
+                        string damageid = "-1";
+                        string fontStyle = "";
+
+                        foreach (var item in Model.HeadWall)
+                        {
+                            if (ViewBag.HeadWallDamageTypeList[i][0] == item.DamageTypeId.ToString())
+                            {
+                                damageQuantity = (float)item.Quantity;
+                                damageid = item.Id;
+                                fontStyle = "color:red;font-weight: bold;";
+                            }
+                        }
+                        @: <td><span class="damage-qty" name="@damageid" data-damagetype="@ViewBag.HeadWallDamageTypeList[i][0]" data-structureitem="5" style="@fontStyle">@damageQuantity</span></td>
+                    @: </tr>
+                }
+            </table>
+        </div>
+    </div>
+
+    <div class="panel panel-default col-lg-2 col-md-2 col-sm-3 col-xs-6">
+        <div class="panel-heading" id="heading-1">
+            <h5 class="panel-title panel-info" style="text-align: center">Paved Water Way</h5>
+        </div>
+        <div class="panel-body">
+            <table class="table table-striped table-condensed table-responsive small" id="tblPavedWaterWay" style="border: 1px solid black;">
+                <tr id="heading-1">
+                    <th></th>
+                    <th>DamageType</th>
+                    <th>Quantity</th>
+                    @*<th>Unit</th>*@
+                </tr>
+
+                @for (int i = 0; i < ViewBag.PavedWaterWayDamageTypeList.Count; i++)
+                {
+                    @: <tr>
+                        <td></td>
+                        <td>
+                            @ViewBag.PavedWaterWayDamageTypeList[i][1]
+                        </td>
+                        // set default values
+                        float damageQuantity = 0;
+                        string damageid = "-1";
+                        string fontStyle = "";
+
+                        foreach (var item in Model.PavedWaterWay)
+                        {
+                            if (ViewBag.PavedWaterWayDamageTypeList[i][0] == item.DamageTypeId.ToString())
+                            {
+                                damageQuantity = (float)item.Quantity;
+                                damageid = item.Id;
+                                fontStyle = "color:red;font-weight: bold;";
+                            }
+                        }
+                        @: <td><span class="damage-qty" name="@damageid" data-damagetype="@ViewBag.PavedWaterWayDamageTypeList[i][0]" data-structureitem="6" style="@fontStyle">@damageQuantity</span></td>
+                    @: </tr>
+                }
+            </table>
+        </div>
+    </div>
+</div>
+
+@*<div id="status"></div>*@
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        // Makes "Damage Quantity" editable
+        $(".damage-qty").each(function () {
+            $(this).editable("/DamageInspCulvert/UpdateDamageQuantity", {
+                callback: function (value, settings) {
+                    // If area is other than 0, set the font style to red and bold
+                    if (value != "0") {
+                        $(this).css({ 'color': 'red', 'font-weight': 'bold' });
+                        $(this).attr("name", $('#culvertId').val());
+                    }
+                    else {
+                        $(this).css({ 'color': '', 'font-weight': '' });
+                        $(this).attr("name", "-1");
+                    }
+                },
+                submitdata: function () {
+                    return {
+                        // Pass parameters to "UpdateDamageQuantity" controller action
+                        id: $(this).attr("name"),
+                        origvalue: this.revert,
+                        culvertid: $('#culvertId').val(),
+                        inspdate: $('#inspectionDate').val(),
+                        stritemid: $(this).attr("data-structureitem"),
+                        dmgtypeid: $(this).attr("data-damagetype"),
+                    };
+                },
+                tooltip: 'Click/Tap to edit...',
+                indicator: 'Saving...',
+                select: true, // highlight all text after editable
+                size: 1
+            });
+        });
+    });
+</script>

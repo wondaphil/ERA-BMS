@@ -1,0 +1,98 @@
+﻿@model ERA_BMS.Models.SubRoute
+
+@{
+    ViewBag.Title = "Delete Sub Route";
+}
+
+<h2>Delete Sub Route</h2>
+
+<h3>Are you sure you want to delete this sub route ?</h3>
+<div class="row">
+    <hr />
+    <dl class="dl-horizontal col-md-4 col-xs-6">
+        <dt>
+            @Html.DisplayNameFor(model => model.SubRouteId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SubRouteId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SubRouteNo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SubRouteNo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SubRouteName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SubRouteName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MainRoute.MainRouteName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MainRoute.MainRouteName)
+        </dd>
+    </dl>
+
+    <dl class="dl-horizontal col-md-4 col-xs-6">
+        <dt>
+            @Html.DisplayNameFor(model => model.FromKm)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FromKm)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ToKm)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ToKm)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Length)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Length)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AverageDailyTraffic)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AverageDailyTraffic)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Remark)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Remark)
+        </dd>
+
+    </dl>
+</div>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-actions no-color">
+        <button type="submit" class="btn btn-danger"><span class="glyphicon glyphicon-warning-sign"></span> Delete</button>
+        <a href="@Url.Action("Index", new {area = "Admin"})" class="btn btn-primary"><span class="glyphicon glyphicon-backward"></span> Go to Routes List</a>
+    </div>
+}

@@ -1,0 +1,2075 @@
+﻿
+@{
+    ViewBag.Title = "Graph Charts";
+}
+
+@*<style>
+    .container {
+        width: 490px;
+        overflow: hidden;
+        margin: 20px auto;
+    }
+
+    .canvas-container {
+        width: 500px;
+        background-color: #ffffff;
+        height: 200px;
+        margin-left: -5px;
+    }
+</style>*@
+
+<h2>Graph Charts</h2>
+
+@using (Html.BeginForm())
+{
+    <div class="panel panel-default">
+        @*<div class="panel-heading">
+                <h3 class="panel-title panel-info">Please select <b>Graph Type</b> and <b>Inspection Year</b> from the dropdown list</h3>
+            </div>*@
+        <div class="panel-body">
+
+            @Html.AntiForgeryToken()
+
+            <div class="row">
+                <div class="col-lg-7 col-md-6 col-sm-7 col-xs-7">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group">
+                            <label for="ddlGraphType" class="control-label col-lg-3 col-md-3 col-sm-4 col-xs-7">Graph Type</label>
+                            <div class="col-lg-9 col-md-8 col-sm-8 col-xs-12">
+                                @Html.DropDownList("ddlGraphType", (List<SelectListItem>)ViewBag.GraphTypes, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-3">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group" id="inspyear" style="display: none">
+                            <!-- Hide the inspection year -->
+                            <label for="ddlInspectionYear" class="control-label col-lg-5 col-md-5 col-sm-6 col-xs-12">Inspection Year</label>
+                            <div class="col-lg-5 col-md-5 col-sm-6 col-xs-10">
+                                @Html.DropDownList("ddlInspectionYear", (List<SelectListItem>)ViewBag.InspectionYearList, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-1 col-md-2 col-xs-2 navbar-right">
+                    <a class="btn btn-primary" data-toggle="tooltip" title="Refresh" id="refresh"> <span class="glyphicon glyphicon-refresh"></span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div id="wait" align="center" style="display: none">
+    <img src="~/images/ajax-loader-big.gif" />
+</div>
+
+
+<div class="container" align="center" style="font-family: Corbel; text-align: center;  ">
+    <div id="chartHeading" style="font-weight: bold; color: #6e6e6e ">
+        <!-- Chart hearing appears here-->
+    </div>
+    <div class="canvas-container" style="width:100%; height:100%">
+        <canvas id="graphChart" style="padding: 0; margin-left: -15px; display: block; "> </canvas>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        var selGraphTypeId;
+        var graphChart;
+
+        function destroyChart() {
+            if (typeof graphChart != 'undefined')
+                graphChart.destroy();
+        }
+
+        function num_format(num) {
+            var num_parts = num.toString().split(".");
+            num_parts[0] = num_parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            return num_parts.join(".");
+        }
+
+        // If page is opened with some graph type id selected, draw the corresponding chart
+        if ($('#ddlGraphType option:selected').val() > 0)
+            draw_chart();
+
+        $('#ddlGraphType').change(function () {
+            draw_chart();
+        });
+
+        $('#ddlInspectionYear').change(function () {
+            if (selGraphTypeId == "5" || selGraphTypeId == "13" || selGraphTypeId == "14" || selGraphTypeId == "15" || selGraphTypeId == "16"
+                || selGraphTypeId == "19" || selGraphTypeId == "20")
+                $('#ddlGraphType').trigger('change');
+        });
+
+        $('#refresh').click(function () {
+            $('#ddlGraphType').trigger('change');
+        });
+
+        function draw_chart() {
+            selGraphTypeId = $('#ddlGraphType option:selected').val();
+
+            // Show inspection year only for specific charts
+            if (selGraphTypeId == "5" || selGraphTypeId == "13" || selGraphTypeId == "14" || selGraphTypeId == "15" || selGraphTypeId == "16"
+                || selGraphTypeId == "19" || selGraphTypeId == "20")
+                $('#inspyear').show();
+            else
+                $('#inspyear').hide();
+
+            var selInspectionYear = $('#ddlInspectionYear option:selected').val();
+            destroyChart(); //clear the chart place holder
+            $('#chartHeading').html("&nbsp;");
+            var now = new Date();
+            var currentYear = now.getFullYear();
+
+            switch (selGraphTypeId) {
+                case "0":
+                    break; // Do nothing!!
+                case "1":
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("_NoOfBridgesVsDistrictChart", "ChartGraph")',
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        beforeSend: function () { $('#wait').show(); },
+                        complete: function () { $('#wait').hide(); },
+                        success: function (chartData) {
+                            var labels = chartData[0];
+                            var dataSets = chartData[1];
+
+                            var total = 0;
+                            for (var key in dataSets) {
+                                total = total + Number(dataSets[key]);
+                            }
+
+                            $('#chartHeading').html('<h3>No. of Bridges vs <b>Districts</b> - <b>' + num_format(total) + ' bridges</b> (as of <b>' + currentYear + '</b>)</h3>');
+
+                            var dataTable = {
+                                labels: labels,
+                                datasets: [{
+                                    label: "No. of Bridges",
+                                    data: dataSets,
+                                    fill: false,
+                                    backgroundColor: ["rgba(54, 162, 235, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 159, 64, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(153, 102, 255, 0.8)", "rgba(201, 203, 207, 0.8)", "rgba(255, 159, 64, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(75, 192, 192, 0.8)"],
+                                    borderColor: ["rgb(54, 162, 235)", "rgb(255, 99, 132)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)", "rgb(153, 102, 255)", "rgb(201, 203, 207)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)"],
+                                    borderWidth: 1,
+                                    //inflateAmount: 5
+                                }]
+                            };
+
+                            var ctx = $("#graphChart").get(0).getContext("2d");
+
+                            graphChart = new Chart(ctx, {
+                                type: 'bar', //'line', 'pie'
+                                data: dataTable,
+                                //plugins: [ChartDataLabels], // register the chart data label plugin
+                                options: {
+                                    responsive: true,
+                                    title: { display: false, text: 'No. of Bridges vs Districts - ' + num_format(total) + ' bridges'},
+                                    legend: { position: 'right', display: false },
+                                    scales: {
+                                        xAxes: [{ gridLines: { display: true }, display: true, scaleLabel: { display: true, labelString: 'Districts', fontSize: 18 }, ticks: { fontSize: 14 }, barPercentage: 0.6 } ],
+                                        yAxes: [{ gridLines: { display: true }, display: true, scaleLabel: { display: true, labelString: 'No. of Bridges', fontSize: 18 }, ticks: { stepSize: 00, beginAtZero: true, fontSize: 14 } }]
+                                    },
+                                    tooltips: {
+                                        enabled: true
+                                    },
+                                    hover: {
+                                        animationDuration: 1
+                                    },
+                                    animation: {
+                                        duration: 1,
+                                        onComplete: function () {
+                                            var chartInstance = this.chart,
+                                                ctx = chartInstance.ctx;
+                                            ctx.textAlign = 'center';
+                                            ctx.fillStyle = "rgba(0, 0, 0, 1)";
+                                            ctx.textBaseline = 'bottom';
+                                            ctx.font = '14pt sans-serif'; // font fsize for label on top of bar
+
+                                            // Loop through each data in the datasets
+                                            this.data.datasets.forEach(function (dataset, i) {
+                                                var meta = chartInstance.controller.getDatasetMeta(i);
+                                                meta.data.forEach(function (bar, index) {
+                                                    var data = dataset.data[index];
+                                                    ctx.fillText(data, bar._model.x, bar._model.y - 5);
+                                                });
+                                            });
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    });
+                    break;
+
+                case "2":
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("_NoOfBridgesVsBridgeTypeChart", "ChartGraph")',
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        beforeSend: function () { $('#wait').show(); },
+                        complete: function () { $('#wait').hide(); },
+                        success: function (chartData) {
+                            var labels = chartData[0];
+                            var dataSets = chartData[1];
+
+                            var total = 0;
+                            for (var key in dataSets) {
+                                total = total + Number(dataSets[key]);
+                            }
+                            $('#chartHeading').html('<h3>No. of Bridges vs <b>Bridge Types</b> - <b>' + num_format(total) + ' bridges</b> (as of <b>' + currentYear + '</b>)</h3>');
+
+                            var dataTable = {
+                                labels: labels,
+                                datasets: [{
+                                    label: "No. of Bridges",
+                                    data: dataSets,
+                                    fill: false,
+                                    backgroundColor: ["rgba(54, 162, 235, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 159, 64, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(153, 102, 255, 0.8)", "rgba(201, 203, 207, 0.8)", "rgba(255, 159, 64, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(75, 192, 192, 0.8)"],
+                                    borderColor: ["rgb(54, 162, 235)", "rgb(255, 99, 132)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)", "rgb(153, 102, 255)", "rgb(201, 203, 207)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)"],
+                                    borderWidth: 1
+                                }]
+                            };
+                            var ctx = $("#graphChart").get(0).getContext("2d");
+                            graphChart = new Chart(ctx, {
+                                type: 'bar', //'line', 'pie'
+                                data: dataTable,
+                                options: {
+                                    responsive: true,
+                                    title: { display: false, text: 'No. of Bridges vs Bridge Types - ' + num_format(total) + ' bridges' },
+                                    legend: { position: 'right', display: false },
+                                    scales: {
+                                        xAxes: [{ gridLines: { display: true }, display: true, scaleLabel: { display: true, labelString: 'Bridge Types', fontSize: 18 }, ticks: { autoSkip: false, fontSize: 16 } }],
+                                        yAxes: [{ gridLines: { display: true }, display: true, scaleLabel: { display: true, labelString: 'No. of Bridges', fontSize: 18 }, ticks: { stepSize: 250, beginAtZero: true, fontSize: 16 } }]
+                                    },
+                                    tooltips: {
+                                        enabled: true
+                                    },
+                                    hover: {
+                                        animationDuration: 1
+                                    },
+                                    animation: {
+                                        duration: 1,
+                                        onComplete: function () {
+                                            var chartInstance = this.chart,
+                                                ctx = chartInstance.ctx;
+                                            ctx.textAlign = 'center';
+                                            ctx.fillStyle = "rgba(0, 0, 0, 1)";
+                                            ctx.textBaseline = 'bottom';
+                                            ctx.font = '14pt sans-serif'; // font fsize for label on top of bar
+
+                                            // Loop through each data in the datasets
+                                            this.data.datasets.forEach(function (dataset, i) {
+                                                var meta = chartInstance.controller.getDatasetMeta(i);
+                                                meta.data.forEach(function (bar, index) {
+                                                    var data = dataset.data[index];
+                                                    ctx.fillText(data, bar._model.x, bar._model.y - 5);
+                                                });
+                                            });
+                                        }
+                                    }
+                                },
+                                ticks: { autoSkip: false }
+                            });
+                        }
+                    });
+                    break;
+
+                case "3":
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("_NoOfBridgesVsConstructionYearChart", "ChartGraph")',
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        beforeSend: function () { $('#wait').show(); },
+                        complete: function () { $('#wait').hide(); },
+                        success: function (chartData) {
+                            var labels = chartData[0];
+                            var dataSets = chartData[1];
+
+                            var total = 0;
+                            for (var key in dataSets) {
+                                total = total + Number(dataSets[key]);
+                            }
+                            $('#chartHeading').html('<h3>No. of Bridges vs <b>Construction/Replaced Years</b> - <b>' + num_format(total) + ' bridges</b> (as of <b>' + currentYear + '</b>)</h3>');
+
+                            var dataTable = {
+                                labels: labels,
+                                datasets: [{
+                                    label: "No. of Bridges",
+                                    data: dataSets,
+                                    fill: false,
+                                    backgroundColor: ["rgba(54, 162, 235, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 159, 64, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(153, 102, 255, 0.8)", "rgba(201, 203, 207, 0.8)", "rgba(255, 159, 64, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(75, 192, 192, 0.8)"],
+                                    borderColor: ["rgb(54, 162, 235)", "rgb(255, 99, 132)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)", "rgb(153, 102, 255)", "rgb(201, 203, 207)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)"],
+                                    borderWidth: 1
+                                }]
+                            };
+                            var ctx = $("#graphChart").get(0).getContext("2d");
+                            graphChart = new Chart(ctx, {
+                                type: 'bar', //'line', 'pie'
+                                data: dataTable,
+                                options: {
+                                    responsive: true,
+                                    title: { display: false, text: 'No. of Bridges vs Construction/Replaced Years - ' + num_format(total) + ' bridges' },
+                                    legend: { position: 'right', display: false },
+                                    scales: {
+                                        xAxes: [{ gridLines: { display: true }, display: true, scaleLabel: { display: true, labelString: 'Construction/Replaced Year', fontSize: 18 }, ticks: { autoSkip: false, fontSize: 14 }, barPercentage: 0.5 }],
+                                        yAxes: [{ gridLines: { display: true }, display: true, scaleLabel: { display: true, labelString: 'No. of Bridges', fontSize: 18 }, ticks: { stepSize: 200, beginAtZero: true, fontSize: 14 } }]
+                                    },
+                                    tooltips: {
+                                        enabled: true
+                                    },
+                                    hover: {
+                                        animationDuration: 1
+                                    },
+                                    animation: {
+                                        duration: 1,
+                                        onComplete: function () {
+                                            var chartInstance = this.chart,
+                                                ctx = chartInstance.ctx;
+                                            ctx.textAlign = 'center';
+                                            ctx.fillStyle = "rgba(0, 0, 0, 1)";
+                                            ctx.textBaseline = 'bottom';
+                                            ctx.font = '14pt sans-serif'; // font fsize for label on top of bar
+
+                                            // Loop through each data in the datasets
+                                            this.data.datasets.forEach(function (dataset, i) {
+                                                var meta = chartInstance.controller.getDatasetMeta(i);
+                                                meta.data.forEach(function (bar, index) {
+                                                    var data = dataset.data[index];
+                                                    ctx.fillText(data, bar._model.x, bar._model.y - 5);
+                                                });
+                                            });
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    });
+                    break;
+
+                case "4":
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("_NoOfBridgesVsBridgeLengthChart", "ChartGraph")',
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        beforeSend: function () { $('#wait').show(); },
+                        complete: function () { $('#wait').hide(); },
+                        success: function (chartData) {
+                            var labels = chartData[0];
+                            var dataSets = chartData[1];
+
+                            var total = 0;
+                            for (var key in dataSets) {
+                                total = total + Number(dataSets[key]);
+                            }
+                            $('#chartHeading').html('<h3>No. of Bridges vs <b>Structure Length</b> - <b>' + num_format(total) + ' bridges</b> (as of <b>' + currentYear + '</b>)</h3>');
+
+                            var dataTable = {
+                                labels: labels,
+                                datasets: [{
+                                    label: "No. of Bridges",
+                                    data: dataSets,
+                                    fill: false,
+                                    backgroundColor: ["rgba(54, 162, 235, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 159, 64, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(153, 102, 255, 0.8)", "rgba(201, 203, 207, 0.8)", "rgba(255, 159, 64, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(75, 192, 192, 0.8)"],
+                                    borderColor: ["rgb(54, 162, 235)", "rgb(255, 99, 132)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)", "rgb(153, 102, 255)", "rgb(201, 203, 207)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)"],
+                                    borderWidth: 1
+                                }]
+                            };
+                            var ctx = $("#graphChart").get(0).getContext("2d");
+                            graphChart = new Chart(ctx, {
+                                type: 'bar', //'line', 'pie'
+                                data: dataTable,
+                                options: {
+                                    responsive: true,
+                                    title: { display: false, text: 'No. of Bridges vs LBridge ength - ' + num_format(total) + ' bridges' },
+                                    legend: { position: 'right', display: false },
+                                    scales: {
+                                        xAxes: [{ gridLines: { display: true }, display: true, scaleLabel: { display: true, labelString: 'Structure Length (meters)', fontSize: 18 }, ticks: { autoSkip: false, fontSize: 14 }, barPercentage: 0.6 }],
+                                        yAxes: [{ gridLines: { display: true }, display: true, scaleLabel: { display: true, labelString: 'No. of Bridges', fontSize: 18 }, ticks: { stepSize: 200, beginAtZero: true, fontSize: 14 } }]
+                                    },
+                                    tooltips: {
+                                        enabled: true
+                                    },
+                                    hover: {
+                                        animationDuration: 1
+                                    },
+                                    animation: {
+                                        duration: 1,
+                                        onComplete: function () {
+                                            var chartInstance = this.chart,
+                                                ctx = chartInstance.ctx;
+                                            ctx.textAlign = 'center';
+                                            ctx.fillStyle = "rgba(0, 0, 0, 1)";
+                                            ctx.textBaseline = 'bottom';
+                                            ctx.font = '14pt sans-serif'; // font fsize for label on top of bar
+
+                                            // Loop through each data in the datasets
+                                            this.data.datasets.forEach(function (dataset, i) {
+                                                var meta = chartInstance.controller.getDatasetMeta(i);
+                                                meta.data.forEach(function (bar, index) {
+                                                    var data = dataset.data[index];
+                                                    ctx.fillText(data, bar._model.x, bar._model.y - 5);
+                                                });
+                                            });
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    });
+                    break;
+
+                case "5":
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("_NoOfBridgesVsServiceConditionChart", "ChartGraph")',
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        data: '{inspectionyear: ' + selInspectionYear + '}',
+                        beforeSend: function () { $('#wait').show(); },
+                        complete: function () { $('#wait').hide(); },
+                        success: function (chartData) {
+                            var labels = chartData[0];
+                            var dataSets = chartData[1];
+
+                            var total = 0;
+                            for (var key in dataSets) {
+                                total = total + Number(dataSets[key]);
+                            }
+                            $('#chartHeading').html('<h3>No. of Bridges vs <b>Service Conditions</b> (<b>' + selInspectionYear + '</b>) - <b>' + num_format(total) + ' bridges</b></h3>');
+
+                            var dataTable = {
+                                labels: labels,
+                                datasets: [{
+                                    label: "No. of Bridges",
+                                    data: dataSets,
+                                    fill: false,
+                                    backgroundColor: ["rgba(75, 192, 192, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(255, 99, 132, 0.8)"],
+                                    borderColor: ["rgb(75, 192, 192)", "rgb(255, 205, 86)", "rgb(255, 99, 132)"],
+                                    borderWidth: 1
+                                }]
+                            };
+                            var ctx = $("#graphChart").get(0).getContext("2d");
+                            graphChart = new Chart(ctx, {
+                                type: 'bar', //'line', 'pie'
+                                data: dataTable,
+                                options: {
+                                    responsive: true, //to make chart smaller make it "false"
+                                    title: { display: false, text: 'No. of Bridges vs Service Conditions (' + selInspectionYear + ') - ' + num_format(total) + ' bridges' },
+                                    legend: { position: 'right', display: false },
+                                    scales: {
+                                        xAxes: [{ gridLines: { display: true }, display: true, scaleLabel: { display: true, labelString: 'Service Condition', fontSize: 18 }, ticks: { fontSize: 16 }, barPercentage: 0.3 }],
+                                        yAxes: [{ gridLines: { display: true }, display: true, scaleLabel: { display: true, labelString: 'No. of Bridges', fontSize: 18 }, ticks: { stepSize: 500, beginAtZero: true, fontSize: 14 } }]
+                                    },
+                                    tooltips: {
+                                        enabled: true
+                                    },
+                                    hover: {
+                                        animationDuration: 1
+                                    },
+                                    animation: {
+                                        duration: 1,
+                                        onComplete: function () {
+                                            var chartInstance = this.chart,
+                                                ctx = chartInstance.ctx;
+                                            ctx.textAlign = 'center';
+                                            ctx.fillStyle = "rgba(0, 0, 0, 1)";
+                                            ctx.textBaseline = 'bottom';
+                                            ctx.font = '14pt sans-serif'; // font fsize for label on top of bar
+
+                                            // Loop through each data in the datasets
+                                            this.data.datasets.forEach(function (dataset, i) {
+                                                var meta = chartInstance.controller.getDatasetMeta(i);
+                                                meta.data.forEach(function (bar, index) {
+                                                    var data = dataset.data[index];
+                                                    ctx.fillText(data, bar._model.x, bar._model.y - 5);
+                                                });
+                                            });
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    });
+                    break;
+
+                case "13":
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("_NoOfInspectedBridgesVsDistrictChart", "ChartGraph")',
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        data: '{inspectionyear: ' + selInspectionYear + '}',
+                        beforeSend: function () { $('#wait').show(); },
+                        complete: function () { $('#wait').hide(); },
+                        success: function (chartData) {
+                            var labels = chartData[0];
+                            var dataSets = chartData[1];
+
+                            var total = 0;
+                            for (var key in dataSets) {
+                                total = total + Number(dataSets[key]);
+                            }
+                            $('#chartHeading').html('<h3>No. of <b>Inspected Bridges</b> vs Districts (<b>' + selInspectionYear + '<b>) - <b>' + num_format(total) + ' bridges</b></h3>');
+
+                            var dataTable = {
+                                labels: labels,
+                                datasets: [{
+                                    label: "No. of Inspected Bridges",
+                                    data: dataSets,
+                                    fill: false,
+                                    backgroundColor: ["rgba(54, 162, 235, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 159, 64, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(153, 102, 255, 0.8)", "rgba(201, 203, 207, 0.8)", "rgba(255, 159, 64, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(75, 192, 192, 0.8)"],
+                                    borderColor: ["rgb(54, 162, 235)", "rgb(255, 99, 132)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)", "rgb(153, 102, 255)", "rgb(201, 203, 207)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)"],
+                                    borderWidth: 1
+                                }]
+                            };
+                            var ctx = $("#graphChart").get(0).getContext("2d");
+                            graphChart = new Chart(ctx, {
+                                type: 'bar', //'line', 'pie'
+                                data: dataTable,
+                                options: {
+                                    responsive: true, //to make chart smaller make it "false"
+                                    title: { display: false, text: 'No. of Inspected Bridges vs District (' + selInspectionYear + ') - ' + num_format(total) + ' bridges' },
+                                    legend: { position: 'right', display: false },
+                                    scales: {
+                                        xAxes: [{ gridLines: { display: true }, display: true, scaleLabel: { display: true, labelString: 'Districts', fontSize: 18 }, ticks: { fontSize: 14 }, barPercentage: 0.5 }],
+                                        yAxes: [{ gridLines: { display: true }, display: true, scaleLabel: { display: true, labelString: 'No. of Inspected Bridges', fontSize: 18 }, ticks: { stepSize: 200, beginAtZero: true, fontSize: 14 } }]
+                                    },
+                                    tooltips: {
+                                        enabled: true
+                                    },
+                                    hover: {
+                                        animationDuration: 1
+                                    },
+                                    animation: {
+                                        duration: 1,
+                                        onComplete: function () {
+                                            var chartInstance = this.chart,
+                                                ctx = chartInstance.ctx;
+                                            ctx.textAlign = 'center';
+                                            ctx.fillStyle = "rgba(0, 0, 0, 1)";
+                                            ctx.textBaseline = 'bottom';
+                                            ctx.font = '14pt sans-serif'; // font fsize for label on top of bar
+
+                                            // Loop through each data in the datasets
+                                            this.data.datasets.forEach(function (dataset, i) {
+                                                var meta = chartInstance.controller.getDatasetMeta(i);
+                                                meta.data.forEach(function (bar, index) {
+                                                    var data = dataset.data[index];
+                                                    ctx.fillText(data, bar._model.x, bar._model.y - 5);
+                                                });
+                                            });
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    });
+                    break;
+
+                case "15":
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("_InspectedBridgeConditionsVsDistrictChart", "ChartGraph")',
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        data: '{inspectionyear: ' + selInspectionYear + '}',
+                        beforeSend: function () { $('#wait').show(); },
+                        complete: function () { $('#wait').hide(); },
+                        success: function (chartData) {
+                            var labels = chartData[0];
+                            var dataSets1 = chartData[1];
+                            var dataSets2 = chartData[2];
+                            var dataSets3 = chartData[3];
+
+                            var total1 = 0;
+                            for (var key in dataSets1) {
+                                total1 = total1 + Number(dataSets1[key]);
+                            }
+
+                            var total2 = 0;
+                            for (var key in dataSets2) {
+                                total2 = total2 + Number(dataSets2[key]);
+                            }
+
+                            var total3 = 0;
+                            for (var key in dataSets3) {
+                                total3 = total3 + Number(dataSets3[key]);
+                            }
+                            var total = total1 + total2 + total3;
+                            $('#chartHeading').html('<h3>Bridges <b>Service Conditions</b> vs Districts (<b>' + selInspectionYear + '</b>) - <b>' + num_format(total) + ' bridges</b></h3>');
+
+                            var dataTable = {
+                                labels: labels,
+                                datasets: [{
+                                    label: "Good = " + num_format(total1),
+                                    data: dataSets1,
+                                    fill: false,
+                                    backgroundColor: ["rgba(75, 192, 192, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(75, 192, 192, 0.8)"],
+                                    borderColor: ["rgb(75, 192, 192)", "rgb(75, 192, 192)", "rgb(75, 192, 192)", "rgb(75, 192, 192)", "rgb(75, 192, 192)", "rgb(75, 192, 192)", "rgb(75, 192, 192)", "rgb(75, 192, 192)", "rgb(75, 192, 192)", "rgb(75, 192, 192)", "rgb(75, 192, 192)"],
+                                    borderWidth: 1
+                                },
+                                {
+                                    label: "Fair =  " + num_format(total2),
+                                    data: dataSets2,
+                                    fill: false,
+                                    backgroundColor: ["rgba(255, 205, 86, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(255, 205, 86, 0.8)"],
+                                    borderColor: ["rgb(255, 205, 86)", "rgb(255, 205, 86)", "rgb(255, 205, 86)", "rgb(255, 205, 86)", "rgb(255, 205, 86)", "rgb(255, 205, 86)", "rgb(255, 205, 86)", "rgb(255, 205, 86)", "rgb(255, 205, 86)", "rgb(255, 205, 86)", "rgb(255, 205, 86)", "rgb(255, 205, 86)"],
+                                    borderWidth: 1
+                                },
+                                {
+                                    label: "Bad = " + num_format(total3),
+                                    data: dataSets3,
+                                    fill: false,
+                                    backgroundColor: ["rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)"],
+                                    borderColor: ["rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)"],
+                                    borderWidth: 1
+                                }]
+                            };
+                            var ctx = $("#graphChart").get(0).getContext("2d");
+                            graphChart = new Chart(ctx, {
+                                type: 'bar', //'line', 'pie'
+                                data: dataTable,
+                                options: {
+                                    responsive: true, //to make chart smaller make it "false"
+                                    title: {
+                                        display: false, text: 'Bridge Service Conditions vs Districts (' + selInspectionYear + ') <br /> Good = ' + num_format(total1) + ' , Fair = ' + num_format(total2) + ' , Bad = ' + num_format(total3) + ' (as of ' + currentYear + ')' },
+                                    legend: { position: 'top', display: true },
+                                    scales: {
+                                        xAxes: [{ gridLines: { display: true }, display: true, scaleLabel: { display: true, labelString: 'Districts', fontSize: 18 }, ticks: { fontSize: 14 }, barPercentage: 0.5 }],
+                                        yAxes: [{ gridLines: { display: true }, display: true, scaleLabel: { display: true, labelString: 'No. of Bridges by Service Conditions', fontSize: 18 }, ticks: { stepSize: 200, beginAtZero: true, fontSize: 14 } }]
+                                    },
+                                    tooltips: {
+                                        enabled: true
+                                    },
+                                    hover: {
+                                        animationDuration: 1
+                                    },
+                                    animation: {
+                                        duration: 1,
+                                        onComplete: function () {
+                                            var chartInstance = this.chart,
+                                                ctx = chartInstance.ctx;
+                                            ctx.textAlign = 'center';
+                                            ctx.fillStyle = "rgba(0, 0, 0, 1)";
+                                            ctx.textBaseline = 'bottom';
+                                            ctx.font = '14pt sans-serif'; // font fsize for label on top of bar
+
+                                            // Loop through each data in the datasets
+                                            this.data.datasets.forEach(function (dataset, i) {
+                                                var meta = chartInstance.controller.getDatasetMeta(i);
+                                                meta.data.forEach(function (bar, index) {
+                                                    var data = dataset.data[index];
+                                                    ctx.fillText(data, bar._model.x, bar._model.y - 5);
+                                                });
+                                            });
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    });
+                    break;
+
+                case "14":
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("_NoOfInspectedCulvertsVsDistrictChart", "ChartGraph")',
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        data: '{inspectionyear: ' + selInspectionYear + '}',
+                        beforeSend: function () { $('#wait').show(); },
+                        complete: function () { $('#wait').hide(); },
+                        success: function (chartData) {
+                            var labels = chartData[0];
+                            var dataSets = chartData[1];
+
+                            var total = 0;
+                            for (var key in dataSets) {
+                                total = total + Number(dataSets[key]);
+                            }
+                            $('#chartHeading').html('<h3>No. of <b>Inspected Culverts</b> vs Districts (<b>' + selInspectionYear + '</b>) - <b>' + num_format(total) + ' culverts</b> </h3>');
+
+                            var dataTable = {
+                                labels: labels,
+                                datasets: [{
+                                    label: "No. of Inspected Culverts",
+                                    data: dataSets,
+                                    fill: false,
+                                    backgroundColor: ["rgba(54, 162, 235, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 159, 64, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(153, 102, 255, 0.8)", "rgba(201, 203, 207, 0.8)", "rgba(255, 159, 64, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(75, 192, 192, 0.8)"],
+                                    borderColor: ["rgb(54, 162, 235)", "rgb(255, 99, 132)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)", "rgb(153, 102, 255)", "rgb(201, 203, 207)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)"],
+                                    borderWidth: 1
+                                }]
+                            };
+                            var ctx = $("#graphChart").get(0).getContext("2d");
+                            graphChart = new Chart(ctx, {
+                                type: 'bar', //'line', 'pie'
+                                data: dataTable,
+                                options: {
+                                    responsive: true, //to make chart smaller make it "false"
+                                    title: { display: false, text: 'No. of Inspected Culverts vs Districts (' + selInspectionYear + ') - ' + num_format(total) + ' culverts' },
+                                    legend: { position: 'right', display: false },
+                                    scales: {
+                                        xAxes: [{ gridLines: { display: true }, display: true, scaleLabel: { display: true, labelString: 'Districts', fontSize: 18 }, ticks: { fontSize: 14 }, barPercentage: 0.5 }],
+                                        yAxes: [{ gridLines: { display: true }, display: true, scaleLabel: { display: true, labelString: 'No. of Inspected Culverts', fontSize: 18 }, ticks: { stepSize: 1000, beginAtZero: true, fontSize: 14 } }]
+                                    },
+                                    tooltips: {
+                                        enabled: true
+                                    },
+                                    hover: {
+                                        animationDuration: 1
+                                    },
+                                    animation: {
+                                        duration: 1,
+                                        onComplete: function () {
+                                            var chartInstance = this.chart,
+                                                ctx = chartInstance.ctx;
+                                            ctx.textAlign = 'center';
+                                            ctx.fillStyle = "rgba(0, 0, 0, 1)";
+                                            ctx.textBaseline = 'bottom';
+                                            ctx.font = '14pt sans-serif'; // font fsize for label on top of bar
+
+                                            // Loop through each data in the datasets
+                                            this.data.datasets.forEach(function (dataset, i) {
+                                                var meta = chartInstance.controller.getDatasetMeta(i);
+                                                meta.data.forEach(function (bar, index) {
+                                                    var data = dataset.data[index];
+                                                    ctx.fillText(data, bar._model.x, bar._model.y - 5);
+                                                });
+                                            });
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    });
+                    break;
+
+                case "16":
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("_InspectedCulvertConditionsVsDistrictChart", "ChartGraph")',
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        data: '{inspectionyear: ' + selInspectionYear + '}',
+                        beforeSend: function () { $('#wait').show(); },
+                        complete: function () { $('#wait').hide(); },
+                        success: function (chartData) {
+                            var labels = chartData[0];
+                            var dataSets1 = chartData[1];
+                            var dataSets2 = chartData[2];
+                            var dataSets3 = chartData[3];
+
+                            var total1 = 0;
+                            for (var key in dataSets1) {
+                                total1 = total1 + Number(dataSets1[key]);
+                            }
+
+                            var total2 = 0;
+                            for (var key in dataSets2) {
+                                total2 = total2 + Number(dataSets2[key]);
+                            }
+
+                            var total3 = 0;
+                            for (var key in dataSets3) {
+                                total3 = total3 + Number(dataSets3[key]);
+                            }
+
+                            var total = total1 + total2 + total3;
+                            $('#chartHeading').html('<h3>Culvert <b>Service Conditions</b> vs Districts (<b>' + selInspectionYear + '</b>) - <b>' + num_format(total) + ' culverts</b></h3>');
+
+                            var dataTable = {
+                                labels: labels,
+                                datasets: [{
+                                    label: "Good (Regular Inspection) = " + num_format(total1),
+                                    data: dataSets1,
+                                    fill: false,
+                                    backgroundColor: ["rgba(75, 192, 192, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(75, 192, 192, 0.8)"],
+                                    borderColor: ["rgb(75, 192, 192)", "rgb(75, 192, 192)", "rgb(75, 192, 192)", "rgb(75, 192, 192)", "rgb(75, 192, 192)", "rgb(75, 192, 192)", "rgb(75, 192, 192)", "rgb(75, 192, 192)", "rgb(75, 192, 192)", "rgb(75, 192, 192)", "rgb(75, 192, 192)"],
+                                    borderWidth: 1
+                                },
+                                {
+                                    label: "Fair (Rehabilitation) =  " + num_format(total2),
+                                    data: dataSets2,
+                                    fill: false,
+                                    backgroundColor: ["rgba(255, 205, 86, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(255, 205, 86, 0.8)"],
+                                    borderColor: ["rgb(255, 205, 86)", "rgb(255, 205, 86)", "rgb(255, 205, 86)", "rgb(255, 205, 86)", "rgb(255, 205, 86)", "rgb(255, 205, 86)", "rgb(255, 205, 86)", "rgb(255, 205, 86)", "rgb(255, 205, 86)", "rgb(255, 205, 86)", "rgb(255, 205, 86)", "rgb(255, 205, 86)"],
+                                    borderWidth: 1
+                                },
+                                {
+                                    label: "Bad (Replacemen) = " + num_format(total3),
+                                    data: dataSets3,
+                                    fill: false,
+                                    backgroundColor: ["rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)"],
+                                    borderColor: ["rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)"],
+                                    borderWidth: 1
+                                }]
+                            };
+                            var ctx = $("#graphChart").get(0).getContext("2d");
+                            graphChart = new Chart(ctx, {
+                                type: 'bar', //'line', 'pie'
+                                data: dataTable,
+                                options: {
+                                    responsive: true, //to make chart smaller make it "false"
+                                    title: {
+                                        display: false, text: 'Culvert Service Conditions vs Districts (' + selInspectionYear + ') - ' + num_format(total) + ' culverts' },
+                                    legend: { position: 'top', display: true },
+                                    scales: {
+                                        xAxes: [{ gridLines: { display: true }, display: true, scaleLabel: { display: true, labelString: 'Districts', fontSize: 18 }, ticks: { fontSize: 14 }, barPercentage: 0.9 }],
+                                        yAxes: [{ gridLines: { display: true }, display: true, scaleLabel: { display: true, labelString: 'No. of Culverts by Service Conditions', fontSize: 18 }, ticks: { stepSize: 500, beginAtZero: true, fontSize: 14 } }]
+                                    },
+                                    tooltips: {
+                                        enabled: true
+                                    },
+                                    hover: {
+                                        animationDuration: 1
+                                    },
+                                    animation: {
+                                        duration: 1,
+                                        onComplete: function () {
+                                            var chartInstance = this.chart,
+                                                ctx = chartInstance.ctx;
+                                            ctx.textAlign = 'center';
+                                            ctx.fillStyle = "rgba(0, 0, 0, 1)";
+                                            ctx.textBaseline = 'bottom';
+                                            ctx.font = '12pt sans-serif'; // font fsize for label on top of bar
+
+                                            // Loop through each data in the datasets
+                                            this.data.datasets.forEach(function (dataset, i) {
+                                                var meta = chartInstance.controller.getDatasetMeta(i);
+                                                meta.data.forEach(function (bar, index) {
+                                                    var data = dataset.data[index];
+                                                    ctx.fillText(data, bar._model.x, bar._model.y - 5);
+                                                });
+                                            });
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    });
+                    break;
+
+                case "6":
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("_NoOfInspectedBridgesVsInspectionYearChart", "ChartGraph")',
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        beforeSend: function () { $('#wait').show(); },
+                        complete: function () { $('#wait').hide(); },
+                        success: function (chartData) {
+                            var labels = chartData[0];
+                            var dataSets = chartData[1];
+
+                            $('#chartHeading').html('<h3>No. of <b>Inspected Bridges</b> vs Inspection Year</h3>');
+
+                            var dataTable = {
+                                labels: labels,
+                                datasets: [{
+                                    label: "No. of Inspected Bridges",
+                                    data: dataSets,
+                                    fill: false,
+                                    backgroundColor: ["rgba(54, 162, 235, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 159, 64, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(153, 102, 255, 0.8)", "rgba(201, 203, 207, 0.8)", "rgba(255, 159, 64, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(75, 192, 192, 0.8)"],
+                                    borderColor: ["rgb(54, 162, 235)", "rgb(255, 99, 132)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)", "rgb(153, 102, 255)", "rgb(201, 203, 207)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)"],
+                                    borderWidth: 1
+                                }]
+                            };
+
+                            var ctx = $("#graphChart").get(0).getContext("2d");
+                            graphChart = new Chart(ctx, {
+                                type: 'bar', //'line', 'pie'
+                                data: dataTable,
+                                options: {
+                                    responsive: true,
+                                    title: { display: false, text: 'No. of Inspected Bridges vs Inspection Year' },
+                                    legend: { position: 'right', display: false },
+                                    scales: {
+                                        xAxes: [{ gridLines: { display: true }, display: true, scaleLabel: { display: true, labelString: 'Inspection Year', fontSize: 18 }, ticks: { fontSize: 14 }, barPercentage: 0.3 }],
+                                        yAxes: [{ gridLines: { display: true }, display: true, scaleLabel: { display: true, labelString: 'No. of Inspected Bridges', fontSize: 18 }, ticks: { stepSize: 1500, beginAtZero: true, fontSize: 14 } }]
+                                    },
+                                    tooltips: {
+                                        enabled: true
+                                    },
+                                    hover: {
+                                        animationDuration: 1
+                                    },
+                                    animation: {
+                                        duration: 1,
+                                        onComplete: function () {
+                                            var chartInstance = this.chart,
+                                                ctx = chartInstance.ctx;
+                                            ctx.textAlign = 'center';
+                                            ctx.fillStyle = "rgba(0, 0, 0, 1)";
+                                            ctx.textBaseline = 'bottom';
+                                            ctx.font = '14pt sans-serif'; // font fsize for label on top of bar
+
+                                            // Loop through each data in the datasets
+                                            this.data.datasets.forEach(function (dataset, i) {
+                                                var meta = chartInstance.controller.getDatasetMeta(i);
+                                                meta.data.forEach(function (bar, index) {
+                                                    var data = dataset.data[index];
+                                                    ctx.fillText(data, bar._model.x, bar._model.y - 5);
+                                                });
+                                            });
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    });
+                    break;
+
+                case "18":
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("_NoOfInspectedAndRegisteredBridgesVsInspectionYearChart", "ChartGraph")',
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        beforeSend: function () { $('#wait').show(); },
+                        complete: function () { $('#wait').hide(); },
+                        success: function (chartData) {
+                            var labels = chartData[0];
+                            var dataSets1 = chartData[1];
+                            var dataSets2 = chartData[2];
+
+                            var total1 = 0;
+                            for (var key in dataSets1) {
+                                total1 = total1 + Number(dataSets1[key]);
+                            }
+
+                            var total2 = 0;
+                            for (var key in dataSets2) {
+                                total2 = total2 + Number(dataSets2[key]);
+                            }
+                            $('#chartHeading').html('<h3>No. of <b>Registered & Inspected Bridges</b> vs Inspection Year</h3>');
+
+                            var dataTable = {
+                                labels: labels,
+                                datasets: [{
+                                    label: "No. of Registered Bridges",
+                                    data: dataSets1,
+                                    fill: false,
+                                    backgroundColor: ["rgba(255, 205, 86, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(255, 205, 86, 0.8)"],
+                                    borderColor: ["rgba(153, 102, 255, 0.8)", "rgba(153, 102, 255, 0.8)", "rgba(153, 102, 255, 0.8)", "rgba(153, 102, 255, 0.8)", "rgba(153, 102, 255, 0.8)", "rgba(153, 102, 255, 0.8)"],
+                                    borderWidth: 1
+                                },
+                                {
+                                    label: "No. of Inspected Bridges",
+                                    data: dataSets2,
+                                    fill: false,
+                                    backgroundColor: ["rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)"],
+                                    borderColor: ["rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)"],
+                                    borderWidth: 1
+                                }]
+                            };
+
+                            var ctx = $("#graphChart").get(0).getContext("2d");
+                            graphChart = new Chart(ctx, {
+                                type: 'bar', //'line', 'pie'
+                                data: dataTable,
+                                options: {
+                                    responsive: true,
+                                    title: { display: false, text: 'No. of Registered & Inspected Bridges vs Inspection Year' },
+                                    legend: { position: 'top', display: true },
+                                    scales: {
+                                        xAxes: [{ gridLines: { display: true }, display: true, scaleLabel: { display: true, labelString: 'Inspection Year', fontSize: 18 }, ticks: { fontSize: 14 }, barPercentage: 0.5 }],
+                                        yAxes: [{ gridLines: { display: true }, display: true, scaleLabel: { display: true, labelString: 'No. of Registered & Inspected Bridges', fontSize: 18 }, ticks: { stepSize: 2000, beginAtZero: true, fontSize: 16 } }]
+                                    },
+                                    tooltips: {
+                                        enabled: true
+                                    },
+                                    hover: {
+                                        animationDuration: 1
+                                    },
+                                    animation: {
+                                        duration: 1,
+                                        onComplete: function () {
+                                            var chartInstance = this.chart,
+                                                ctx = chartInstance.ctx;
+                                            ctx.textAlign = 'center';
+                                            ctx.fillStyle = "rgba(0, 0, 0, 1)";
+                                            ctx.textBaseline = 'bottom';
+                                            ctx.font = '14pt sans-serif'; // font fsize for label on top of bar
+
+                                            // Loop through each data in the datasets
+                                            this.data.datasets.forEach(function (dataset, i) {
+                                                var meta = chartInstance.controller.getDatasetMeta(i);
+                                                meta.data.forEach(function (bar, index) {
+                                                    var data = dataset.data[index];
+                                                    ctx.fillText(data, bar._model.x, bar._model.y - 5);
+                                                });
+                                            });
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    });
+                    break;
+
+                case "7":
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("_BridgeAssetValueVsDistrictsChart", "ChartGraph")',
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        beforeSend: function () { $('#wait').show(); },
+                        complete: function () { $('#wait').hide(); },
+                        success: function (chartData) {
+                            var labels = chartData[0];
+                            var dataSets = chartData[1];
+
+                            var total = 0;
+                            for (var key in dataSets) {
+                                total = total + Number(dataSets[key]);
+                            }
+                            $('#chartHeading').html('<h3>Bridge <b>Asset Value</b> vs Districts (in billion) - Total of <b>' + total.toFixed(2) + ' billion</b> (as of <b>' + currentYear + '</b>)</h3>');
+
+                            var dataTable = {
+                                labels: labels,
+                                datasets: [{
+                                    label: "Bridge Asset Value",
+                                    data: dataSets,
+                                    fill: false,
+                                    backgroundColor: ["rgba(54, 162, 235, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 159, 64, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(153, 102, 255, 0.8)", "rgba(201, 203, 207, 0.8)", "rgba(255, 159, 64, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(75, 192, 192, 0.8)"],
+                                    borderColor: ["rgb(54, 162, 235)", "rgb(255, 99, 132)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)", "rgb(153, 102, 255)", "rgb(201, 203, 207)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)"],
+                                    borderWidth: 1
+                                }]
+                            };
+                            var ctx = $("#graphChart").get(0).getContext("2d");
+                            graphChart = new Chart(ctx, {
+                                type: 'bar', //'line', 'pie'
+                                data: dataTable,
+                                options: {
+                                    responsive: true,
+                                    title: { display: false, text: 'Bridge Asset Value vs Districts (in billion) - Total of ' + total.toFixed(2) + ' billion' },
+                                    legend: { position: 'right', display: false },
+                                    scales: {
+                                        xAxes: [{ gridLines: { display: true }, display: true, scaleLabel: { display: true, labelString: 'Districts', fontSize: 18 }, ticks: { fontSize: 14 }, barPercentage: 0.6 }],
+                                        yAxes: [{ gridLines: { display: true }, display: true, scaleLabel: { display: true, labelString: 'Bridge Asset Value (in billion)', fontSize: 18 }, ticks: { stepSize: 2, beginAtZero: true, fontSize: 14 } }]
+                                    },
+                                    tooltips: {
+                                        enabled: true
+                                    },
+                                    hover: {
+                                        animationDuration: 1
+                                    },
+                                    animation: {
+                                        duration: 1,
+                                        onComplete: function () {
+                                            var chartInstance = this.chart,
+                                                ctx = chartInstance.ctx;
+                                            ctx.textAlign = 'center';
+                                            ctx.fillStyle = "rgba(0, 0, 0, 1)";
+                                            ctx.textBaseline = 'bottom';
+                                            ctx.font = '14pt sans-serif'; // font fsize for label on top of bar
+
+                                            // Loop through each data in the datasets
+                                            this.data.datasets.forEach(function (dataset, i) {
+                                                var meta = chartInstance.controller.getDatasetMeta(i);
+                                                meta.data.forEach(function (bar, index) {
+                                                    var data = dataset.data[index];
+                                                    ctx.fillText(data, bar._model.x, bar._model.y - 5);
+                                                });
+                                            });
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    });
+                    break;
+
+                case "17":
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("_NoOfInspectedCulvertsVsInspectionYearChart", "ChartGraph")',
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        beforeSend: function () { $('#wait').show(); },
+                        complete: function () { $('#wait').hide(); },
+                        success: function (chartData) {
+                            var labels = chartData[0];
+                            var dataSets = chartData[1];
+
+                            var total = 0;
+                            for (var key in dataSets) {
+                                total = total + Number(dataSets[key]);
+                            }
+                            $('#chartHeading').html('<h3>No. of <b>Inspected Culverts</b> vs Inspection Year - Total of <b>' + num_format(total) + ' culverts</b> </h3>');
+
+                            var dataTable = {
+                                labels: labels,
+                                datasets: [{
+                                    label: "Inspection Year",
+                                    data: dataSets,
+                                    fill: false,
+                                    backgroundColor: ["rgba(54, 162, 235, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 159, 64, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(153, 102, 255, 0.8)", "rgba(201, 203, 207, 0.8)", "rgba(255, 159, 64, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(75, 192, 192, 0.8)"],
+                                    borderColor: ["rgb(54, 162, 235)", "rgb(255, 99, 132)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)", "rgb(153, 102, 255)", "rgb(201, 203, 207)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)"],
+                                    borderWidth: 1
+                                }]
+                            };
+                            var ctx = $("#graphChart").get(0).getContext("2d");
+                            graphChart = new Chart(ctx, {
+                                type: 'bar', //'line', 'pie'
+                                data: dataTable,
+                                options: {
+                                    responsive: true,
+                                    title: {
+                                        display: false, text: 'No. of Inspected Culverts vs Inspection Year - Total of ' + num_format(total) + ' culverts' },
+                                    legend: { position: 'right', display: false },
+                                    scales: {
+                                        xAxes: [{ gridLines: { display: true }, display: true, scaleLabel: { display: true, labelString: 'Inspection Year', fontSize: 18 }, ticks: { fontSize: 14 }, barPercentage: 0.4 }],
+                                        yAxes: [{ gridLines: { display: true }, display: true, scaleLabel: { display: true, labelString: 'No. of Inspected Culverts', fontSize: 18 }, ticks: { stepSize: 6000, beginAtZero: true, fontSize: 14 } }]
+                                    },
+                                    tooltips: {
+                                        enabled: true
+                                    },
+                                    hover: {
+                                        animationDuration: 1
+                                    },
+                                    animation: {
+                                        duration: 1,
+                                        onComplete: function () {
+                                            var chartInstance = this.chart,
+                                                ctx = chartInstance.ctx;
+                                            ctx.textAlign = 'center';
+                                            ctx.fillStyle = "rgba(0, 0, 0, 1)";
+                                            ctx.textBaseline = 'bottom';
+                                            ctx.font = '14pt sans-serif'; // font fsize for label on top of bar
+
+                                            // Loop through each data in the datasets
+                                            this.data.datasets.forEach(function (dataset, i) {
+                                                var meta = chartInstance.controller.getDatasetMeta(i);
+                                                meta.data.forEach(function (bar, index) {
+                                                    var data = dataset.data[index];
+                                                    ctx.fillText(data, bar._model.x, bar._model.y - 5);
+                                                });
+                                            });
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    });
+                    break;
+
+                case "8":
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("_NoOfCulvertsVsDistrictChart", "ChartGraph")',
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        beforeSend: function () { $('#wait').show(); },
+                        complete: function () { $('#wait').hide(); },
+                        success: function (chartData) {
+                            var labels = chartData[0];
+                            var dataSets = chartData[1];
+
+                            var total = 0;
+                            for (var key in dataSets) {
+                                total = total + Number(dataSets[key]);
+                            }
+                            $('#chartHeading').html('<h3>No. of Culverts vs <b>District</b> - <b>' + num_format(total) + ' culverts</b> (as of <b>' + currentYear + '</b>)</h3>');
+
+                            var dataTable = {
+                                labels: labels,
+                                datasets: [{
+                                    label: "No. of Culverts",
+                                    data: dataSets,
+                                    fill: false,
+                                    backgroundColor: ["rgba(54, 162, 235, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 159, 64, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(153, 102, 255, 0.8)", "rgba(201, 203, 207, 0.8)", "rgba(255, 159, 64, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(75, 192, 192, 0.8)"],
+                                    borderColor: ["rgb(54, 162, 235)", "rgb(255, 99, 132)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)", "rgb(153, 102, 255)", "rgb(201, 203, 207)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)"],
+                                    borderWidth: 1
+                                }]
+                            };
+
+                            var ctx = $("#graphChart").get(0).getContext("2d");
+                            graphChart = new Chart(ctx, {
+                                type: 'bar', //'line', 'pie'
+                                data: dataTable,
+                                options: {
+                                    responsive: true,
+                                    title: { display: false, text: 'No. of Culverts vs District - ' + num_format(total) + ' culverts' },
+                                    legend: { position: 'right', display: false },
+                                    scales: {
+                                        xAxes: [{ gridLines: { display: true }, display: true, scaleLabel: { display: true, labelString: 'Districts', fontSize: 18 }, ticks: { fontSize: 14 }, barPercentage: 0.5 }],
+                                        yAxes: [{ gridLines: { display: true }, display: true, scaleLabel: { display: true, labelString: 'No. of Culverts', fontSize: 18 }, ticks: { stepSize: 1000, beginAtZero: true, fontSize: 14 } }]
+                                    },
+                                    tooltips: {
+                                        enabled: true
+                                    },
+                                    hover: {
+                                        animationDuration: 1
+                                    },
+                                    animation: {
+                                        duration: 1,
+                                        onComplete: function () {
+                                            var chartInstance = this.chart,
+                                                ctx = chartInstance.ctx;
+                                            ctx.textAlign = 'center';
+                                            ctx.fillStyle = "rgba(0, 0, 0, 1)";
+                                            ctx.textBaseline = 'bottom';
+                                            ctx.font = '14pt sans-serif'; // font fsize for label on top of bar
+
+                                            // Loop through each data in the datasets
+                                            this.data.datasets.forEach(function (dataset, i) {
+                                                var meta = chartInstance.controller.getDatasetMeta(i);
+                                                meta.data.forEach(function (bar, index) {
+                                                    var data = dataset.data[index];
+                                                    ctx.fillText(data, bar._model.x, bar._model.y - 5);
+                                                });
+                                            });
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    });
+                    break;
+
+                case "9":
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("_NoOfCulvertsVsCulvertTypeChart", "ChartGraph")',
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        beforeSend: function () { $('#wait').show(); },
+                        complete: function () { $('#wait').hide(); },
+                        success: function (chartData) {
+                            var labels = chartData[0];
+                            var dataSets = chartData[1];
+
+                            var total = 0;
+                            for (var key in dataSets) {
+                                total = total + Number(dataSets[key]);
+                            }
+                            $('#chartHeading').html('<h3>No. of Culverts vs <b>Culvert Types</b> - <b>' + num_format(total) + ' culverts</b> (as of <b>' + currentYear + '</b>)</h3>');
+
+                            var dataTable = {
+                                labels: labels,
+                                datasets: [{
+                                    label: "No. of Culverts",
+                                    data: dataSets,
+                                    fill: false,
+                                    backgroundColor: ["rgba(54, 162, 235, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 159, 64, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(153, 102, 255, 0.8)", "rgba(201, 203, 207, 0.8)", "rgba(255, 159, 64, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(75, 192, 192, 0.8)"],
+                                    borderColor: ["rgb(54, 162, 235)", "rgb(255, 99, 132)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)", "rgb(153, 102, 255)", "rgb(201, 203, 207)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)"],
+                                    borderWidth: 1
+                                }]
+                            };
+                            var ctx = $("#graphChart").get(0).getContext("2d");
+                            graphChart = new Chart(ctx, {
+                                type: 'bar', //'line', 'pie'
+                                data: dataTable,
+                                options: {
+                                    responsive: true,
+                                    title: { display: false, text: 'No. of Culverts vs Culvert Types - ' + num_format(total) + ' culverts' },
+                                    legend: { position: 'right', display: false },
+                                    scales: {
+                                        xAxes: [{ gridLines: { display: true }, display: true, scaleLabel: { display: true, labelString: 'Culvert Types', fontSize: 18 }, ticks: { autoSkip: false, fontSize: 14 }, barPercentage: 0.4 }],
+                                        yAxes: [{ gridLines: { display: true }, display: true, scaleLabel: { display: true, labelString: 'No. of Culverts', fontSize: 18 }, ticks: { stepSize: 3000, beginAtZero: true, fontSize: 14 } }]
+                                    },
+                                    tooltips: {
+                                        enabled: true
+                                    },
+                                    hover: {
+                                        animationDuration: 1
+                                    },
+                                    animation: {
+                                        duration: 1,
+                                        onComplete: function () {
+                                            var chartInstance = this.chart,
+                                                ctx = chartInstance.ctx;
+                                            ctx.textAlign = 'center';
+                                            ctx.fillStyle = "rgba(0, 0, 0, 1)";
+                                            ctx.textBaseline = 'bottom';
+                                            ctx.font = '14pt sans-serif'; // font fsize for label on top of bar
+
+                                            // Loop through each data in the datasets
+                                            this.data.datasets.forEach(function (dataset, i) {
+                                                var meta = chartInstance.controller.getDatasetMeta(i);
+                                                meta.data.forEach(function (bar, index) {
+                                                    var data = dataset.data[index];
+                                                    ctx.fillText(data, bar._model.x, bar._model.y - 5);
+                                                });
+                                            });
+                                        }
+                                    }
+                                },
+                                ticks: { autoSkip: false }
+                            });
+                        }
+                    });
+                    break;
+
+                case "10":
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("_CulvertAssetValueVsDistrictsChart", "ChartGraph")',
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        beforeSend: function () { $('#wait').show(); },
+                        complete: function () { $('#wait').hide(); },
+                        success: function (chartData) {
+                            var labels = chartData[0];
+                            var dataSets = chartData[1];
+
+                            var total = 0;
+                            for (var key in dataSets) {
+                                total = total + Number(dataSets[key]);
+                            }
+                            $('#chartHeading').html('<h3>Culvert <b>Asset Value</b> vs Districts (in billion) - Total of <b>' + total.toFixed(2) + ' billion</b> (as of <b>' + currentYear + '</b>)</h3>');
+
+                            var dataTable = {
+                                labels: labels,
+                                datasets: [{
+                                    label: "Culvert Asset Value",
+                                    data: dataSets,
+                                    fill: false,
+                                    backgroundColor: ["rgba(54, 162, 235, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 159, 64, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(153, 102, 255, 0.8)", "rgba(201, 203, 207, 0.8)", "rgba(255, 159, 64, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(75, 192, 192, 0.8)"],
+                                    borderColor: ["rgb(54, 162, 235)", "rgb(255, 99, 132)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)", "rgb(153, 102, 255)", "rgb(201, 203, 207)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)"],
+                                    borderWidth: 1
+                                }]
+                            };
+                            var ctx = $("#graphChart").get(0).getContext("2d");
+                            graphChart = new Chart(ctx, {
+                                type: 'bar', //'line', 'pie'
+                                data: dataTable,
+                                options: {
+                                    responsive: true,
+                                    title: { display: false, text: 'Culvert Asset Value vs Districts (in billion) - Total of ' + total.toFixed(2) + ' billion' },
+                                    legend: { position: 'right', display: false },
+                                    scales: {
+                                        xAxes: [{ gridLines: { display: true }, display: true, scaleLabel: { display: true, labelString: 'Districts', fontSize: 18 }, ticks: { fontSize: 14 }, barPercentage: 0.6 }],
+                                        yAxes: [{ gridLines: { display: true }, display: true, scaleLabel: { display: true, labelString: 'Culvert Asset Value (in billion)', fontSize: 18 }, ticks: { stepSize: 0.5, beginAtZero: true, fontSize: 14 } }]
+                                    },
+                                    tooltips: {
+                                        enabled: true
+                                    },
+                                    hover: {
+                                        animationDuration: 1
+                                    },
+                                    animation: {
+                                        duration: 1,
+                                        onComplete: function () {
+                                            var chartInstance = this.chart,
+                                                ctx = chartInstance.ctx;
+                                            ctx.textAlign = 'center';
+                                            ctx.fillStyle = "rgba(0, 0, 0, 1)";
+                                            ctx.textBaseline = 'bottom';
+                                            ctx.font = '14pt sans-serif'; // font fsize for label on top of bar
+
+                                            // Loop through each data in the datasets
+                                            this.data.datasets.forEach(function (dataset, i) {
+                                                var meta = chartInstance.controller.getDatasetMeta(i);
+                                                meta.data.forEach(function (bar, index) {
+                                                    var data = dataset.data[index];
+                                                    ctx.fillText(data, bar._model.x, bar._model.y - 5);
+                                                });
+                                            });
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    });
+                    break;
+
+                case "11":
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("_NoOfBridgesAndCulvertsVsDistrictChart", "ChartGraph")',
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        beforeSend: function () { $('#wait').show(); },
+                        complete: function () { $('#wait').hide(); },
+                        success: function (chartData) {
+                            var labels = chartData[0];
+                            var dataSets1 = chartData[1];
+                            var dataSets2 = chartData[2];
+
+                            var total1 = 0;
+                            for (var key in dataSets1) {
+                                total1 = total1 + Number(dataSets1[key]);
+                            }
+
+                            var total2 = 0;
+                            for (var key in dataSets2) {
+                                total2 = total2 + Number(dataSets2[key]);
+                            }
+                            $('#chartHeading').html('<h3>No. of <b>Bridges & Culverts</b> vs District - <b>' + num_format(total1) + ' bridges</b> and <b>' + num_format(total2) + ' culverts</b> (as of <b>' + currentYear + '</b>)</h3>');
+
+                            var dataTable = {
+                                labels: labels,
+                                datasets: [{
+                                    label: "No. of Bridges",
+                                    data: dataSets1,
+                                    fill: false,
+                                    backgroundColor: ["rgba(54, 162, 235, 0.8)", "rgba(54, 162, 235, 0.8)", "rgba(54, 162, 235, 0.8)", "rgba(54, 162, 235, 0.8)", "rgba(54, 162, 235, 0.8)", "rgba(54, 162, 235, 0.8)", "rgba(54, 162, 235, 0.8)", "rgba(54, 162, 235, 0.8)", "rgba(54, 162, 235, 0.8)", "rgba(54, 162, 235, 0.8)", "rgba(54, 162, 235, 0.8)"],
+                                    borderColor: ["rgb(54, 162, 235)", "rgb(54, 162, 235)", "rgb(54, 162, 235)", "rgb(54, 162, 235)", "rgb(54, 162, 235)", "rgb(54, 162, 235)", "rgb(54, 162, 235)", "rgb(54, 162, 235)", "rgb(54, 162, 235)", "rgb(54, 162, 235)", "rgb(54, 162, 235)"],
+                                    borderWidth: 1
+                                },
+                                {
+                                    label: "No. of Culverts",
+                                    data: dataSets2,
+                                    fill: false,
+                                    backgroundColor: ["rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)"],
+                                    borderColor: ["rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)"],
+                                    borderWidth: 1
+                                }]
+                            };
+
+                            var ctx = $("#graphChart").get(0).getContext("2d");
+                            graphChart = new Chart(ctx, {
+                                type: 'bar', //'line', 'pie'
+                                data: dataTable,
+                                options: {
+                                    responsive: true,
+                                    title: { display: false, text: 'No. of Bridges & Culverts vs District - ' + num_format(total1) + ' bridges and ' + num_format(total2) + ' culverts' },
+                                    legend: { position: 'top', display: true },
+                                    scales: {
+                                        xAxes: [{ gridLines: { display: true }, display: true, scaleLabel: { display: true, labelString: 'Districts', fontSize: 18 }, ticks: { fontSize: 14 } }],
+                                        yAxes: [{ gridLines: { display: true }, display: true, scaleLabel: { display: true, labelString: 'No. of Bridges/Culverts', fontSize: 18 }, ticks: { stepSize: 1000, beginAtZero: true, fontSize: 16 } }]
+                                    },
+                                    tooltips: {
+                                        enabled: true
+                                    },
+                                    hover: {
+                                        animationDuration: 1
+                                    },
+                                    animation: {
+                                        duration: 1,
+                                        onComplete: function () {
+                                            var chartInstance = this.chart,
+                                                ctx = chartInstance.ctx;
+                                            ctx.textAlign = 'center';
+                                            ctx.fillStyle = "rgba(0, 0, 0, 1)";
+                                            ctx.textBaseline = 'bottom';
+                                            ctx.font = '14pt sans-serif'; // font fsize for label on top of bar
+
+                                            // Loop through each data in the datasets
+                                            this.data.datasets.forEach(function (dataset, i) {
+                                                var meta = chartInstance.controller.getDatasetMeta(i);
+                                                meta.data.forEach(function (bar, index) {
+                                                    var data = dataset.data[index];
+                                                    ctx.fillText(data, bar._model.x, bar._model.y - 5);
+                                                });
+                                            });
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    });
+                    break;
+
+                case "12":
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("_BridgeAndCulvertAssetValuesVsDistrictsChart", "ChartGraph")',
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        beforeSend: function () { $('#wait').show(); },
+                        complete: function () { $('#wait').hide(); },
+                        success: function (chartData) {
+                            var labels = chartData[0];
+                            var dataSets1 = chartData[1];
+                            var dataSets2 = chartData[2];
+                            var dataSets3 = chartData[3];
+
+                            var total1 = 0;
+                            for (var key in dataSets1) {
+                                total1 = total1 + Number(dataSets1[key]);
+                            }
+
+                            var total2 = 0;
+                            for (var key in dataSets2) {
+                                total2 = total2 + Number(dataSets2[key]);
+                            }
+
+                            var total3 = 0;
+                            for (var key in dataSets3) {
+                                total3 = total3 + Number(dataSets3[key]);
+                            }
+                            $('#chartHeading').html('<h3>Bridge/Culvert <b>Total Asset Value</b> vs Districts (in billion) <br /> Bridges Value <b>' + total1.toFixed(2) + ' billion</b>, Culverts Value <b>' + total2.toFixed(2) + ' billion</b>, Total Value <b>' + total3.toFixed(2) + ' billion</b> (as of <b>' + currentYear + '</b>)</h3>');
+
+                            var dataTable = {
+                                labels: labels,
+                                datasets: [{
+                                    label: "Bridge Asset Value",
+                                    data: dataSets1,
+                                    fill: false,
+                                    backgroundColor: ["rgba(75, 192, 192, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(75, 192, 192, 0.8)"],
+                                    borderColor: ["rgb(75, 192, 192)", "rgb(75, 192, 192)", "rgb(75, 192, 192)", "rgb(75, 192, 192)", "rgb(75, 192, 192)", "rgb(75, 192, 192)", "rgb(75, 192, 192)", "rgb(75, 192, 192)", "rgb(75, 192, 192)", "rgb(75, 192, 192)", "rgb(75, 192, 192)"],
+                                    borderWidth: 1
+                                },
+                                {
+                                    label: "Culvert Asset Value",
+                                    data: dataSets2,
+                                    fill: false,
+                                    backgroundColor: ["rgba(255, 205, 86, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(255, 205, 86, 0.8)"],
+                                    borderColor: ["rgb(255, 205, 86)", "rgb(255, 205, 86)", "rgb(255, 205, 86)", "rgb(255, 205, 86)", "rgb(255, 205, 86)", "rgb(255, 205, 86)", "rgb(255, 205, 86)", "rgb(255, 205, 86)", "rgb(255, 205, 86)", "rgb(255, 205, 86)", "rgb(255, 205, 86)", "rgb(255, 205, 86)"],
+                                    borderWidth: 1
+                                },
+                                {
+                                    label: "Total Asset Value",
+                                    data: dataSets3,
+                                    fill: false,
+                                    backgroundColor: ["rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)"],
+                                    borderColor: ["rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)"],
+                                    borderWidth: 1
+                                }
+                                ]
+                            };
+                            var ctx = $("#graphChart").get(0).getContext("2d");
+                            graphChart = new Chart(ctx, {
+                                type: 'bar', //'line', 'pie'
+                                data: dataTable,
+                                options: {
+                                    responsive: true,
+                                    title: { display: false, text: 'Bridge/Culvert Total Asset Value vs Districts (in billion) - Bridges Value ' + total1.toFixed(2) + ' billion, Culverts Value ' + total2.toFixed(2) + ' billion, Total Value ' + total3.toFixed(2) + ' billion' },
+                                    legend: { position: 'top', display: true },
+                                    scales: {
+                                        xAxes: [{ gridLines: { display: true }, display: true, scaleLabel: { display: true, labelString: 'Districts', fontSize: 18 }, ticks: { fontSize: 14 } }],
+                                        yAxes: [{ gridLines: { display: true }, display: true, scaleLabel: { display: true, labelString: 'Asset Value (in billion)', fontSize: 18 }, ticks: { stepSize: 2, beginAtZero: true, fontSize: 16 } }]
+                                    },
+                                    tooltips: {
+                                        enabled: true
+                                    },
+                                    hover: {
+                                        animationDuration: 1
+                                    },
+                                    animation: {
+                                        duration: 1,
+                                        onComplete: function () {
+                                            var chartInstance = this.chart,
+                                                ctx = chartInstance.ctx;
+                                            ctx.textAlign = 'center';
+                                            ctx.fillStyle = "rgba(0, 0, 0, 1)";
+                                            ctx.textBaseline = 'bottom';
+                                            ctx.font = '12pt sans-serif'; // font fsize for label on top of bar
+
+                                            // Loop through each data in the datasets
+                                            this.data.datasets.forEach(function (dataset, i) {
+                                                var meta = chartInstance.controller.getDatasetMeta(i);
+                                                meta.data.forEach(function (bar, index) {
+                                                    var data = dataset.data[index];
+                                                    ctx.fillText(data, bar._model.x, bar._model.y - 5);
+                                                });
+                                            });
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    });
+                    break;
+
+                case "19":
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("_NoOfBridgesVsRequiredActionChart", "ChartGraph")',
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        data: '{inspectionyear: ' + selInspectionYear + '}',
+                        beforeSend: function () { $('#wait').show(); },
+                        complete: function () { $('#wait').hide(); },
+                        success: function (chartData) {
+                            var labels = chartData[0];
+                            var dataSets = chartData[1];
+
+                            var total = 0;
+                            for (var key in dataSets) {
+                                total = total + Number(dataSets[key]);
+                            }
+                            $('#chartHeading').html('<h3>No. of Bridges vs <b>Required Actions</b> (<b>' + selInspectionYear + '</b>) - <b>' + num_format(total) + ' bridges</b></h3>');
+
+                            var dataTable = {
+                                labels: labels,
+                                datasets: [{
+                                    label: "No. of Bridges",
+                                    data: dataSets,
+                                    fill: false,
+                                    backgroundColor: ["rgba(75, 192, 192, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(255, 99, 132, 0.8)"],
+                                    borderColor: ["rgb(75, 192, 192)", "rgb(255, 205, 86)", "rgb(255, 99, 132)"],
+                                    borderWidth: 1
+                                }]
+                            };
+                            var ctx = $("#graphChart").get(0).getContext("2d");
+                            graphChart = new Chart(ctx, {
+                                type: 'bar', //'line', 'pie'
+                                data: dataTable,
+                                options: {
+                                    responsive: true, //to make chart smaller make it "false"
+                                    title: { display: false, text: 'No. of Bridges vs Required Actions (' + selInspectionYear + ') - ' + num_format(total) + ' bridges' },
+                                    legend: { position: 'right', display: false },
+                                    scales: {
+                                        xAxes: [{ gridLines: { display: true }, display: true, scaleLabel: { display: true, labelString: 'Required Actions', fontSize: 18 }, ticks: { fontSize: 14 }, barPercentage: 0.3 }],
+                                        yAxes: [{ gridLines: { display: true }, display: true, scaleLabel: { display: true, labelString: 'No. of Bridges', fontSize: 18 }, ticks: { stepSize: 500, beginAtZero: true, fontSize: 16 } }]
+                                    },
+                                    tooltips: {
+                                        enabled: true
+                                    },
+                                    hover: {
+                                        animationDuration: 1
+                                    },
+                                    animation: {
+                                        duration: 1,
+                                        onComplete: function () {
+                                            var chartInstance = this.chart,
+                                                ctx = chartInstance.ctx;
+                                            ctx.textAlign = 'center';
+                                            ctx.fillStyle = "rgba(0, 0, 0, 1)";
+                                            ctx.textBaseline = 'bottom';
+                                            ctx.font = '14pt sans-serif'; // font fsize for label on top of bar
+
+                                            // Loop through each data in the datasets
+                                            this.data.datasets.forEach(function (dataset, i) {
+                                                var meta = chartInstance.controller.getDatasetMeta(i);
+                                                meta.data.forEach(function (bar, index) {
+                                                    var data = dataset.data[index];
+                                                    ctx.fillText(data, bar._model.x, bar._model.y - 5);
+                                                });
+                                            });
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    });
+                    break;
+
+                case "10":
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("_CulvertAssetValueVsDistrictsChart", "ChartGraph")',
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        beforeSend: function () { $('#wait').show(); },
+                        complete: function () { $('#wait').hide(); },
+                        success: function (chartData) {
+                            var labels = chartData[0];
+                            var dataSets = chartData[1];
+
+                            var total = 0;
+                            for (var key in dataSets) {
+                                total = total + Number(dataSets[key]);
+                            }
+                            $('#chartHeading').html('<h3>Culvert <b>Asset Value</b> vs Districts (in billion) - Total of <b>' + total.toFixed(2) + ' billion</b> (as of <b>' + currentYear + '</b>)</h3>');
+
+                            var dataTable = {
+                                labels: labels,
+                                datasets: [{
+                                    label: "Culvert Asset Value",
+                                    data: dataSets,
+                                    fill: false,
+                                    backgroundColor: ["rgba(54, 162, 235, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 159, 64, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(153, 102, 255, 0.8)", "rgba(201, 203, 207, 0.8)", "rgba(255, 159, 64, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(75, 192, 192, 0.8)"],
+                                    borderColor: ["rgb(54, 162, 235)", "rgb(255, 99, 132)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)", "rgb(153, 102, 255)", "rgb(201, 203, 207)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)"],
+                                    borderWidth: 1
+                                }]
+                            };
+                            var ctx = $("#graphChart").get(0).getContext("2d");
+                            graphChart = new Chart(ctx, {
+                                type: 'bar', //'line', 'pie'
+                                data: dataTable,
+                                options: {
+                                    responsive: true,
+                                    title: { display: false, text: 'Culvert Asset Value vs Districts (in billion) - Total of ' + total.toFixed(2) + ' billion' },
+                                    legend: { position: 'right', display: false },
+                                    scales: {
+                                        xAxes: [{ gridLines: { display: true }, display: true, scaleLabel: { display: true, labelString: 'Districts', fontSize: 18 }, ticks: { fontSize: 14 }, barPercentage: 0.6 }],
+                                        yAxes: [{ gridLines: { display: true }, display: true, scaleLabel: { display: true, labelString: 'Culvert Asset Value (in billion)', fontSize: 18 }, ticks: { stepSize: 0.5, beginAtZero: true, fontSize: 14 } }]
+                                    },
+                                    tooltips: {
+                                        enabled: true
+                                    },
+                                    hover: {
+                                        animationDuration: 1
+                                    },
+                                    animation: {
+                                        duration: 1,
+                                        onComplete: function () {
+                                            var chartInstance = this.chart,
+                                                ctx = chartInstance.ctx;
+                                            ctx.textAlign = 'center';
+                                            ctx.fillStyle = "rgba(0, 0, 0, 1)";
+                                            ctx.textBaseline = 'bottom';
+                                            ctx.font = '14pt sans-serif'; // font fsize for label on top of bar
+
+                                            // Loop through each data in the datasets
+                                            this.data.datasets.forEach(function (dataset, i) {
+                                                var meta = chartInstance.controller.getDatasetMeta(i);
+                                                meta.data.forEach(function (bar, index) {
+                                                    var data = dataset.data[index];
+                                                    ctx.fillText(data, bar._model.x, bar._model.y - 5);
+                                                });
+                                            });
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    });
+                    break;
+
+                case "20":
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("_InspectedBridgeRequiredActionsVsDistrictChart", "ChartGraph")',
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        data: '{inspectionyear: ' + selInspectionYear + '}',
+                        beforeSend: function () { $('#wait').show(); },
+                        complete: function () { $('#wait').hide(); },
+                        success: function (chartData) {
+                            var labels = chartData[0];
+                            var dataSets1 = chartData[1];
+                            var dataSets2 = chartData[2];
+                            var dataSets3 = chartData[3];
+
+                            var total1 = 0;
+                            for (var key in dataSets1) {
+                                total1 = total1 + Number(dataSets1[key]);
+                            }
+
+                            var total2 = 0;
+                            for (var key in dataSets2) {
+                                total2 = total2 + Number(dataSets2[key]);
+                            }
+
+                            var total3 = 0;
+                            for (var key in dataSets3) {
+                                total3 = total3 + Number(dataSets3[key]);
+                            }
+                            var total = total1 + total2 + total3;
+                            $('#chartHeading').html('<h3>Bridges <b>Required Action</b> vs Districts (<b>' + selInspectionYear + '</b>) - <b>' + num_format(total) + ' bridges</b></h3>');
+
+                            var dataTable = {
+                                labels: labels,
+                                datasets: [{
+                                    label: "Regular Inspection = " + num_format(total1),
+                                    data: dataSets1,
+                                    fill: false,
+                                    backgroundColor: ["rgba(75, 192, 192, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(75, 192, 192, 0.8)"],
+                                    borderColor: ["rgb(75, 192, 192)", "rgb(75, 192, 192)", "rgb(75, 192, 192)", "rgb(75, 192, 192)", "rgb(75, 192, 192)", "rgb(75, 192, 192)", "rgb(75, 192, 192)", "rgb(75, 192, 192)", "rgb(75, 192, 192)", "rgb(75, 192, 192)", "rgb(75, 192, 192)"],
+                                    borderWidth: 1
+                                },
+                                {
+                                    label: "Rehabilitation =  " + num_format(total2),
+                                    data: dataSets2,
+                                    fill: false,
+                                    backgroundColor: ["rgba(255, 205, 86, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(255, 205, 86, 0.8)"],
+                                    borderColor: ["rgb(255, 205, 86)", "rgb(255, 205, 86)", "rgb(255, 205, 86)", "rgb(255, 205, 86)", "rgb(255, 205, 86)", "rgb(255, 205, 86)", "rgb(255, 205, 86)", "rgb(255, 205, 86)", "rgb(255, 205, 86)", "rgb(255, 205, 86)", "rgb(255, 205, 86)", "rgb(255, 205, 86)"],
+                                    borderWidth: 1
+                                },
+                                {
+                                    label: "Replacement = " + num_format(total3),
+                                    data: dataSets3,
+                                    fill: false,
+                                    backgroundColor: ["rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)"],
+                                    borderColor: ["rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)"],
+                                    borderWidth: 1
+                                }]
+                            };
+                            var ctx = $("#graphChart").get(0).getContext("2d");
+                            graphChart = new Chart(ctx, {
+                                type: 'bar', //'line', 'pie'
+                                data: dataTable,
+                                options: {
+                                    responsive: true, //to make chart smaller make it "false"
+                                    title: {
+                                        display: false, text: 'Bridge Required Actions vs Districts (' + selInspectionYear + ') <br /> Regular Inspection = ' + num_format(total1) + ' , Rehabilitation = ' + num_format(total2) + ' , Replacement = ' + num_format(total3) + ' (as of ' + currentYear + ')' },
+                                    legend: { position: 'top', display: true },
+                                    scales: {
+                                        xAxes: [{ gridLines: { display: true }, display: true, scaleLabel: { display: true, labelString: 'Districts', fontSize: 18 }, ticks: { fontSize: 14 }, barPercentage: 0.5 }],
+                                        yAxes: [{ gridLines: { display: true }, display: true, scaleLabel: { display: true, labelString: 'No. of Inspected Bridges by Required Actions', fontSize: 18 }, ticks: { stepSize: 150, beginAtZero: true, fontSize: 14 } }]
+                                    },
+                                    tooltips: {
+                                        enabled: true
+                                    },
+                                    hover: {
+                                        animationDuration: 1
+                                    },
+                                    animation: {
+                                        duration: 1,
+                                        onComplete: function () {
+                                            var chartInstance = this.chart,
+                                                ctx = chartInstance.ctx;
+                                            ctx.textAlign = 'center';
+                                            ctx.fillStyle = "rgba(0, 0, 0, 1)";
+                                            ctx.textBaseline = 'bottom';
+                                            ctx.font = '14pt sans-serif'; // font fsize for label on top of bar
+
+                                            // Loop through each data in the datasets
+                                            this.data.datasets.forEach(function (dataset, i) {
+                                                var meta = chartInstance.controller.getDatasetMeta(i);
+                                                meta.data.forEach(function (bar, index) {
+                                                    var data = dataset.data[index];
+                                                    ctx.fillText(data, bar._model.x, bar._model.y - 5);
+                                                });
+                                            });
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    });
+                    break;
+
+                case "21":
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("_NoOfBridgesVsRegionChart", "ChartGraph")',
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        beforeSend: function () { $('#wait').show(); },
+                        complete: function () { $('#wait').hide(); },
+                        success: function (chartData) {
+                            var labels = chartData[0];
+                            var dataSets = chartData[1];
+
+                            var total = 0;
+                            for (var key in dataSets) {
+                                total = total + Number(dataSets[key]);
+                            }
+
+                            $('#chartHeading').html('<h3>No. of Bridges vs <b>Regional Gov\'t</b> - <b>' + num_format(total) + ' bridges</b> (as of <b>' + currentYear + '</b>)</h3>');
+
+                            var dataTable = {
+                                labels: labels,
+                                datasets: [{
+                                    label: "No. of Bridges",
+                                    data: dataSets,
+                                    fill: false,
+                                    backgroundColor: ["rgba(54, 162, 235, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 159, 64, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(153, 102, 255, 0.8)", "rgba(201, 203, 207, 0.8)", "rgba(255, 159, 64, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(75, 192, 192, 0.8)"],
+                                    borderColor: ["rgb(54, 162, 235)", "rgb(255, 99, 132)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)", "rgb(153, 102, 255)", "rgb(201, 203, 207)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)"],
+                                    borderWidth: 1,
+                                    //inflateAmount: 5
+                                }]
+                            };
+
+                            var ctx = $("#graphChart").get(0).getContext("2d");
+
+                            graphChart = new Chart(ctx, {
+                                type: 'bar', //'line', 'pie'
+                                data: dataTable,
+                                //plugins: [ChartDataLabels], // register the chart data label plugin
+                                options: {
+                                    responsive: true,
+                                    title: { display: false, text: 'No. of Bridges vs Regional Gov\'t - ' + num_format(total) + ' bridges'},
+                                    legend: { position: 'right', display: false },
+                                    scales: {
+                                        xAxes: [{ gridLines: { display: true }, display: true, scaleLabel: { display: true, labelString: 'Regional Gov\'t', fontSize: 18 }, ticks: { fontSize: 14 }, barPercentage: 0.6 } ],
+                                        yAxes: [{ gridLines: { display: true }, display: true, scaleLabel: { display: true, labelString: 'No. of Bridges', fontSize: 18 }, ticks: { stepSize: 00, beginAtZero: true, fontSize: 14 } }]
+                                    },
+                                    tooltips: {
+                                        enabled: true
+                                    },
+                                    hover: {
+                                        animationDuration: 1
+                                    },
+                                    animation: {
+                                        duration: 1,
+                                        onComplete: function () {
+                                            var chartInstance = this.chart,
+                                                ctx = chartInstance.ctx;
+                                            ctx.textAlign = 'center';
+                                            ctx.fillStyle = "rgba(0, 0, 0, 1)";
+                                            ctx.textBaseline = 'bottom';
+                                            ctx.font = '14pt sans-serif'; // font fsize for label on top of bar
+
+                                            // Loop through each data in the datasets
+                                            this.data.datasets.forEach(function (dataset, i) {
+                                                var meta = chartInstance.controller.getDatasetMeta(i);
+                                                meta.data.forEach(function (bar, index) {
+                                                    var data = dataset.data[index];
+                                                    ctx.fillText(data, bar._model.x, bar._model.y - 5);
+                                                });
+                                            });
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    });
+                    break;
+
+                case "22":
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("_NoOfCulvertsVsRegionChart", "ChartGraph")',
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        beforeSend: function () { $('#wait').show(); },
+                        complete: function () { $('#wait').hide(); },
+                        success: function (chartData) {
+                            var labels = chartData[0];
+                            var dataSets = chartData[1];
+
+                            var total = 0;
+                            for (var key in dataSets) {
+                                total = total + Number(dataSets[key]);
+                            }
+
+                            $('#chartHeading').html('<h3>No. of Culverts vs <b>Regional Gov\'t</b> - <b>' + num_format(total) + ' culverts</b> (as of <b>' + currentYear + '</b>)</h3>');
+
+                            var dataTable = {
+                                labels: labels,
+                                datasets: [{
+                                    label: "No. of Culverts",
+                                    data: dataSets,
+                                    fill: false,
+                                    backgroundColor: ["rgba(54, 162, 235, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 159, 64, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(153, 102, 255, 0.8)", "rgba(201, 203, 207, 0.8)", "rgba(255, 159, 64, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(75, 192, 192, 0.8)"],
+                                    borderColor: ["rgb(54, 162, 235)", "rgb(255, 99, 132)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)", "rgb(153, 102, 255)", "rgb(201, 203, 207)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)"],
+                                    borderWidth: 1,
+                                    //inflateAmount: 5
+                                }]
+                            };
+
+                            var ctx = $("#graphChart").get(0).getContext("2d");
+
+                            graphChart = new Chart(ctx, {
+                                type: 'bar', //'line', 'pie'
+                                data: dataTable,
+                                //plugins: [ChartDataLabels], // register the chart data label plugin
+                                options: {
+                                    responsive: true,
+                                    title: { display: false, text: 'No. of Culverts vs Regional Gov\'t - ' + num_format(total) + ' culverts'},
+                                    legend: { position: 'right', display: false },
+                                    scales: {
+                                        xAxes: [{ gridLines: { display: true }, display: true, scaleLabel: { display: true, labelString: 'Regional Gov\'t', fontSize: 18 }, ticks: { fontSize: 14 }, barPercentage: 0.6 } ],
+                                        yAxes: [{ gridLines: { display: true }, display: true, scaleLabel: { display: true, labelString: 'No. of Culverts', fontSize: 18 }, ticks: { stepSize: 00, beginAtZero: true, fontSize: 14 } }]
+                                    },
+                                    tooltips: {
+                                        enabled: true
+                                    },
+                                    hover: {
+                                        animationDuration: 1
+                                    },
+                                    animation: {
+                                        duration: 1,
+                                        onComplete: function () {
+                                            var chartInstance = this.chart,
+                                                ctx = chartInstance.ctx;
+                                            ctx.textAlign = 'center';
+                                            ctx.fillStyle = "rgba(0, 0, 0, 1)";
+                                            ctx.textBaseline = 'bottom';
+                                            ctx.font = '14pt sans-serif'; // font fsize for label on top of bar
+
+                                            // Loop through each data in the datasets
+                                            this.data.datasets.forEach(function (dataset, i) {
+                                                var meta = chartInstance.controller.getDatasetMeta(i);
+                                                meta.data.forEach(function (bar, index) {
+                                                    var data = dataset.data[index];
+                                                    ctx.fillText(data, bar._model.x, bar._model.y - 5);
+                                                });
+                                            });
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    });
+                    break;
+
+                case "23":
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("_NoOfBridgesAndCulvertsVsRegionChart", "ChartGraph")',
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        beforeSend: function () { $('#wait').show(); },
+                        complete: function () { $('#wait').hide(); },
+                        success: function (chartData) {
+                            var labels = chartData[0];
+                            var dataSets1 = chartData[1];
+                            var dataSets2 = chartData[2];
+
+                            var total1 = 0;
+                            for (var key in dataSets1) {
+                                total1 = total1 + Number(dataSets1[key]);
+                            }
+
+                            var total2 = 0;
+                            for (var key in dataSets2) {
+                                total2 = total2 + Number(dataSets2[key]);
+                            }
+                            $('#chartHeading').html('<h3>No. of <b>Bridges & Culverts</b> vs Regional Gov\'t - <b>' + num_format(total1) + ' bridges</b> and <b>' + num_format(total2) + ' culverts</b> (as of <b>' + currentYear + '</b>)</h3>');
+
+                            var dataTable = {
+                                labels: labels,
+                                datasets: [{
+                                    label: "No. of Bridges",
+                                    data: dataSets1,
+                                    fill: false,
+                                    backgroundColor: ["rgba(54, 162, 235, 0.8)", "rgba(54, 162, 235, 0.8)", "rgba(54, 162, 235, 0.8)", "rgba(54, 162, 235, 0.8)", "rgba(54, 162, 235, 0.8)", "rgba(54, 162, 235, 0.8)", "rgba(54, 162, 235, 0.8)", "rgba(54, 162, 235, 0.8)", "rgba(54, 162, 235, 0.8)", "rgba(54, 162, 235, 0.8)", "rgba(54, 162, 235, 0.8)"],
+                                    borderColor: ["rgb(54, 162, 235)", "rgb(54, 162, 235)", "rgb(54, 162, 235)", "rgb(54, 162, 235)", "rgb(54, 162, 235)", "rgb(54, 162, 235)", "rgb(54, 162, 235)", "rgb(54, 162, 235)", "rgb(54, 162, 235)", "rgb(54, 162, 235)", "rgb(54, 162, 235)"],
+                                    borderWidth: 1
+                                },
+                                {
+                                    label: "No. of Culverts",
+                                    data: dataSets2,
+                                    fill: false,
+                                    backgroundColor: ["rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)"],
+                                    borderColor: ["rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)"],
+                                    borderWidth: 1
+                                }]
+                            };
+
+                            var ctx = $("#graphChart").get(0).getContext("2d");
+                            graphChart = new Chart(ctx, {
+                                type: 'bar', //'line', 'pie'
+                                data: dataTable,
+                                options: {
+                                    responsive: true,
+                                    title: { display: false, text: 'No. of Bridges & Culverts vs Regional Gov\'t - ' + num_format(total1) + ' bridges and ' + num_format(total2) + ' culverts' },
+                                    legend: { position: 'top', display: true },
+                                    scales: {
+                                        xAxes: [{ gridLines: { display: true }, display: true, scaleLabel: { display: true, labelString: 'Districts', fontSize: 18 }, ticks: { fontSize: 14 } }],
+                                        yAxes: [{ gridLines: { display: true }, display: true, scaleLabel: { display: true, labelString: 'No. of Bridges/Culverts', fontSize: 18 }, ticks: { stepSize: 1000, beginAtZero: true, fontSize: 16 } }]
+                                    },
+                                    tooltips: {
+                                        enabled: true
+                                    },
+                                    hover: {
+                                        animationDuration: 1
+                                    },
+                                    animation: {
+                                        duration: 1,
+                                        onComplete: function () {
+                                            var chartInstance = this.chart,
+                                                ctx = chartInstance.ctx;
+                                            ctx.textAlign = 'center';
+                                            ctx.fillStyle = "rgba(0, 0, 0, 1)";
+                                            ctx.textBaseline = 'bottom';
+                                            ctx.font = '14pt sans-serif'; // font fsize for label on top of bar
+
+                                            // Loop through each data in the datasets
+                                            this.data.datasets.forEach(function (dataset, i) {
+                                                var meta = chartInstance.controller.getDatasetMeta(i);
+                                                meta.data.forEach(function (bar, index) {
+                                                    var data = dataset.data[index];
+                                                    ctx.fillText(data, bar._model.x, bar._model.y - 5);
+                                                });
+                                            });
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    });
+                    break;
+            }
+        }
+    });
+
+</script>

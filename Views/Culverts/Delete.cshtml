@@ -1,80 +1,132 @@
-﻿@model ERA_BCMS.Models.Culvert
+﻿@model ERA_BMS.Models.Culvert
 
-@{
-    ViewBag.Title = "Delete Culvert";
-}
-
-<h2>Delete</h2>
-
-<h3>Are you sure you want to delete this?</h3>
 <div>
-    <h4>Culvert</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.CulvertId)
-        </dt>
+    @if (ViewBag.Success)
+    {
+        <h3>Are you sure you want to delete this culvert?</h3>
+        <h4 class="text-danger">(All of its inventory and inspection data will also be deleted and the process can not be reversed!!)</h4>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-4 col-xs-6">
+                    <table class="table table-condensed">
+                        <tr>
+                            <td>Revised Culvert Id</td>
+                            <th>@Model.RevisedCulvertNo</th>
+                        </tr>
 
-        <dd>
-            @Html.DisplayFor(model => model.CulvertId)
-        </dd>
+                        <tr>
+                            <td>Segment</td>
+                            <th>[@Model.Segment.RevisedRoadId] @Model.Segment.SegmentName</th>
+                        </tr>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.CulvertName)
-        </dt>
+                        <tr>
+                            <td>Section</td>
+                            <th>[@Model.Segment.Section.SectionNo] @Model.Segment.Section.SectionName</th>
+                        </tr>
 
-        <dd>
-            @Html.DisplayFor(model => model.CulvertName)
-        </dd>
+                        <tr>
+                            <td>District</td>
+                            <th>[@Model.Segment.Section.District.DistrictNo] @Model.Segment.Section.District.DistrictName</th>
+                        </tr>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.RouteId)
-        </dt>
+                        <tr>
+                            <td>Main Route</td>
+                            <th>[@Model.SubRoute.MainRoute.MainRouteNo] @Model.SubRoute.MainRoute.MainRouteName</th>
+                        </tr>
 
-        <dd>
-            @Html.DisplayFor(model => model.RouteId)
-        </dd>
+                        <tr>
+                            <td>Sub Route</td>
+                            <th>[@Model.SubRoute.SubRouteNo] @Model.SubRoute.SubRouteName</th>
+                        </tr>
+                    </table>
+                </div>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.KMFromAddis)
-        </dt>
+                @if (!ViewBag.NoInventory)
+                {
+                    <div class="col-sm-4 col-xs-6">
+                        <table class="table table-condensed">
+                            <tr>
+                                <td>Distance from AA (Km)</td>
+                                <th>@Model.CulvertGeneralInfo.KMFromAddis</th>
+                            </tr>
+                            <tr>
+                                <td>Coordinates (Lat/Lon)</td>
+                                <th>@Model.CulvertGeneralInfo.LatitudeDMS <br /> @Model.CulvertGeneralInfo.LongitudeDMS</th>
+                            </tr>
+                            <tr>
+                                <td>Culvert Length</td>
+                                <th>@Model.CulvertStructure.LengthTotal</th>
+                            </tr>
+                            <tr>
+                                <td>Culvert Type</td>
+                                <th>@Model.CulvertStructure.CulvertType.CulvertTypeName</th>
+                            </tr>
+                            <tr>
+                                <td>Construction Year</td>
+                                <th>@Model.CulvertGeneralInfo.ConstructionYear</th>
+                            </tr>
+                        </table>
+                    </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.KMFromAddis)
-        </dd>
+                    <div class="clearfix visible-xs"></div> <!-- Add clearfix (or new line break) for only the xs -->
 
-        <dt>
-            @Html.DisplayNameFor(model => model.XCoord)
-        </dt>
+                    <div class="col-sm-4 col-xs-8">
+                        <table class="table table-condensed">
+                            <tr>
+                                <td>Designer / Consultant</td>
+                                <th>@Model.CulvertGeneralInfo.Designer</th>
+                            </tr>
+                            <tr>
+                                <td>Contractor</td>
+                                <th>@Model.CulvertGeneralInfo.Contractor</th>
+                            </tr>
 
-        <dd>
-            @Html.DisplayFor(model => model.XCoord)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.YCoord)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.YCoord)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Segment.SegmentName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Segment.SegmentName)
-        </dd>
-
-    </dl>
-
-    @using (Html.BeginForm()) {
-        @Html.AntiForgeryToken()
+                            <tr>
+                                <td>Road Width (m)</td>
+                                <th>@Model.CulvertGeneralInfo.RoadWidth</th>
+                            </tr>
+                            <tr>
+                                <td>ADT</td>
+                                <th>@Model.Segment.AverageDailyTraffic</th>
+                            </tr>
+                            <tr>
+                                <td>No. of Lanes</td>
+                                <th>@Model.CulvertGeneralInfo.NoOfLanes</th>
+                            </tr>
+                            <tr>
+                                <td>Replacement Cost, ETB</td>
+                                @if (Model.CulvertGeneralInfo.AssetReplacementCost != null)
+                                {
+                                    <th>@Model.CulvertGeneralInfo.AssetReplacementCost.Value.ToString("#,0.00")</th>
+                                }
+                                else
+                                {
+                                    <th></th>
+                                }
+                            </tr>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <h5 class="col-sm-8 col-xs-6">
+                        No or incomplete inventory data for culvert: <br /><br />
+                        <b>@Model.CulvertNo</b>
+                    </h5>
+                }
+            </div>
+        </div>
 
         <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-danger" />
-            @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+            @*<button type="submit" class="btn btn-danger"><span class="glyphicon glyphicon-warning-sign"></span> Delete</button>*@
+            <a href="@Url.Action("DeleteConfirmed", new { culvertid = Model.CulvertId })" class="btn btn-danger"><span class="glyphicon glyphicon-warning-sign"></span> Delete</a>
+            <a href="@Url.Action("DeleteCulvert")" class="btn btn-primary"><span class="glyphicon glyphicon-remove"></span> Cancel</a>
+        </div>
+    }
+    else
+    {
+        <div class="text-danger">
+            <h4><b>Culvert not found!</b></h4>
         </div>
     }
 </div>

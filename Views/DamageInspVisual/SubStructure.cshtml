@@ -1,0 +1,789 @@
+﻿@model ERA_BMS.ViewModels.InspVisualSubStructuresViewModel
+
+<!--Change TempData to ViewBag for easy use-->
+@{
+    ViewBag.PierDamageTypeList = (List<string[]>)TempData["PierDamageTypeList"];
+    ViewBag.AbutmentDamageTypeList = (List<string[]>)TempData["AbutmentDamageTypeList"];
+    ViewBag.EmbankmentDamageTypeList = (List<string[]>)TempData["EmbankmentDamageTypeList"];
+    ViewBag.RipRapDamageTypeList = (List<string[]>)TempData["RipRapDamageTypeList"];
+
+    ViewBag.DamageSeverity = (List<SelectListItem>)TempData["DamageSeverity"];
+}
+
+<input type="hidden" id="bridgeId" value="@TempData["BridgeId"]" /> <!-- Bridge Id -->
+<input type="hidden" id="inspectionDate" value="@TempData["InspectionDate"]" /> <!-- Inspection Date -->
+<div class="row">
+    <div class="panel panel-default panel-collapse col-md-3 col-sm-4 col-xs-6">
+        <div class="panel-heading" id="heading-1">
+            <h5 class="panel-title panel-info" style="text-align: center">Pier and Foundation</h5>
+        </div>
+        <div class="panel-body">
+            <table class="table table-striped table-condensed table-responsive small" id="tblPierAndFoundation" style="border: 1px solid black;">
+                <tr id="heading-1">
+                    <th></th>
+                    <th>DamageType</th>
+                    <th>DamageLevel</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                @foreach (var item in Model.PierAndFoundation)
+                {
+                    <tr>
+                        <td>
+                            <input type="hidden" id="PierAndFoundationId" value="@item.Id" /> <!-- Unique Id of Damage Inspection Visual -->
+                        </td>
+                        <td>
+                            <span class="damage-type-pier" name="@item.Id">@item.DamageType.DamageTypeName</span>
+                        </td>
+                        <td>
+                            <span class="damage-severity" name="@item.Id">@item.DamageSeverity.DamageSeverityName</span>
+                        </td>
+                        <td>
+                            <a class="Confirm glyphicon glyphicon-ok" href="javascript:;" style="display:none" data-toggle="tooltip" title="Confirm"></a>
+                        </td>
+                        <td>
+                            <a class="Cancel glyphicon glyphicon-remove" href="javascript:;" style="display:none" data-toggle="tooltip" title="Cancel"></a>
+                            <a class="Delete glyphicon glyphicon-trash" href="javascript:;" data-toggle="tooltip" title="Delete"></a>
+                        </td>
+                    </tr>
+                }
+            </table>
+
+            <table>
+                <tr>
+                    <td style="width: 150px" class="form-group form-group-sm">
+                        Damage Type:<br />
+                        @Html.DropDownList("ddlPierDamageType", (List<SelectListItem>)TempData["DamageType1"])
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 150px" class="form-group form-group-sm">
+                        Damage Level:<br />
+                        @Html.DropDownList("ddlPierDamageLevel", (List<SelectListItem>)ViewBag.DamageSeverity)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 200px">
+                        <br />
+                        <button type="button" id="btnSavePierAndFoundationDamage" class="btn btn-primary"><span class="glyphicon glyphicon-save"></span> Save</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="panel panel-default col-md-3 col-sm-4 col-xs-6">
+        <div class="panel-heading" id="heading-2">
+            <h5 class="panel-title panel-info" style="text-align: center">Abutment and Wing Wall</h5>
+        </div>
+        <div class="panel-body">
+            <table class="table table-striped table-condensed table-responsive small" id="tblAbutmentAndWingWall" style="border: 1px solid black;">
+                <tr id="heading-2">
+                    <th></th>
+                    <th>DamageType</th>
+                    <th>DamageLevel</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+
+                @foreach (var item in Model.AbutmentAndWingWall)
+                {
+                    <tr>
+                        <td>
+                            <input type="hidden" id="AbutmentAndWingWallId" value="@item.Id" /> <!-- Unique Id of Damage Inspection Visual -->
+                        </td>
+                        <td>
+                            <span class="damage-type-abutment" name="@item.Id">@item.DamageType.DamageTypeName</span>
+                        </td>
+                        <td>
+                            <span class="damage-severity" name="@item.Id">@item.DamageSeverity.DamageSeverityName</span>
+                        </td>
+                        <td>
+                            <a class="Confirm glyphicon glyphicon-ok" href="javascript:;" style="display:none" data-toggle="tooltip" title="Confirm"></a>
+                        </td>
+                        <td>
+                            <a class="Cancel glyphicon glyphicon-remove" href="javascript:;" style="display:none" data-toggle="tooltip" title="Cancel"></a>
+                            <a class="Delete glyphicon glyphicon-trash" href="javascript:;" data-toggle="tooltip" title="Delete"></a>
+                        </td>
+                    </tr>
+                }
+            </table>
+
+            <table>
+                <tr>
+                    <td style="width: 150px" class="form-group form-group-sm">
+                        Damage Type:<br />
+                        @Html.DropDownList("ddlAbutmentDamageType", (List<SelectListItem>)TempData["DamageType2"])
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 150px" class="form-group form-group-sm">
+                        Damage Level:<br />
+                        @Html.DropDownList("ddlAbutmentDamageLevel", (List<SelectListItem>)ViewBag.DamageSeverity)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 200px">
+                        <br />
+                        <button type="button" id="btnSaveAbutmentAndWingWallDamage" class="btn btn-primary"><span class="glyphicon glyphicon-save"></span> Save</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="clearfix visible-xs"></div> <!-- Add clearfix (or new line break) for only the xs -->
+
+    <div class="panel panel-default col-md-3 col-sm-4 col-xs-6">
+        <div class="panel-heading" id="heading-1">
+            <h5 class="panel-title panel-info" style="text-align: center">Embankment</h5>
+        </div>
+        <div class="panel-body">
+            <table class="table table-striped table-condensed table-responsive small" id="tblEmbankment" style="border: 1px solid black;">
+                <tr id="heading-1">
+                    <th></th>
+                    <th>DamageType</th>
+                    <th>DamageLevel</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+
+                @foreach (var item in Model.Embankment)
+                {
+                    <tr>
+                        <td>
+                            <input type="hidden" id="EmbankmentId" value="@item.Id" /> <!-- Unique Id of Damage Inspection Visual -->
+                        </td>
+                        <td>
+                            <span class="damage-type-embankment" name="@item.Id">@item.DamageType.DamageTypeName</span>
+                        </td>
+                        <td>
+                            <span class="damage-severity" name="@item.Id">@item.DamageSeverity.DamageSeverityName</span>
+                        </td>
+                        <td>
+                            <a class="Confirm glyphicon glyphicon-ok" href="javascript:;" style="display:none" data-toggle="tooltip" title="Confirm"></a>
+                        </td>
+                        <td>
+                            <a class="Cancel glyphicon glyphicon-remove" href="javascript:;" style="display:none" data-toggle="tooltip" title="Cancel"></a>
+                            <a class="Delete glyphicon glyphicon-trash" href="javascript:;" data-toggle="tooltip" title="Delete"></a>
+                        </td>
+                    </tr>
+                }
+            </table>
+
+            <table>
+                <tr>
+                    <td style="width: 150px" class="form-group form-group-sm">
+                        Damage Type:<br />
+                        @Html.DropDownList("ddlEmbankmentDamageType", (List<SelectListItem>)TempData["DamageType3"])
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 150px" class="form-group form-group-sm">
+                        Damage Level:<br />
+                        @Html.DropDownList("ddlEmbankmentDamageLevel", (List<SelectListItem>)ViewBag.DamageSeverity)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 200px">
+                        <br />
+                        <button type="button" id="btnSaveEmbankmentDamage" class="btn btn-primary"><span class="glyphicon glyphicon-save"></span> Save</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="clearfix visible-sm"></div> <!-- Add clearfix (or new line break) for only the sm -->
+
+    <div class="panel panel-default col-md-3 col-sm-4 col-xs-6">
+        <div class="panel-heading" id="heading-2">
+            <h5 class="panel-title panel-info" style="text-align: center">Rip Rap</h5>
+        </div>
+        <div class="panel-body">
+            <table class="table table-striped table-condensed table-responsive small" id="tblRipRap" style="border: 1px solid black;">
+                <tr id="heading-2">
+                    <th></th>
+                    <th>DamageType</th>
+                    <th>DamageLevel</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+
+                @foreach (var item in Model.RipRap)
+                {
+                    <tr>
+                        <td>
+                            <input type="hidden" id="RipRapId" value="@item.Id" /> <!-- Unique Id of Damage Inspection Visual -->
+                        </td>
+                        <td>
+                            <span class="damage-type-riprap" name="@item.Id">@item.DamageType.DamageTypeName</span>
+                        </td>
+                        <td>
+                            <span class="damage-severity" name="@item.Id">@item.DamageSeverity.DamageSeverityName</span>
+                        </td>
+                        <td>
+                            <a class="Confirm glyphicon glyphicon-ok" href="javascript:;" style="display:none" data-toggle="tooltip" title="Confirm"></a>
+                        </td>
+                        <td>
+                            <a class="Cancel glyphicon glyphicon-remove" href="javascript:;" style="display:none" data-toggle="tooltip" title="Cancel"></a>
+                            <a class="Delete glyphicon glyphicon-trash" href="javascript:;" data-toggle="tooltip" title="Delete"></a>
+                        </td>
+                    </tr>
+                }
+            </table>
+
+            <table>
+                <tr>
+                    <td style="width: 150px" class="form-group form-group-sm">
+                        Damage Type:<br />
+                        @Html.DropDownList("ddlRipRapDamageType", (List<SelectListItem>)TempData["DamageType4"])
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 150px" class="form-group form-group-sm">
+                        Damage Level:<br />
+                        @Html.DropDownList("ddlRipRapDamageLevel", (List<SelectListItem>)ViewBag.DamageSeverity)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 200px">
+                        <br />
+                        <button type="button" id="btnSaveRipRapDamage" class="btn btn-primary"><span class="glyphicon glyphicon-save"></span> Save</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+@*<div id="status"></div>*@
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        makeDamageLevelEditable();
+        makePierDamageEditable();
+        makeAbutmentDamageEditable();
+        makeEmbankmentDamageEditable();
+        makeRipRapDamageEditable();
+
+        // A function that makes "DamageLevel" editable
+        function makeDamageLevelEditable() {
+            $(".damage-severity").each(function () {
+                var selVisualInspId = $(this).attr("name");
+                //alert('@TempData["InspectionDate"]');
+                $(this).editable("/DamageInspVisual/UpdateDamageSeverity", {
+                    type: "select",
+                    loadurl: '/DamageInspVisual/SelectDamageSeverity',
+                    callback: function (value, settings) {
+                        $(this).html(jQuery.parseJSON(settings.data)[value]);
+                    },
+                    submitdata: function () {
+                        return {
+                            id: selVisualInspId,
+                            @*inspdate: '@TempData["InspectionDate"]'*@
+                        };
+                    },
+                    tooltip: 'Click/Tap to edit...',
+                    indicator: 'Saving...',
+                    size: 10
+                });
+            });
+        }
+
+        // A function that makes Pier And Foundation "DamageType" editable
+        function makePierDamageEditable() {
+            $(".damage-type-pier").each(function () {
+                var selVisualInspId = $(this).attr("name");
+                $(this).editable('/DamageInspVisual/UpdateDamageType', {
+                    type: "select",
+                    loadurl: '/DamageInspVisual/SelectDamageTypePier',
+                    callback: function (value, settings) {
+                        $(this).html(jQuery.parseJSON(settings.data)[value]);
+                    },
+                    submitdata: function () {
+                        return {
+                            id: selVisualInspId,
+                            @*inspdate: '@TempData["InspectionDate"]'*@
+                        };
+                    },
+                    tooltip: 'Click/Tap to edit...',
+                    indicator: 'Saving...'
+                });
+            });
+        }
+
+        // A function that makes Abutment And Wing Wall "DamageType" editable
+        function makeAbutmentDamageEditable() {
+            $(".damage-type-abutment").each(function () {
+                var selVisualInspId = $(this).attr("name");
+                $(this).editable('/DamageInspVisual/UpdateDamageType', {
+                    type: "select",
+                    loadurl: '/DamageInspVisual/SelectDamageTypeAbutment',
+                    callback: function (value, settings) {
+                        $(this).html(jQuery.parseJSON(settings.data)[value]);
+                    },
+                    submitdata: function () {
+                        return {
+                            id: selVisualInspId,
+                            @*inspdate: '@TempData["InspectionDate"]'*@
+                        };
+                    },
+                    tooltip: 'Click/Tap to edit...',
+                    indicator: 'Saving...'
+                });
+            });
+        }
+
+        // A function that makes Embankment And Wing Wall "DamageType" editable
+        function makeEmbankmentDamageEditable() {
+            $(".damage-type-embankment").each(function () {
+                var selVisualInspId = $(this).attr("name");
+                $(this).editable('/DamageInspVisual/UpdateDamageType', {
+                    type: "select",
+                    loadurl: '/DamageInspVisual/SelectDamageTypeEmbankment',
+                    callback: function (value, settings) {
+                        $(this).html(jQuery.parseJSON(settings.data)[value]);
+                    },
+                    submitdata: function () {
+                        return {
+                            id: selVisualInspId,
+                            @*inspdate: '@TempData["InspectionDate"]'*@
+                        };
+                    },
+                    tooltip: 'Click/Tap to edit...',
+                    indicator: 'Saving...'
+                });
+            });
+        }
+
+        // A function that makes Rip Rap And Wing Wall "DamageType" editable
+        function makeRipRapDamageEditable() {
+            $(".damage-type-riprap").each(function () {
+                var selVisualInspId = $(this).attr("name");
+                $(this).editable('/DamageInspVisual/UpdateDamageType', {
+                    type: "select",
+                    loadurl: '/DamageInspVisual/SelectDamageTypeRipRap',
+                    callback: function (value, settings) {
+                        $(this).html(jQuery.parseJSON(settings.data)[value]);
+                    },
+                    submitdata: function () {
+                        return {
+                            id: selVisualInspId,
+                            @*inspdate: '@TempData["InspectionDate"]'*@
+                        };
+                    },
+                    tooltip: 'Click/Tap to edit...',
+                    indicator: 'Saving...'
+                });
+            });
+        }
+
+        //Save Pier and Foundation damage
+        $("#btnSavePierAndFoundationDamage").on("click", function () {
+            var BridgeId = $("#bridgeId");
+            var InspectionDate = $("#inspectionDate");
+            var PierDamageType = $("#ddlPierDamageType");
+            var PierDamageLevel = $("#ddlPierDamageLevel");
+            var InspType = 1;
+            var StructItem = 1;
+            //alert('{BridgeId: "' + BridgeId.val() + '", StructureItemId: ' + StructItem + ', DamageTypeId: ' + PierDamageType.val() + ', DamageSeverityId: ' + PierDamageLevel.val() + ', InspectionTypeId: ' + InspType + ', InspectionDate: "' + InspectionDate.val() + '" }');
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("SaveDamage", "DamageInspVisual")',
+                data: '{BridgeId: "' + BridgeId.val() + '", StructureItemId: ' + StructItem + ', DamageTypeId: ' + PierDamageType.val() + ', DamageSeverityId: ' + PierDamageLevel.val() + ', InspectionTypeId: ' + InspType + ', InspectionDate: "' + InspectionDate.val() + '" }',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (data) {
+                    $.ajax({
+                        type: 'GET',
+                        url: '@Url.Action("GetLastAddedDamage", "DamageInspVisual")',
+                        data: { bridgeid: BridgeId.val() },
+                        datatype: 'json',
+                        success: function (data) {
+                            var Id = data.Id;
+                            var row = '<tr>';
+                            row += '<td><input type="hidden" id="PierAndFoundationId" value="' + Id + '" /></td>';
+                            row += '<td><span class="damage-type-pier" name="' + Id + '">' + $('#ddlPierDamageType option:selected').text() + '</span></td>';
+                            row += '<td><span class="damage-severity" name="' + Id + '">' + $('#ddlPierDamageLevel option:selected').text() + '</span></td>';
+                            row += '<td><a class="Confirm glyphicon glyphicon-ok" href="javascript:;" style="display:none" data-toggle="tooltip" title="Confirm"></a></td>';
+                            row += '<td><a class="Cancel glyphicon glyphicon-remove" href="javascript:;" style="display:none" data-toggle="tooltip" title="Cancel"></a>'
+                                + '<a class="Delete glyphicon glyphicon-trash" href = "javascript:;" data - toggle="tooltip" title = "Delete" ></a ></td>';
+                            row += '</tr > ';
+                            //alert(row);
+                            $("#tblPierAndFoundation > tbody").append(row);
+                            makePierDamageEditable();
+                            makeDamageLevelEditable();
+                            $('#ddlPierDamageType').val("");
+                            $('#ddlPierDamageLevel').val("");
+                        },
+                        error: function (xhr) {
+                            //$('#status').text(xhr.status);
+                        }
+                    });
+                },
+                error: function (xhr) {
+                    //$('#status').text(xhr.status);
+                }
+            });
+        });
+
+        //Cancel Pier and Foundation damage
+        $("body").on("click", "#tblPierAndFoundation .Cancel", function () {
+            var row = $(this).closest("tr");
+            $("td", row).each(function () {
+                if ($(this).find("input").length > 0) {
+                    var span = $(this).find("span");
+                    var input = $(this).find("input");
+                    input.val(span.html());
+                    span.show();
+                    input.hide();
+                }
+            });
+            row.find(".Delete").show();
+            row.find(".Confirm").hide();
+            $(this).hide();
+        });
+
+        //Delete Pier and Foundation damage
+        $("body").on("click", "#tblPierAndFoundation .Delete", function () {
+            var row = $(this).closest("tr");
+            row.find(".Confirm").show();
+            row.find(".Cancel").show();
+            row.find(".Delete").hide();
+            $(this).hide();
+        });
+
+        //Confirm Pier and Foundation damage
+        $("body").on("click", "#tblPierAndFoundation .Confirm", function () {
+            var row = $(this).closest("tr");
+            var id = row.find('#PierAndFoundationId').val();
+            alert(id);
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("DeleteDamage", "DamageInspVisual")',
+                data: '{id: "' + id + '"}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (response) {
+                    if ($("#tblPierAndFoundation tr").length > 2) {
+                        row.remove();
+
+                    } else {
+                        row.find(".Delete").hide();
+                        row.find(".Confirm").hide();
+                        row.find(".Cancel").hide();
+                        row.find("span").html('&nbsp;');
+                    }
+                },
+                error: function (xhr) {
+                    //$('#status').text(xhr.status);
+                }
+            });
+        });
+
+        //Save Abutment and Wing Wall damage
+        $("#btnSaveAbutmentAndWingWallDamage").on("click", function () {
+            var BridgeId = $("#bridgeId");
+            var InspectionDate = $("#inspectionDate");
+            var AbutmentDamageType = $("#ddlAbutmentDamageType");
+            var AbutmentDamageLevel = $("#ddlAbutmentDamageLevel");
+            var InspType = 1;
+            var StructItem = 2
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("SaveDamage", "DamageInspVisual")',
+                data: '{BridgeId: "' + BridgeId.val() + '", StructureItemId: ' + StructItem + ', DamageTypeId: ' + AbutmentDamageType.val() + ', DamageSeverityId: ' + AbutmentDamageLevel.val() + ', InspectionTypeId: ' + InspType + ', InspectionDate: "' + InspectionDate.val() + '" }',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (data) {
+                    $.ajax({
+                        type: 'GET',
+                        url: '@Url.Action("GetLastAddedDamage", "DamageInspVisual")',
+                        data: { bridgeid: BridgeId.val() },
+                        datatype: 'json',
+                        success: function (data) {
+                            var Id = data.Id;
+                            var row = '<tr>';
+                            row += '<td><input type="hidden" id="AbutmentAndWingWallId" value="' + Id + '" /></td>';
+                            row += '<td><span class="damage-type-abutment" name="' + Id + '">' + $('#ddlAbutmentDamageType option:selected').text() + '</span></td>';
+                            row += '<td><span class="damage-severity" name="' + Id + '">' + $('#ddlAbutmentDamageLevel option:selected').text() + '</span></td>';
+                            row += '<td><a class="Confirm glyphicon glyphicon-ok" href="javascript:;" style="display:none" data-toggle="tooltip" title="Confirm"></a></td>';
+                            row += '<td><a class="Cancel glyphicon glyphicon-remove" href="javascript:;" style="display:none" data-toggle="tooltip" title="Cancel"></a>'
+                                + '<a class="Delete glyphicon glyphicon-trash" href = "javascript:;" data - toggle="tooltip" title = "Delete" ></a ></td>';
+                            row += '</tr > ';
+                            //alert(row);
+                            $("#tblAbutmentAndWingWall > tbody").append(row);
+                            makeAbutmentDamageEditable();
+                            makeDamageLevelEditable();
+                            $('#ddlAbutmentDamageType').val("");
+                            $('#ddlAbutmentDamageLevel').val("");
+                        },
+                        error: function (xhr) {
+                            //$('#status').text(xhr.status);
+                        }
+                    });
+                },
+                error: function (xhr) {
+                    //$('#status').text(xhr.status);
+                }
+            });
+        });
+
+        //Cancel Abutment and Wing Wall damage
+        $("body").on("click", "#tblAbutmentAndWingWall .Cancel", function () {
+            var row = $(this).closest("tr");
+            $("td", row).each(function () {
+                if ($(this).find("input").length > 0) {
+                    var span = $(this).find("span");
+                    var input = $(this).find("input");
+                    input.val(span.html());
+                    span.show();
+                    input.hide();
+                }
+            });
+            row.find(".Delete").show();
+            row.find(".Confirm").hide();
+            $(this).hide();
+        });
+
+        //Delete Abutment and Wing Wall damage
+        $("body").on("click", "#tblAbutmentAndWingWall .Delete", function () {
+            var row = $(this).closest("tr");
+            row.find(".Confirm").show();
+            row.find(".Cancel").show();
+            row.find(".Delete").hide();
+            $(this).hide();
+        });
+
+        //Confirm Abutment and Wing Wall damage
+        $("body").on("click", "#tblAbutmentAndWingWall .Confirm", function () {
+            var row = $(this).closest("tr");
+            var id = row.find('#AbutmentAndWingWallId').val();
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("DeleteDamage", "DamageInspVisual")',
+                data: '{id: "' + id + '"}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (response) {
+                    if ($("#tblAbutmentAndWingWall tr").length > 2) {
+                        row.remove();
+
+                    } else {
+                        row.find(".Delete").hide();
+                        row.find(".Confirm").hide();
+                        row.find(".Cancel").hide();
+                        row.find("span").html('&nbsp;');
+                    }
+                },
+                error: function (xhr) {
+                    //$('#status').text(xhr.status);
+                }
+            });
+        });
+
+        //Save Embankment damage
+        $("#btnSaveEmbankmentDamage").on("click", function () {
+            var BridgeId = $("#bridgeId");
+            var InspectionDate = $("#inspectionDate");
+            var EmbankmentDamageType = $("#ddlEmbankmentDamageType");
+            var EmbankmentDamageLevel = $("#ddlEmbankmentDamageLevel");
+            var InspType = 1;
+            var StructItem = 3;
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("SaveDamage", "DamageInspVisual")',
+                data: '{BridgeId: "' + BridgeId.val() + '", StructureItemId: ' + StructItem + ', DamageTypeId: ' + EmbankmentDamageType.val() + ', DamageSeverityId: ' + EmbankmentDamageLevel.val() + ', InspectionTypeId: ' + InspType + ', InspectionDate: "' + InspectionDate.val() + '" }',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (data) {
+                    $.ajax({
+                        type: 'GET',
+                        url: '@Url.Action("GetLastAddedDamage", "DamageInspVisual")',
+                        data: { bridgeid: BridgeId.val() },
+                        datatype: 'json',
+                        success: function (data) {
+                            var Id = data.Id;
+                            var row = '<tr>';
+                            row += '<td><input type="hidden" id="EmbankmentId" value="' + Id + '" /></td>';
+                            row += '<td><span class="damage-type-embankment" name="' + Id + '">' + $('#ddlEmbankmentDamageType option:selected').text() + '</span></td>';
+                            row += '<td><span class="damage-severity" name="' + Id + '">' + $('#ddlEmbankmentDamageLevel option:selected').text() + '</span></td>';
+                            row += '<td><a class="Confirm glyphicon glyphicon-ok" href="javascript:;" style="display:none" data-toggle="tooltip" title="Confirm"></a></td>';
+                            row += '<td><a class="Cancel glyphicon glyphicon-remove" href="javascript:;" style="display:none" data-toggle="tooltip" title="Cancel"></a>'
+                                + '<a class="Delete glyphicon glyphicon-trash" href = "javascript:;" data - toggle="tooltip" title = "Delete" ></a ></td>';
+                            row += '</tr > ';
+                            //alert(row);
+                            $("#tblEmbankment > tbody").append(row);
+                            makeEmbankmentDamageEditable();
+                            makeDamageLevelEditable();
+                            $('#ddlEmbankmentDamageType').val("");
+                            $('#ddlEmbankmentDamageLevel').val("");
+                        },
+                        error: function (xhr) {
+                            //$('#status').text(xhr.status);
+                        }
+                    });
+                },
+                error: function (xhr) {
+                    //$('#status').text(xhr.status);
+                }
+            });
+        });
+
+        //Cancel Embankment damage
+        $("body").on("click", "#tblEmbankment .Cancel", function () {
+            var row = $(this).closest("tr");
+            $("td", row).each(function () {
+                if ($(this).find("input").length > 0) {
+                    var span = $(this).find("span");
+                    var input = $(this).find("input");
+                    input.val(span.html());
+                    span.show();
+                    input.hide();
+                }
+            });
+            row.find(".Delete").show();
+            row.find(".Confirm").hide();
+            $(this).hide();
+        });
+
+        //Delete Embankment damage
+        $("body").on("click", "#tblEmbankment .Delete", function () {
+            var row = $(this).closest("tr");
+            row.find(".Confirm").show();
+            row.find(".Cancel").show();
+            row.find(".Delete").hide();
+            $(this).hide();
+        });
+
+        //Confirm Embankment damage
+        $("body").on("click", "#tblEmbankment .Confirm", function () {
+            var row = $(this).closest("tr");
+            var id = row.find('#EmbankmentId').val();
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("DeleteDamage", "DamageInspVisual")',
+                data: '{id: "' + id + '"}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (response) {
+                    if ($("#tblEmbankment tr").length > 2) {
+                        row.remove();
+
+                    } else {
+                        row.find(".Delete").hide();
+                        row.find(".Confirm").hide();
+                        row.find(".Cancel").hide();
+                        row.find("span").html('&nbsp;');
+                    }
+                },
+                error: function (xhr) {
+                    //$('#status').text(xhr.status);
+                }
+            });
+        });
+
+        //Save Rip Rap damage
+        $("#btnSaveRipRapDamage").on("click", function () {
+            var BridgeId = $("#bridgeId");
+            var InspectionDate = $("#inspectionDate");
+            var RipRapDamageType = $("#ddlRipRapDamageType");
+            var RipRapDamageLevel = $("#ddlRipRapDamageLevel");
+            var InspType = 1;
+            var StructItem = 4;
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("SaveDamage", "DamageInspVisual")',
+                data: '{BridgeId: "' + BridgeId.val() + '", StructureItemId: ' + StructItem + ', DamageTypeId: ' + RipRapDamageType.val() + ', DamageSeverityId: ' + RipRapDamageLevel.val() + ', InspectionTypeId: ' + InspType + ', InspectionDate: "' + InspectionDate.val() + '" }',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (data) {
+                    $.ajax({
+                        type: 'GET',
+                        url: '@Url.Action("GetLastAddedDamage", "DamageInspVisual")',
+                        data: { bridgeid: BridgeId.val() },
+                        datatype: 'json',
+                        success: function (data) {
+                            var Id = data.Id;
+                            var row = '<tr>';
+                            row += '<td><input type="hidden" id="RipRapId" value="' + Id + '" /></td>';
+                            row += '<td><span class="damage-type-riprap" name="' + Id + '">' + $('#ddlRipRapDamageType option:selected').text() + '</span></td>';
+                            row += '<td><span class="damage-severity" name="' + Id + '">' + $('#ddlRipRapDamageLevel option:selected').text() + '</span></td>';
+                            row += '<td><a class="Confirm glyphicon glyphicon-ok" href="javascript:;" style="display:none" data-toggle="tooltip" title="Confirm"></a></td>';
+                            row += '<td><a class="Cancel glyphicon glyphicon-remove" href="javascript:;" style="display:none" data-toggle="tooltip" title="Cancel"></a>'
+                                + '<a class="Delete glyphicon glyphicon-trash" href = "javascript:;" data - toggle="tooltip" title = "Delete" ></a ></td>';
+                            row += '</tr > ';
+                            //alert(row);
+                            $("#tblRipRap > tbody").append(row);
+                            makeRipRapDamageEditable();
+                            makeDamageLevelEditable();
+                            $('#ddlRipRapDamageType').val("");
+                            $('#ddlRipRapDamageLevel').val("");
+                        },
+                        error: function (xhr) {
+                            //$('#status').text(xhr.status);
+                        }
+                    });
+                },
+                error: function (xhr) {
+                    //$('#status').text(xhr.status);
+                }
+            });
+        });
+
+        //Cancel Rip Rap damage
+        $("body").on("click", "#tblRipRap .Cancel", function () {
+            var row = $(this).closest("tr");
+            $("td", row).each(function () {
+                if ($(this).find("input").length > 0) {
+                    var span = $(this).find("span");
+                    var input = $(this).find("input");
+                    input.val(span.html());
+                    span.show();
+                    input.hide();
+                }
+            });
+            row.find(".Delete").show();
+            row.find(".Confirm").hide();
+            $(this).hide();
+        });
+
+        //Delete Rip Rap damage
+        $("body").on("click", "#tblRipRap .Delete", function () {
+            var row = $(this).closest("tr");
+            row.find(".Confirm").show();
+            row.find(".Cancel").show();
+            row.find(".Delete").hide();
+            $(this).hide();
+        });
+
+        //Confirm Rip Rap damage
+        $("body").on("click", "#tblRipRap .Confirm", function () {
+            var row = $(this).closest("tr");
+            var id = row.find('#RipRapId').val();
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("DeleteDamage", "DamageInspVisual")',
+                data: '{id: "' + id + '"}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (response) {
+                    if ($("#tblRipRap tr").length > 2) {
+                        row.remove();
+
+                    } else {
+                        row.find(".Delete").hide();
+                        row.find(".Confirm").hide();
+                        row.find(".Cancel").hide();
+                        row.find("span").html('&nbsp;');
+                    }
+                },
+                error: function (xhr) {
+                    //$('#status').text(xhr.status);
+                }
+            });
+        });
+    });
+</script>

@@ -1,20 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Entity;
+using System.Data.Entity; using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using ERA_BCMS.Models;
+using ERA_BMS.Models;
 
-namespace ERA_BCMS.Areas.Admin.Controllers
+namespace ERA_BMS.Areas.Admin.Controllers
 {
     //Only Admins should have access
     [Authorize(Roles = "Admin")]
     public class ExpansionJointTypesController : Controller
     {
-        private BCMSEntities db = new BCMSEntities();
+        private BMSEntities db = new BMSEntities();
 
         // GET: Admin/ExpansionJointTypes
         public ActionResult Index()
@@ -39,23 +39,32 @@ namespace ERA_BCMS.Areas.Admin.Controllers
             return View(expansionJointType);
         }
 
-        // GET: Admin/ExpansionJointTypes/Create
-        public ActionResult Create()
+        // GET: Admin/ExpansionJointTypes/New
+        public ActionResult New()
         {
             return View();
         }
 
-        // POST: Admin/ExpansionJointTypes/Create
+        // POST: Admin/ExpansionJointTypes/New
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ExpansionJointTypeId,ExpansionJointTypeName,Remark")] ExpansionJointType expansionJointType)
+        public ActionResult New([Bind(Include = "ExpansionJointTypeId,ExpansionJointTypeName,Remark")] ExpansionJointType expansionJointType)
         {
             if (ModelState.IsValid)
             {
                 db.ExpansionJointTypes.Add(expansionJointType);
-                db.SaveChanges();
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch (Exception e) when (e.InnerException?.InnerException is SqlException sqlEx
+                                            && (sqlEx.Number == 2601 || sqlEx.Number == 2627))
+                {
+                    return RedirectToAction("DuplicateError", "ErrorHandler", new { area = "" });
+                }
+
                 return RedirectToAction("Details", new { id = expansionJointType.ExpansionJointTypeId });
             }
 

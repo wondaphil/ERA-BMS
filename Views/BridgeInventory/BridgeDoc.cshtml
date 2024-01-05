@@ -1,51 +1,396 @@
-﻿@model ERA_BCMS.Models.BridgeDoc
+﻿@model IEnumerable<ERA_BMS.Models.BridgeDoc>
 
 @{
-    ViewBag.Title = "BridgeDoc";
+    ViewBag.Title = "Bridge Doc Inventory";
 }
 
-<div>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.SerNo)
-        </dt>
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "bridgeDocForm", enctype = "multipart/form-data" }))
+{
+    @*<input type="hidden" id="bridgeId" value="@TempData["BridgeId"]" />*@ <!-- Bridge Id -->
+    <table class="table table-striped table-condensed table-responsive table-bordered" id="tblBridgeDoc">
+        <tr>
+            <th></th>
+            <th>Doc Type</th>
+            <th>Doc Date</th>
+            <th>Description</th>
+            <th>Doc File Path</th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+        @foreach (var bridgeDoc in Model.Select((value, index) => new { index, value }))
+        {
+            <tr>
+                <td class="Id">
+                    <input type="hidden" id="Id" value="@bridgeDoc.value.Id" /> <!-- Unique Identity (key) -->
+                </td>
+                <td class="DocTypeId">
+                    <div class="form-group form-group-sm">
+                        <span id="spnDocType">@bridgeDoc.value.DocType.DocTypeName</span>
+                        @Html.DropDownList("ddlDocTypeId", new SelectList((List<SelectListItem>)TempData["DocTypes"], "Value", "Text", @bridgeDoc.value.DocTypeId), new { @class = "form-control FoundationTypeId", style = "display: none; width: 150px;" })
+                    </div>
+                </td>
+                <td class="DocDate">
+                    @{ if (bridgeDoc.value.DocDate != null)
+                        {
+                            <span>@bridgeDoc.value.DocDate.Value.ToString("dd/MM/yyyy")</span>
+                        }
+                        else
+                        {
+                            <span></span>
+                        }
+                    }
+                </td>
+                <td class="DocDescription">
+                    <span>@bridgeDoc.value.Description</span>
+                    <input type="text" value="@bridgeDoc.value.Description" style="display:none" />
+                </td>
+                <td class="DocFilePath">
+                    <span>@bridgeDoc.value.DocFilePath</span>
+                    <input type="file" value="@bridgeDoc.value.DocFilePath" accept=".doc, .docx, .pdf, .xls, .xlsx" style="display:none" />
+                </td>
+                <td class="DocPreview">
+                    <span><a href="@bridgeDoc.value.DocFilePath" class="glyphicon glyphicon-book" data-toggle="tooltip" title="Preview"></a></span>
+                </td>
+                <td>
+                    <a class="Edit glyphicon glyphicon-edit" href="javascript:;" data-toggle="tooltip" title="Edit"></a>
+                    <a class="Update glyphicon glyphicon-ok" href="javascript:;" style="display:none" data-toggle="tooltip" title="Update"></a>
+                    <a class="Confirm glyphicon glyphicon-ok" href="javascript:;" style="display:none" data-toggle="tooltip" title="Confirm"></a>
+                </td>
+                <td>
+                    <a class="Cancel glyphicon glyphicon-remove" href="javascript:;" style="display:none" data-toggle="tooltip" title="Cancel"></a>
+                    <a class="Delete glyphicon glyphicon-trash" href="javascript:;" data-toggle="tooltip" title="Delete"></a>
+                </td>
+            </tr>
+        }
+    </table>
 
-        <dd>
-            @Html.DisplayFor(model => model.SerNo)
-        </dd>
+    <div class="form-horizontal">
+        <div class="row">
+            <div class="col-lg-2 col-md-2 col-sm-3 col-xs-5">
+                <div class="form-group form-group-sm">
+                    <label for="txtDocDate" class="col-md-8 col-sm-10 col-xs-10">Doc Type</label>
+                    @*@Html.DropDownList("ddlNewDocTypeId", (List<SelectListItem>)ViewBag.DocTypes, new { @class = "col-md-10 col-sm-10 col-xs-10" })*@
+                    @Html.DropDownList("ddlNewDocTypeId", (List<SelectListItem>)TempData["DocTypes"], htmlAttributes: new { @class = "col-md-10 col-sm-10 col-xs-10" })
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-5 col-xs-5">
+                <div class="form-group form-group-sm">
+                    <label for="txtDocDate" class="col-md-10 col-sm-10 col-xs-10">Doc Date</label>
+                    <input type="date" class="col-md-10 col-sm-7 col-xs-10" id="txtDocDate" />
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-5 col-sm-7 col-xs-7">
+                <div class="form-group form-group-sm">
+                    <label for="txtDocDescription" class="col-md-10 col-sm-10 col-xs-10">Doc Description</label>
+                    <input type="text" class="col-md-10 col-sm-10 col-xs-10" id="txtDocDescription" name="txtDocDescription" style="max-width:100% " />
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-3 col-sm-7 col-xs-7">
+                <div class="form-group form-group-sm">
+                    <label for="txtDocFilePath" class="col-md-12 col-sm-10">Enter Bridge PDF/Doc File</label>
+                    <input type="file" class="col-md-12 col-sm-10" id="txtDocFilePath" accept=".doc, .docx, .pdf, .xls, .xlsx, .dwg, .dws" />
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                <div class="form-group form-group-sm">
+                    <button type="button" id="btnAddBridgeDoc" class="btn btn-primary"><span class="glyphicon glyphicon-save"></span> Save</button>
+                    <div id="uploadprogress" align="center" style="display: none">
+                        <img src="~/images/ajax-loader-small.gif" /> Uploading...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 
-        <dt>
-            @Html.DisplayNameFor(model => model.DocDate)
-        </dt>
+@*<div id="status"></div>*@
 
-        <dd>
-            @Html.DisplayFor(model => model.DocDate)
-        </dd>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var emptyRow = "<td class='Id'>" +
+            "<input type='hidden' id='Id'> <!-- Unique Identity (key) -->" +
+            "</td>" +
+            "<td class='DocTypeId'>" +
+            "<span>&nbsp;</span>" +
+            "<select class='form-control FoundationTypeId' id='ddlDocTypeId' name='ddlDocTypeId' style='display: none'>" +
+            "<option selected='selected' value='1'>History</option>" +
+            "<option value='2'>Bearing Capacity</option>" +
+            "</select>" +
+            "</td>" +
+            "<td class='DocDate'>" +
+            "<span>&nbsp;</span>" +
+            "</td>" +
+            "<td class='DocDescription'>" +
+            "<span>&nbsp;</span>" +
+            "<input type='text' style='display:none'>" +
+            "</td>" +
+            "<td class='DocFilePath'>" +
+            "<span>&nbsp;</span>" +
+            "<input type='file' accept='.doc, .docx, .pdf, .xls, .xlsx' style='display:none'>" +
+            "</td>" +
+            "<td class='DocPreview'>" +
+            "<span><a class='glyphicon glyphicon-book' style='display:none' data-toggle='tooltip' title='Preview'></a></span>" +
+            "</td>" +
+            "<td>" +
+            "<a class='Edit glyphicon glyphicon-edit' href='javascript:;' style='display:none' data-toggle='tooltip' title='Edit'></a>" +
+            "<a class='Update glyphicon glyphicon-ok' href='javascript:;' style='display:none' data-toggle='tooltip' title='Update'></a>" +
+            "<a class='Confirm glyphicon glyphicon-ok' href='javascript:;' style='display:none' data-toggle='tooltip' title='Confirm'></a>" +
+            "</td>" +
+            "<td>" +
+            "<a class='Cancel glyphicon glyphicon-remove' href='javascript:;' style='display:none' data-toggle='tooltip' title='Cancel'></a>" +
+            "<a class='Delete glyphicon glyphicon-trash' href='javascript:;' style='display:none' data-toggle='tooltip' title='Delete'></a>" +
+            "</td>";
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
+        addEmptyRow();
 
-        <dd>
-            @Html.DisplayFor(model => model.Description)
-        </dd>
+        function addEmptyRow() {
+            if ($("#tblBridgeDoc tr").length == 1) {
+                $("#tblBridgeDoc").append("<tr>" + emptyRow + "</tr>");
+            }
+        }
+        var today = new Date().toJSON().slice(0, 10);
+        $('#txtDocDate').val(today);
 
-        <dt>
-            @Html.DisplayNameFor(model => model.DocPath)
-        </dt>
+        //Add event handler
+        $("#btnAddBridgeDoc").on("click", function () {
+            // Checking whether FormData is available in browser
+            if (window.FormData != undefined) {
+                var BridgeId = '@TempData["BridgeId"]';
+                var DocTypeId = $("#ddlNewDocTypeId option:selected");
+                var DocDate = $("#txtDocDate");
+                var DocDescription = $("#txtDocDescription");
+                var DocFilePath = $("#txtDocFilePath");
+                var docFileName = DocFilePath.val().replace(/^.*[\\\/]/, '');
+                var fullDocPath = '@TempData["DocPath"]' + docFileName;
 
-        <dd>
-            @Html.DisplayFor(model => model.DocPath)
-        </dd>
+                var fileUpload = $("#txtDocFilePath").get(0);
+                var files = fileUpload.files;
+                var formData = new FormData();
+                formData.append(files[0].name, files[0]);
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Bridge.BridgeName)
-        </dt>
+                // Add bridge document data as keys to FormData object
+                formData.append('BridgeId', BridgeId);
+                formData.append('DocDate', DocDate.val());
+                formData.append('Description', DocDescription.val());
+                formData.append('DocTypeId', DocTypeId.val());
+                formData.append('DocFilePath', fullDocPath);
+                //alert(formData);
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("BridgeDocInsert", "BridgeInventory")',
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    dataType: 'json',
+                    data: formData,
+                    beforeSend: function () { $('#uploadprogress').show(); },
+                    complete: function () { $('#uploadprogress').hide(); },
+                    success: function (data) {
+                        //alert("first success");
+                        $.ajax({
+                            type: 'GET',
+                            url: '@Url.Action("GetLastBridgeDoc", "BridgeInventory")',
+                            data: { bridgeid: BridgeId },
+                            datatype: 'json',
+                            success: function (data) {
+                                //alert("Second success");
+                                var row = $("#tblBridgeDoc tr:last-child");
+                                if ($("#tblBridgeDoc tr:last-child span").eq(0).html() != "&nbsp;") {
+                                    row = row.clone();
+                                }
+                                var Id = data.Id;
+                                //alert(row);
+                                //Bind Id
+                                row.find('input[type=hidden]').val(Id);
 
-        <dd>
-            @Html.DisplayFor(model => model.Bridge.BridgeName)
-        </dd>
+                                //Bind all rows
+                                $(".DocTypeId", row).find("span").html(DocTypeId.text());
 
-    </dl>
-</div>
+                                $(".DocDate", row).find("span").html(DocDate.val());
+                                $(".DocDate", row).find("input").val(DocDate.val());
+
+                                $(".Description", row).find("span").html(DocDescription.val());
+                                $(".Description", row).find("input").val(DocDescription.val());
+
+                                $(".DocFilePath", row).find("span").html(fullDocPath);
+
+                                var preview = "<a href='" + fullDocPath + "' target='_blank' class='glyphicon glyphicon-book' data-toggle='tooltip' title='Preview'></a>";
+                                $(".DocPreview", row).find("span").html(preview);
+                                
+                                row.find(".Edit").show();
+                                row.find(".Delete").show();
+                                //alert(row);
+
+                                $("#tblBridgeDoc > tbody").append(row);
+
+                                DocTypeId.val(1);
+                                var today = new Date().toJSON().slice(0, 10);
+                                DocDate.val(today);
+                                DocDescription.val("");
+                                DocFilePath.val("");
+                            },
+                            error: function (xhr) {
+                                //$('#status').text(xhr.status);
+                                //alert("Second error: " + xhr.status);
+                            }
+                        });
+                    },
+                    error: function (xhr) {
+                        //alert(xhr.status);
+                    }
+                });
+            }
+        });
+
+        //Edit event handler.
+        $("body").on("click", "#tblBridgeDoc .Edit", function () {
+            var row = $(this).closest("tr");
+            $("td", row).each(function () {
+                if ($(this).find("input").length > 0) {
+                    $(this).find("input").show();
+                    $(this).find("span").hide();
+                }
+            });
+            row.find("#spnDocType").hide();
+            row.find("#ddlDocTypeId").show();
+            row.find(".Update").show();
+            row.find(".Cancel").show();
+            row.find(".Delete").hide();
+            $(this).hide();
+        });
+
+        //Update event handler.
+        $("body").on("click", "#tblBridgeDoc .Update", function () {
+            var row = $(this).closest("tr");
+            $("td", row).each(function () {
+                if ($(this).find("input").length > 0) {
+                    var span = $(this).find("span");
+                    var input = $(this).find("input");
+                    //span.html(input.val());
+                    span.show();
+                    input.hide();
+                }
+            });
+            row.find("#spnDocType").html(row.find("#ddlDocTypeId option:selected").text());
+            row.find("#spnDocType").show();
+            row.find("#ddlDocTypeId").hide();
+            row.find(".Edit").show();
+            row.find(".Delete").show();
+            row.find(".Cancel").hide();
+            $(this).hide();
+
+            var DocTypeId = row.find("#ddlDocTypeId");
+            var DocDescription = row.find(".DocDescription").find("input");
+            var DocFilePath = row.find(".DocFilePath").find("input").val();
+
+            // If user didn't choose another file to be uploaded, keep the existing one
+            var formData = new FormData();
+            if (DocFilePath == "") {
+                fullDocPath = row.find(".DocFilePath").find("span").html();
+            }
+            else {
+                var docFileName = DocFilePath.replace(/^.*[\\\/]/, '');
+                var fullDocPath = '@TempData["DocPath"]' + docFileName;
+                
+                var fileUpload = row.find(".DocFilePath").find("input").get(0);
+                var files = fileUpload.files;
+                
+                formData.append(files[0].name, files[0]);
+            }
+            // Add bridge doc data as keys to FormData object
+            formData.append('BridgeId', '@TempData["BridgeId"]');
+            formData.append('Id', row.find('input[type=hidden]').val());
+            formData.append('DocTypeId', DocTypeId.val());
+            formData.append('Description', DocDescription.val());
+            formData.append('DocFilePath', fullDocPath);
+            
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("BridgeDocUpdate", "Bridgeinventory")',
+                cache: false,
+                contentType: false,
+                processData: false,
+                dataType: 'json',
+                data: formData,
+                beforeSend: function () { $('#uploadprogress').show(); },
+                complete: function () { $('#uploadprogress').hide(); },
+                success: function (data) {
+                    //alet("Sucess");
+                },
+                error: function (xhr) {
+                    //$('#status').text(xhr.status);
+                }
+            });
+
+            var preview = "<a href='" + fullDocPath + "' target='_blank' class='glyphicon glyphicon-book' data-toggle='tooltip' title='Preview'></a>";
+            $(".DocPreview", row).find("span").html(preview);
+
+            $(".DocDescription", row).find("span").html(DocDescription.val());
+            $(".DocDescription", row).find("input").val(DocDescription.val());
+            
+            $(".DocFilePath", row).find("span").html(fullDocPath);
+            
+        });
+
+        //Cancel event handler.
+        $("body").on("click", "#tblBridgeDoc .Cancel", function () {
+            var row = $(this).closest("tr");
+            $("td", row).each(function () {
+                if ($(this).find("input").length > 0) {
+                    var span = $(this).find("span");
+                    var input = $(this).find("input");
+                    //input.val(span.html());
+                    span.show();
+                    input.hide();
+                }
+            });
+            row.find("#spnDocType").show();
+            row.find("#ddlDocTypeId").hide();
+            row.find(".Edit").show();
+            row.find(".Delete").show();
+            row.find(".Update").hide();
+            row.find(".Confirm").hide();
+            $(this).hide();
+        });
+
+        //Delete event handler.
+        $("body").on("click", "#tblBridgeDoc .Delete", function () {
+            var row = $(this).closest("tr");
+            row.find(".Edit").hide();
+            row.find(".Confirm").show();
+            row.find(".Cancel").show();
+            row.find(".Delete").hide();
+            $(this).hide();
+        });
+
+        //Confirm event handler.
+        $("body").on("click", "#tblBridgeDoc .Confirm", function () {
+            var row = $(this).closest("tr");
+            var id = row.find('input[type=hidden]').val();
+            //alert(id);
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("BridgeDocDelete", "Bridgeinventory")',
+                data: '{id: "' + id + '"}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (response) {
+                    if ($("#tblBridgeDoc tr").length > 2) {
+                        row.remove();
+
+                    } else {
+                        row.find(".Edit").hide();
+                        row.find(".Delete").hide();
+                        row.find(".Confirm").hide();
+                        row.find(".Cancel").hide();
+                        row.find("span").html('&nbsp;');
+                    }
+                },
+                error: function (xhr) {
+                    //$('#status').text(xhr.status);
+                }
+            });
+        });
+    });
+</script>

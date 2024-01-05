@@ -1,14 +1,52 @@
 ﻿@{
     ViewBag.Title = "About";
+    ViewBag.LeftMenuSelection = "about";
 }
 <h2>@ViewBag.Message</h2>
 
 <div class="row">
-    <div class="col-xs-6 col-md-2"><img src="~/images/era_logo.png" alt="ERA LOGO" width="125" height="125"></div>
-    <div class="col-xs-6 col-md-10">
+    <div class="col-md-2 col-xs-4"><img src="~/images/era_logo.png" alt="ERA LOGO" width="125" height="125"></div>
+    <div class="col-md-10 col-xs-8">
         <br />
-        <p>Ethiopian Roads Authority - Bridge and Culvert Management System</p>
-        <p>Version: <span style="font-style: italic">6.0.0 (Prototype)</span></p>
-        <p>&copy; 2005-@DateTime.Now.Year ERA. All rights reserved.
+        <b>Ethiopian Roads Administration - Bridge Management System</b>
+        <p>Version: <span style="font-style: italic">8.0.0</span></p>
+        <dl>
+            <dt>
+                Girma Worku, Senior Bridge Engineer
+            </dt>
+            <dd>
+                - Concept Writer
+            </dd>
+            <dd>
+                - Program Designer
+            </dd>
+
+            <dt>
+                Yared Shewangizaw, Senior Programmer
+            </dt>
+            <dd>
+                - Desktop Application Design and Development
+            </dd>
+            <dd>
+                - Windows Application and Miscrosoft Access Database Design and Development
+            </dd>
+
+            <dt>
+                Wondwossen Philemon, Software Engineer
+            </dt>
+            <dd>
+                - Web Application Design and Development
+            </dd>
+            <dd>
+                - Android App Design and Development
+            </dd>
+            <dd>
+                - SQL Server Database Design and Development
+            </dd>
+        </dl>
+        <br />
+        <p>
+            &copy; 2005-@DateTime.Now.Year Ethiopian Raods Authority.<br />
+            All rights reserved.
     </div>
 </div>

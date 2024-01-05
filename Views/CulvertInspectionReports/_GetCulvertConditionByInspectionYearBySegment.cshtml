@@ -1,0 +1,117 @@
+﻿@model IEnumerable<ERA_BMS.ViewModels.CulvertDamageInspectionViewModel>
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title panel-info">Culvert Service Condition for Inspection Year <b>@ViewBag.InspectionYear</b> (@ViewBag.YearRange[0] - @ViewBag.YearRange[1]) | District: <b>@ViewBag.DistrictName</b> | Section: <b>@ViewBag.SectionName</b> | Road Segment: <b>@ViewBag.SegmentName</b>)</h3>
+    </div>
+
+    <div class="panel-body">
+        <br />
+        <br />
+        <table class="table table-striped table-condensed table-responsive table-bordered display compact hover" id="tblculvertdamgecondition">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.culverts.CulvertNo)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.culverts.CulvertStructure.CulvertType.CulvertTypeName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.damageInspCulvert.InspectionDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.culverts.CulvertStructure.LengthTotal)
+                    </th>
+                    <th>
+                        @*@Html.DisplayNameFor(model => model.recommendation.MaintenanceUrgency.UrgencyName)*@
+                        Inspector's Recommendation
+                    </th>
+                    <th>
+                        @*@Html.DisplayNameFor(model => model.condition.DamageConditionName)*@
+                        Service Condition
+                    </th>
+                    <th>
+                        @*@Html.DisplayNameFor(model => model.resultInspCulvert.RepairCost)*@
+                        Repair Cost
+                    </th>
+                    <th></th><th></th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.culverts.CulvertNo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.culverts.CulvertStructure.CulvertType.CulvertTypeName)
+                        </td>
+                        <td>
+                            @item.resultInspCulvert.InspectionDate.Value.ToString("dd-MM-yyyy")
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.culverts.CulvertStructure.LengthTotal)
+                        </td>
+                        @{
+                            string bg = "";
+                            string fore = "";
+                            if (item.recommendation.MaintenanceUrgency.UrgencyId == 2)
+                            {
+                                bg = "red";
+                                fore = "white";
+                            }
+                        }
+                        <td style="background-color: @bg; color: @fore">
+                            @Html.DisplayFor(modelItem => item.recommendation.MaintenanceUrgency.UrgencyName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.condition)
+                        </td>
+                        <td>
+                            @*@Html.DisplayFor(modelItem => item.resultInspCulvert.RepairCost)*@
+                            @item.resultInspCulvert.RepairCost.Value.ToString("#,0.00") <br />
+                        </td>
+                        <td>
+                            <a href="@Url.Action("Index", "DamageInspCulvert", new { id = item.culverts.CulvertId })" target="_blank" class="glyphicon glyphicon-new-window" data-toggle = "tooltip" title = "Go to Inspection" style="font-size: 14px"></a>
+                        </td>
+                        <td>
+                            <a href="@Url.Action("BillOfQuantity", "CulvertInspectionReports", new { id = item.culverts.CulvertId })" target="_blank" class="glyphicon glyphicon-new-window" data-toggle="tooltip" title="Go to BOQ" style="font-size: 14px"></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="panel-footer">
+        <h3 class="panel-title">Total No. of Culverts: <b>@Model.Count()</b></h3>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        
+
+        $('#tblculvertdamgecondition').dataTable({
+            paging: true,
+            pageLength: 15,
+            bLengthChange: true,
+            scrollY: 400,
+            
+            searching: true,
+            select: true,
+            dom: 'lBfrtip',
+            //buttons: ['copy', 'excel', 'pdf', 'print']
+            buttons: [
+                { extend: 'copy', className: 'btn btn-sm btn-primary' },
+                { extend: 'excel', className: 'btn btn-sm btn-primary', text: 'Export Excel' },
+                { extend: 'pdf', className: 'btn btn-sm btn-primary', text: 'Export PDF' },
+                { extend: 'print', className: 'btn btn-sm btn-primary' }
+            ]
+        });
+    });
+</script>
+
+

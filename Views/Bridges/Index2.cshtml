@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ERA_BCMS.Models.Bridge>
+﻿@model IEnumerable<ERA_BMS.Models.Bridge>
 
 @{
     ViewBag.Title = "Bridges";
@@ -124,7 +124,7 @@
             else {
                 $('#distrIdDIV').text("District Id = " + selDistrictId );
                 $.ajax({
-                    url: '@Url.Action("_GetSections", "Bridges")',
+                    url: '@Url.Action("_GetSections", "LocationsDDL")',
                     data: { districtid: selDistrictId },
                     type: 'GET',
                     dataType: 'json',
@@ -153,7 +153,7 @@
                 $('#secIdDIV').text("Section Id = " + selSectionId);
 
                 $.ajax({
-                    url: '@Url.Action("_GetSegments", "Bridges")',
+                    url: '@Url.Action("_GetSegments", "LocationsDDL")',
                     data: { sectionid: selSectionId },
                     type: 'GET',
                     dataType: 'json',
@@ -178,7 +178,7 @@
             else {
                 $('#segIdDIV').text("Segment Id = " + selSegmentId);
                 $.ajax({
-                    url: '@Url.Action("_GetBridges", "Bridges")',
+                    url: '@Url.Action("_GetBridgesList", "Bridges")',
                     data: { segmentid: selSegmentId },
                     type: 'GET',
                     dataType: 'html',

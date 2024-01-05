@@ -1,0 +1,103 @@
+﻿
+@{
+    ViewBag.Title = "Roads Map";
+}
+
+<style>
+    .floating-panel {
+        position: relative;
+        z-index: 5;
+        padding: 5px;
+        text-align: center;
+        line-height: 30px;
+        padding-left: 10px;
+    }
+</style>
+
+<h2>Roads Map</h2>
+
+<div class="panel panel-primary title">
+    <div class="panel-heading">
+        <h3 class="panel-title panel-info" id="title">Road Segment: <b>@ViewBag.SegmentName</b></h3>
+    </div>
+    <div class="panel-body">
+        <div id="Map" style="height: 600px; border: 1px solid #999;">
+            <!-- Map displays here -->
+        </div>
+    </div>
+</div>
+
+<script>
+    // Get all points
+    var roadPointList = @(Html.Raw(new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(ViewBag.RoadPointList)));
+    var segmentNo = @(Html.Raw(new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(ViewBag.SegmentNo)));
+    var segmentName = @(Html.Raw(new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(ViewBag.SegmentName)));
+    var segmentLength = @(Html.Raw(new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(ViewBag.SegmentLength)));
+    var sectionName = @(Html.Raw(new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(ViewBag.SectionName)));
+    var districtName = @(Html.Raw(new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(ViewBag.DistrictName)));
+    var map;
+
+    //alert(roadPointList[0].lat + ", " + roadPointList[0].lng);
+
+    $(document).ready(function () {
+        var j, centerPoint = roadPointList[0];
+
+        // Center the map to the first bridge which has complete coordinate info
+        map = new google.maps.Map(document.getElementById('Map'), {
+            zoom: 12,
+            center: {
+                lat: centerPoint.lat,
+                lng: centerPoint.lng
+            },
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            draggableCursor: 'crosshair'
+        });
+
+        var marker, i, roadPath;
+
+        //// Loop through all bridges in the list and place markers
+        //for (i = 0; i < roadPointList.length; i++) {
+        //    marker = new google.maps.Marker({
+        //        position: new google.maps.LatLng(roadPointList[i].lat, roadPointList[i].lng),
+        //        map: map,
+        //        icon: { url: '/images/bridge_map_marker_orange.png', scaledSize: new google.maps.Size(14, 16) },
+        //    });
+        //}
+
+        roadPath = new google.maps.Polyline({
+            path: roadPointList,
+            geodesic: true,
+            strokeColor: "#FF0000",
+            strokeOpacity: 1.0,
+            strokeWeight: 2,
+            map: map,
+        });
+
+        //roadPath.setMap(map);
+        var length = segmentLength != null ? segmentLength : "";
+        var contentString = "<h4 style='font-size: 20px'>Road Information</h4>" +
+            "<div>Road Id: <b>" + segmentNo + "</b></div>" +
+            "<div>Road Segment Name: <b>" + segmentName + "</b></div>" +
+            "<div>Section: <b>" + sectionName + "</b></div>" +
+            "<div>District: <b>" + districtName + "</b></div>" +
+            "<div>Length (km): <b>" + length + "</b></div>" +
+            "<div>Start: <b>[" + roadPointList[0].lat + ", " + roadPointList[0].lng + "]</b></div>" +
+            "<div>End: <b>[" + roadPointList[roadPointList.length - 1].lat + ", " + roadPointList[roadPointList.length - 1].lng + "]</b></div>" +
+            "</div>";
+
+        infowindow = new google.maps.InfoWindow();
+
+        google.maps.event.addListener(roadPath, 'click', function (event) {
+            // infowindow.content = content;
+            infowindow.setContent(contentString);
+
+            // infowindow.position = event.latLng;
+            infowindow.setPosition(event.latLng);
+            infowindow.open(map);
+        });
+
+    });
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAE0qRfcQ0xxZq5mWSMOtxT3G_cWkHpBAA&callback=InitializeMap" async defer></script>
+@*<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDIfcdDWC9egWYIRM6FPBCbIC8AqMkzAkw&callback=InitializeMap" async defer></script>*@

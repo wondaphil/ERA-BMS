@@ -1,14 +1,13 @@
-﻿@model ERA_BCMS.Models.RegisterViewModel
+﻿@model ERA_BMS.Models.RegisterViewModel
 @{
-    ViewBag.Title = "Register";
+    ViewBag.Title = "Create New User";
 }
 
-<h2>@ViewBag.Title.</h2>
+<h2>Create New User</h2>
 
 @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
     @Html.AntiForgeryToken()
-    <h4>Create a new account.</h4>
     <hr />
     @Html.ValidationSummary("", new { @class = "text-danger" })
     <div class="form-group">
@@ -43,7 +42,10 @@
         @Html.Label("User Role", new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
             @*@Html.DropDownList("Name")*@
-            @Html.DropDownList("UserRoles", (SelectList)ViewBag.Name, "--Select User Role--", new { @class = "form-control" })
+            @Html.DropDownList("UserRoles", (SelectList)ViewBag.Roles, "--Select User Role--", new { @class = "form-control" })
+            @*<select >
+                <option 
+            </select>*@
         </div>
     </div>
 

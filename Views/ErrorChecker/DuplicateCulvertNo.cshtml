@@ -1,0 +1,78 @@
+﻿
+<br />
+<br />
+<table class="table table-striped table-condensed table-responsive table-bordered display compact hover" id="tblDuplicateCulvertNo">
+    <tr>
+        <th>
+            Culvert Id
+        </th>
+        <th>
+            Culvert No
+        </th>
+        <th>
+            District
+        </th>
+        <th>
+            Section`
+        </th>
+        <th>
+            Segment
+        </th>
+        <th>
+            Main Route
+        </th>
+        <th>
+            Sub Route
+        </th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+    </tr>
+
+    @foreach (var duplcateCulvert in ViewBag.DuplicatesList)
+    {
+
+        foreach (var culvert in duplcateCulvert)
+        {
+            <tr>
+                <td>
+                    @culvert.CulvertId
+                </td>
+                <td>
+                    @culvert.CulvertNo
+                </td>
+                <td>
+                    @culvert.Segment.Section.District.DistrictName
+                </td>
+                <td>
+                    @culvert.Segment.Section.SectionName
+                </td>
+                <td>
+                    @culvert.Segment.SegmentName
+                </td>
+                <td>
+                    @culvert.SubRoute.MainRoute.MainRouteNo - @culvert.SubRoute.MainRoute.MainRouteName
+                </td>
+                <td>
+                    @culvert.SubRoute.SubRouteNo - @culvert.SubRoute.SubRouteName
+                </td>
+                <td align="center">
+                    <a href="@Url.Action("Edit", "Culverts", new { id = culvert.CulvertId })" target="_blank" class="glyphicon glyphicon-new-window" data-toggle="tooltip" title="Go to Edit" style="font-size: 14px"></a>
+                </td>
+                <td align="center">
+                    <a href="@Url.Action("Index", "CulvertInventory", new { id = culvert.CulvertId })" target="_blank" class="glyphicon glyphicon-new-window" data-toggle="tooltip" title="Go to Inventory" style="font-size: 14px"></a>
+                </td>
+                <td align="center">
+                    <a href="@Url.Action("Index", "CulvertProfile", new { id = culvert.CulvertId })" target="_blank" class="glyphicon glyphicon-new-window" data-toggle="tooltip" title="Go to Profile" style="font-size: 14px"></a>
+                </td>
+                <td align="center">
+                    <a href="@Url.Action("Index", "DamageInspMajor", new { id = culvert.CulvertId })" target="_blank" class="glyphicon glyphicon-new-window" data-toggle="tooltip" title="Go to Inspection" style="font-size: 14px"></a>
+                </td>
+            </tr>
+        }
+        <tr style="background-color: lightgray">
+            <td colspan="11"></td>
+        </tr>
+    }
+</table>

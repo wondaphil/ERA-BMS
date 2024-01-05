@@ -1,0 +1,77 @@
+﻿
+@{
+    ViewBag.Title = "Sub Routes";
+}
+
+<br />
+@using (Html.BeginForm())
+{
+    <div class="panel panel-default">
+        <div class="panel-body">
+
+            @Html.AntiForgeryToken()
+
+            <div class="form-horizontal">
+                <div class="col-xs-12">
+                    <div class="form-group form-group">
+                        <label class="control-label col-sm-4 col-xs-3">Main Route</label>
+                        <div class="col-sm-6 col-xs-7">
+                            @*@Html.DropDownList("ddlMainRoute", (List<SelectListItem>)ViewBag.MainRoutes, new { @class = "form-control" })*@
+                            @Html.DropDownList("ddlMainRoute", new SelectList(ViewBag.MainRoutes, "Value", "Text", ViewBag.MainRouteId), htmlAttributes: new { @class = "form-control" })
+                            <!--<label class="control-label" id="mainRouteIdDIV">--> <!-- Main Route id appears here --> <!--</label>-->
+                        </div>
+                        <div class="col-sm-2 col-xs-2" align="right">
+                            <a class="btn btn-primary" data-toggle="tooltip" title="Refresh" id="refresh"> <span class="glyphicon glyphicon-refresh"></span> </a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="subroutesPartial">
+        <!-- Sub routes list displays here -->
+    </div>
+}
+
+<div id="wait" align="center" style="display: none">
+    <img src="~/images/ajax-loader-big.gif" />
+</div>
+
+<p>
+    <a href="@Url.Action("NewSubRoute", new {area = "Admin"})" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> Register New Sub Route</a>
+</p>
+
+<script>
+    $(document).ready(function () {
+        $('#ddlMainRoute').change(function () {
+            var selMainRouteId = "";
+            $('#subroutesPartial').empty(); //clear the subroutes place holder
+            $('#mainRouteIdDIV').text(""); //clear main route id indicator
+
+            if (selMainRouteId != "0") // some main route is selected
+            {
+                selMainRouteId = $('#ddlMainRoute option:selected').val();
+                $('#mainRouteIdDIV').text("Main Route Id = " + selMainRouteId);
+                //alert(selMainRouteId);
+
+                $.ajax({
+                    url: '@Url.Action("_GetSubRouteList", "Routes", new { area = "Admin" })', 
+                    data: { mainrouteid: selMainRouteId },
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () { $('#wait').show(); },
+                    complete: function () { $('#wait').hide(); },
+                    success: function (data) {
+                        $('#subroutesPartial').html(data);
+                    }
+                });
+            }
+        });
+
+        $('#refresh').click(function () {
+            $('#ddlMainRoute').trigger('change');
+        });
+    });
+</script>
+

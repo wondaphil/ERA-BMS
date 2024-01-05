@@ -1,76 +1,81 @@
-﻿@model IEnumerable<ERA_BCMS.Models.Section>
+﻿@model IEnumerable<ERA_BMS.Models.Section>
 
 @{
     ViewBag.Title = "Sections";
 }
 
-<h2>Index</h2>
-
-<p>
-    @Html.ActionLink("New Section", "New", null, new { @class = "btn btn-primary" })
-</p>
+<h2>Sections</h2>
 
 @using (Html.BeginForm())
 {
     <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title panel-info">Please select district from the dropdown list</h3>
-        </div>
+        @*<div class="panel-heading">
+                <h3 class="panel-title panel-info">Please select <b>District</b> from the dropdown list</h3>
+            </div>*@
         <div class="panel-body">
-        
+
             @Html.AntiForgeryToken()
 
             <div class="form-horizontal">
-                <div class="col-sm-12">
-                    <div class="form-group form-group-sm">
-                        <label class="control-label col-md-2">District</label>
-                        <div class="col-md-5">
-                            @Html.DropDownList("ddlDistrict", (List<SelectListItem>)ViewBag.Districts, new { @class = "form-control" })
-                            <label class="control-label" id="distrIdDIV"> <!-- District id appears here --> </label>
+                <div class="col-sm-12 col-xs-10">
+                    <div class="form-group form-group">
+                        <label class="control-label col-ss-4 col-xs-3">District</label>
+                        <div class="col-sm-8 col-xs-6">
+                            @*@Html.DropDownList("ddlDistrict", (List<SelectListItem>)ViewBag.Districts, new { @class = "form-control" })*@
+                            @Html.DropDownList("ddlDistrict", new SelectList(ViewBag.Districts, "Value", "Text", ViewBag.DistrictId), htmlAttributes: new { @class = "form-control" })
+                            <!--<label class="control-label" id="distrIdDIV">--> <!-- District id appears here --> <!--</label>-->
                         </div>
-                        
+
                     </div>
                 </div>
             </div>
-            
-        </div>
-        <div id="sectionsPartial">
-            <!-- Sections list displays here -->
+
         </div>
     </div>
+    <div id="sectionsPartial">
+        <!-- Sections list displays here -->
+        @if (Model.Count() > 0)
+        {
+            @Html.Partial("_GetSectionsList", Model);
+        }
+    </div>
+}
 
- }
-
-<div id="temp">
-
+<div id="wait" align="center" style="display: none">
+    <img src="~/images/ajax-loader-big.gif" />
 </div>
-<div id="status">
 
-</div>
+<p>
+    <a href="@Url.Action("New", new {area = "Admin", id = (ViewContext.RouteData.Values["id"]) })" class="btn btn-primary" id="new"><span class="glyphicon glyphicon-plus" id="new"></span> Register New Section</a>
+</p>
 
 <script>
     $(document).ready(function () {
         $('#ddlDistrict').change(function () {
             var selDistrictId = $('#ddlDistrict option:selected').val();
-            
-            if (selDistrictId == "0") //if no district is selected
-            {
-                $('#sectionsPartial').empty(); //clear the sections place holder
-                selDistrictId = "";
-                $('#distrIdDIV').text(selDistrictId); //clear district no. indicator
-            }
-            else {
-                $('#distrIdDIV').text("District Id = " + selDistrictId);
 
+            if (selDistrictId != "0") //if some district is selected
+            {
                 $.ajax({
-                    url: '@Url.Action("_GetSections", "Sections")', //url: 'Sections/_GetSections',
+                    url: '@Url.Action("_GetSectionsList", "Sections")', //url: 'Sections/_GetSections',
                     data: { districtid: selDistrictId },
                     type: 'GET',
                     dataType: 'html',
+                    beforeSend: function () { $('#wait').show(); },
+                    complete: function () { $('#wait').hide(); },
                     success: function (data) {
                         $('#sectionsPartial').html(data);
                     }
                 });
+
+                // append id of the current district to the 'Register New Section' link
+                var updatedLink = "@Url.Action("New", new { area = "Admin" })" + "/" + selDistrictId;
+                $('#new').attr("href", updatedLink);
+            }
+            else {
+                $('#sectionsPartial').empty(); //clear the sections place holder
+                $('#new').attr("href", "@Url.Action("New", new { area = "Admin" })");
+                selDistrictId = "";
             }
         });
     });

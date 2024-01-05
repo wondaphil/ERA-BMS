@@ -1,0 +1,41 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+    ViewBag.LeftMenuSelection = "index";
+}
+
+<div class="jumbotron">
+    @*<img src="~/images/background.jpg" style="width: 150px; position: relative; display: block;">*@
+    <table class="homebackground">
+        <tr align="center">
+            <td style="padding:10px"><img src="~/images/home_01.jpg" class="homeimage"></td>
+            <td style="padding:10px"><img src="~/images/home_02.jpg" class="homeimage"></td>
+            <td style="padding:10px"><img src="~/images/home_03.jpg" class="homeimage"></td>
+            <td style="padding:10px"><img src="~/images/home_04.jpg" class="homeimage"></td>
+        </tr>
+        <tr align="center" style="background-color: whitesmoke; border:double; border-radius:150px 500px">
+            <td align="right">
+                <img src="~/images/era_logo.png" alt="ERA LOGO" style="width: 150px">
+            </td>
+            <td colspan="3">
+                <h1 style="font-family: 'Power Geez Unicode3'; font-size:50px; color: black">የኢትዮጵያ መንገዶች አስተዳደር</h1>
+                <h2 style="color: black">Ethiopian Roads Administration</h2>
+                <h1 style="font-size:45px; color: #ef5821">Bridge Management System</h1> 
+                <h1 style="font-size:45px; color: #ef5821">ERA-BMS</h1>
+            </td>
+        </tr>
+
+        <tr align="center">
+            <td style="padding:10px"><img src="~/images/home_05.jpg" class="homeimage"></td>
+            <td style="padding:10px"><img src="~/images/home_06.jpg" class="homeimage"></td>
+            <td style="padding:10px"><img src="~/images/home_09.jpg" class="homeimage"></td>
+            <td style="padding:10px"><img src="~/images/home_08.jpg" class="homeimage"></td>
+        </tr>
+    </table>
+
+    @*@if (!Request.IsAuthenticated) //If user has not logged in
+        {
+            <div style="text-align: center;">
+                @Html.Partial("_LoginRegisterPartial")
+            </div>
+        }*@
+</div>

@@ -1,171 +1,124 @@
-﻿@model ERA_BCMS.Models.Bridge
-
+﻿@model ERA_BMS.Models.Bridge
+@using ERA_BMS.ViewModels
 @{
     ViewBag.Title = "Edit Bridge";
 }
 
-<h2>Edit</h2>
+<h2>Edit Bridge</h2>
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
-        <h4>Bridge</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.BridgeId)
-
+        
         <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    @Html.LabelFor(model => model.BridgeId, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.BridgeId, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-8">
                         @Html.EditorFor(model => model.BridgeId, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
-                        @Html.ValidationMessageFor(model => model.BridgeId, "You cannot modify this value", new { @class = "text-danger" })
+                        @Html.ValidationMessageFor(model => model.BridgeId, "You cannot modify this value", new { style = "color: red" })
                     </div>
                 </div>
 
-                <div class="form-group">
-                    @Html.LabelFor(model => model.BridgeName, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
+                <div class="form-group form-group-sm required">
+                    @Html.LabelFor(model => model.BridgeNo, htmlAttributes: new { @class = "control-label col-md-3", @style = "color: red; " })
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.BridgeNo, new { htmlAttributes = new { @class = "form-control", @style= "border: 2px solid red; " } })
+                        @Html.ValidationMessageFor(model => model.BridgeNo, "** Be careful when changing this value!", new { style = "color: red" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.RevisedBridgeNo, htmlAttributes: new { @class = "control-label col-md-3", @style = "color: red; " })
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.RevisedBridgeNo, new { htmlAttributes = new { @class = "form-control", @style= "border: 2px solid red; " } })
+                        @Html.ValidationMessageFor(model => model.RevisedBridgeNo, "** Be careful when changing this value!", new { style = "color: red" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm required">
+                    @Html.LabelFor(model => model.BridgeName, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-8">
                         @Html.EditorFor(model => model.BridgeName, new { htmlAttributes = new { @class = "form-control" } })
                         @Html.ValidationMessageFor(model => model.BridgeName, "", new { @class = "text-danger" })
                     </div>
                 </div>
+            </div>
 
-                <div class="form-group">
-                    @Html.LabelFor(model => model.BridgeSerNo, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        @Html.EditorFor(model => model.BridgeSerNo, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.BridgeSerNo, "", new { @class = "text-danger" })
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                <div class="form-group form-group-sm required">
+                    <label class="control-label col-md-3">District</label>
+                    <div class="col-md-8">
+                        @Html.DropDownList("DistrictId", new SelectList(ViewBag.Districts, "Value", "Text"), htmlAttributes: new { @class = "form-control" })
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label class="control-label col-md-2">District</label>
-                    <div class="col-md-10">
-                        @Html.DropDownList("DistrictId", new SelectList(ViewBag.Districts, "Value", "Text", ViewBag.DistrictId), htmlAttributes: new { @class = "form-control" })
-                        @*@Html.ValidationMessageFor("District", "", new { @class = "text-danger" })*@
-                        <div id="distrIdDIV" style="font-weight: bolder"> <!-- District Id --> </div>
-                    </div>
-                </div>
-
-                <div class="form-group required">
-                    <label class="control-label col-md-2">Section</label>
-                    <div class="col-md-10">
-                        @Html.DropDownList("SectionId", new SelectList(ViewBag.Sections, "Value", "Text", ViewBag.SectionId), htmlAttributes: new { @class = "form-control" })
+                <div class="form-group form-group-sm required">
+                    <label class="control-label col-md-3">Section</label>
+                    <div class="col-md-8">
+                        @*@Html.DropDownList("SectionId", new SelectList(ViewBag.Sections, "Value", "Text", ViewBag.SectionId), htmlAttributes: new { @class = "form-control" })*@
+                        @Html.DropDownList("SectionId", new SelectList(ViewBag.Sections, "Value", "Text"), htmlAttributes: new { @class = "form-control" })
                         @*@Html.DropDownList("SectionId", null, htmlAttributes: new { @class = "form-control" })*@
                         @*@Html.ValidationMessageFor("Section", "", new { @class = "text-danger" })*@
-                        <div id="secIdDIV" style="font-weight: bolder"> <!-- Section Id --> </div>
                     </div>
                 </div>
 
-                <div class="form-group">
-                    @Html.LabelFor(model => model.SegmentId, "SegmentId", htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        @Html.DropDownList("SegmentId", (IEnumerable<SelectListItem>)ViewBag.Segments, htmlAttributes: new { @class = "form-control" })
+                <div class="form-group form-group-sm required">
+                    @Html.LabelFor(model => model.SegmentId, null, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-8">
+                        @Html.DropDownList("SegmentId", new SelectList(ViewBag.Segments, "Value", "Text"), htmlAttributes: new { @class = "form-control" })
                         @Html.ValidationMessageFor(model => model.SegmentId, "", new { @class = "text-danger" })
-                        <div id="segIdDIV" style="font-weight: bolder"> <!-- Segment Id --> </div>
                     </div>
                 </div>
-             </div>
-
-             <div class="col-md-6">
-                <div class="form-group">
-                    @Html.LabelFor(model => model.RouteId, "RouteId", htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        @Html.DropDownList("RouteId", null, htmlAttributes: new { @class = "form-control" })
-                        @Html.ValidationMessageFor(model => model.RouteId, "", new { @class = "text-danger" })
+            
+                <div class="form-group form-group-sm required">
+                    <label class="control-label col-md-3">Main Route</label>
+                    <div class="col-md-8">
+                        @Html.DropDownList("MainRouteId", new SelectList(ViewBag.MainRoutes, "Value", "Text"), htmlAttributes: new { @class = "form-control" })
                     </div>
                 </div>
 
-                <div class="form-group">
-                    @Html.LabelFor(model => model.KMFromAddis, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        @Html.EditorFor(model => model.KMFromAddis, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.KMFromAddis, "", new { @class = "text-danger" })
+                <div class="form-group form-group-sm required">
+                    @Html.LabelFor(model => model.SubRouteId, null, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-8">
+                        @Html.DropDownList("SubRouteId", new SelectList(ViewBag.SubRoutes, "Value", "Text"), htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.SubRouteId, "", new { @class = "text-danger" })
                     </div>
                 </div>
-
-                <div class="form-group">
-                    @Html.LabelFor(model => model.XCoord, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        @Html.EditorFor(model => model.XCoord, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.XCoord, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    @Html.LabelFor(model => model.YCoord, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        @Html.EditorFor(model => model.YCoord, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.YCoord, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    @Html.LabelFor(model => model.GirderTypeId, "GirderTypeId", htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        @Html.DropDownList("GirderTypeId", null, htmlAttributes: new { @class = "form-control" })
-                        @Html.ValidationMessageFor(model => model.GirderTypeId, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-
-                @*<div class="form-group">
-                    @Html.LabelFor(model => model.BudgetYear, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        @Html.EditorFor(model => model.BudgetYear, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.BudgetYear, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    @Html.LabelFor(model => model.BudgetYearComment, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        @Html.EditorFor(model => model.BudgetYearComment, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.BudgetYearComment, "", new { @class = "text-danger" })
-                    </div>
-                </div>*@
             </div>
         </div>
-            
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-success" />
-                <input type="reset" value="Reset" class="btn btn-warning" />
+
+        <div class="form-group form-group-sm">
+            <div class="col-md-offset-2 col-md-8">
+                <button type="submit" class="btn btn-primary" id="save"><span class="glyphicon glyphicon-save"></span> Save</button>
+                <button type="reset" class="btn btn-primary"><span class="glyphicon glyphicon-refresh"></span> Reset</button>
+                <div id="status" class="text-danger">
+                    <!-- Save failure status text appears here-->
+                </div>
             </div>
         </div>
     </div>
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+    <a href="@Url.Action("Index", new { id = ViewBag.SegmentId })" class="btn btn-primary"><span class="glyphicon glyphicon-backward"></span> Go to Bridges</a>
+    <a href="@Url.Action("Index", "BridgeInventory", new { id = Model.BridgeId })" target="_blank" class="btn btn-primary"><span class="glyphicon glyphicon-new-window"></span> Go to Inventory</a>
 </div>
 
 <script>
     $(document).ready(function () {
-        $('#distrIdDIV').text("District Id = " + $('#DistrictId option:selected').val());
-        $('#secIdDIV').text("Section Id = " + $('#SectionId option:selected').val());
-        $('#segIdDIV').text("Segment Id = " + $('#SegmentId option:selected').val());
-
         $('#DistrictId').change(function () {
             var selDistrictId = $('#DistrictId option:selected').val();
             $('#SectionId option').remove(); //empty the section dropdown list
-            $('#secIdDIV').text(""); //clear section no. indicator
             $('#SegmentId option').remove(); //empty the segment dropdown list
-            $('#segIdDIV').text(""); //clear segment no. indicator
-            if (selDistrictId == "0") //if no district is selected
+            if (selDistrictId != "0") //if some district is selected
             {
-                $('#distrIdDIV').text(""); //clear district no. indicator
-            }
-            else {
-                $('#distrIdDIV').text("District Id = " + selDistrictId);
-                $('#secIdDIV').text("");
-                $('#segmentsPartial').empty(); //empty the segment table
-
                 $.ajax({
-                    url: '@Url.Action("_GetSections", "Bridges")',
+                    url: '@Url.Action("_GetSections", "LocationsDDL")',
                     data: { districtid: selDistrictId },
                     type: 'GET',
                     dataType: 'json',
@@ -183,21 +136,15 @@
         $('#SectionId').change(function () {
             var selSectionId = $('#SectionId option:selected').val();
             $('#SegmentId option').remove(); //empty the segment dropdown list
-            $('#segIdDIV').text(""); //clear segment no. indicator
-            if (selSectionId == "0") //if no section is selected
+            if (selSectionId != "0") //if some section is selected
             {
-                $('#secIdDIV').text(""); //clear section no. indicator
-            }
-            else {
-                $('#secIdDIV').text("(Section Id = " + selSectionId + ")");
-
                 $.ajax({
-                    url: '@Url.Action("_GetSegments", "Bridges")',
+                    url: '@Url.Action("_GetSegments", "LocationsDDL")',
                     data: { sectionid: selSectionId },
                     type: 'GET',
                     dataType: 'json',
                     success: function (data) {
-                        var markup = '<option value="0" id="noselect"> --Select Section --</option>';
+                        var markup = '<option value="0" id="noselect"> --Select Segment --</option>';
                         $.each(data, function (i, segment) {
                             markup += '<option value="' + segment.Value + '">' + segment.Text + '</option>'
                             $('#SegmentId').html(markup);
@@ -207,12 +154,39 @@
             }
         });
 
-        $('#SegmentId').change(function () {
-            var selSegmentId = $('#SegmentId option:selected').val();
-            if (selSegmentId == "0") //if no segment is selected
-                $('#segIdDIV').text(""); //clear segment no. indicator
-            else
-                $('#segIdDIV').text("Segment Id = " + selSegmentId);
+        $('#MainRouteId').change(function () {
+            var selMainRouteId = $('#MainRouteId option:selected').val();
+            $('#SubRouteId option').remove(); //empty the sub route dropdown list
+        
+            if (selMainRouteId != "0") //if some main route is selected
+            {
+                $.ajax({
+                    url: '@Url.Action("_GetSubRoutes", "LocationsDDL")',
+                    data: { mainrouteid: selMainRouteId },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        var markup = '<option value="0" id="noselect"> --Select Subroute --</option>';
+                        $.each(data, function (i, subroute) {
+                            markup += '<option value="' + subroute.Value + '">' + subroute.Text + '</option>'
+                            $('#SubRouteId').html(markup);
+                        });
+                    }
+                });
+            }
+        });
+
+        $('#save').click(function () {
+            var selSegmentId = $('#SegmentId').val();
+            var selSubRouteId = $('#SubRouteId').val();
+
+            // if no road segment or sub route is selected, cancel submission and show error status
+            if (selSegmentId == 0 || selSubRouteId == 0
+                || (typeof selSegmentId == 'undefined') || (typeof selSubRouteId == 'undefined')
+                || selSegmentId == null || selSubRouteId == null) { 
+                $('#status').text("Please enter/select all boxes marked with *")
+                return false;
+            }
         });
     });
 </script>

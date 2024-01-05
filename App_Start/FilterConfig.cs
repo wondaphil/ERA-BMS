@@ -1,7 +1,7 @@
 ﻿using System.Web;
 using System.Web.Mvc;
 
-namespace ERA_BCMS
+namespace ERA_BMS
 {
     public class FilterConfig
     {

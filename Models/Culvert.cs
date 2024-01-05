@@ -7,22 +7,41 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ERA_BCMS.Models
+namespace ERA_BMS.Models
 {
     using System;
     using System.Collections.Generic;
     
     public partial class Culvert
     {
-        public string CulvertId { get; set; }
-        public string CulvertName { get; set; }
-        public Nullable<int> SegmentId { get; set; }
-        public string RouteId { get; set; }
-        public Nullable<double> KMFromAddis { get; set; }
-        public Nullable<double> XCoord { get; set; }
-        public Nullable<double> YCoord { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Culvert()
+        {
+            this.culDamageInspStructures = new HashSet<culDamageInspStructure>();
+            this.CulvertMedias = new HashSet<CulvertMedia>();
+            this.CulvertImprovements = new HashSet<CulvertImprovement>();
+        }
     
-        public virtual Route Route { get; set; }
+        public string CulvertId { get; set; }
+        public string CulvertNo { get; set; }
+        public string RevisedCulvertNo { get; set; }
+        public string SegmentId { get; set; }
+        public string SubRouteId { get; set; }
+        public Nullable<System.DateTime> ModifiedOn { get; set; }
+        public byte[] Flag { get; set; }
+    
+        public virtual culDamageInspHydraulic culDamageInspHydraulic { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<culDamageInspStructure> culDamageInspStructures { get; set; }
         public virtual Segment Segment { get; set; }
+        public virtual SubRoute SubRoute { get; set; }
+        public virtual CulvertGeneralInfo CulvertGeneralInfo { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<CulvertMedia> CulvertMedias { get; set; }
+        public virtual CulvertStructure CulvertStructure { get; set; }
+        public virtual ObservationAndRecommendation ObservationAndRecommendation { get; set; }
+        public virtual ResultInspCulvert ResultInspCulvert { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<CulvertImprovement> CulvertImprovements { get; set; }
     }
 }

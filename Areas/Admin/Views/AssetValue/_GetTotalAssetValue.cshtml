@@ -1,0 +1,79 @@
+﻿@model IEnumerable<ERA_BMS.Models.AssetValueByDistrict>
+
+<hr />
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title panel-info">Total Asset Value Grouped By Districts</h3>
+    </div>
+
+    <div class="panel-body">
+        <table class="table table-striped table-condensed table-responsive display compact hover" style="width:100%" id="tblTotalAssetValue">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.DistrictName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.BridgeAssetValue)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CulvertAssetValue)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.TotalAssetValue)
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DistrictName)
+                        </td>
+                        <td>
+                            @item.BridgeAssetValue.ToString("#,0.00")
+                        </td>
+                        <td>
+                            @item.CulvertAssetValue.ToString("#,0.00")
+                        </td>
+                        <td>
+                            <b>@item.TotalAssetValue.ToString("#,0.00")</b>
+                        </td>
+                    </tr>
+
+                }
+                <tr>
+                    <td><b>TOTAL</b></td>
+                    <td><h5><b>@Model.Sum(b => b.BridgeAssetValue).ToString("#,0.00")</b></h5></td>
+                    <td><h5><b>@Model.Sum(b => b.CulvertAssetValue).ToString("#,0.00")</b></h5></td>
+                    <td><h5><b>@Model.Sum(b => b.TotalAssetValue).ToString("#,0.00")</b></h5></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="panel-footer">
+        <h3 class="panel-title">Total No. of Districts: <b>@Model.Count()</b></h3>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#tblTotalAssetValue').dataTable({
+            paging: false,
+            bLengthChange: true,
+            scrollY: 400,
+            searching: true,
+            select: true,
+            dom: 'lBfrtip',
+            //buttons: ['copy', 'excel', 'pdf', 'print']
+            buttons: [
+                { extend: 'copy', className: 'btn btn-sm btn-primary' },
+                { extend: 'excel', className: 'btn btn-sm btn-primary', text: 'Export Excel' },
+                { extend: 'pdf', className: 'btn btn-sm btn-primary', text: 'Export PDF' },
+                { extend: 'print', className: 'btn btn-sm btn-primary' }
+            ]
+        });
+    });
+</script>

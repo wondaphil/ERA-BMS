@@ -1,0 +1,131 @@
+﻿@model IEnumerable<ERA_BMS.ViewModels.CulvertValueViewModel>
+
+<hr />
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title panel-info">Culvert Current Value (District: <b>@ViewBag.District</b>, Section: <b>@ViewBag.Section</b>, Road Segment: <b>@ViewBag.Segment</b>)</h3>
+    </div>
+    
+    <div class="panel-body">
+        <table class="table table-striped table-condensed table-responsive display compact hover" id="culverts">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Culvert.RevisedCulvertNo)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Culvert.CulvertStructure.CulvertType.CulvertTypeName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CurrentValue.ConstructionYear)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CurrentValue.TotalLength)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CurrentValue.InsideLength)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CurrentValue.Area)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CurrentValue.InitialConstructionCost)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CurrentValue.CurrentReplacementCost)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CurrentValue.ServiceCondition)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CurrentValue.ConditionIndex)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CurrentValue.DepreciatedReplacementCost)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CurrentValue.CurrentValue)
+                    </th>
+                    <th>
+                        Inventory
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Culvert.RevisedCulvertNo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Culvert.CulvertStructure.CulvertType.CulvertTypeName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CurrentValue.ConstructionYear)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CurrentValue.TotalLength)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CurrentValue.InsideLength)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CurrentValue.Area)
+                        </td>
+                        <td>
+                            @item.CurrentValue.InitialConstructionCost.Value.ToString("#,0.00")
+                        </td>
+                        <td>
+                            @item.CurrentValue.CurrentReplacementCost.Value.ToString("#,0.00")
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CurrentValue.ServiceCondition)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CurrentValue.ConditionIndex)
+                        </td>
+
+                        <td>
+                            @item.CurrentValue.DepreciatedReplacementCost.Value.ToString("#,0.00")
+                        </td>
+                        <th>
+                            @item.CurrentValue.CurrentValue.Value.ToString("#,0.00")
+                        </th>
+                        <td align="center">
+                            <a href="@Url.Action("Index", "CulvertInventory", new { id = item.Culvert.CulvertId, area = ""  })" target="_blank" class="glyphicon glyphicon-new-window" data-toggle="tooltip" title="Go to Innventory" style="font-size: 14px"></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="panel-footer">
+        <h3 class="panel-title">Total No. of Culverts: <b>@Model.Count().ToString("#,0")</b> | Total Culvert Asset Value: <b>@Model.Sum(b => b.CurrentValue.CurrentValue).Value.ToString("#,0.00")</b></h3>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        
+        
+        $('#culverts').dataTable({
+            paging: true,
+            pageLength: 15,
+            bLengthChange: true,
+            scrollY: 400,
+            scrollX: true,
+            searching: true,
+            select: true,
+            dom: 'lBfrtip',
+            //buttons: ['copy', 'excel', 'pdf', 'print']
+            buttons: [
+                { extend: 'copy', className: 'btn btn-sm btn-primary' },
+                { extend: 'excel', className: 'btn btn-sm btn-primary', text: 'Export Excel' },
+                { extend: 'pdf', className: 'btn btn-sm btn-primary', text: 'Export PDF' },
+                { extend: 'print', className: 'btn btn-sm btn-primary' }
+            ]
+        });
+    });
+</script>

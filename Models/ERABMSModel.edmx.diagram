@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="96d1f2408aa14f59a520cadaf683a0c0" Name="Diagram1" ZoomLevel="59">
+        <EntityTypeShape EntityType="ERABMSModel.Abutment" Width="1.5" PointX="12.75" PointY="50.375" />
+        <EntityTypeShape EntityType="ERABMSModel.AbutmentType" Width="1.5" PointX="10.5" PointY="72.25" />
+        <EntityTypeShape EntityType="ERABMSModel.Ancillary" Width="1.5" PointX="12.75" PointY="45.875" />
+        <EntityTypeShape EntityType="ERABMSModel.BearingType" Width="1.5" PointX="10.5" PointY="35.5" />
+        <EntityTypeShape EntityType="ERABMSModel.BridgeComment" Width="1.5" PointX="12.75" PointY="99.375" />
+        <EntityTypeShape EntityType="ERABMSModel.BridgeMedia" Width="1.5" PointX="12.75" PointY="58.125" />
+        <EntityTypeShape EntityType="ERABMSModel.BridgeObservation" Width="1.5" PointX="18.75" PointY="56.25" />
+        <EntityTypeShape EntityType="ERABMSModel.BridgePart" Width="1.5" PointX="12" PointY="76.125" />
+        <EntityTypeShape EntityType="ERABMSModel.BridgePartDmgWt" Width="1.5" PointX="14.25" PointY="83.25" />
+        <EntityTypeShape EntityType="ERABMSModel.BridgeType" Width="1.5" PointX="16.5" PointY="34.25" />
+        <EntityTypeShape EntityType="ERABMSModel.ConstructionYear" Width="1.5" PointX="7.75" PointY="0.75" />
+        <EntityTypeShape EntityType="ERABMSModel.culDamageInspHydraulic" Width="1.5" PointX="9.75" PointY="63.375" />
+        <EntityTypeShape EntityType="ERABMSModel.culDamageInspStructure" Width="1.5" PointX="9.75" PointY="42.5" />
+        <EntityTypeShape EntityType="ERABMSModel.culDamageRateAndCost" Width="1.5" PointX="7.5" PointY="43.125" />
+        <EntityTypeShape EntityType="ERABMSModel.culEndWallType" Width="1.5" PointX="10.5" PointY="23.125" />
+        <EntityTypeShape EntityType="ERABMSModel.culHydrDamageType" Width="1.5" PointX="7.5" PointY="64.25" />
+        <EntityTypeShape EntityType="ERABMSModel.culStructureItem" Width="1.5" PointX="5.25" PointY="43.875" />
+        <EntityTypeShape EntityType="ERABMSModel.CulvertMedia" Width="1.5" PointX="15.75" PointY="41.25" />
+        <EntityTypeShape EntityType="ERABMSModel.CulvertStructure" Width="1.5" PointX="12.75" PointY="40.5" />
+        <EntityTypeShape EntityType="ERABMSModel.CulvertType" Width="1.5" PointX="10.5" PointY="26.375" />
+        <EntityTypeShape EntityType="ERABMSModel.DamageConditionRange" Width="1.5" PointX="7.75" PointY="3.75" />
+        <EntityTypeShape EntityType="ERABMSModel.DamageInspVisual" Width="1.5" PointX="18.75" PointY="60" />
+        <EntityTypeShape EntityType="ERABMSModel.DamageRank" Width="1.5" PointX="16.5" PointY="69.125" />
+        <EntityTypeShape EntityType="ERABMSModel.DamageSeverity" Width="1.5" PointX="16.5" PointY="79.875" />
+        <EntityTypeShape EntityType="ERABMSModel.DamageType" Width="1.5" PointX="16.5" PointY="75.875" />
+        <EntityTypeShape EntityType="ERABMSModel.DeckSlabType" Width="1.5" PointX="16.5" PointY="37.75" />
+        <EntityTypeShape EntityType="ERABMSModel.ExpansionJointType" Width="1.5" PointX="10.5" PointY="39" />
+        <EntityTypeShape EntityType="ERABMSModel.FoundationType" Width="1.5" PointX="13.5" PointY="37.375" />
+        <EntityTypeShape EntityType="ERABMSModel.GirderType" Width="1.5" PointX="16.5" PointY="63.375" />
+        <EntityTypeShape EntityType="ERABMSModel.GuardRailingType" Width="1.5" PointX="10.5" PointY="32.25" />
+        <EntityTypeShape EntityType="ERABMSModel.ImprovementType" Width="1.5" PointX="13.5" PointY="79.75" />
+        <EntityTypeShape EntityType="ERABMSModel.MainRoute" Width="1.5" PointX="6" PointY="38.25" />
+        <EntityTypeShape EntityType="ERABMSModel.MaintenanceUrgency" Width="1.5" PointX="16.5" PointY="72.75" />
+        <EntityTypeShape EntityType="ERABMSModel.MajorInspectionYear" Width="1.5" PointX="7.75" PointY="7.75" />
+        <EntityTypeShape EntityType="ERABMSModel.MediaType" Width="1.5" PointX="10.5" PointY="80.75" />
+        <EntityTypeShape EntityType="ERABMSModel.ObservationAndRecommendation" Width="1.5" PointX="12.75" PointY="62.5" />
+        <EntityTypeShape EntityType="ERABMSModel.ParapetMaterialType" Width="1.5" PointX="7.5" PointY="58.875" />
+        <EntityTypeShape EntityType="ERABMSModel.Pier" Width="1.5" PointX="15.75" PointY="45.75" />
+        <EntityTypeShape EntityType="ERABMSModel.PierType" Width="1.5" PointX="13.5" PointY="34.25" />
+        <EntityTypeShape EntityType="ERABMSModel.Repair" Width="1.5" PointX="9.75" PointY="0.75" />
+        <EntityTypeShape EntityType="ERABMSModel.RequiredAction" Width="1.5" PointX="9.75" PointY="5.75" />
+        <EntityTypeShape EntityType="ERABMSModel.ResultInspCulvert" Width="1.5" PointX="9.75" PointY="76.75" />
+        <EntityTypeShape EntityType="ERABMSModel.RoadAlignmentType" Width="1.5" PointX="13.5" PointY="72.875" />
+        <EntityTypeShape EntityType="ERABMSModel.RoadClass" Width="1.5" PointX="3.75" PointY="38.875" />
+        <EntityTypeShape EntityType="ERABMSModel.Section" Width="1.5" PointX="3" PointY="52.375" />
+        <EntityTypeShape EntityType="ERABMSModel.SoilType" Width="1.5" PointX="10.5" PointY="29.25" />
+        <EntityTypeShape EntityType="ERABMSModel.SpanSupportType" Width="1.5" PointX="16.5" PointY="65.875" />
+        <EntityTypeShape EntityType="ERABMSModel.StructureItem" Width="1.5" PointX="14.25" PointY="75.875" />
+        <EntityTypeShape EntityType="ERABMSModel.StructureItemDmgWt" Width="1.5" PointX="16.5" PointY="82.75" />
+        <EntityTypeShape EntityType="ERABMSModel.SubRoute" Width="1.5" PointX="8.25" PointY="37.875" />
+        <EntityTypeShape EntityType="ERABMSModel.SuperStructure" Width="1.5" PointX="18.75" PointY="45" />
+        <EntityTypeShape EntityType="ERABMSModel.SurfaceType" Width="1.5" PointX="10.5" PointY="69.75" />
+        <EntityTypeShape EntityType="ERABMSModel.BridgeCondition2006" Width="1.5" PointX="12.75" PointY="12.75" />
+        <EntityTypeShape EntityType="ERABMSModel.BridgeCondition2010" Width="1.5" PointX="13.75" PointY="0.75" />
+        <EntityTypeShape EntityType="ERABMSModel.BridgeCondition2013" Width="1.5" PointX="13.75" PointY="3.75" />
+        <EntityTypeShape EntityType="ERABMSModel.BridgeCondition2017" Width="1.5" PointX="13.75" PointY="6.75" />
+        <EntityTypeShape EntityType="ERABMSModel.BridgeCondition2020" Width="1.5" PointX="13.75" PointY="9.75" />
+        <EntityTypeShape EntityType="ERABMSModel.BridgeConditionAndRepairCostByDistrict" Width="1.5" PointX="0.75" PointY="14.75" />
+        <EntityTypeShape EntityType="ERABMSModel.BridgeLengthByDistrict" Width="1.5" PointX="15.75" PointY="0.75" />
+        <EntityTypeShape EntityType="ERABMSModel.BridgeValuePerLm" Width="1.5" PointX="12.75" PointY="16.75" />
+        <EntityTypeShape EntityType="ERABMSModel.CulvertConditionAndRepairCostByDistrict" Width="1.5" PointX="18.75" PointY="17.75" />
+        <EntityTypeShape EntityType="ERABMSModel.CulvertLengthByDistrict" Width="1.5" PointX="20.75" PointY="12.75" />
+        <EntityTypeShape EntityType="ERABMSModel.CulvertValuePerLm" Width="1.5" PointX="21.75" PointY="0.75" />
+        <EntityTypeShape EntityType="ERABMSModel.InvalidCulvertInspectionDate" Width="1.5" PointX="2.75" PointY="21.75" />
+        <EntityTypeShape EntityType="ERABMSModel.NoOfBridgesByDistrict" Width="1.5" PointX="21.75" PointY="3.75" />
+        <AssociationConnector Association="ERABMSModel.FK_Abutment_AbutmentTypeA1" />
+        <AssociationConnector Association="ERABMSModel.FK_Abutment_AbutmentTypeA2" />
+        <AssociationConnector Association="ERABMSModel.FK_Abutment_FoundationTypeA1" />
+        <AssociationConnector Association="ERABMSModel.FK_Abutment_FoundationTypeA2" />
+        <AssociationConnector Association="ERABMSModel.FK_Abutment_SoilTypeA1" />
+        <AssociationConnector Association="ERABMSModel.FK_Abutment_SoilTypeA2" />
+        <AssociationConnector Association="ERABMSModel.FK_CulvertStructure_AbutmentType" />
+        <AssociationConnector Association="ERABMSModel.FK_Ancillary_Abutment_BearingType" />
+        <AssociationConnector Association="ERABMSModel.FK_Ancillary_ExpansionJointType" />
+        <AssociationConnector Association="ERABMSModel.FK_Ancillary_GuardRailingType" />
+        <AssociationConnector Association="ERABMSModel.FK_Ancillary_Piers_BearingType1" />
+        <AssociationConnector Association="ERABMSModel.FK_Ancillary_SurfaceType" />
+        <AssociationConnector Association="ERABMSModel.FK_BridgeMedia_MediaType" />
+        <AssociationConnector Association="ERABMSModel.FK_BridgeObservation_MaintenanceUrgency1" />
+        <AssociationConnector Association="ERABMSModel.FK_BridgePartDmgWt_BridgePart" />
+        <AssociationConnector Association="ERABMSModel.FK_StructureItem_BridgePart" />
+        <AssociationConnector Association="ERABMSModel.FK_SuperStructure_BridgeType" />
+        <AssociationConnector Association="ERABMSModel.FK_culDamageInspHydraulic_culHydrDamageTypeChannelObstruction" />
+        <AssociationConnector Association="ERABMSModel.FK_culDamageInspHydraulic_culHydrDamageTypeChannelScour" />
+        <AssociationConnector Association="ERABMSModel.FK_culDamageInspHydraulic_culHydrDamageTypeConstriction" />
+        <AssociationConnector Association="ERABMSModel.FK_culDamageInspHydraulic_culHydrDamageTypeEmbankmentScour" />
+        <AssociationConnector Association="ERABMSModel.FK_culDamageInspHydraulic_culHydrDamageTypeOvertoppint" />
+        <AssociationConnector Association="ERABMSModel.FK_culDamageInspHydraulic_culHydrDamageTypeSilation" />
+        <AssociationConnector Association="ERABMSModel.FK_culDamageInspHydraulic_culHydrDamageTypeVegitation" />
+        <AssociationConnector Association="ERABMSModel.FK_culDamageInspStructure_culStrDamageType" />
+        <AssociationConnector Association="ERABMSModel.FK_culDamageType_culStructureItem" />
+        <AssociationConnector Association="ERABMSModel.FK_CulvertStructure_culEndWallTypeIn" />
+        <AssociationConnector Association="ERABMSModel.FK_CulvertStructure_culEndWallTypeOut" />
+        <AssociationConnector Association="ERABMSModel.FK_CulvertMedia_MediaType" />
+        <AssociationConnector Association="ERABMSModel.FK_CulvertStructure_CulvertType" />
+        <AssociationConnector Association="ERABMSModel.FK_DamageInspVisual_DamageSeverity" />
+        <AssociationConnector Association="ERABMSModel.FK_DamageInspVisual_DamageType" />
+        <AssociationConnector Association="ERABMSModel.FK_DamageType_StructureItem" />
+        <AssociationConnector Association="ERABMSModel.FK_SuperStructure_DeckSlabType" />
+        <AssociationConnector Association="ERABMSModel.FK_Pier_FoundationType" />
+        <AssociationConnector Association="ERABMSModel.FK_SuperStructure_GirderType" />
+        <AssociationConnector Association="ERABMSModel.FK_MainRoute_RoadClass" />
+        <AssociationConnector Association="ERABMSModel.FK_SubRoute_MainRoute" />
+        <AssociationConnector Association="ERABMSModel.FK_ActionAndRecommendation_MaintenanceUrgency" />
+        <AssociationConnector Association="ERABMSModel.FK_Pier_PierType" />
+        <AssociationConnector Association="ERABMSModel.FK_SuperStructure_SpanSupportType" />
+        <AssociationConnector Association="ERABMSModel.FK_StructureItemDmgWt_StructureItem" />
+        <EntityTypeShape EntityType="ERABMSModel.CulvertTypeByDistrict" Width="1.5" PointX="13.75" PointY="20.75" />
+        <EntityTypeShape EntityType="ERABMSModel.CulvertTypeBySection" Width="1.5" PointX="3.375" PointY="28.75" />
+        <EntityTypeShape EntityType="ERABMSModel.BridgeConditionAndRepairCostBySection" Width="1.5" PointX="16.375" PointY="3.75" />
+        <EntityTypeShape EntityType="ERABMSModel.BridgeConditionAndRepairCostBySegment" Width="1.5" PointX="3.375" PointY="17.75" />
+        <EntityTypeShape EntityType="ERABMSModel.BridgeConditionByInspectionYear" Width="1.5" PointX="5.375" PointY="17.75" />
+        <EntityTypeShape EntityType="ERABMSModel.CulvertConditionAndRepairCostBySection" Width="1.5" PointX="18.375" PointY="3.75" />
+        <EntityTypeShape EntityType="ERABMSModel.CulvertConditionAndRepairCostBySegment" Width="1.5" PointX="21.375" PointY="15.75" />
+        <EntityTypeShape EntityType="ERABMSModel.District" Width="1.5" PointX="0.75" PointY="52.625" />
+        <AssociationConnector Association="ERABMSModel.FK_Section_District" />
+        <EntityTypeShape EntityType="ERABMSModel.DamageInspMajor" Width="1.5" PointX="18.75" PointY="65" />
+        <AssociationConnector Association="ERABMSModel.FK_DamageInspMajor_DamageRank" />
+        <AssociationConnector Association="ERABMSModel.FK_DamageInspMajor_DamageType" />
+        <EntityTypeShape EntityType="ERABMSModel.ResultInspMajor" Width="1.5" PointX="12.75" PointY="66.25" />
+        <EntityTypeShape EntityType="ERABMSModel.CulvertGeneralInfo" Width="1.5" PointX="25.625" PointY="33.875" />
+        <EntityTypeShape EntityType="ERABMSModel.UtmZoneEthiopia" Width="1.5" PointX="23.375" PointY="12.875" />
+        <AssociationConnector Association="ERABMSModel.FK_CulvertGeneralInfo_ParapetMaterialType" />
+        <AssociationConnector Association="ERABMSModel.FK_CulvertGeneralInfo_UtmZone" />
+        <EntityTypeShape EntityType="ERABMSModel.AspNetRole" Width="1.5" PointX="23.375" PointY="8.5" />
+        <EntityTypeShape EntityType="ERABMSModel.AspNetUser" Width="1.5" PointX="25.625" PointY="7.375" />
+        <AssociationConnector Association="ERABMSModel.AspNetUserRoles" />
+        <EntityTypeShape EntityType="ERABMSModel.DamagePrioritizationCriteria" Width="1.5" PointX="0.75" PointY="1.5" />
+        <EntityTypeShape EntityType="ERABMSModel.DamagePriority" Width="1.5" PointX="3" PointY="1" />
+        <AssociationConnector Association="ERABMSModel.FK_DamagePriority_DamagePrioritizationCriteria" />
+        <EntityTypeShape EntityType="ERABMSModel.DamagePriorityCriteriaAndSum" Width="1.5" PointX="0.75" PointY="5.75" />
+        <EntityTypeShape EntityType="ERABMSModel.BridgeLength" Width="1.5" PointX="0.75" PointY="8.75" />
+        <EntityTypeShape EntityType="ERABMSModel.BridgeRequiredActionByDistrict" Width="1.5" PointX="3.375" PointY="8.75" />
+        <EntityTypeShape EntityType="ERABMSModel.AssetValueByDistrict" Width="1.5" PointX="15.375" PointY="14.75" />
+        <EntityTypeShape EntityType="ERABMSModel.RepairCostAndRecommendation" Width="1.5" PointX="13.375" PointY="24.75" />
+        <EntityTypeShape EntityType="ERABMSModel.BridgeTypeByDistrict" Width="1.5" PointX="7.375" PointY="14.75" />
+        <EntityTypeShape EntityType="ERABMSModel.BridgeTypeByMainRoute" Width="1.5" PointX="9.375" PointY="15.75" />
+        <EntityTypeShape EntityType="ERABMSModel.BridgeTypeBySection" Width="1.5" PointX="18.375" PointY="21.75" />
+        <EntityTypeShape EntityType="ERABMSModel.BridgeTypeBySegment" Width="1.5" PointX="23.375" PointY="16.75" />
+        <EntityTypeShape EntityType="ERABMSModel.CulvertTypeBySegment" Width="1.5" PointX="20.375" PointY="23.75" />
+        <EntityTypeShape EntityType="ERABMSModel.BridgeGeneralInfo" Width="1.5" PointX="25.625" PointY="41.375" />
+        <AssociationConnector Association="ERABMSModel.FK_BridgeGeneralInfo_RoadAlignment" />
+        <AssociationConnector Association="ERABMSModel.FK_BridgeGeneralInfo_UtmZone" />
+        <EntityTypeShape EntityType="ERABMSModel.BridgeDoc" Width="1.5" PointX="23.25" PointY="45.625" />
+        <EntityTypeShape EntityType="ERABMSModel.DocType" Width="1.5" PointX="21" PointY="51.375" />
+        <AssociationConnector Association="ERABMSModel.FK_BridgeDoc_DocType" />
+        <EntityTypeShape EntityType="ERABMSModel.SegmentMap" Width="1.5" PointX="12.25" PointY="92.375" />
+        <EntityTypeShape EntityType="ERABMSModel.DistrictMap" Width="1.5" PointX="3" PointY="49" />
+        <EntityTypeShape EntityType="ERABMSModel.SectionMap" Width="1.5" PointX="5.25" PointY="52.625" />
+        <AssociationConnector Association="ERABMSModel.FK_DistrictMap_District" />
+        <AssociationConnector Association="ERABMSModel.FK_SectionMap_Section" />
+        <EntityTypeShape EntityType="ERABMSModel.DesignStandard" Width="1.5" PointX="10.375" PointY="9.875" />
+        <EntityTypeShape EntityType="ERABMSModel.RegionalGovernment" Width="1.5" PointX="0.75" PointY="11.875" />
+        <EntityTypeShape EntityType="ERABMSModel.RoadSurfaceType" Width="1.5" PointX="3.375" PointY="11.875" />
+        <EntityTypeShape EntityType="ERABMSModel.BridgeCurrentValue" Width="1.5" PointX="16.375" PointY="7.75" />
+        <EntityTypeShape EntityType="ERABMSModel.CulvertConditionIndex" Width="1.5" PointX="3.375" PointY="5.75" />
+        <EntityTypeShape EntityType="ERABMSModel.CulvertCurrentValue" Width="1.5" PointX="17.375" PointY="12.75" />
+        <AssociationConnector Association="ERABMSModel.FK_CulvertConditionIndex_CulvertConditionIndex" />
+        <EntityTypeShape EntityType="ERABMSModel.Bridge" Width="1.5" PointX="21.875" PointY="32.25" />
+        <EntityTypeShape EntityType="ERABMSModel.Culvert" Width="1.5" PointX="24.875" PointY="28.875" />
+        <EntityTypeShape EntityType="ERABMSModel.Segment" Width="1.5" PointX="19.625" PointY="28.375" />
+        <AssociationConnector Association="ERABMSModel.FK_Abutment_Bridge" />
+        <AssociationConnector Association="ERABMSModel.FK_Ancillary_Bridge" />
+        <AssociationConnector Association="ERABMSModel.FK_Bridge_Segment" />
+        <AssociationConnector Association="ERABMSModel.FK_Bridge_SubRoute" />
+        <AssociationConnector Association="ERABMSModel.FK_BridgeComment_Bridge" />
+        <AssociationConnector Association="ERABMSModel.FK_BridgeDoc_Bridge" />
+        <AssociationConnector Association="ERABMSModel.FK_BridgeGeneralInfo_Bridge" />
+        <AssociationConnector Association="ERABMSModel.FK_BridgeMedia_Bridge" />
+        <AssociationConnector Association="ERABMSModel.FK_BridgeObservation_Bridge1" />
+        <AssociationConnector Association="ERABMSModel.FK_DamageInspMajor_Bridge" />
+        <AssociationConnector Association="ERABMSModel.FK_DamageInspVisual_Bridge" />
+        <AssociationConnector Association="ERABMSModel.FK_Pier_Bridge" />
+        <AssociationConnector Association="ERABMSModel.FK_ResultInspMajor_Bridge" />
+        <AssociationConnector Association="ERABMSModel.FK_SuperStructure_Bridge" />
+        <AssociationConnector Association="ERABMSModel.FK_culDamageInspHydraulic_Culvert" />
+        <AssociationConnector Association="ERABMSModel.FK_culDamageInspStructure_Culvert" />
+        <AssociationConnector Association="ERABMSModel.FK_Culvert_Segment" />
+        <AssociationConnector Association="ERABMSModel.FK_Culvert_SubRoute" />
+        <AssociationConnector Association="ERABMSModel.FK_CulvertGeneralInfo_Culvert" />
+        <AssociationConnector Association="ERABMSModel.FK_CulvertMedia_Culvert" />
+        <AssociationConnector Association="ERABMSModel.FK_CulvertStructure_Culvert" />
+        <AssociationConnector Association="ERABMSModel.FK_ObservationAndRecommendation_Culvert" />
+        <AssociationConnector Association="ERABMSModel.FK_ResultInspCulvert_Culvert" />
+        <AssociationConnector Association="ERABMSModel.FK_Segment_DesignStandard" />
+        <AssociationConnector Association="ERABMSModel.FK_Segment_RegionalGovernment" />
+        <AssociationConnector Association="ERABMSModel.FK_Segment_RoadClass" />
+        <AssociationConnector Association="ERABMSModel.FK_Segment_RoadSurfaceType" />
+        <AssociationConnector Association="ERABMSModel.FK_Segment_Section" />
+        <AssociationConnector Association="ERABMSModel.FK_Segment_SegmentMap" />
+        <EntityTypeShape EntityType="ERABMSModel.BridgePriorityByHighestDamageRank" Width="1.5" PointX="20.375" PointY="6.75" />
+        <EntityTypeShape EntityType="ERABMSModel.BridgePriorityByInterventionRequirement" Width="1.5" PointX="7.375" PointY="22.75" />
+        <EntityTypeShape EntityType="ERABMSModel.PriorityParameter" Width="1.5" PointX="24.375" PointY="0.75" />
+        <EntityTypeShape EntityType="ERABMSModel.CulvertsForUpgrading" Width="1.5" PointX="22.375" PointY="23.75" />
+        <EntityTypeShape EntityType="ERABMSModel.BridgeTypeByRegion" Width="1.5" PointX="15.375" PointY="24.75" />
+        <EntityTypeShape EntityType="ERABMSModel.CulvertTypeByRegion" Width="1.5" PointX="24.375" PointY="23.75" />
+        <EntityTypeShape EntityType="ERABMSModel.DamageRateAndCost" Width="1.5" PointX="18.75" PointY="71.875" />
+        <AssociationConnector Association="ERABMSModel.FK_DamageRateAndCost_DamageRank" />
+        <AssociationConnector Association="ERABMSModel.FK_DamageRateAndCost_DamageType" />
+        <EntityTypeShape EntityType="ERABMSModel.BridgeImprovement" Width="1.5" PointX="24.125" PointY="55" />
+        <EntityTypeShape EntityType="ERABMSModel.CulvertImprovement" Width="1.5" PointX="27.125" PointY="53.5" />
+        <AssociationConnector Association="ERABMSModel.FK_BridgeImprovement_Bridge" />
+        <AssociationConnector Association="ERABMSModel.FK_BridgeImprovement_ImprovementType" />
+        <AssociationConnector Association="ERABMSModel.FK_CulvertImprovement_Culvert" />
+        <AssociationConnector Association="ERABMSModel.FK_CulvertImprovement_ImprovementType" />
+        </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

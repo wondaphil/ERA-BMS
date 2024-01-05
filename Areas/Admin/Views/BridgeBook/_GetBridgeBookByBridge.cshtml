@@ -1,0 +1,200 @@
+﻿@model ERA_BMS.ViewModels.BridgeImageListViewModel
+
+<div class="panel panel-primary title">
+    <div class="panel-heading" style="background-color: white; color: black">
+        <div align="center">
+            <img src="~/images/era_logo.png" alt="ERA logo" width="65" height="65" align="middle">
+            <h4 align="center">
+                Ethiopian Roads Administration - Bridge Management System <br />
+                የኢትዮጵያ መንገዶች አስተዳደር - የድልድይ ሀብት አስተዳደር ሥርዓት
+            </h4>
+        </div>
+        <h2 class="panel-title panel-info"><b>Bridge Book @DateTime.Now.Year</b></h2>
+    </div>
+    <div class="panel-body">
+        <div align="center">
+            <div class="row">
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
+                    <table class="table">
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Bridge.Segment.Section.District.DistrictName)
+                            </th>
+                            <td>
+                                @Html.DisplayFor(model => model.Bridge.Segment.Section.District.DistrictName)
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Bridge.Segment.Section.SectionName)
+                            </th>
+                            <td>
+                                @Html.DisplayFor(model => model.Bridge.Segment.Section.SectionName)
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Bridge.Segment.SegmentName)
+                            </th>
+                            <td>
+                                @Html.DisplayFor(model => model.Bridge.Segment.SegmentName)
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
+                    <table class="table">
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Bridge.RevisedBridgeNo)
+                            </th>
+                            <td>
+                                @Html.DisplayFor(model => model.Bridge.RevisedBridgeNo)
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Bridge.BridgeName)
+                            </th>
+                            <td>
+                                @Html.DisplayFor(model => model.Bridge.BridgeName)
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Bridge.BridgeGeneralInfo.BridgeLength)
+                            </th>
+                            <td>
+                                @Html.DisplayFor(model => model.Bridge.BridgeGeneralInfo.BridgeLength)
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Bridge.SuperStructure.NoOfSpan)
+                            </th>
+                            <td>
+                                @Html.DisplayFor(model => model.Bridge.SuperStructure.NoOfSpan)
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
+                    <table class="table">
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Bridge.SuperStructure.BridgeType.BridgeTypeName)
+                            </th>
+                            <td>
+                                @Html.DisplayFor(model => model.Bridge.SuperStructure.BridgeType.BridgeTypeName)
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>
+                                Orig. Constr. Year
+                            </th>
+                            <td>
+                                @Html.DisplayFor(model => model.Bridge.BridgeGeneralInfo.ConstructionYear)
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Bridge.BridgeGeneralInfo.Contractor)
+                            </th>
+                            <td>
+                                @Html.DisplayFor(model => model.Bridge.BridgeGeneralInfo.Contractor)
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Bridge.BridgeGeneralInfo.Designer)
+                            </th>
+                            <td>
+                                @Html.DisplayFor(model => model.Bridge.BridgeGeneralInfo.Designer)
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
+                    <table class="table">
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Bridge.BridgeGeneralInfo.KMFromAddis)
+                            </th>
+                            <td>
+                                @Html.DisplayFor(model => model.Bridge.BridgeGeneralInfo.KMFromAddis)
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>
+                                Latititude
+                            </th>
+                            <td>
+                                @Html.DisplayFor(model => model.Bridge.BridgeGeneralInfo.LatitudeDMS)
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>
+                                Logitude
+                            </th>
+
+                            <td>
+                                @Html.DisplayFor(model => model.Bridge.BridgeGeneralInfo.LongitudeDMS)
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Bridge.BridgeGeneralInfo.Altitude)
+                            </th>
+                            <td>
+                                @Html.DisplayFor(model => model.Bridge.BridgeGeneralInfo.Altitude)
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" align="center">
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                <div>
+                    <h3>Bridge Side View</h3>
+                </div>
+                <div>
+                    @*If the first image is not null*@
+                    @if (Model.ImagesList[0] != null)
+                    {
+                        @*<img src="@Model.ImagesList[0].MediaFilePath" alt="nopic" style="margin: 20px;" class="bridgebook" />*@
+                        <img src="@Model.ImagesList[0].MediaFilePath" alt="not-found" style="margin: 20px;" class="bridgebook" onerror="this.onerror = null; this.src = '../../images/error_2.png'; this.style.width = '40px'; this.style.height = '40px'; this.title = 'Image Not Found';" />
+                    }
+                </div>
+            </div>
+
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                <div>
+                    <h3>Bridge Front View</h3>
+                </div>
+                <div>
+                    @*If the first image is not null*@
+                    @if (Model.ImagesList[1] != null)
+                    {
+                        @*<img src="@Model.ImagesList[1].MediaFilePath" alt="nopic" style="margin: 20px;" class="bridgebook" />*@
+                        <img src="@Model.ImagesList[1].MediaFilePath" alt="not-found" style="margin: 20px;" class="bridgebook" onerror="this.onerror = null; this.src = '../../images/error_2.png'; this.style.width = '40px'; this.style.height = '40px'; this.title = 'Image Not Found';" />
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

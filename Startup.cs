@@ -4,17 +4,17 @@ using Owin;
 //I added these namespaces
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
-using ERA_BCMS.Models;
+using ERA_BMS.Models;
 
-[assembly: OwinStartupAttribute(typeof(ERA_BCMS.Startup))]
-namespace ERA_BCMS
+[assembly: OwinStartupAttribute(typeof(ERA_BMS.Startup))]
+namespace ERA_BMS
 {
     public partial class Startup
     {
         public void Configuration(IAppBuilder app)
         {
             ConfigureAuth(app);
-            //createRolesandUsers(); // I added this 
+            createRolesandUsers(); // I added this 
         }
 
         // In this method we will create default User roles and Admin user for login    

@@ -1,0 +1,47 @@
+﻿@model IEnumerable<ERA_BMS.Models.DamagePriorityCriteriaAndSum>
+
+    <table class="table table-condensed table-striped table-bordered">
+        <tr>
+            <th colspan="2"><h4>Priority Criteria Weights</h4></th>
+        </tr>
+        <tr>
+            <th>
+                @*@Html.DisplayNameFor(model => model.PrioritizationCriteria)*@
+                Prioritization Indicators
+            </th>
+            <th align="center">
+                @*@Html.DisplayNameFor(model => model.DamageWeight)*@
+                Indicator's Weight
+            </th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PrioritizationCriteria)
+                </td>
+                @{
+                    var status = "";
+                    var className = "";
+                    if (item.Id == 9)
+                    {
+                        className = "bg-success";
+                        if (item.DamageWeight.Value != 100)
+                        {
+                            status = " (Must be 100)";
+                            className = "bg-danger";
+                        }
+
+                    }
+                }
+            <td class="@className" align="center">
+
+                @Html.DisplayFor(modelItem => item.DamageWeight)
+                <br /><span class="alert-danger">@status</span>
+            </td>
+            </tr>
+        }
+
+    </table>
+

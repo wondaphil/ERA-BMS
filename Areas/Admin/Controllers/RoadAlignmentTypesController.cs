@@ -1,20 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Entity;
+using System.Data.Entity; using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using ERA_BCMS.Models;
+using ERA_BMS.Models;
 
-namespace ERA_BCMS.Areas.Admin.Controllers
+namespace ERA_BMS.Areas.Admin.Controllers
 {
     //Only Admins should have access
     [Authorize(Roles = "Admin")]
     public class RoadAlignmentTypesController : Controller
     {
-        private BCMSEntities db = new BCMSEntities();
+        private BMSEntities db = new BMSEntities();
 
         // GET: Admin/RoadAlignmentTypes
         public ActionResult Index()
@@ -39,23 +39,32 @@ namespace ERA_BCMS.Areas.Admin.Controllers
             return View(roadAlignment);
         }
 
-        // GET: Admin/RoadAlignments/Create
-        public ActionResult Create()
+        // GET: Admin/RoadAlignments/New
+        public ActionResult New()
         {
             return View();
         }
 
-        // POST: Admin/RoadAlignmentTypes/Create
+        // POST: Admin/RoadAlignmentTypes/New
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "RoadAlignmentTypeId,RoadAlignmentTypeName")] RoadAlignmentType roadAlignment)
+        public ActionResult New([Bind(Include = "RoadAlignmentTypeId,RoadAlignmentTypeName")] RoadAlignmentType roadAlignment)
         {
             if (ModelState.IsValid)
             {
                 db.RoadAlignmentTypes.Add(roadAlignment);
-                db.SaveChanges();
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch (Exception e) when (e.InnerException?.InnerException is SqlException sqlEx
+                                            && (sqlEx.Number == 2601 || sqlEx.Number == 2627))
+                {
+                    return RedirectToAction("DuplicateError", "ErrorHandler", new { area = "" });
+                }
+
                 return RedirectToAction("Details", new { id = roadAlignment.RoadAlignmentTypeId });
             }
 

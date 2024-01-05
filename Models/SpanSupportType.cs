@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ERA_BCMS.Models
+namespace ERA_BMS.Models
 {
     using System;
     using System.Collections.Generic;

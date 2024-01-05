@@ -1,0 +1,120 @@
+﻿@model IEnumerable<ERA_BMS.Models.Bridge>
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title panel-info">List of Bridges (Road Segment: <b>@ViewBag.SegmentName</b>, Section: <b>@ViewBag.SectionName</b>, District: <b>@ViewBag.DistrictName</b>)</h3>
+    </div>
+    
+    <div class="panel-body">
+        <table class="table table-striped table-condensed table-responsive table-bordered display compact hover" id="bridges">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.RevisedBridgeNo)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.BridgeName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.BridgeGeneralInfo.KMFromAddis)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.SuperStructure.BridgeType.BridgeTypeName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.SuperStructure.TotalSpanLength)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.BridgeGeneralInfo.ConstructionYear)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.BridgeGeneralInfo.ReplacedYear)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.BridgeGeneralInfo.ConstructionCost)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.BridgeGeneralInfo.Contractor)
+                    </th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.RevisedBridgeNo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.BridgeName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.BridgeGeneralInfo.KMFromAddis)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SuperStructure.BridgeType.BridgeTypeName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SuperStructure.TotalSpanLength)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.BridgeGeneralInfo.ConstructionYear)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.BridgeGeneralInfo.ReplacedYear)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.BridgeGeneralInfo.ConstructionCost)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.BridgeGeneralInfo.Contractor)
+                        </td>
+                        <td align="center">
+                            <a href="@Url.Action("BridgeAllImages", "ImageGallery", new { id = item.BridgeId })" target="_blank" class="glyphicon glyphicon-new-window" data-toggle="tooltip" title="View Photos" style="font-size: 14px"></a>
+                        </td>
+                        <td align="center">
+                            <a href="@Url.Action("Index", "BridgeInventory", new { id = item.BridgeId })" target="_blank" class="glyphicon glyphicon-new-window" data-toggle="tooltip" title="Go to Inventory" style="font-size: 14px"></a>
+                        </td>
+                        <td align="center">
+                            <a href="@Url.Action("Index", "BridgeProfile", new { id = item.BridgeId })" target="_blank" class="glyphicon glyphicon-new-window" data-toggle="tooltip" title="Go to Profile" style="font-size: 14px"></a>
+                        </td>
+                        <td align="center">
+                            <a href="@Url.Action("Index", "DamageInspMajor", new { id = item.BridgeId })" target="_blank" class="glyphicon glyphicon-new-window" data-toggle="tooltip" title="Go to Inspection" style="font-size: 14px"></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="panel-footer">
+        <h3 class="panel-title">Total No. of Bridges: <b>@Model.Count()</b></h3>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#bridges').dataTable({
+            paging: true,
+            pageLength: 15,
+            bLengthChange: true,
+            scrollY: 400,
+            scrollX: true,
+            searching: true,
+            select: true,
+            dom: 'lBfrtip',
+            //buttons: ['copy', 'excel', 'pdf', 'print']
+            buttons: [
+                { extend: 'copy', className: 'btn btn-sm btn-primary' },
+                { extend: 'excel', className: 'btn btn-sm btn-primary', text: 'Export Excel' },
+                { extend: 'pdf', className: 'btn btn-sm btn-primary', text: 'Export PDF' },
+                { extend: 'print', className: 'btn btn-sm btn-primary' }
+            ]
+        });
+    });
+</script>
+

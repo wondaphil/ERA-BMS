@@ -1,86 +1,97 @@
-﻿@model ERA_BCMS.Models.Section
+﻿@model ERA_BMS.Models.Section
 
 @{
     ViewBag.Title = "New Section";
 }
 
-<style>
-    .form-group.required .control-label:after {
-        content: " *";
-        color: red;
-        font-size: large;
-    }
-</style>
-
-<h2>New</h2>
+<h2>Register New Section</h2>
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        <h4>Section</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group required">
-            @Html.LabelFor(model => model.SectionId, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.SectionId, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.SectionId, "", new { @class = "text-danger" })
+        @*Holds a unique section id*@
+        @Html.HiddenFor(model => model.SectionId)
+
+        <div class="row">
+            <div class="col-xs-6">
+                <div class="form-group form-group-sm required">
+                    @Html.LabelFor(model => model.SectionNo, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-7">
+                        @Html.EditorFor(model => model.SectionNo, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.SectionNo, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm required">
+                    @Html.LabelFor(model => model.SectionName, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-7">
+                        @Html.EditorFor(model => model.SectionName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.SectionName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                </div>
+
+             <div class="col-xs-6">
+                <div class="form-group form-group-sm required">
+                    @Html.LabelFor(model => model.DistrictId, "District", htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-7">
+                        @Html.DropDownList("DistrictId", new SelectList(ViewBag.Districts, "Value", "Text"), new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.DistrictId, "", new { @class = "text-danger" })
+                        @*<div id="distrIdDIV" style="font-weight: bolder">  </div>*@
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.Remark, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-7">
+                        @Html.EditorFor(model => model.Remark, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Remark, "", new { @class = "text-danger" })
+                    </div>
+                </div>
             </div>
         </div>
-
-        <div class="form-group required">
-            @Html.LabelFor(model => model.SectionName, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.SectionName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.SectionName, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group required">
-            @Html.LabelFor(model => model.DistrictId, "District", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("DistrictId", null, "--Select District--", htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.DistrictId, "", new { @class = "text-danger" })
-                <div id="distrIdDIV" style="font-weight: bolder">  </div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Remark, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Remark, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Remark, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-success" />
-                <input type="reset" value="Reset" class="btn btn-warning" />
+        <div class="form-group form-group-sm">
+            <div class="col-md-offset-2 col-md-7">
+                <button type="submit" class="btn btn-primary" id="save"><span class="glyphicon glyphicon-save"></span> Save</button>
+                <button type="reset" class="btn btn-primary"><span class="glyphicon glyphicon-refresh"></span> Reset</button>
+                <div id="status" class="text-danger">
+                    <!-- Save failure status text appears here-->
+                </div>
             </div>
         </div>
     </div>
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+    <a href="@Url.Action("Index", new {area = "Admin", id = (ViewContext.RouteData.Values["id"]) })" class="btn btn-primary"><span class="glyphicon glyphicon-backward"></span> Go to Sections List</a>
 </div>
-
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
 
 <script>
     $(document).ready(function () {
-        $('#DistrictId').change(function () {
-            var selDistrictId = $('#DistrictId option:selected').val();
-            
-            if (!selDistrictId) //if no district is selected
-                $('#distrIdDIV').text(""); //clear district no. indicator
-            else
-                $('#distrIdDIV').text("District Id = " + selDistrictId);
+        // Assign a section id which is the next sequence in the section table
+        $.ajax({
+            url: '@Url.Action("LastSectionId", "Sections", new { area = "Admin" })',
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                $.each(data, function (i, item) {
+                    $('#SectionId').val(item.SectionId); // set the section id
+                });
+            },
+        });
+
+        $('#save').click(function () {
+            var selDistrictId = $('#DistrictId').val();
+
+            // if no section is selected, cancel submission and show error status
+            if (selDistrictId == 0 || (typeof selDistrictId == 'undefined') || selDistrictId == null || selSubRouteId == null) {
+                $('#status').text("Please select District")
+                return false;
+            }
         });
     });
 </script>

@@ -1,0 +1,95 @@
+﻿@model List<ERA_BMS.Models.DamageInspVisual>
+@using ERA_BMS.Models
+
+<style>
+    .withborder {
+        border: 1px solid black;
+    }
+</style>
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title panel-info">Regular/Visual Inspection Details (District: <b>@ViewBag.District</b>, Section: <b>@ViewBag.Section</b>, Road Segment: <b>@ViewBag.Segment</b>, Bridge: <b>@ViewBag.BridgeName</b>)</h3>
+    </div>
+
+    <div class="panel-body">
+        <br />
+        <br />
+        <table class="table table-condensed table-responsive display compact hover" id="tblvisualinspectiondetails">
+            <thead>
+                <tr>
+                    <th class="withborder">Structure Item</th>
+                    <th class="withborder">Damage Type</th>
+                    <th class="withborder">Damage Type</th>
+                    <th class="withborder">Damage Type</th>
+                    <th class="withborder">Damage Type</th>
+                    <th class="withborder">Damage Type</th>
+                    <th class="withborder">Damage Type</th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var inspDate in Model.GroupBy(d => d.InspectionDate))
+                {
+                    <tr>
+                        <td colspan="6">
+                            <h5>Inspection Date: <b>@inspDate.Key.Value.ToString("dd/MM/yyyy")</b></h5>
+                        </td>
+                    </tr>
+                    foreach (var strItem in inspDate.GroupBy(d => d.StructureItemId))
+                    {
+                        //InspectionDate.Value.ToString("dd/MM/yyyy")
+                        <tr>
+                            <td class="withborder">
+                                @{ var strItemName = "";
+                                    strItemName = ViewBag.StrItemNamesList[strItem.Key - 1];
+
+                                }
+                                <b>@strItemName</b>
+                            </td>
+                            @foreach (var item in strItem)
+                            {
+                        <td class="withborder">
+                            @item.DamageType.DamageTypeName
+                            <br />
+                            <b><i>@item.DamageSeverity.DamageSeverityName</i></b>
+                        </td>
+                            }
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="panel-footer">
+        <h5>Visual/Regular Bridge damage detail</h5>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        
+
+        $('#tblvisualinspectiondetails').dataTable({
+            paging: false,
+            pageLength: 15,
+            bLengthChange: true,
+            scrollY: 400,
+            
+            searching: true,
+            select: true,
+            dom: 'lBfrtip',
+            language: {
+                "emptyTable": " "
+            },
+            bInfo: false,
+            //buttons: ['copy', 'excel', 'pdf', 'print']
+            buttons: [
+                { extend: 'copy', className: 'btn btn-sm btn-primary' },
+                { extend: 'excel', className: 'btn btn-sm btn-primary', text: 'Export Excel' },
+                { extend: 'pdf', className: 'btn btn-sm btn-primary', text: 'Export PDF' },
+                { extend: 'print', className: 'btn btn-sm btn-primary' }
+            ]
+        });
+    });
+</script>

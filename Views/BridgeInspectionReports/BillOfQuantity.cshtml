@@ -1,0 +1,32 @@
+﻿
+@{
+    ViewBag.Title = "Bridge Bill of Quantity";
+}
+
+<h2>Bridge Bill of Quantity (BOQ)</h2>
+
+<div id="BOQPartial">
+    <!-- Bill of Quantity displays here -->
+</div>
+
+
+<div id="wait" align="center" style="display: none">
+    <img src="~/images/ajax-loader-big.gif" />
+</div>
+
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            url: '@Url.Action("_GetBillOfQuantity", "BridgeInspectionReports")',
+            data: { bridgeid: selBridgeId, inspectionyear: selInspectionYear },
+            type: 'GET',
+            dataType: 'html',
+            beforeSend: function () { $('#wait').show(); },
+            complete: function () { $('#wait').hide(); },
+            success: function (data) {
+                $('#BOQPartial').html(data);
+            }
+        });
+    });
+</script>
+

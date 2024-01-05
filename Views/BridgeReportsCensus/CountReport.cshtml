@@ -1,0 +1,105 @@
+﻿
+@{
+    ViewBag.Title = "Bridges & Culverts Count Reports";
+}
+
+<h2>Bridges & Culverts Count Reports</h2>
+
+
+@using (Html.BeginForm())
+{
+    <div class="panel panel-default">
+        <div class="panel-body">
+
+            @Html.AntiForgeryToken()
+
+            <div class="row">
+                
+                <div class="col-md-8 col-sm-10 col-xs-10">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group">
+                            <label for="ddlReportType" class="control-label col-md-4 col-sm-4 col-xs-4">Count Report Type</label>
+                            <div class="col-md-8 col-sm-8 col-xs-8">
+                                @Html.DropDownList("ddlCountReportType", (List<SelectListItem>)ViewBag.CountReportTypes, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class=" col-md-1 col-sm-2 col-xs-2 navbar-right">
+                    <a class="btn btn-primary" data-toggle="tooltip" title="Refresh" id="refresh"> <span class="glyphicon glyphicon-refresh"></span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="bridgeCountReportPartial">
+        <!-- Bridges count reports displays here -->
+    </div>
+}
+
+<div id="wait" align="center" style="display: none">
+    <img src="~/images/ajax-loader-big.gif" />
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#ddlCountReportType').change(function () {
+            var selCountReportTypeId = $('#ddlCountReportType option:selected').val();
+            $('#bridgeCountReportPartial').empty(); //clear the bridge report place holder
+            
+            if (selCountReportTypeId != "0") //if some count report is selected
+            {
+                switch (selCountReportTypeId) {
+                    case "1":
+                        $.ajax({
+                            url: '@Url.Action("BridgesCount", "BridgeReportsCensus")',
+                            type: 'GET',
+                            dataType: 'html',
+                            beforeSend: function () { $('#wait').show(); },
+                            complete: function () { $('#wait').hide(); },
+                            success: function (data) {
+                                $('#bridgeCountReportPartial').html(data);
+                            }
+                        });
+                        break;
+
+                    case "2":
+                        $.ajax({
+                            url: '@Url.Action("CulvertsCountByCulvertType", "CulvertReportsCensus")',
+                            type: 'GET',
+                            dataType: 'html',
+                            beforeSend: function () { $('#wait').show(); },
+                            complete: function () { $('#wait').hide(); },
+                            success: function (data) {
+                                $('#bridgeCountReportPartial').html(data);
+                            }
+                        });
+                        break;
+
+                    case "3":
+                        $.ajax({
+                            url: '@Url.Action("BridgesAndCulvertsCount", "BridgeReportsCensus")',
+                            type: 'GET',
+                            dataType: 'html',
+                            beforeSend: function () { $('#wait').show(); },
+                            complete: function () { $('#wait').hide(); },
+                            success: function (data) {
+                                $('#bridgeCountReportPartial').html(data);
+                            }
+                        });
+                        break;
+                }
+            }
+        });
+
+        $('#refresh').click(function () {
+            var selCountReportId = $('#ddlCountReportType option:selected').val();
+            if (selCountReportId != "0")
+                $('#ddlCountReportType').trigger('change');
+        });
+    });
+
+</script>
+
+
+

@@ -1,15 +1,14 @@
-﻿@model ERA_BCMS.Models.Section
+﻿@model ERA_BMS.Models.Section
 
 @{
     ViewBag.Title = "Section Details";
 }
 
-<h2>Details</h2>
+<h2>Section Details</h2>
 
-<div>
-    <h4>Section</h4>
+<div class="row">
     <hr />
-    <dl class="dl-horizontal">
+    <dl class="dl-horizontal col-md-4 col-xs-6">
         <dt>
             @Html.DisplayNameFor(model => model.SectionId)
         </dt>
@@ -19,13 +18,23 @@
         </dd>
 
         <dt>
+            @Html.DisplayNameFor(model => model.SectionNo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SectionNo)
+        </dd>
+
+        <dt>
             @Html.DisplayNameFor(model => model.SectionName)
         </dt>
 
         <dd>
             @Html.DisplayFor(model => model.SectionName)
         </dd>
+    </dl>
 
+    <dl class="dl-horizontal col-md-4 col-xs-6">
         <dt>
             @Html.DisplayNameFor(model => model.District.DistrictName)
         </dt>
@@ -43,6 +52,6 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.SectionId }, new { @class = "btn btn-primary" })
-    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+    <a href="@Url.Action("Edit", new {area = "Admin", id = Model.SectionId })" class="btn btn-primary"><span class="glyphicon glyphicon-edit"></span> Edit Section</a>
+    <a href="@Url.Action("Index", new {area = "Admin", id = ViewBag.DistrictId })" class="btn btn-primary"><span class="glyphicon glyphicon-backward"></span> Go to Sections List</a>
 </p>

@@ -1,20 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Entity;
+using System.Data.Entity; 
+using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using ERA_BCMS.Models;
+using ERA_BMS.Models;
 
-namespace ERA_BCMS.Areas.Admin.Controllers
+namespace ERA_BMS.Areas.Admin.Controllers
 {
     //Only Admins should have access
     [Authorize(Roles = "Admin")]
     public class SpanSupportTypesController : Controller
     {
-        private BCMSEntities db = new BCMSEntities();
+        private BMSEntities db = new BMSEntities();
 
         // GET: Admin/SpanSupportTypes
         public ActionResult Index()
@@ -39,23 +40,32 @@ namespace ERA_BCMS.Areas.Admin.Controllers
             return View(spanSupportType);
         }
 
-        // GET: Admin/SpanSupportTypes/Create
-        public ActionResult Create()
+        // GET: Admin/SpanSupportTypes/New
+        public ActionResult New()
         {
             return View();
         }
 
-        // POST: Admin/SpanSupportTypes/Create
+        // POST: Admin/SpanSupportTypes/New
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "SpanSupportTypeId,SpanSupportTypeName,Remark")] SpanSupportType spanSupportType)
+        public ActionResult New([Bind(Include = "SpanSupportTypeId,SpanSupportTypeName,Remark")] SpanSupportType spanSupportType)
         {
             if (ModelState.IsValid)
             {
                 db.SpanSupportTypes.Add(spanSupportType);
-                db.SaveChanges();
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch (Exception e) when (e.InnerException?.InnerException is SqlException sqlEx
+                                            && (sqlEx.Number == 2601 || sqlEx.Number == 2627))
+                {
+                    return RedirectToAction("DuplicateError", "ErrorHandler", new { area = "" });
+                }
+
                 return RedirectToAction("Details", new { id = spanSupportType.SpanSupportTypeId });
             }
 

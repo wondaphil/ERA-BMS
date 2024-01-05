@@ -1,0 +1,132 @@
+﻿@model ERA_BMS.Models.MajorInspectionYear
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "NewMajorInspectionForm", onsubmit = "return ValidateDataEntry()" }))
+{
+    <hr />
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <div class="row">
+            <h2 align="center">New Major Inspection Year</h2>
+            <hr />
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group form-group-sm required">
+                    @Html.LabelFor(model => model.InspectionYear, htmlAttributes: new { @class = "control-label col-sm-8 col-xs-7" })
+                    <div class="col-sm-4 col-xs-5">
+                        @Html.EditorFor(model => model.InspectionYear, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.InspectionYear, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm required">
+                    @Html.LabelFor(model => model.StartYear, htmlAttributes: new { @class = "control-label col-sm-8 col-xs-7" })
+                    <div class="col-sm-4 col-xs-5">
+                        @Html.EditorFor(model => model.StartYear, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.StartYear, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm required">
+                    @Html.LabelFor(model => model.EndYear, htmlAttributes: new { @class = "control-label col-sm-8 col-xs-7" })
+                    <div class="col-sm-4 col-xs-5">
+                        @Html.EditorFor(model => model.EndYear, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.EndYear, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
+                <div class="form-group form-group-sm required">
+                    @Html.LabelFor(model => model.NoOfRegisteredBridges, htmlAttributes: new { @class = "control-label col-sm-8 col-xs-7" })
+                    <div class="col-sm-4 col-xs-5">
+                        @Html.EditorFor(model => model.NoOfRegisteredBridges, new { htmlAttributes = new { @class = "form-control", @Value = "0" } })
+                        @Html.ValidationMessageFor(model => model.NoOfRegisteredBridges, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.NoOfInspectedBridges, htmlAttributes: new { @class = "control-label col-sm-8 col-xs-7" })
+                    <div class="col-sm-4 col-xs-5">
+                        @Html.EditorFor(model => model.NoOfInspectedBridges, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.NoOfInspectedBridges, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.NoOfRegisteredCulverts, htmlAttributes: new { @class = "control-label col-sm-8 col-xs-7" })
+                    <div class="col-sm-4 col-xs-5">
+                        @Html.EditorFor(model => model.NoOfRegisteredCulverts, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.NoOfRegisteredCulverts, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.NofInspectedCulverts, htmlAttributes: new { @class = "control-label col-sm-8 col-xs-7" })
+                    <div class="col-sm-4 col-xs-5">
+                        @Html.EditorFor(model => model.NofInspectedCulverts, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.NofInspectedCulverts, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.Remark, htmlAttributes: new { @class = "control-label col-sm-4 col-xs-3" })
+                    <div class="col-sm-8 col-xs-9">
+                        @Html.EditorFor(model => model.Remark, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Remark, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group form-group-sm">
+            <div class="col-md-offset-3 col-xs-offset-1 col-md-8 col-xs-10 col-sm-12 col-xs-10">
+                <div class="col-md-2 col-sm-2 col-xs-3">
+                    <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-save"></span> Save</button>
+                </div>
+                <div class="col-sm-2 col-xs-3">
+                    <button type="reset" class="btn btn-primary"><span class="glyphicon glyphicon-refresh"></span> Reset</button>
+                </div>
+                <div class="col-sm-2 col-xs-3">
+                    <button type="button" id="cancel" class="btn btn-primary"><span class="glyphicon glyphicon-backward"></span> Cancel</button>
+                </div>
+                <div class="col-sm-7 col-xs-10">
+                    <div id="validationStatus" class="success">
+                        <!-- Validation status text appears here-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        function ValidateDataEntry() {
+            if ($('#InspectionYear').val() == "" || $('#StartYear').val() == "" ||
+                $('#EndYear').val() == "" || $('#NoOfRegisteredBridges').val() == "")
+                return false;
+
+            return true;
+        }
+
+        $('form').on('submit', function (e) {
+            // validation code here
+            if (!ValidateDataEntry()) {
+                e.preventDefault();
+                if ($('#validationStatus').hasClass("text-success"))
+                    $('#validationStatus').removeClass("text-success");
+                $('#validationStatus').addClass("text-danger");
+                $('#validationStatus').text("Please enter all boxes marked with *");
+            }
+            else {
+                if ($('#validationStatus').hasClass("text-danger"))
+                    $('#validationStatus').removeClass("text-danger");
+                $('#validationStatus').addClass("text-success"); $('#validationStatus').text("Saving...");
+            }
+
+        });
+
+        $("#cancel").on("click", function () {
+            window.location.href = "/Admin/MajorInspectionYear";
+        });
+    });
+</script>

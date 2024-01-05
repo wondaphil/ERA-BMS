@@ -1,0 +1,42 @@
+﻿@model ERA_BMS.Models.ParapetMaterialType
+
+@{
+    ViewBag.Title = "Parapet Material Type Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Parapet Material Type</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.MaterialTypeId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MaterialTypeId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MaterialTypeName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MaterialTypeName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Remark)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Remark)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    <a href="@Url.Action("Edit", new { id = Model.MaterialTypeId })" class="btn btn-primary"><span class="glyphicon glyphicon-edit"></span> Edit</a>
+    <a href="@Url.Action("Index")" class="btn btn-primary"><span class="glyphicon glyphicon-backward"></span> Go to List</a>
+</p>

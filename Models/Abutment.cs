@@ -7,17 +7,14 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ERA_BCMS.Models
+namespace ERA_BMS.Models
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-
+    
     public partial class Abutment
     {
-        [Key, ForeignKey("Bridge")]
-        public string BridgeAbutementId { get; set; }
+        public string BridgeId { get; set; }
         public Nullable<int> AbutmentTypeIdA1 { get; set; }
         public Nullable<int> AbutmentTypeIdA2 { get; set; }
         public Nullable<double> AbutmentHeightA1 { get; set; }
@@ -34,14 +31,18 @@ namespace ERA_BCMS.Models
         public Nullable<int> NoOfAbutmentPilesA2 { get; set; }
         public Nullable<double> AbutmentPileDepthA1 { get; set; }
         public Nullable<double> AbutmentPileDepthA2 { get; set; }
-        public string SoilType { get; set; }
-        public string SoilType2 { get; set; }
+        public Nullable<int> SoilTypeA1 { get; set; }
+        public Nullable<int> SoilTypeA2 { get; set; }
         public Nullable<int> NoOfpier { get; set; }
+        public Nullable<System.DateTime> ModifiedOn { get; set; }
+        public byte[] Flag { get; set; }
     
         public virtual AbutmentType AbutmentType { get; set; }
         public virtual AbutmentType AbutmentType1 { get; set; }
-        public virtual Bridge Bridge { get; set; }
         public virtual FoundationType FoundationType { get; set; }
         public virtual FoundationType FoundationType1 { get; set; }
+        public virtual SoilType SoilType { get; set; }
+        public virtual SoilType SoilType1 { get; set; }
+        public virtual Bridge Bridge { get; set; }
     }
 }

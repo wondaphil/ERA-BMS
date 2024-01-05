@@ -1,171 +1,229 @@
-﻿@model ERA_BCMS.Models.Abutment
+﻿@model ERA_BMS.Models.Abutment
 
 @{
     ViewBag.Title = "Abutment";
 }
 
-<div>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.AbutmentHeightA1)
-        </dt>
+<div class="row">
+    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+        <table class="table table-condensed">
+            <tr>
+                <td class="h5">
+                    Abutment A1
+                </td>
+                <th></th>
+            </tr>
 
-        <dd>
-            @Html.DisplayFor(model => model.AbutmentHeightA1)
-        </dd>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.AbutmentType.AbutmentTypeName)
+                </td>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.AbutmentHeightA2)
-        </dt>
+                <th>
+                    @Html.DisplayFor(model => model.AbutmentType.AbutmentTypeName)
+                </th>
+            </tr>
 
-        <dd>
-            @Html.DisplayFor(model => model.AbutmentHeightA2)
-        </dd>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.AbutmentHeightA1)
+                </td>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.AbutmentWidthA1)
-        </dt>
+                <th>
+                    @Html.DisplayFor(model => model.AbutmentHeightA1)
+                </th>
+            </tr>
 
-        <dd>
-            @Html.DisplayFor(model => model.AbutmentWidthA1)
-        </dd>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.AbutmentWidthA1)
+                </td>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.AbutmentWidthA2)
-        </dt>
+                <th>
+                    @Html.DisplayFor(model => model.AbutmentWidthA1)
+                </th>
+            </tr>
 
-        <dd>
-            @Html.DisplayFor(model => model.AbutmentWidthA2)
-        </dd>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.FoundationType.FoundationTypeName)
+                </td>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.WingWallLengthA1)
-        </dt>
+                <th>
+                    @Html.DisplayFor(model => model.FoundationType.FoundationTypeName)
+                </th>
+            </tr>
 
-        <dd>
-            @Html.DisplayFor(model => model.WingWallLengthA1)
-        </dd>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.WingWallLengthA1)
+                </td>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.WingWallLengthA2)
-        </dt>
+                <th>
+                    @Html.DisplayFor(model => model.WingWallLengthA1)
+                </th>
+            </tr>
 
-        <dd>
-            @Html.DisplayFor(model => model.WingWallLengthA2)
-        </dd>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.FoundationSizeA1)
+                </td>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.FoundationSizeA1)
-        </dt>
+                <th>
+                    @Html.DisplayFor(model => model.FoundationSizeA1)
+                </th>
+            </tr>
 
-        <dd>
-            @Html.DisplayFor(model => model.FoundationSizeA1)
-        </dd>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.NoOfAbutmentPilesA1)
+                </td>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.FoundationSizeA2)
-        </dt>
+                <th>
+                    @Html.DisplayFor(model => model.NoOfAbutmentPilesA1)
+                </th>
+            </tr>
 
-        <dd>
-            @Html.DisplayFor(model => model.FoundationSizeA2)
-        </dd>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.AbutmentPileDepthA1)
+                </td>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.NoOfAbutmentPilesA1)
-        </dt>
+                <th>
+                    @Html.DisplayFor(model => model.AbutmentPileDepthA1)
+                </th>
+            </tr>
 
-        <dd>
-            @Html.DisplayFor(model => model.NoOfAbutmentPilesA1)
-        </dd>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.SoilType.SoilTypeName)
+                </td>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.NoOfAbutmentPilesA2)
-        </dt>
+                <th>
+                    @Html.DisplayFor(model => model.SoilType.SoilTypeName)
+                </th>
+            </tr>
+        </table>
+    </div>
+    
+    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+        <table class="table table-condensed">
+            <tr>
+                <td class="h5">
+                    Abutment A2
+                </td>
+                <th></th>
+            </tr>
 
-        <dd>
-            @Html.DisplayFor(model => model.NoOfAbutmentPilesA2)
-        </dd>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.AbutmentType1.AbutmentTypeName)
+                </td>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.AbutmentPileDepthA1)
-        </dt>
+                <th>
+                    @Html.DisplayFor(model => model.AbutmentType1.AbutmentTypeName)
+                </th>
+            </tr>
 
-        <dd>
-            @Html.DisplayFor(model => model.AbutmentPileDepthA1)
-        </dd>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.AbutmentHeightA2)
+                </td>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.AbutmentPileDepthA2)
-        </dt>
+                <th>
+                    @Html.DisplayFor(model => model.AbutmentHeightA2)
+                </th>
+            </tr>
 
-        <dd>
-            @Html.DisplayFor(model => model.AbutmentPileDepthA2)
-        </dd>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.AbutmentWidthA2)
+                </td>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.SoilType)
-        </dt>
+                <th>
+                    @Html.DisplayFor(model => model.AbutmentWidthA2)
+                </th>
+            </tr>
 
-        <dd>
-            @Html.DisplayFor(model => model.SoilType)
-        </dd>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.FoundationType1.FoundationTypeName)
+                </td>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.SoilType2)
-        </dt>
+                <th>
+                    @Html.DisplayFor(model => model.FoundationType1.FoundationTypeName)
+                </th>
+            </tr>
 
-        <dd>
-            @Html.DisplayFor(model => model.SoilType2)
-        </dd>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.WingWallLengthA2)
+                </td>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.NoOfpier)
-        </dt>
+                <th>
+                    @Html.DisplayFor(model => model.WingWallLengthA2)
+                </th>
+            </tr>
 
-        <dd>
-            @Html.DisplayFor(model => model.NoOfpier)
-        </dd>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.FoundationSizeA2)
+                </td>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.AbutmentType.AbutmentTypeName)
-        </dt>
+                <th>
+                    @Html.DisplayFor(model => model.FoundationSizeA2)
+                </th>
+            </tr>
 
-        <dd>
-            @Html.DisplayFor(model => model.AbutmentType.AbutmentTypeName)
-        </dd>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.NoOfAbutmentPilesA2)
+                </td>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.AbutmentType1.AbutmentTypeName)
-        </dt>
+                <th>
+                    @Html.DisplayFor(model => model.NoOfAbutmentPilesA2)
+                </th>
+            </tr>
 
-        <dd>
-            @Html.DisplayFor(model => model.AbutmentType1.AbutmentTypeName)
-        </dd>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.AbutmentPileDepthA2)
+                </td>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Bridge.BridgeName)
-        </dt>
+                <th>
+                    @Html.DisplayFor(model => model.AbutmentPileDepthA2)
+                </th>
+            </tr>
 
-        <dd>
-            @Html.DisplayFor(model => model.Bridge.BridgeName)
-        </dd>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.SoilType1.SoilTypeName)
+                </td>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.FoundationType.FoundationTypeName)
-        </dt>
+                <th>
+                    @Html.DisplayFor(model => model.SoilType1.SoilTypeName)
+                </th>
+            </tr>
 
-        <dd>
-            @Html.DisplayFor(model => model.FoundationType.FoundationTypeName)
-        </dd>
+            <tr>
+                <td>
+                    <br />
+                </td>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.FoundationType1.FoundationTypeName)
-        </dt>
+                <th>
+                    <br />
+                </th>
+            </tr>
 
-        <dd>
-            @Html.DisplayFor(model => model.FoundationType1.FoundationTypeName)
-        </dd>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.NoOfpier)
+                </td>
 
-    </dl>
+                <th>
+                    @Html.DisplayFor(model => model.NoOfpier)
+                </th>
+            </tr>
+        </table>
+    </div>
 </div>

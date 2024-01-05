@@ -1,0 +1,175 @@
+﻿@model IEnumerable<ERA_BMS.Models.Bridge>
+
+@{
+    ViewBag.Title = "Bridge Damage Condition";
+}
+
+<h2>Bridge Damage Condition</h2>
+
+@using (Html.BeginForm())
+{
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title panel-info">Please select <b>District</b>, <b>Section</b>, <b>Segment</b> and <b>Inspection Year</b> from the dropdown list</h3>
+        </div>
+        <div class="panel-body">
+
+            @Html.AntiForgeryToken()
+
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group-sm">
+                            <label class="control-label col-md-3">District</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("ddlDistrict", (List<SelectListItem>)ViewBag.Districts, new { @class = "form-control" })
+                                <label class="control-label" id="distrIdDIV"> <!-- District id appears here --> </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group-sm">
+                            <label class="control-label col-md-3">Section</label>
+                            <div class="col-md-8">
+                                <select class="form-control" id="ddlSection">
+                                    <!-- Sections list populates here -->
+                                </select>
+                                <label class="control-label" id="secIdDIV"> <!-- Section id appears here --> </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group-sm">
+                            <label class="control-label col-md-3">Segment</label>
+                            <div class="col-md-8">
+                                <select class="form-control" id="ddlSegment">
+                                    <!-- Segments list populates here -->
+                                </select>
+                                <label class="control-label" id="segIdDIV"> <!-- Segment id appears here --> </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group-sm">
+                            <label class="control-label col-md-5">Inspection Year</label>
+                            <div class="col-md-5">
+                                @Html.DropDownList("ddlInspectionYear", (List<SelectListItem>)ViewBag.InspectionYear, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="bridgeConditionPartial">
+        <!-- Bridges condition list displays here -->
+    </div>
+}
+
+<div id="wait" align="center" style="display: none">
+    <img src="~/images/ajax-loader-big.gif" />
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#ddlDistrict').change(function () {
+            var selDistrictId = $('#ddlDistrict option:selected').val();
+            $('#ddlSection option').remove(); //empty the section dropdown list
+            $('#secIdDIV').text(""); //clear section no. indicator
+            $('#ddlSegment option').remove(); //empty the segment dropdown list
+            $('#segIdDIV').text(""); //clear segment no. indicator
+            $('#bridgeConditionPartial').empty(); // clear the bridge condition place holder
+            if (selDistrictId == "0") //if no district is selected
+            {
+                $('#distrIdDIV').text(""); //clear district no. indicator
+            }
+            else {
+                $('#distrIdDIV').text("District Id = " + selDistrictId );
+                $.ajax({
+                    url: '@Url.Action("_GetSections", "LocationsDDL")',
+                    data: { districtid: selDistrictId },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        var markup = '<option value="0" id="noselect"> --Select Section --</option>';
+                        $.each(data, function (i, section) {
+                            markup += '<option value="' + section.Value + '">' + section.Text + '</option>'
+                            $('#ddlSection').html(markup);
+                        });
+                    }
+                });
+            }
+        });
+
+        $('#ddlSection').change(function () {
+            var selSectionId = $('#ddlSection option:selected').val();
+            $('#ddlSegment option').remove(); //empty the segment dropdown list
+            $('#segIdDIV').text(""); //clear segment no. indicator
+            $('#bridgeConditionPartial').empty(); // clear the bridge condition place holder
+
+            if (selSectionId == "0") //if no section is selected
+            {
+                $('#secIdDIV').text(""); //clear section no. indicator
+            }
+            else {
+                $('#secIdDIV').text("Section Id = " + selSectionId);
+
+                $.ajax({
+                    url: '@Url.Action("_GetSegments", "LocationsDDL")',
+                    data: { sectionid: selSectionId },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        var markup = '<option value="0" id="noselect"> --Select Section --</option>';
+                        $.each(data, function (i, segment) {
+                            markup += '<option value="' + segment.Value + '">' + segment.Text + '</option>'
+                            $('#ddlSegment').html(markup);
+                        });
+                    }
+                });
+            }
+        });
+
+        $('#ddlSegment').change(function () {
+            var selSegmentId = $('#ddlSegment option:selected').val();
+            var selSectionId = $('#ddlSection option:selected').val();
+            var selDistrictId = $('#ddlDistrict option:selected').val();
+            var selInspectionYear = $('#ddlInspectionYear option:selected').val();
+
+            if (selSegmentId == "0") //if no segment is selected
+            {
+                $('#bridgeConditionPartial').empty(); //clear the bridge condition place holder
+                $('#SegIdDIV').text("");
+            }
+            else {
+                $('#segIdDIV').text("Segment Id = " + selSegmentId);
+                $.ajax({
+                    url: '@Url.Action("_GetBridgeDamageCondition", "BridgeReportsInspection")',
+                    data: { segmentid: selSegmentId, inspectionyear: selInspectionYear },
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () { $('#wait').show(); },
+                    complete: function () { $('#wait').hide(); },
+                    success: function (data) {
+                        $('#bridgeConditionPartial').html(data);
+                    }
+                });
+            }
+        });
+
+        $('#ddlInspectionYear').change(function () {
+            $('#ddlSegment').trigger('change');
+        });
+    });
+
+</script>
+

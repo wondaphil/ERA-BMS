@@ -1,0 +1,145 @@
+﻿@model IEnumerable<ERA_BMS.Models.Culvert>
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title panel-info">List of Culverts (District: <b>All</b>)</h3>
+    </div>
+
+    <div class="panel-body">
+        <table class="table table-striped table-condensed table-responsive table-bordered display compact hover" id="culverts">
+            <thead>
+                <tr>
+                    @*<th>
+                        @Html.DisplayNameFor(model => model.CulvertId)
+                    </th>*@
+                    <th>
+                        @Html.DisplayNameFor(model => model.RevisedCulvertNo)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Segment.SegmentName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Segment.Section.SectionName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Segment.Section.District.DistrictName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CulvertGeneralInfo.KMFromAddis)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CulvertStructure.CulvertType.CulvertTypeName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CulvertStructure.AbutmentType.AbutmentTypeName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CulvertStructure.LengthTotal)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CulvertStructure.LengthInside)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CulvertGeneralInfo.ConstructionYear)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CulvertGeneralInfo.ConstructionCost)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CulvertGeneralInfo.Contractor)
+                    </th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        @*<td>
+                            @Html.DisplayFor(modelItem => item.CulvertId)
+                        </td>*@
+                        <td>
+                            @Html.DisplayFor(modelItem => item.RevisedCulvertNo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Segment.SegmentName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Segment.Section.SectionName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Segment.Section.District.DistrictName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CulvertGeneralInfo.KMFromAddis)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CulvertStructure.CulvertType.CulvertTypeName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CulvertStructure.AbutmentType.AbutmentTypeName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CulvertStructure.LengthTotal)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CulvertStructure.LengthInside)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CulvertGeneralInfo.ConstructionYear)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CulvertGeneralInfo.ConstructionCost)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CulvertGeneralInfo.Contractor)
+                        </td>
+                        <td align="center">
+                            <a href="@Url.Action("Index", "CulvertInventory", new { id = item.CulvertId })" target="_blank" class="glyphicon glyphicon-new-window" data-toggle="tooltip" title="Go to Inventory" style="font-size: 14px"></a>
+                        </td>
+                        <td align="center">
+                            <a href="@Url.Action("Index", "CulvertProfile", new { id = item.CulvertId })" target="_blank" class="glyphicon glyphicon-new-window" data-toggle="tooltip" title="Go to Profile" style="font-size: 14px"></a>
+                        </td>
+                        <td align="center">
+                            <a href="@Url.Action("Index", "DamageInspCulvert", new { id = item.CulvertId })" target="_blank" class="glyphicon glyphicon-new-window" data-toggle="tooltip" title="Go to Inspection" style="font-size: 14px"></a>
+                        </td>
+                        <td align="center">
+                            <a href="@Url.Action("BillOfQuantity", "CulvertInspectionReports", new { id = item.CulvertId })" target="_blank" class="glyphicon glyphicon-new-window" data-toggle="tooltip" title="Go to BOQ" style="font-size: 14px"></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="panel-footer">
+        <h3 class="panel-title">Total No. of Culverts: <b>@Model.Count()</b></h3>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        
+
+        $('#culverts').dataTable({
+            paging: true,
+            pageLength: 15,
+            bLengthChange: true,
+            scrollY: 400,
+            scrollX: true,
+            searching: true,
+            select: true,
+            dom: 'lBfrtip',
+            //buttons: ['copy', 'excel', 'pdf', 'print']
+            buttons: [
+                { extend: 'copy', className: 'btn btn-sm btn-primary' },
+                { extend: 'excel', className: 'btn btn-sm btn-primary', text: 'Export Excel' },
+                { extend: 'pdf', className: 'btn btn-sm btn-primary', text: 'Export PDF' },
+                { extend: 'print', className: 'btn btn-sm btn-primary' }
+            ]
+        });
+    });
+</script>

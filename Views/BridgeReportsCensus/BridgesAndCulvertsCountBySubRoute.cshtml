@@ -1,0 +1,54 @@
+﻿
+<hr />
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="row">
+        <div class="form-horizontal">
+            <div class="col-xs-12">
+                <div class="form-group form-group-sm">
+                    <label class="control-label col-xs-2">MainRoute</label>
+                    <div class="col-xs-5">
+                        @Html.DropDownList("ddlMainRoute", new SelectList(ViewBag.MainRoutes, "Value", "Text"), new { @class = "form-control" })
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="bridgesAndCulvertsCountBySubRoutePartial">
+        <!-- Bridges and culverts count displays here -->
+    </div>
+}
+
+<div id="waitsubroute" align="center" style="display: none">
+    <img src="~/images/ajax-loader-big.gif" />
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#ddlMainRoute').change(function () {
+            var selMainRouteId = $('#ddlMainRoute option:selected').val();
+            $('#bridgesAndCulvertsCountBySubRoutePartial').empty(); //clear the sections place holder
+            
+            if (selMainRouteId != "0") //if some main route is selected
+            {
+                $.ajax({
+                    url: '@Url.Action("_GetBridgesAndCulvertsCountBySubRoute", "BridgeReportsCensus")',
+                    data: { mainrouteid: selMainRouteId },
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () { $('#waitsubroute').show(); },
+                    complete: function () { $('#waitsubroute').hide(); },
+                    success: function (data) {
+                        $('#bridgesAndCulvertsCountBySubRoutePartial').html(data);
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+

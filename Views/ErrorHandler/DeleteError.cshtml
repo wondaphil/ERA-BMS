@@ -1,0 +1,54 @@
+﻿@model ERA_BMS.Models.District
+
+@{
+    ViewBag.Title = "Delete Error";
+}
+
+<h2>Delete Error</h2>
+
+@{ 
+    int errorCode = ViewBag.ErrorCode;
+    HtmlString message1;
+    HtmlString message2;
+}
+@switch (errorCode)
+{
+    //District
+    case 1:
+        message1 = new HtmlString("Unable to delete District");
+        message2 = new HtmlString("The <b>District</b> you are trying to delete has one or more <b>Sections</b> in it. <br /><br />Move to another District or Delete those Sections and try again.");
+        break;
+
+    //Section
+    case 2:
+        message1 = new HtmlString("Unable to delete Section");
+        message2 = new HtmlString("The <b>Section</b> you are trying to delete has one or more <b>Road Segments</b> in it. <br /><br />Move to another Section or Delete those Road Segments and try again.");
+        break;
+
+    //Segment
+    case 3:
+        message1 = new HtmlString("Unable to delete Road Segment");
+        message2 = new HtmlString("The <b>Road Segment</b> you are trying to delete has been assigned to one or more <b>Bridges/Culverts</b>. <br /><br />Reassign to another Road Segement or delete those Bridges/Culverts and try again.");
+        break;
+
+    //Main Route
+    case 4:
+        message1 = new HtmlString("Unable to delete Main Route");
+        message2 = new HtmlString("The <b>Main Route</b> you are trying to delete has one or more <b>Sub Routes</b> in it. <br /><br />Move to another Main Route or Delete those Sub Routes and try again.");
+        break;
+
+    //Sub Route
+    case 5:
+        message1 = new HtmlString("Unable to delete Sub Route");
+        message2 = new HtmlString("The <b>Sub Route</b> you are trying to delete has been assigned to one or more <b>Bridges/Culverts</b>. <br /><br />Reassign to another Sub Route or Delete those Bridges/Culverts and try again.");
+        break;
+    default:
+        message1 = new HtmlString("Unknown error");
+        message2 = new HtmlString("Unknown error has occured. Please try again and try again.");
+        break;
+}
+
+<h3 style="color: red"><u>@message1</u></h3>
+<h4>@message2</h4>
+<br />
+<a href="javascript:history.back()" class="btn btn-primary"><span class="glyphicon glyphicon-backward"></span> Go back</a>

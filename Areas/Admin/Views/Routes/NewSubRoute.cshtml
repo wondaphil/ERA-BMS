@@ -1,0 +1,137 @@
+﻿@model ERA_BMS.Models.SubRoute
+
+@{
+    ViewBag.Title = "New Sub Route";
+}
+
+<h2>Register New Sub Route</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @*Holds a unique sub route id*@
+        @Html.HiddenFor(model => model.SubRouteId)
+
+        <div class="row">
+            <div class="col-xs-6">
+                <div class="form-group form-group-sm required">
+                    @Html.LabelFor(model => model.SubRouteNo, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-7">
+                        @Html.EditorFor(model => model.SubRouteNo, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.SubRouteNo, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm required">
+                    @Html.LabelFor(model => model.SubRouteName, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-7">
+                        @Html.EditorFor(model => model.SubRouteName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.SubRouteName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm required">
+                    @Html.LabelFor(model => model.MainRouteId, null, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-7">
+                        @Html.DropDownList("MainRouteId", new SelectList(ViewBag.MainRoutes, "Value", "Text"), new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.MainRouteId, "", new { @class = "text-danger" })
+                        @*<div id="mainRouteIdDIV" style="font-weight: bolder">  </div>*@
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xs-3">
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.FromKm, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-7">
+                        @Html.EditorFor(model => model.FromKm, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.FromKm, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.ToKm, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-7">
+                        @Html.EditorFor(model => model.ToKm, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.ToKm, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.Length, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-7">
+                        @Html.EditorFor(model => model.Length, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Length, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xs-3">
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.AverageDailyTraffic, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-7">
+                        @Html.EditorFor(model => model.AverageDailyTraffic, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.AverageDailyTraffic, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.Remark, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-7">
+                        @Html.EditorFor(model => model.Remark, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Remark, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group form-group-sm">
+            <div class="col-md-offset-2 col-md-6">
+                <button type="submit" class="btn btn-primary" id="save"><span class="glyphicon glyphicon-save"></span> Save</button>
+                <button type="reset" class="btn btn-primary"><span class="glyphicon glyphicon-refresh"></span> Reset</button>
+                <div id="status" class="text-danger">
+                    <!-- Save failure status text appears here-->
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    <a href="@Url.Action("Index")" class="btn btn-primary"><span class="glyphicon glyphicon-backward"></span> Go to Routes List</a>
+</div>
+
+<script>
+    $(document).ready(function () {
+        // Assign a sub route id which is the next sequence in the "SubRoute" table
+        $.ajax({
+            url: '@Url.Action("LastSubRouteId", "Routes",  new { area = "Admin" })',
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                $.each(data, function (i, item) {
+                    $('#SubRouteId').val(item.SubRouteId); // set the sub route id
+                });
+            },
+        });
+
+        $('#MainRouteId').change(function () {
+            var selMainRouteId = $('#MainRouteId option:selected').val();
+
+            if (!selMainRouteId) //if no main route is selected
+                $('#mainRouteIdDIV').text(""); //clear main route no. indicator
+            else
+                $('#mainRouteIdDIV').text("Main Route Id = " + selMainRouteId);
+        });
+
+        $('#save').click(function () {
+            if ($('#MainRouteId').val() == 0) { // no main route is selected
+                $('#status').text("Please enter/select all boxes marked with *");
+                return false;
+            }
+        });
+    });
+</script>

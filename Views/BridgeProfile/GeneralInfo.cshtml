@@ -1,163 +1,246 @@
-﻿@model ERA_BCMS.Models.BridgeGeneralInfo
+﻿@model ERA_BMS.Models.BridgeGeneralInfo
 
 @{
-    ViewBag.Title = "BridgeGeneralInfo";
+    ViewBag.Title = "Bridge General Info";
 }
 
-<div>
-    <hr />
-    <dl class="row">
-        <dt>
-            @Html.DisplayNameFor(model => model.BridgeLength)
-        </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.BridgeLength)
-        </dd>
+<div class="row">
+    <div class="col-xs-6">
+        <table class="table table-condensed">
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.BridgeLength)
+                </td>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.TotBridgeLength)
-        </dt>
+                <th>
+                    @Html.DisplayFor(model => model.BridgeLength)
+                </th>
+            </tr>
 
-        <dd>
-            @Html.DisplayFor(model => model.TotBridgeLength)
-        </dd>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.BridgeWidth)
+                </td>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.BridgeWidth)
-        </dt>
+                <th>
+                    @Html.DisplayFor(model => model.BridgeWidth)
+                </th>
+            </tr>
 
-        <dd>
-            @Html.DisplayFor(model => model.BridgeWidth)
-        </dd>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.RiverWidth)
+                </td>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.RiverWidth)
-        </dt>
+                <th>
+                    @Html.DisplayFor(model => model.RiverWidth)
+                </th>
+            </tr>
 
-        <dd>
-            @Html.DisplayFor(model => model.RiverWidth)
-        </dd>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.PresentWaterLevel)
+                </td>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.PresentWaterLevel)
-        </dt>
+                <th>
+                    @Html.DisplayFor(model => model.PresentWaterLevel)
+                </th>
+            </tr>
 
-        <dd>
-            @Html.DisplayFor(model => model.PresentWaterLevel)
-        </dd>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.HighestWaterLevel)
+                </td>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.HighestWaterLevel)
-        </dt>
+                <th>
+                    @Html.DisplayFor(model => model.HighestWaterLevel)
+                </th>
+            </tr>
 
-        <dd>
-            @Html.DisplayFor(model => model.HighestWaterLevel)
-        </dd>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.DesignCapacity)
+                </td>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.LoadCapacity)
-        </dt>
+                <th>
+                    @Html.DisplayFor(model => model.DesignCapacity)
+                </th>
+            </tr>
 
-        <dd>
-            @Html.DisplayFor(model => model.LoadCapacity)
-        </dd>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.BearingCapacity)
+                </td>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.DailyTraffic)
-        </dt>
+                <th>
+                    @*@Html.DisplayFor(model => model.BearingCapacity)*@
+                    @{
+                        string deisgnCapacity = ((bool)Model.BearingCapacity) ? "Yes" : "No";
+                    }
+                    @deisgnCapacity
+                </th>
+            </tr>
 
-        <dd>
-            @Html.DisplayFor(model => model.DailyTraffic)
-        </dd>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.Bridge.Segment.AverageDailyTraffic)
+                </td>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Topography)
-        </dt>
+                <th>
+                    @Html.DisplayFor(model => model.Bridge.Segment.AverageDailyTraffic)
+                </th>
+            </tr>
 
-        <dd>
-            @Html.DisplayFor(model => model.Topography)
-        </dd>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.Topography)
+                </td>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Altitude)
-        </dt>
+                <th>
+                    @Html.DisplayFor(model => model.Topography)
+                </th>
+            </tr>
 
-        <dd>
-            @Html.DisplayFor(model => model.Altitude)
-        </dd>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.Altitude)
+                </td>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.ConstructionYear)
-        </dt>
+                <th>
+                    @Html.DisplayFor(model => model.Altitude)
+                </th>
+            </tr>
+        </table>
+    </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.ConstructionYear)
-        </dd>
+    <div class="col-xs-6">
+        <table class="table table-condensed">
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.ConstructionYear)
+                </td>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.BeforeYear)
-        </dt>
+                <th>
+                    @Html.DisplayFor(model => model.ConstructionYear)
+                </th>
+            </tr>
 
-        <dd>
-            @Html.DisplayFor(model => model.BeforeYear)
-        </dd>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.ReplacedYear)
+                </td>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Contractor)
-        </dt>
+                <th>
+                    @Html.DisplayFor(model => model.ReplacedYear)
+                </th>
+            </tr>
 
-        <dd>
-            @Html.DisplayFor(model => model.Contractor)
-        </dd>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.Before1935)
+                </td>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Designer)
-        </dt>
+                <th>
+                    @*@Html.DisplayFor(model => model.Before1935)*@
+                    @{
+                        string before1935 = ((bool)Model.Before1935) ? "Yes" : "No";
+                    }
+                    @before1935
+                </th>
+            </tr>
 
-        <dd>
-            @Html.DisplayFor(model => model.Designer)
-        </dd>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.Contractor)
+                </td>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.BridgeCost)
-        </dt>
+                <th>
+                    @Html.DisplayFor(model => model.Contractor)
+                </th>
+            </tr>
 
-        <dd>
-            @Html.DisplayFor(model => model.BridgeCost)
-        </dd>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.Designer)
+                </td>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.SafetySign)
-        </dt>
+                <th>
+                    @Html.DisplayFor(model => model.Designer)
+                </th>
+            </tr>
 
-        <dd>
-            @Html.DisplayFor(model => model.SafetySign)
-        </dd>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.ConstructionCost)
+                </td>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Detour)
-        </dt>
+                <th>
+                    @Html.DisplayFor(model => model.ConstructionCost)
+                </th>
+            </tr>
 
-        <dd>
-            @Html.DisplayFor(model => model.Detour)
-        </dd>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.AssetReplacementCost)
+                </td>
 
-        @*<dt>
-            @Html.DisplayNameFor(model => model.Bridge.BridgeName)
-        </dt>
+                <th>
+                    @Html.DisplayFor(model => model.AssetReplacementCost)
+                </th>
+            </tr>
 
-        <dd>
-            @Html.DisplayFor(model => model.Bridge.BridgeName)
-        </dd>*@
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.SafetySign)
+                </td>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.RoadAlignmentType.RoadAlignmentTypeName)
-        </dt>
+                <th>
+                    @*@Html.DisplayFor(model => model.SafetySign)*@
+                    @{
+                        string safetysign = ((bool)Model.SafetySign) ? "Yes" : "No";
+                    }
+                    @safetysign
+                </th>
+            </tr>
 
-        <dd>
-            @Html.DisplayFor(model => model.RoadAlignmentType.RoadAlignmentTypeName)
-        </dd>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.DetourPossible)
+                </td>
 
-    </dl>
+                <th>
+                    @*@Html.DisplayFor(model => model.DetourPossible)*@
+                    @{
+                        string detourpossible = ((bool)Model.DetourPossible) ? "Yes" : "No";
+                    }
+                    @detourpossible
+                </th>
+            </tr>
+
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.RoadAlignmentType.RoadAlignmentTypeName)
+                </td>
+
+                <th>
+                    @Html.DisplayFor(model => model.RoadAlignmentType.RoadAlignmentTypeName)
+                </th>
+            </tr>
+        </table>
+    </div>
+
+    <div class="col-xs-12">
+        <table class="table table-condensed">
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.Remark)
+                </td>
+
+                <th>
+                    @Html.DisplayFor(model => model.Remark)
+                </th>
+            </tr>
+        </table>
+    </div>
 </div>

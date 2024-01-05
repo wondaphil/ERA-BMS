@@ -1,0 +1,250 @@
+﻿@model ERA_BMS.ViewModels.RoadMapViewModel
+
+@{
+    ViewBag.Title = "Road Map";
+}
+
+<style>
+    .floating-panel {
+        position: relative;
+        z-index: 5;
+        padding: 5px;
+        text-align: center;
+        line-height: 30px;
+        padding-left: 10px;
+    }
+</style>
+
+<h2>Road Map</h2>
+
+<div class="panel panel-primary title">
+    <div class="panel-heading">
+        <h3 class="panel-title panel-info" id="title">Road Segment: <b>@Model.SegmentName</b> (<b>@Model.RevisedRoadId</b>)</h3>
+    </div>
+    <div class="panel-body">
+        <div id="divStatus" style="font-size:small; font-weight: bold; padding: 10px; display: none;">
+            <div style="float: right">
+                <input type="checkbox" id="chkShowBridges" style="float: inline-end; width: 15px; height: 15px;" onclick="ShowOrHideBridges()" >
+                <label for="chkShowBridges" style="background-color: whitesmoke;"> Show Bridges </label>
+                <br />
+                <input type="checkbox" id="chkShowCulverts" style="float: inline-end; width: 15px; height: 15px;" onclick="ShowOrHideCulverts()" >
+                <label for="chkShowCulverts" style="background-color: whitesmoke;"> Show Culverts </label>
+            </div>
+        </div>
+        
+        <div id="Map" style="height: 600px; border: 1px solid #999;">
+            <!-- Map displays here -->
+        </div>
+    </div>
+</div>
+<script>
+    // Get road segment map from the Model and store it in Javascript object
+    @{
+        System.Web.Script.Serialization.JavaScriptSerializer serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+        serializer.MaxJsonLength = Int32.MaxValue; // to avoid maxJsonLength exception
+    }
+    var roadPointList = ConvertModelToJSObject('@serializer.Serialize(Model.RoadPointList)');
+    var segmentNo = ConvertModelToJSObject('@serializer.Serialize(Model.SegmentNo)');
+    var roadId = ConvertModelToJSObject('@serializer.Serialize(Model.RoadId)');
+    var revisedRoadId = ConvertModelToJSObject('@serializer.Serialize(Model.RevisedRoadId)');
+    var segmentName = ConvertModelToJSObject('@serializer.Serialize(Model.SegmentName)');
+    var roadLength = ConvertModelToJSObject('@serializer.Serialize(Model.RoadLength)');
+    var sectionName = ConvertModelToJSObject('@serializer.Serialize(Model.SectionName)');
+    var districtName = ConvertModelToJSObject('@serializer.Serialize(Model.DistrictName)');
+    var AADT = ConvertModelToJSObject('@serializer.Serialize(Model.AADT)');
+
+    // Get all the bridges and culverts in the selected road segment
+    var bridgeLocList = @(Html.Raw(new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(ViewBag.BridgeLocationList)));
+    var culvertLocList = @(Html.Raw(new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(ViewBag.CulvertLocationList)));
+
+    var brgMarkerList = new Array();
+    var culMarkerList = new Array();
+
+    var noMapFile = @serializer.Serialize(ViewBag.NoMapFile);
+    var i, j, k, map, contentString, infowindow;
+    var roadPath;
+    //alert(roadPointList[0].lat + ", " + roadPointList[0].lng);
+    //alert(districtBoundaryPointsList[0].DistrictName + " " + districtBoundaryPointsList[0].DistrictBoundaryPoints[0].lng)
+
+    function ConvertModelToJSObject(modelObject) {
+        var obj = modelObject.replaceAll("&quot;", "\"");
+        return JSON.parse(obj); // Convert JSON string to Javascript object and return it
+    }
+
+    $(document).ready(function () {
+        // If road has no map file (kml), then prompt error message and do not go to the map page
+        if (noMapFile == true) {
+            document.getElementById('Map').innerHTML = "<h3 style='padding-left: 20px'>Map cannot be displayed</h3>" +
+                "<h4 style='padding-left: 20px; color:red'>The is no map file (kml) associated with the road segment.</h4>";
+            return;
+        }
+
+        // calculate the approximate mid point of the road
+        var midindex = Math.round(roadPointList.length / 2);
+        var centerPoint = roadPointList[midindex];
+
+        // Center the map to the mid point of the road map
+        map = new google.maps.Map(document.getElementById('Map'), {
+            zoom: 12,
+            center: {
+                lat: centerPoint.lat,
+                lng: centerPoint.lng
+            },
+            //mapTypeId: google.maps.MapTypeId.TERRAIN, //ROADMAP
+            //mapTypeId: 'mapStyle',
+            draggableCursor: 'crosshair',
+        });
+
+        // Hide any open infowindow when anywhere in the map is clicked
+        google.maps.event.addListener(map, 'click', function () {
+            infowindow.close();
+        });
+
+        // Put update controls inside the map
+        map.controls[google.maps.ControlPosition.TOP_RIGHT].push(document.getElementById('divStatus'));
+        document.getElementById('divStatus').style.display = "";
+
+        infowindow = new google.maps.InfoWindow();
+
+        ShowRoad();
+    });
+
+    function AddListenersOnPolyline(polyline) {
+        var path = polyline.getPath();
+        var length = google.maps.geometry.spherical.computeLength(path);
+        length = (length / 1000.0).toFixed(1);
+        roadId = (roadId == null) ? "" : roadId;
+        revisedRoadId = (revisedRoadId == null) ? "" : revisedRoadId;
+
+        contentString = "<h4 style='font-size: 20px'>Road Information</h4>" +
+            "<div>Road Segment: <b>" + segmentName + "</b></div>" +
+            "<div>Road Id: <b>" + roadId + "</b></div>" +
+            "<div>Rev. Road Id: <b>" + revisedRoadId + "</b></div>" +
+            "<div>Segment No: <b>" + segmentNo + "</b></div>" +
+            "<div>Section: <b>" + sectionName + "</b></div>" +
+            "<div>District: <b>" + districtName + "</b></div>" +
+            "<div>Length (km): <b>" + roadLength + "</b></div>" +
+            "<div>Calculated Length (km): <b>" + length + "</b></div>" +
+            "<div>AADT: <b>" + AADT + "</b></div>" +
+            "</div>";
+
+        google.maps.event.addListener(polyline, 'click', function (event) {
+            infowindow.setContent(contentString);
+            infowindow.setPosition(event.latLng);
+            infowindow.open(map, polyline);
+        });
+    }
+
+    function ShowRoad() {
+        roadPath = new google.maps.Polyline({
+            path: roadPointList,
+            geodesic: true,
+            strokeColor: "#ff7d00",
+            strokeOpacity: 0.8,
+            strokeWeight: 4,
+            map: map,
+        });
+
+        AddListenersOnPolyline(roadPath);
+    }
+
+    // Toggle bridge markers
+    function ShowOrHideBridges() {
+        if (document.getElementById('chkShowBridges').checked)
+            PlaceBridgeMarkers();
+        else
+            RemoveBridgeMarkers();
+    }
+
+    // Remove all bridge markers
+    function RemoveBridgeMarkers() {
+        for (i = 0; i < brgMarkerList.length; i++) {
+            brgMarkerList[i].setMap(null);
+        }
+    }
+
+    function PlaceBridgeMarkers() {
+        var brgMarker, brgContentString, k;
+
+        // Loop through all bridgess in the list and place markers
+        for (k = 0; k < bridgeLocList.length; k++) {
+            // if currrent bridge has no or incomplete coordinate info, do not put pin and continue the loop to the next iteration
+            if (bridgeLocList[k].XCoord == null || bridgeLocList[k].YCoord == null || bridgeLocList[k].UtmZone == null)
+                continue;
+
+            brgMarker = new google.maps.Marker({
+                position: new google.maps.LatLng(bridgeLocList[k].LatitudeDecimal, bridgeLocList[k].LongitudeDecimal),
+                map: map,
+                icon: { url: '/images/bridge_marker_on_road_map.png', scaledSize: new google.maps.Size(22, 25) },
+            });
+            google.maps.event.addListener(brgMarker, 'click', (function (brgMarker, k) {
+                return function () {
+                    brgContentString = "<div style='font-size: 15px; font-weight: bold'>Bridge Info</div>" +
+                        "<div>Old Bridge Id: <b>" + bridgeLocList[k].OldBridgeId + "</b></div>" +
+                        "<div>Revised Bridge Id: <b>" + bridgeLocList[k].RevisedBridgeId + "</b></div>" +
+                        "<div>Bridge Name: <b>" + bridgeLocList[k].BridgeName + "</b></div>" +
+                        "<div>Length (m): <b>" + bridgeLocList[k].BridgeLength + "</b></div>" +
+                        "<div>Type: <b>" + bridgeLocList[k].BridgeType + "</b></div>" +
+                        "</div>";
+
+                    infowindow.setContent(brgContentString);
+                    infowindow.open(map, brgMarker);
+                }
+            })(brgMarker, k));
+
+            // Add each marker to the 'brgMarkerList' array
+            brgMarkerList.push(brgMarker);
+        }
+    }
+
+    // Toggle culvert markers
+    function ShowOrHideCulverts() {
+        if (document.getElementById('chkShowCulverts').checked)
+            PlaceCulvertMarkers();
+        else
+            RemoveCulvertMarkers();
+    }
+
+    // Remove all culvert markers
+    function RemoveCulvertMarkers() {
+        for (i = 0; i < culMarkerList.length; i++) {
+            culMarkerList[i].setMap(null);
+        }
+    }
+
+    function PlaceCulvertMarkers() {
+        var culMarker, culContentString, k;
+
+        // Loop through all culvertss in the list and place markers
+        for (k = 0; k < culvertLocList.length; k++) {
+            // if currrent culvert has no or incomplete coordinate info, do not put pin and continue the loop to the next iteration
+            if (culvertLocList[k].XCoord == null || culvertLocList[k].YCoord == null || culvertLocList[k].UtmZone == null)
+                continue;
+
+            culMarker = new google.maps.Marker({
+                position: new google.maps.LatLng(culvertLocList[k].LatitudeDecimal, culvertLocList[k].LongitudeDecimal),
+                map: map,
+                icon: { url: '/images/culvert_marker_on_road_map.png', scaledSize: new google.maps.Size(22, 25) },
+            });
+            google.maps.event.addListener(culMarker, 'click', (function (culMarker, k) {
+                return function () {
+                    culContentString = "<div style='font-size: 15px; font-weight: bold'>Culvert Info</div>" +
+                        "<div>Old Culvert Id: <b>" + culvertLocList[k].OldCulvertId + "</b></div>" +
+                        "<div>Revised Culvert Id: <b>" + culvertLocList[k].RevisedCulvertId + "</b></div>" +
+                        "<div>Length (m): <b>" + culvertLocList[k].CulvertLength + "</b></div>" +
+                        "<div>Type: <b>" + culvertLocList[k].CulvertType + "</b></div>" +
+                        "</div>";
+
+                    infowindow.setContent(culContentString);
+                    infowindow.open(map, culMarker);
+                }
+            })(culMarker, k));
+
+            // Add each marker to the 'culMarkerList' array
+            culMarkerList.push(culMarker);
+        }
+    }
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?libraries=geometry&sensor=true&key=AIzaSyAE0qRfcQ0xxZq5mWSMOtxT3G_cWkHpBAA&callback=InitializeMap" async defer></script>
+@*<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAE0qRfcQ0xxZq5mWSMOtxT3G_cWkHpBAA&callback=InitializeMap" async defer></script>*@

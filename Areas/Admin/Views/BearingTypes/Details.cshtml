@@ -1,4 +1,4 @@
-﻿@model ERA_BCMS.Models.BearingType
+﻿@model ERA_BMS.Models.BearingType
 
 @{
     ViewBag.Title = "Bearing Type Details";
@@ -37,6 +37,6 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.BearingTypeId }, new { @class = "btn btn-primary" })
-    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+    <a href="@Url.Action("Edit", new { id = Model.BearingTypeId })" class="btn btn-primary"><span class="glyphicon glyphicon-edit"></span> Edit</a>
+    <a href="@Url.Action("Index")" class="btn btn-primary"><span class="glyphicon glyphicon-backward"></span> Go to List</a>
 </p>

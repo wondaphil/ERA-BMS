@@ -1,29 +1,47 @@
 ﻿@{
     ViewBag.Title = "Home Page";
+    ViewBag.LeftMenuSelection = "index";
 }
 
 <div class="jumbotron">
-    <table>
-        <tr>
-            <td rowspan="2">
-                <img src="~/images/era_logo.png" alt="ERA LOGO">
-            </td>
-            <td>
-                <h1>ERA-BCMS</h1>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                The Ethiopian Roads Authority Bridge and Culvert Management System (ERA-BCMS) is a system that is used by
-                the Ethiopian Roads Authority (ERA) to manage Bridges throughout the country and to maintain
-                organized information about their service conditions.
-            </td>
-        </tr>
-    </table>
-    @if (!Request.IsAuthenticated) //If user has not logged in
-    {
-        <div style="text-align: center;">
-            @Html.Partial("_LoginRegisterPartial")
+    @*<img src="~/images/background.jpg" style="width: 150px; position: relative; display: block;">*@
+    <div class="homebackground">
+        <div class="row">
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3"><img src="~/images/home_01.jpg" class="homeimage"></div>
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3"><img src="~/images/home_02.jpg" class="homeimage"></div>
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3"><img src="~/images/home_03.jpg" class="homeimage"></div>
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3"><img src="~/images/home_04.jpg" class="homeimage"></div>
         </div>
-    }
+        <div class="row" >
+            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" style="align-items: center">
+                &nbsp;
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" style="top: 50%;transform: translateY(30%);display: flex; align-items: center ">
+                <img src="~/images/era_logo.png" alt="ERA LOGO" class="homelogo">
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" style="align-items: center">
+                &nbsp;
+            </div>
+            <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10" align="center">
+                <div class="hometext" style="font-family: 'Power Geez Unicode3'; color: black">የኢትዮጵያ መንገዶች አስተዳደር</div>
+                <div class="hometext" style="color: black">Ethiopian Roads Administration</div>
+                <div class="hometext" style="color: #ef5821">Bridge Management System</div>
+                <div class="hometext" style="color: #ef5821">ERA-BMS</div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3"><img src="~/images/home_05.jpg" class="homeimage"></div>
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3"><img src="~/images/home_06.jpg" class="homeimage"></div>
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3"><img src="~/images/home_09.jpg" class="homeimage"></div>
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3"><img src="~/images/home_08.jpg" class="homeimage"></div>
+        </div>
     </div>
+
+    @*@if (!Request.IsAuthenticated) //If user has not logged in
+        {
+            <div style="text-align: center;">
+                @Html.Partial("_LoginRegisterPartial")
+            </div>
+        }*@
+</div>

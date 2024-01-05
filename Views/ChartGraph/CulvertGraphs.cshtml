@@ -1,0 +1,271 @@
+﻿
+@{
+    ViewBag.Title = "Culvert Graphs";
+}
+
+<h2>Culvert Graphs</h2>
+
+@using (Html.BeginForm())
+{
+    <div class="panel panel-default">
+        @*<div class="panel-heading">
+                <h3 class="panel-title panel-info">Please select <b>Graph Type</b> and <b>Inspection Year</b> from the dropdown list</h3>
+            </div>*@
+        <div class="panel-body">
+
+            @Html.AntiForgeryToken()
+
+            <div class="row">
+                <div class="col-sm-10 col-xs-11">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group-sm">
+                            <label for="ddlGraphType" class="control-label col-sm-3 col-xs-3">Graph Type</label>
+                            <div class="col-sm-7 col-xs-6">
+                                @Html.DropDownList("ddlGraphType", (List<SelectListItem>)ViewBag.GraphTypes, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-2 col-xs-1 navbar-right">
+                    <a class="btn btn-primary" data-toggle="tooltip" title="Refresh" id="refresh"> <span class="glyphicon glyphicon-refresh"></span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div id="wait" align="center" style="display: none">
+    <img src="~/images/ajax-loader-big.gif" />
+</div>
+
+<script>
+    $(document).ready(function () {
+        var selGraphTypeId
+        var culvertChart;
+
+        function destroyChart() {
+            if (typeof culvertChart != 'undefined')
+                culvertChart.destroy();
+        }
+
+        $('#ddlGraphType').change(function () {
+            selGraphTypeId = $('#ddlGraphType option:selected').val();
+            destroyChart(); //clear the culvert chart place holder
+
+            switch (selGraphTypeId) {
+                case "0":
+                    break; // Do nothing!!
+                case "1":
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("_NoOfCulvertsVsDistrictChart", "CulvertGraphs")',
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        beforeSend: function () { $('#wait').show(); },
+                        complete: function () { $('#wait').hide(); },
+                        success: function (chartData) {
+                            var labels = chartData[0];
+                            var dataSets = chartData[1];
+                            var dataTable = {
+                                labels: labels,
+                                datasets: [{
+                                    label: "No. of Culverts",
+                                    data: dataSets,
+                                    fill: false,
+                                    backgroundColor: ["rgba(54, 162, 235, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 159, 64, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(153, 102, 255, 0.8)", "rgba(201, 203, 207, 0.8)", "rgba(255, 159, 64, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(75, 192, 192, 0.8)"],
+                                    borderColor: ["rgb(54, 162, 235)", "rgb(255, 99, 132)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)", "rgb(153, 102, 255)", "rgb(201, 203, 207)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)"],
+                                    borderWidth: 1
+                                }]
+                            };
+
+                            var ctx = $("#culvertChart").get(0).getContext("2d");
+                            culvertChart = new Chart(ctx, {
+                                type: 'bar', //'line', 'pie'
+                                data: dataTable,
+                                options: {
+                                    responsive: true,
+                                    title: { display: true, text: 'No. of Culverts vs District' },
+                                    legend: { position: 'right', display: false },
+                                    scales: {
+                                        xAxes: [{ gridLines: { display: true }, display: true, scaleLabel: { display: true, labelString: 'Districts' }, barPercentage: 0.5 }],
+                                        yAxes: [{ gridLines: { display: true }, display: true, scaleLabel: { display: true, labelString: 'No. of Culverts' }, ticks: { stepSize: 1000, beginAtZero: true } }]
+                                    },
+                                    tooltips: {
+                                        enabled: true
+                                    },
+                                    hover: {
+                                        animationDuration: 1
+                                    },
+                                    animation: {
+                                        duration: 1,
+                                        onComplete: function () {
+                                            var chartInstance = this.chart,
+                                                ctx = chartInstance.ctx;
+                                            ctx.textAlign = 'center';
+                                            ctx.fillStyle = "rgba(0, 0, 0, 1)";
+                                            ctx.textBaseline = 'bottom';
+                                            // Loop through each data in the datasets
+                                            this.data.datasets.forEach(function (dataset, i) {
+                                                var meta = chartInstance.controller.getDatasetMeta(i);
+                                                meta.data.forEach(function (bar, index) {
+                                                    var data = dataset.data[index];
+                                                    ctx.fillText(data, bar._model.x, bar._model.y - 5);
+                                                });
+                                            });
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    });
+                    break;
+
+                case "2":
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("_NoOfCulvertsVsCulvertTypeChart", "CulvertGraphs")',
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        beforeSend: function () { $('#wait').show(); },
+                        complete: function () { $('#wait').hide(); },
+                        success: function (chartData) {
+                            var labels = chartData[0];
+                            var dataSets = chartData[1];
+                            var dataTable = {
+                                labels: labels,
+                                datasets: [{
+                                    label: "No. of Culverts",
+                                    data: dataSets,
+                                    fill: false,
+                                    backgroundColor: ["rgba(54, 162, 235, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 159, 64, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(153, 102, 255, 0.8)", "rgba(201, 203, 207, 0.8)", "rgba(255, 159, 64, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(75, 192, 192, 0.8)"],
+                                    borderColor: ["rgb(54, 162, 235)", "rgb(255, 99, 132)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)", "rgb(153, 102, 255)", "rgb(201, 203, 207)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)"],
+                                    borderWidth: 1
+                                }]
+                            };
+                            var ctx = $("#culvertChart").get(0).getContext("2d");
+                            culvertChart = new Chart(ctx, {
+                                type: 'bar', //'line', 'pie'
+                                data: dataTable,
+                                options: {
+                                    responsive: true,
+                                    title: { display: true, text: 'No. of Culverts vs Culvert Types' },
+                                    legend: { position: 'right', display: false },
+                                    scales: {
+                                        xAxes: [{ gridLines: { display: false }, display: true, scaleLabel: { display: true, labelString: 'Culvert Types' }, ticks: { autoSkip: false }, barPercentage: 0.4 }],
+                                        yAxes: [{ gridLines: { display: false }, display: true, scaleLabel: { display: true, labelString: 'No. of Culverts' }, ticks: { stepSize: 2500, beginAtZero: true } }]
+                                    },
+                                    tooltips: {
+                                        enabled: true
+                                    },
+                                    hover: {
+                                        animationDuration: 1
+                                    },
+                                    animation: {
+                                        duration: 1,
+                                        onComplete: function () {
+                                            var chartInstance = this.chart,
+                                                ctx = chartInstance.ctx;
+                                            ctx.textAlign = 'center';
+                                            ctx.fillStyle = "rgba(0, 0, 0, 1)";
+                                            ctx.textBaseline = 'bottom';
+                                            // Loop through each data in the datasets
+                                            this.data.datasets.forEach(function (dataset, i) {
+                                                var meta = chartInstance.controller.getDatasetMeta(i);
+                                                meta.data.forEach(function (bar, index) {
+                                                    var data = dataset.data[index];
+                                                    ctx.fillText(data, bar._model.x, bar._model.y - 5);
+                                                });
+                                            });
+                                        }
+                                    }
+                                },
+                                ticks: {autoSkip: false}
+                            });
+                        }
+                    });
+                    break;
+
+                case "3":
+                   $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("_CulvertAssetValueVsDistrictsChart", "CulvertGraphs")',
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        beforeSend: function () { $('#wait').show(); },
+                        complete: function () { $('#wait').hide(); },
+                        success: function (chartData) {
+                            var labels = chartData[0];
+                            var dataSets = chartData[1];
+                            var dataTable = {
+                                labels: labels,
+                                datasets: [{
+                                    label: "Culvert Asset Value",
+                                    data: dataSets,
+                                    fill: false,
+                                    backgroundColor: ["rgba(54, 162, 235, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 159, 64, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(153, 102, 255, 0.8)", "rgba(201, 203, 207, 0.8)", "rgba(255, 159, 64, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(75, 192, 192, 0.8)"],
+                                    borderColor: ["rgb(54, 162, 235)", "rgb(255, 99, 132)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)", "rgb(153, 102, 255)", "rgb(201, 203, 207)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)"],
+                                    borderWidth: 1
+                                }]
+                            };
+                            var ctx = $("#culvertChart").get(0).getContext("2d");
+                            culvertChart = new Chart(ctx, {
+                                type: 'bar', //'line', 'pie'
+                                data: dataTable,
+                                options: {
+                                    responsive: true,
+                                    title: { display: true, text: 'Culvert Asset Value vs Districts (in billion)' },
+                                    legend: { position: 'right', display: false },
+                                    scales: {
+                                        xAxes: [{ gridLines: { display: false }, display: true, scaleLabel: { display: true, labelString: 'Districts' }, barPercentage: 0.6 }],
+                                        yAxes: [{ gridLines: { display: false }, display: true, scaleLabel: { display: true, labelString: 'Culvert Asset Value (in billion)' }, ticks: { stepSize: 0.5, beginAtZero: true } }]
+                                    },
+                                    tooltips: {
+                                        enabled: true
+                                    },
+                                    hover: {
+                                        animationDuration: 1
+                                    },
+                                    animation: {
+                                        duration: 1,
+                                        onComplete: function () {
+                                            var chartInstance = this.chart,
+                                                ctx = chartInstance.ctx;
+                                            ctx.textAlign = 'center';
+                                            ctx.fillStyle = "rgba(0, 0, 0, 1)";
+                                            ctx.textBaseline = 'bottom';
+                                            // Loop through each data in the datasets
+                                            this.data.datasets.forEach(function (dataset, i) {
+                                                var meta = chartInstance.controller.getDatasetMeta(i);
+                                                meta.data.forEach(function (bar, index) {
+                                                    var data = dataset.data[index];
+                                                    ctx.fillText(data, bar._model.x, bar._model.y - 5);
+                                                });
+                                            });
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    });
+                    break;
+                }
+        });
+
+        $('#ddlInspectionYear').change(function () {
+            if (selGraphTypeId == "5")
+                $('#ddlGraphType').trigger('change');
+        });
+
+        $('#refresh').click(function () {
+            $('#ddlGraphType').trigger('change');
+        });
+    });
+
+</script>
+
+<div Style="font-family: Corbel; font-size: small ;text-align:center " class="row">
+    <div style="width:100%;height:100%">
+        <canvas id="culvertChart" style="padding: 0;margin: auto;display: block; "> </canvas>
+    </div>
+</div>  

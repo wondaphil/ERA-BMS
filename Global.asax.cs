@@ -6,7 +6,7 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 
-namespace ERA_BCMS
+namespace ERA_BMS
 {
     public class MvcApplication : System.Web.HttpApplication
     {

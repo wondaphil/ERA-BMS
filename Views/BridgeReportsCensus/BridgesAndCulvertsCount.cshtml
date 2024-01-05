@@ -1,0 +1,136 @@
+﻿
+@{
+    ViewBag.Title = "Bridges and Culverts Count";
+}
+
+<!-- Tab Buttons -->
+<ul id="tabstrip" class="nav nav-tabs" role="tablist">
+    <li class="active">
+        <a href="#_CountByDistrictTab" role="tab" data-toggle="tab">Count By District</a>
+    </li>
+    <li>
+        <a href="#_CountBySectionTab" role="tab" data-toggle="tab">Count By Section</a>
+    </li>
+    <li>
+        <a href="#_CountByRoadSegmentTab" role="tab" data-toggle="tab">Count By Road Segment</a>
+    </li>
+    <li>
+        <a href="#_CountByMainRouteTab" role="tab" data-toggle="tab">Count By Main Route</a>
+    </li>
+    <li>
+        <a href="#_CountBySubRouteTab" role="tab" data-toggle="tab">Count By Sub Route</a>
+    </li>
+    <li>
+        <a href="#_CountByRegionTab" role="tab" data-toggle="tab">Count By Regional Gov't</a>
+    </li>
+</ul>
+
+<!-- Tab Content Containers -->
+<div class="tab-content">
+    <div class="tab-pane fade in active" id="_CountByDistrictTab">
+        <div id="countByDistrict">
+            <!-- Bridges and Culverts count by District display here -->
+        </div>
+        <div id="waitCountByDistrict" align="center" style="display: none">
+            <img src="~/images/ajax-loader-big.gif" />
+        </div>
+    </div>
+    <div class="tab-pane fade" id="_CountBySectionTab">
+        <div id="countBySection">
+            <!-- Bridges and Culverts count by Section displays here -->
+        </div>
+    </div>
+    <div class="tab-pane fade" id="_CountByRoadSegmentTab">
+        <div id="countBySegment">
+            <!-- Bridges and Culverts count by Segment displays here -->
+        </div>
+    </div>
+    <div class="tab-pane fade" id="_CountByMainRouteTab">
+        <div id="countByMainRoute">
+            <!-- Bridges and Culverts count by Main Route display here -->
+        </div>
+        <div id="waitCountByMainRoute" align="center" style="display: none">
+            <img src="~/images/ajax-loader-big.gif" />
+        </div>
+    </div>
+    <div class="tab-pane fade" id="_CountBySubRouteTab">
+        <div id="countBySubRoute">
+            <!-- Bridges and Culverts count by Sub Route displays here -->
+        </div>
+    </div>
+    <div class="tab-pane fade" id="_CountByRegionTab">
+        <div id="countByRegion">
+            <!-- Bridges and Culverts count by Regional Gov't displays here -->
+        </div>
+        <div id="waitCountByRegion" align="center" style="display: none">
+            <img src="~/images/ajax-loader-big.gif" />
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+
+        $.ajax({
+            url: '@Url.Action("_GetBridgesAndCulvertsCountByDistrict", "BridgeReportsCensus")',
+            type: 'GET',
+            dataType: 'html',
+            beforeSend: function () { $('#waitCountByDistrict').show(); },
+            complete: function () { $('#waitCountByDistrict').hide(); },
+            success: function (data) {
+                $('#countByDistrict').html(data);
+            }
+        });
+
+        $.ajax({
+            url: '@Url.Action("BridgesAndCulvertsCountBySection", "BridgeReportsCensus")',
+            type: 'GET',
+            dataType: 'html',
+            success: function (data) {
+                $('#countBySection').html(data);
+            }
+        });
+
+        $.ajax({
+            url: '@Url.Action("BridgesAndCulvertsCountBySegment", "BridgeReportsCensus")',
+            type: 'GET',
+            dataType: 'html',
+            success: function (data) {
+                $('#countBySegment').html(data);
+            }
+        });
+
+        $.ajax({
+            url: '@Url.Action("_GetBridgesAndCulvertsCountByMainRoute", "BridgeReportsCensus")',
+            type: 'GET',
+            dataType: 'html',
+            beforeSend: function () { $('#waitCountByMainRoute').show(); },
+            complete: function () { $('#waitCountByMainRoute').hide(); },
+            success: function (data) {
+                $('#countByMainRoute').html(data);
+            }
+        });
+
+        $.ajax({
+            url: '@Url.Action("BridgesAndCulvertsCountBySubRoute", "BridgeReportsCensus")',
+            type: 'GET',
+            dataType: 'html',
+            success: function (data) {
+                $('#countBySubRoute').html(data);
+            }
+        });
+
+        $.ajax({
+            url: '@Url.Action("_GetBridgesAndCulvertsCountByRegion", "BridgeReportsCensus")',
+            type: 'GET',
+            dataType: 'html',
+            beforeSend: function () { $('#waitCountByRegion').show(); },
+            complete: function () { $('#waitCountByRegion').hide(); },
+            success: function (data) {
+                $('#countByRegion').html(data);
+            }
+        });
+    });
+</script>
+
+

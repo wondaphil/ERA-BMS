@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ERA_BCMS.Models
+namespace ERA_BMS.Models
 {
     using System;
     using System.Collections.Generic;
@@ -17,32 +17,49 @@ namespace ERA_BCMS.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Bridge()
         {
+            this.BridgeComments = new HashSet<BridgeComment>();
+            this.BridgeDocs = new HashSet<BridgeDoc>();
+            this.BridgeMedias = new HashSet<BridgeMedia>();
+            this.BridgeObservations = new HashSet<BridgeObservation>();
+            this.DamageInspMajors = new HashSet<DamageInspMajor>();
+            this.DamageInspVisuals = new HashSet<DamageInspVisual>();
             this.Piers = new HashSet<Pier>();
+            this.ResultInspMajors = new HashSet<ResultInspMajor>();
+            this.BridgeImprovements = new HashSet<BridgeImprovement>();
         }
     
         public string BridgeId { get; set; }
+        public string BridgeNo { get; set; }
+        public string RevisedBridgeNo { get; set; }
         public string BridgeName { get; set; }
-        public Nullable<int> BridgeSerNo { get; set; }
-        public int SegmentId { get; set; }
-        public string RouteId { get; set; }
-        public Nullable<double> KMFromAddis { get; set; }
-        public Nullable<double> XCoord { get; set; }
-        public Nullable<double> YCoord { get; set; }
-        public Nullable<short> GirderTypeId { get; set; }
-        public Nullable<int> BudgetYear { get; set; }
-        public Nullable<int> BudgetYearComment { get; set; }
+        public string SegmentId { get; set; }
+        public string SubRouteId { get; set; }
+        public Nullable<System.DateTime> ModifiedOn { get; set; }
+        public byte[] Flag { get; set; }
     
-        public virtual GirderType GirderType { get; set; }
-        public virtual Route Route { get; set; }
-        public virtual Segment Segment { get; set; }
-        public virtual BridgeGeneralInfo BridgeGeneralInfo { get; set; }
-        public virtual SuperStructure SuperStructure { get; set; }
         public virtual Abutment Abutment { get; set; }
-        public virtual BridgeDoc BridgeDoc { get; set; }
-        public virtual BridgeHistory BridgeHistory { get; set; }
-        public virtual Component Component { get; set; }
+        public virtual Ancillary Ancillary { get; set; }
+        public virtual Segment Segment { get; set; }
+        public virtual SubRoute SubRoute { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<BridgeComment> BridgeComments { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<BridgeDoc> BridgeDocs { get; set; }
+        public virtual BridgeGeneralInfo BridgeGeneralInfo { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<BridgeMedia> BridgeMedias { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<BridgeObservation> BridgeObservations { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DamageInspMajor> DamageInspMajors { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DamageInspVisual> DamageInspVisuals { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Pier> Piers { get; set; }
-        public virtual ImageVideoDrawing ImageVideoDrawing { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ResultInspMajor> ResultInspMajors { get; set; }
+        public virtual SuperStructure SuperStructure { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<BridgeImprovement> BridgeImprovements { get; set; }
     }
 }

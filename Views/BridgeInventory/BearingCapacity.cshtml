@@ -1,0 +1,111 @@
+﻿@model IEnumerable<ERA_BMS.ViewModels.BearingCapacityViewModel>
+
+@{
+    ViewBag.Title = "Bearing Capacity";
+}
+
+<h2>List of bridges having Bearing Capacity Test and AutoCAD Drawings</h2>
+
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title panel-info">Bearing Capacity Test and AutoCAD Drawings</h3>
+    </div>
+
+    <div class="panel-body">
+        <table class="table table-striped table-condensed table-responsive table-bordered display compact hover" id="bridges">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Bridge.RevisedBridgeNo)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Bridge.BridgeName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Bridge.Segment.SegmentName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Bridge.Segment.Section.SectionName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Bridge.Segment.Section.District.DistrictName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.GeneralInfo.DesignCapacity)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.GeneralInfo.BearingCapacity)
+                    </th>
+                    <th>Study File</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                       <td>
+                            @Html.DisplayFor(modelItem => item.Bridge.RevisedBridgeNo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Bridge.BridgeName)
+                        </td>
+                        <td>
+                            @*@Html.DisplayFor(modelItem => item.Bridge.Segment.SegmentName)*@
+                            [@item.Bridge.Segment.RevisedRoadId] @item.Bridge.Segment.SegmentName
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Bridge.Segment.Section.SectionName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Bridge.Segment.Section.District.DistrictName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.GeneralInfo.DesignCapacity)
+                        </td>
+                        <td>
+                            @{
+                                string deisgnCapacity = ((bool)item.GeneralInfo.BearingCapacity) ? "Yes" : "No";
+                            }
+                            @deisgnCapacity
+                        </td>
+                        <td align="center">
+                            <a href="@item.BridgeDoc.DocFilePath" target="_blank" class="glyphicon glyphicon-book" data-toggle="tooltip" title="Open PDF File" style="font-size: 14px"></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="panel-footer">
+        <h3 class="panel-title">Total No. of Bridges: <b>@Model.Count()</b></h3>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+
+
+        $('#bridges').dataTable({
+            paging: true,
+            pageLength: 15,
+            bLengthChange: true,
+            scrollY: 400,
+
+            searching: true,
+            select: true,
+            dom: 'lBfrtip',
+            //buttons: ['copy', 'excel', 'pdf', 'print']
+            buttons: [
+                { extend: 'copy', className: 'btn btn-sm btn-primary' },
+                { extend: 'excel', className: 'btn btn-sm btn-primary', text: 'Export Excel' },
+                { extend: 'pdf', className: 'btn btn-sm btn-primary', text: 'Export PDF' },
+                { extend: 'print', className: 'btn btn-sm btn-primary' }
+            ]
+        });
+    });
+</script>
+
+
+

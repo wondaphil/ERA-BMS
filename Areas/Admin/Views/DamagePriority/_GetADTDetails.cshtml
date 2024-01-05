@@ -1,0 +1,132 @@
+﻿@model IEnumerable<ERA_BMS.Models.DamagePriority>
+
+<table class="table table-stripped table-condensed table-bordered centeredtable" id="tblADTdetails">
+    <tr>
+        <th></th>
+        <th></th>
+        <th colspan="2">
+            Average Daily Traffic (ADT)
+        </th>
+        <th></th>
+        <th></th>
+    </tr>
+    <tr>
+        <th></th>
+        <th>
+            @Html.DisplayNameFor(model => model.CriteriaSerNo)
+        </th>
+        <th>
+            @*@Html.DisplayNameFor(model => model.DmgValFrom)*@
+            From
+        </th>
+        <th>
+            @*@Html.DisplayNameFor(model => model.DmgValTo)*@
+            To
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DmgWtVal)
+        </th>
+        <th>Edit</th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td class="Id">
+                <input type="hidden" id="Id" value="@item.Id" size="3" /> <!-- Unique Identity (key) -->
+            </td>
+            <td>
+                <span>@Html.DisplayFor(modelItem => item.CriteriaSerNo)</span>
+            </td>
+            <td class="DmgValFrom">
+                <span>@Html.DisplayFor(modelItem => item.DmgValFrom)</span>
+                <input type="text" value="@item.DmgValFrom" style="display:none" size="3" />
+            </td>
+            <td class="DmgValTo">
+                <span>@Html.DisplayFor(modelItem => item.DmgValTo)</span>
+                <input type="text" value="@item.DmgValTo" style="display:none" size="3" />
+            </td>
+            <td class="DmgWtVal">
+                <span>@Html.DisplayFor(modelItem => item.DmgWtVal)</span>
+                <input type="text" value="@item.DmgWtVal" style="display:none" size="3" />
+            </td>
+            <td>
+                <a class="Edit glyphicon glyphicon-edit" href="javascript:;" data-toggle="tooltip" title="Edit"></a>
+                <a class="Update glyphicon glyphicon-ok" href="javascript:;" style="display:none" data-toggle="tooltip" title="Update"></a>
+                &nbsp;&nbsp;&nbsp;<a class="Cancel glyphicon glyphicon-remove" href="javascript:;" style="display:none" data-toggle="tooltip" title="Cancel"></a>
+            </td>
+        </tr>
+    }
+
+</table>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        //Edit event handler.
+        $("body").on("click", "#tblADTdetails .Edit", function () {
+            var row = $(this).closest("tr");
+            $("td", row).each(function () {
+                if ($(this).find("input").length > 0) {
+                    $(this).find("input").show();
+                    $(this).find("span").hide();
+                }
+             });
+            row.find(".Update").show();
+            row.find(".Cancel").show();
+            $(this).hide();
+        });
+
+        //Update event handler.
+        $("body").on("click", "#tblADTdetails .Update", function () {
+            var row = $(this).closest("tr");
+            $("td", row).each(function () {
+                if ($(this).find("input").length > 0) {
+                    var span = $(this).find("span");
+                    var input = $(this).find("input");
+                    span.html(input.val());
+                    span.show();
+                    input.hide();
+                }
+            });
+            row.find(".Edit").show();
+            row.find(".Cancel").hide();
+            $(this).hide();
+
+            var DmgPriority = {};
+            DmgPriority.Id = row.find('input[type=hidden]').val();
+            DmgPriority.DmgValFrom = row.find(".DmgValFrom").find("span").html();
+            DmgPriority.DmgValTo = row.find(".DmgValTo").find("span").html();
+            DmgPriority.DmgWtVal = row.find(".DmgWtVal").find("span").html();
+
+            //alert(JSON.stringify(DmgPriority));
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("UpdatePriorityFromTo", "DamagePriority")',
+                data: '{dmgPriority:' + JSON.stringify(DmgPriority) + '}',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'text', //'html',
+                error: function (xhr) {
+                    //$('#status').text(xhr.status);
+                }
+            });
+        });
+
+        //Cancel event handler.
+        $("body").on("click", "#tblADTdetails .Cancel", function () {
+            var row = $(this).closest("tr");
+            $("td", row).each(function () {
+                if ($(this).find("input").length > 0) {
+                    var span = $(this).find("span");
+                    var input = $(this).find("input");
+                    input.val(span.html());
+                    span.show();
+                    input.hide();
+                }
+            });
+            row.find(".Edit").show();
+            row.find(".Update").hide();
+            $(this).hide();
+        });
+    });
+</script>

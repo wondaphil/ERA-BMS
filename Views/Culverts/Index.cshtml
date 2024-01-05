@@ -1,113 +1,116 @@
-﻿@model IEnumerable<ERA_BCMS.Models.Culvert>
+﻿@model IEnumerable<ERA_BMS.Models.Culvert>
 
 @{
-    ViewBag.Title = "Culverts";
+    ViewBag.Title = "Modify Culverts";
 }
 
-<h2>Index</h2>
+<h2>Modify Culverts' Informations</h2>
 
-<p>
-    @Html.ActionLink("New Culvert", "New", null, new { @class = "btn btn-primary" })
-</p>
-
-@section Scripts{
-    @Styles.Render("~/Content/dataTables")
-    @Scripts.Render("~/bundles/dataTables")
-    
-    <script>
-        $(document).ready(function () {
-            $('#allBridges').dataTable({
-                paging: true,
-                scrollY: 400,
-                select: true,
-                dom: 'Bfrtip',
-                buttons: ['copy', 'excel', 'pdf', 'print']
-            });
-        });
-    </script>
-}
 @using (Html.BeginForm())
 {
     <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title panel-info">Please select <b>District</b>, <b>Section</b> and <b>Segment</b> from the dropdown list</h3>
-        </div>
+        @*<div class="panel-heading">
+            <h3 class="panel-title panel-info">Please select <b>District</b>, <b>Section</b> and <b>Road Segment</b> from the dropdown list</h3>
+        </div>*@
         <div class="panel-body">
 
             @Html.AntiForgeryToken()
 
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-lg-3 col-md-3 col-sm-4 col-xs-6">
                     <div class="form-horizontal">
-                        <div class="form-group form-group-sm">
-                            <label class="control-label col-md-2">District</label>
-                            <div class="col-md-8">
-                                @Html.DropDownList("ddlDistrict", (List<SelectListItem>)ViewBag.Districts, new { @class = "form-control" })
-                                <label class="control-label" id="distrIdDIV"> <!-- District id appears here --> </label>
+                        <div class="form-group form-group">
+                            <label class="control-label col-lg-3 col-md-3 col-sm-4">District</label>
+                            <div class="col-lg-9 col-md-9 col-sm-12 col-xs-11">
+                                @*@Html.DropDownList("ddlDistrict", (List<SelectListItem>)ViewBag.Districts, new { @class = "form-control" })*@
+                                @Html.DropDownList("ddlDistrict", new SelectList(ViewBag.Districts, "Value", "Text", ViewBag.DistrictId), htmlAttributes: new { @class = "form-control" })
+                                <!--<label class="control-label" id="distrIdDIV">--> <!-- District id appears here --> <!--</label>-->
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-md-4">
+                <div class="col-lg-3 col-md-3 col-sm-4 col-xs-6">
                     <div class="form-horizontal">
-                        <div class="form-group form-group-sm">
-                            <label class="control-label col-md-2">Section</label>
-                            <div class="col-md-8">
-                                <select class="form-control" id="ddlSection">
-                                    <!-- Sections list populates here -->
-                                </select>
-                                <label class="control-label" id="secIdDIV"> <!-- Section id appears here --> </label>
+                        <div class="form-group form-group">
+                            <label class="control-label col-lg-3 col-md-3 col-sm-4">Section</label>
+                            <div class="col-lg-9 col-md-9 col-sm-12 col-xs-11">
+                                @*@Html.DropDownList("ddlSection", (List<SelectListItem>)ViewBag.Sections, new { @class = "form-control" })*@
+                                @Html.DropDownList("ddlSection", new SelectList(ViewBag.Sections, "Value", "Text", ViewBag.SectionId), htmlAttributes: new { @class = "form-control" })
+                                <!--<select class="form-control" id="ddlSection">-->
+                                <!-- Sections list populates here -->
+                                <!--</select>-->
+                                <!--<label class="control-label" id="secIdDIV">--> <!-- Section id appears here --> <!--</label>-->
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-md-4">
+                <div class="clearfix visible-xs"></div> <!-- Add clearfix (or new line break) for only the xs -->
+
+                <div class="col-lg-6 col-md-5 col-sm-4 col-xs-10">
                     <div class="form-horizontal">
-                        <div class="form-group form-group-sm">
-                            <label class="control-label col-md-2">Segment</label>
-                            <div class="col-md-8">
-                                <select class="form-control" id="ddlSegment">
-                                    <!-- Segments list populates here -->
-                                </select>
-                                <label class="control-label" id="segIdDIV"> <!-- Segment id appears here --> </label>
+                        <div class="form-group form-group">
+                            <label class="control-label col-md-3 col-sm-6 col-xs-8">Road Segment</label>
+                            <div class="col-md-9 col-sm-12 col-xs-11">
+                                @*@Html.DropDownList("ddlSegment", (List<SelectListItem>)ViewBag.Segments, new { @class = "form-control" })*@
+                                @Html.DropDownList("ddlSegment", new SelectList(ViewBag.Segments, "Value", "Text", ViewBag.SegmentId), htmlAttributes: new { @class = "form-control" })
+                                <!--<select class="form-control" id="ddlSegment">-->
+                                <!-- Segments list populates here -->
+                                <!--</select>-->
+                                <!--<label class="control-label" id="segIdDIV">--> <!-- Segment id appears here --> <!--</label>-->
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="col-md-1 col-sm-2 col-md-push-0 col-sm-push-0 col-xs-push-10 navbar-right">
+                        <a class="btn btn-primary" data-toggle="tooltip" title="Refresh" id="refresh"> <span class="glyphicon glyphicon-refresh"></span></a>
                     </div>
                 </div>
             </div>
         </div>
-        <div id="culvertsPartial">
-            <!-- Culverts list displays here -->
-        </div>
+    </div>
+    <div id="culvertsPartial">
+        <!-- Culverts list displays here -->
+        
+        @*
+            If index is opened with some Segment id value (e.g. https://localhost:44387/Culverts/Index/10001),
+            then populate the bridge list
+        *@
+        @if (ViewContext.RouteData.Values["id"] != null)
+        {
+            @Html.Partial("_GetCulvertIndex", Model);
+        }
     </div>
 }
 
-<div id="temp">
 
+<div id="wait" align="center" style="display: none">
+    <img src="~/images/ajax-loader-big.gif" />
 </div>
-<div id="status">
 
-</div>
+<p>
+    @*
+        If the page is opened with some Road segment id value (e.g. https://localhost:44387/Culverts/Index/10001),
+        then the segment id (i.e. 10001) will be appended to "Register New Culvert" link
+    *@
+    <a href="@Url.Action("New", new { id = (ViewContext.RouteData.Values["id"]) })" class="btn btn-primary" id="new"><span class="glyphicon glyphicon-plus"></span> Register New Culvert</a>
+</p>
 
 <script>
     $(document).ready(function () {
         $('#ddlDistrict').change(function () {
             var selDistrictId = $('#ddlDistrict option:selected').val();
             $('#ddlSection option').remove(); //empty the section dropdown list
-            $('#secIdDIV').text(""); //clear section no. indicator
             $('#ddlSegment option').remove(); //empty the segment dropdown list
-            $('#segIdDIV').text(""); //clear segment no. indicator
             $('#culvertsPartial').empty(); // clear the culvert place holder
-            if (selDistrictId == "0") //if no district is selected
+
+            if (selDistrictId != "0") //if some district is selected
             {
-                $('#distrIdDIV').text(""); //clear district no. indicator
-            }
-            else {
-                $('#distrIdDIV').text("District Id = " + selDistrictId );
                 $.ajax({
-                    url: '@Url.Action("_GetSections", "Culverts")',
+                    url: '@Url.Action("_GetSections", "LocationsDDL")',
                     data: { districtid: selDistrictId },
                     type: 'GET',
                     dataType: 'json',
@@ -125,23 +128,17 @@
         $('#ddlSection').change(function () {
             var selSectionId = $('#ddlSection option:selected').val();
             $('#ddlSegment option').remove(); //empty the segment dropdown list
-            $('#segIdDIV').text(""); //clear segment no. indicator
             $('#culvertsPartial').empty(); // clear the culverts place holder
 
-            if (selSectionId == "0") //if no section is selected
+            if (selSectionId != "0") //if some section is selected
             {
-                $('#secIdDIV').text(""); //clear section no. indicator
-            }
-            else {
-                $('#secIdDIV').text("Section Id = " + selSectionId);
-
                 $.ajax({
-                    url: '@Url.Action("_GetSegments", "Culverts")',
+                    url: '@Url.Action("_GetSegments", "LocationsDDL")',
                     data: { sectionid: selSectionId },
                     type: 'GET',
                     dataType: 'json',
                     success: function (data) {
-                        var markup = '<option value="0" id="noselect"> --Select Section --</option>';
+                        var markup = '<option value="0" id="noselect"> --Select Segment --</option>';
                         $.each(data, function (i, segment) {
                             markup += '<option value="' + segment.Value + '">' + segment.Text + '</option>'
                             $('#ddlSegment').html(markup);
@@ -153,22 +150,37 @@
 
         $('#ddlSegment').change(function () {
             var selSegmentId = $('#ddlSegment option:selected').val();
-            if (selSegmentId == "0") //if no section is selected
+            $('#culvertsPartial').empty(); //clear the culverts place holder
+            
+            if (selSegmentId != "0") //if some segment is selected
             {
-                $('#culvertsPartial').empty(); //clear the culverts place holder
-                $('#SegIdDIV').text("");
-            }
-            else {
-                $('#segIdDIV').text("Segment Id = " + selSegmentId);
                 $.ajax({
-                    url: '@Url.Action("_GetCulverts", "Culverts")',
+                    url: '@Url.Action("_GetCulvertIndex", "Culverts")',
                     data: { segmentid: selSegmentId },
                     type: 'GET',
                     dataType: 'html',
+                    beforeSend: function () { $('#wait').show(); },
+                    complete: function () { $('#wait').hide(); },
                     success: function (data) {
                         $('#culvertsPartial').html(data);
                     }
                 });
+
+                // append id of the current road segment to the 'Register New Culvert' link
+                var updatedLink = "@Url.Action("New")" + "/" + selSegmentId;
+                $('#new').attr("href", updatedLink)
+            }
+            else
+            {
+                $('#new').attr("href", "@Url.Action("New")");
+            }
+        });
+
+        $('#refresh').click(function () {
+            var selSegmentId = $('#ddlSegment option:selected').val();
+            if (selSegmentId != "0" && typeof selSegmentId != 'undefined') //if some segment is selected
+            {
+                $('#ddlSegment').trigger('change');
             }
         });
     });

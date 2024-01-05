@@ -1,6 +1,6 @@
 ﻿using System.Web.Mvc;
 
-namespace ERA_BCMS.Areas.User
+namespace ERA_BMS.Areas.User
 {
     public class UserAreaRegistration : AreaRegistration 
     {

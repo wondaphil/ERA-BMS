@@ -1,0 +1,169 @@
+﻿@model ERA_BMS.Models.Culvert
+
+<hr />
+<div>
+    @if (@ViewBag.Success)
+    {
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-4 col-xs-6">
+                    <table class="table table-condensed">
+                        <tr>
+                            <td>Revised Culvert Id</td>
+                            <th>@Model.RevisedCulvertNo</th>
+                        </tr>
+
+                        <tr>
+                            <td>Road Segment</td>
+                            <th>[@Model.Segment.RevisedRoadId] @Model.Segment.SegmentName</th>
+                        </tr>
+
+                        <tr>
+                            <td>Section</td>
+                            <th>[@Model.Segment.Section.SectionNo] @Model.Segment.Section.SectionName</th>
+                        </tr>
+
+                        <tr>
+                            <td>District</td>
+                            <th>[@Model.Segment.Section.District.DistrictNo] @Model.Segment.Section.District.DistrictName</th>
+                        </tr>
+
+                        <tr>
+                            <td>Main Route</td>
+                            <th>[@Model.SubRoute.MainRoute.MainRouteNo] @Model.SubRoute.MainRoute.MainRouteName</th>
+                        </tr>
+
+                        <tr>
+                            <td>Sub Route</td>
+                            <th>[@Model.SubRoute.SubRouteNo] @Model.SubRoute.SubRouteName</th>
+                        </tr>
+                    </table>
+                </div>
+
+                @if (!ViewBag.NoInventory)
+                {
+                    <div class="col-sm-4 col-xs-6">
+                        <table class="table table-condensed">
+                            <tr>
+                                <td>Distance from AA (Km)</td>
+                                <th>@Model.CulvertGeneralInfo.KMFromAddis</th>
+                            </tr>
+                            <tr>
+                                <td>Coordinates (Lat/Lon)</td>
+                                <th>@Model.CulvertGeneralInfo.LatitudeDMS <br /> @Model.CulvertGeneralInfo.LongitudeDMS</th>
+                            </tr>
+                            <tr>
+                                <td>Culvert Length (m)</td>
+                                <th>@Model.CulvertStructure.LengthTotal</th>
+                            </tr>
+                            <tr>
+                                <td>Culvert Type</td>
+                                <th>@Model.CulvertStructure.CulvertType.CulvertTypeName</th>
+                            </tr>
+                            <tr>
+                                <td>Height (m)</td>
+                                <th>@Model.CulvertStructure.Height</th>
+                            </tr>
+                            <tr>
+                                <td>Abutment Type</td>
+                                <th>@Model.CulvertStructure.AbutmentType.AbutmentTypeName</th>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="clearfix visible-xs"></div> <!-- Add clearfix (or new line break) for only the xs -->
+
+                    <div class="col-sm-4 col-xs-8">
+                        <table class="table table-condensed">
+                            <tr>
+                                <td>Construction Year</td>
+                                <th>@Model.CulvertGeneralInfo.ConstructionYear</th>
+                            </tr>
+                            <tr>
+                                <td>Designer / Consultant</td>
+                                <th>@Model.CulvertGeneralInfo.Designer</th>
+                            </tr>
+                            <tr>
+                                <td>Contractor</td>
+                                <th>@Model.CulvertGeneralInfo.Contractor</th>
+                            </tr>
+
+                            <tr>
+                                <td>Average Daily Traffic</td>
+                                <th>@Model.Segment.AverageDailyTraffic</th>
+                            </tr>
+                            <tr>
+                                <td>Construction Cost, ETB</td>
+                                @{
+                                    if (Model.CulvertGeneralInfo.ConstructionCost != null)
+                                    {
+                                        <th>@Model.CulvertGeneralInfo.ConstructionCost.Value.ToString("#,#.00")</th>
+                                    }
+                                    else
+                                    {
+                                        <th></th>
+                                    }
+                                }
+                            </tr>
+                            <tr>
+                                <td>Replacement Cost, ETB</td>
+                                @{
+                                    if (Model.CulvertGeneralInfo.AssetReplacementCost != null)
+                                    {
+                                        <th>@Model.CulvertGeneralInfo.AssetReplacementCost.Value.ToString("#,#.00")</th>
+                                    }
+                                    else
+                                    {
+                                        <th></th>
+                                    }
+                                }
+                            </tr>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <h5 class="col-sm-8 col-xs-6">
+                        Inventory data empty or incomplete for culvert: <br /><br />
+                        <b>@Model.CulvertNo</b>
+                    </h5>
+                }
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-2 col-sm-4 col-xs-4 padding-button">
+                <a href="@Url.Action("Edit", "Culverts", new { id = Model.CulvertId })" class="btn btn-primary" target="_blank" title="Go to Modify Culvert Data"><span class="glyphicon glyphicon-new-window" data-toggle="tooltip" title="Go to Edit/Modify Culvert Data"></span> Modify Data</a>
+            </div>
+            <div class="col-md-2 col-sm-4 col-xs-4 padding-button">
+                <a href="@Url.Action("Index", "CulvertInventory", new { id = Model.CulvertId })" class="btn btn-primary" target="_blank" title="Go to Culvert Inventory"><span class="glyphicon glyphicon-new-window" data-toggle="tooltip" title="Go to Culvert Inventory"></span> Inventory</a>
+            </div>
+            <div class="col-md-2 col-sm-4 col-xs-4 padding-button">
+                <a href="@Url.Action("Index", "CulvertProfile", new { id = Model.CulvertId })" class="btn btn-primary" target="_blank" title="Go to Culvert Profile"><span class="glyphicon glyphicon-new-window" data-toggle="tooltip" title="Go to Culvert Profile"></span> Profile</a>
+            </div>
+
+            <div class="clearfix visible-sm visible-xs"></div> <!-- Add clearfix (or new line break) for sm  and xs -->
+
+
+            <div class="col-md-2 col-sm-4 col-xs-4 padding-button">
+                <a href="@Url.Action("Index", "DamageInspCulvert", new { id = Model.CulvertId })" class="btn btn-primary" target="_blank" title="Go to Culvert Inspection"><span class="glyphicon glyphicon-new-window" data-toggle="tooltip" title="Go to Culvert Major Inspection"></span> Inspection</a>
+            </div>
+            <div class="col-md-2 col-sm-4 col-xs-4 padding-button">
+                <a href="@Url.Action("Index", "CulvertImprovement", new { id = Model.CulvertId })" class="btn btn-primary" target="_blank" title="Go to Culvert Improvement"><span class="glyphicon glyphicon-new-window" data-toggle="tooltip" title="Go to Culvert Major Inspection"></span> Improvement</a>
+            </div>
+        </div>
+
+        @*<div>
+                <a href="@Url.Action("Index", new { id = ViewBag.SegmentId })" class="btn btn-primary"><span class="glyphicon glyphicon-backward"></span> Back to Culverts List</a>
+            </div>*@
+    }
+    else
+    {
+        <div class="text-danger">
+            <h4><b>Culvert not found!</b></h4>
+        </div>
+    }
+</div>
+<br />
+<br />
+

@@ -1,0 +1,72 @@
+﻿
+@{
+    ViewBag.Title = "Culvert Improvement Action Records";
+}
+
+<h2>Culvert Improvement Action Records</h2>
+
+@using (Html.BeginForm())
+{
+    <div class="panel panel-default">
+        @*<div class="panel-heading">
+            <h3 class="panel-title panel-info">Please select <b>Improvement Year</b> from the dropdown list</h3>
+        </div>*@
+        <div class="panel-body">
+
+            @Html.AntiForgeryToken()
+
+            <div class="row">
+                <div class="col-sm-10 col-xs-10">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group">
+                            <label for="ddlImprovementYear" class="control-label col-sm-5 col-xs-5" align="right">Improvement Year</label>
+                            <div class="col-sm-7 col-xs-7">
+                                @Html.DropDownList("ddlImprovementYear", (List<SelectListItem>)ViewBag.ImprovementYearList, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-2 col-xs-2 navbar-right" align="right">
+                    <a class="btn btn-primary " data-toggle="tooltip" title="Refresh" id="refresh"> <span class="glyphicon glyphicon-refresh"></span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="culvertImprovement">
+        <!-- Culvert improvement display here -->
+    </div>
+}
+
+<div id="wait" align="center" style="display: none">
+    <img src="~/images/ajax-loader-big.gif" />
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#ddlImprovementYear').change(function () {
+            var selImprovementYear = $('#ddlImprovementYear option:selected').val();
+            $('#culvertImprovement').empty(); // clear the culvert improvement place holder
+
+            if (selImprovementYear != "0") //if some improvement year is selected
+            {
+
+                $.ajax({
+                    url: '@Url.Action("_GetCulvertImprovementActionRecords", "CulvertImprovement")',
+                    data: { improvementyear: selImprovementYear },
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () { $('#wait').show(); },
+                    complete: function () { $('#wait').hide(); },
+                    success: function (data) {
+                        $('#culvertImprovement').html(data);
+                    }
+                });
+            }
+        });
+
+        $('#refresh').click(function () {
+            $('#ddlImprovementYear').trigger("change");
+        });
+    });
+
+</script>

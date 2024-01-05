@@ -1,10 +1,10 @@
-﻿@model ERA_BCMS.Models.Section
+﻿@model ERA_BMS.Models.Section
 
 @{
     ViewBag.Title = "Edit Section";
 }
 
-<h2>Edit</h2>
+<h2>Edit Section</h2>
 
 
 @using (Html.BeginForm())
@@ -12,72 +12,93 @@
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        <h4>Section</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.SectionId)
+        @*@Html.HiddenFor(model => model.SectionId)*@
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.SectionId, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.SectionId, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
-                @Html.ValidationMessageFor(model => model.SectionId, "You cannot modify this value", new { @class = "text-danger" })
+        <div class="row">
+            <div class="col-xs-6">
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.SectionId, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-7">
+                        @Html.EditorFor(model => model.SectionId, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                        @Html.ValidationMessageFor(model => model.SectionId, "You cannot modify this value", new { style = "color: red" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm required">
+                    @Html.LabelFor(model => model.SectionNo, htmlAttributes: new { @class = "control-label col-md-3", @style = "color: red; " })
+                    <div class="col-md-7">
+                        @Html.EditorFor(model => model.SectionNo, new { htmlAttributes = new { @class = "form-control", @style = "border: 2px solid red; " } })
+                        @Html.ValidationMessageFor(model => model.SectionNo, "** Be careful when changing this value!", new { style = "color: red" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm required">
+                    @Html.LabelFor(model => model.SectionName, "Section", htmlAttributes: new { @class = "control-label col-sm-3" })
+                    <div class="col-sm-7">
+                        @Html.EditorFor(model => model.SectionName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.SectionName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+             <div class="col-xs-6">
+                <div class="form-group form-group-sm required">
+                    @Html.LabelFor(model => model.DistrictId, "District", htmlAttributes: new { @class = "control-label col-sm-3" })
+                    <div class="col-sm-7">
+                        @Html.DropDownList("DistrictId", new SelectList(ViewBag.Districts, "Value", "Text"), htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.DistrictId, "", new { @class = "text-danger" })
+                        @*<div id="distrIdDIV" style="font-weight: bolder">  </div>*@
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.Remark, htmlAttributes: new { @class = "control-label col-sm-3" })
+                    <div class="col-sm-7">
+                        @Html.EditorFor(model => model.Remark, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Remark, "", new { @class = "text-danger" })
+                    </div>
+                </div>
             </div>
         </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.SectionName, "Section", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.SectionName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.SectionName, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.DistrictId, "District", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("DistrictId", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.DistrictId, "", new { @class = "text-danger" })
-                <div id="distrIdDIV" style="font-weight: bolder">  </div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Remark, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Remark, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Remark, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-success" />
-                <input type="reset" value="Reset" class="btn btn-warning" />
+        <div class="form-group form-group-sm">
+            <div class="col-md-offset-2 col-sm-7">
+                <button type="submit" class="btn btn-primary" id="save"><span class="glyphicon glyphicon-save"></span> Save</button>
+                <button type="reset" class="btn btn-primary"><span class="glyphicon glyphicon-refresh"></span> Reset</button>
+                <div id="status" class="text-danger">
+                    <!-- Save failure status text appears here-->
+                </div>
             </div>
         </div>
     </div>
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+    <a href="@Url.Action("Index", new {area = "Admin", id = ViewBag.DistrictId })" class="btn btn-primary"><span class="glyphicon glyphicon-backward"></span> Go to Sections Sections List</a>
 </div>
-
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
 
 <script>
     $(document).ready(function () {
-        $('#distrIdDIV').text("District Id = " + $('#DistrictId option:selected').val());
+        $('#distrIdDIV').text("District No. = " + $('#DistrictId option:selected').val());
 
         $('#DistrictId').change(function () {
-            var selDistrictId = $('#DistrictId option:selected').val();
+            var selDistrictId = $('#DistrictList option:selected').val();
 
             if (!selDistrictId) //if no district is selected
                 $('#distrIdDIV').text(""); //clear district no. indicator
             else
-                $('#distrIdDIV').text("District Id = " + selDistrictId);
+                $('#distrIdDIV').text("District No. = " + selDistrictId);
+        });
+
+        $('#save').click(function () {
+            var selDistrictId = $('#DistrictId').val();
+
+            // if no district is selected, cancel submission and show error status
+            if (selDistrictId == 0 || (typeof selDistrictId == 'undefined') || selDistrictId == null || selSubRouteId == null) {
+                $('#status').text("Please select District")
+                return false;
+            }
         });
     });
 </script>

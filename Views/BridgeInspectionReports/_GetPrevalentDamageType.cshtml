@@ -1,0 +1,313 @@
+﻿@*@model IEnumerable<ERA_BMS.ViewModels.DamageByStructureItemByDamgeTypeViewModel>*@
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title panel-info">Prevalent Bridge Damage Statistics for Inpsection Year <b>@ViewBag.InspectionYear</b></h3>
+    </div>
+
+    <div class="panel-body">
+        <br />
+        <br />
+        <table class="table table-striped table-condensed table-responsive table-bordered display compact hover" id="tblbridgedamagecondition">
+            @*<thead>
+                    <tr>
+                        <th>
+                            Pier and Foundation
+                        </th>
+                    </tr>
+                </thead>*@
+
+            <tbody>
+                @if (ViewBag.PierAndFoundation.Count != 0)
+                {
+                    <tr>
+                        <th rowspan="2">Pier and Foundation</th>
+                        @*<td>Damage Type</td>*@
+                        @foreach (var item in ViewBag.PierAndFoundation)
+                        {
+                            <td>@item.DamageTypeName</td>
+                        }
+                        <th>Total</th>
+                    </tr>
+                    <tr>
+                        @*<td>Bridge Count</td>*@
+                        @{ int totPier = 0; }
+                        @foreach (var item in ViewBag.PierAndFoundation)
+                        {
+                            totPier += item.BridgeCount;
+                            <td>@item.BridgeCount</td>
+                        }
+                        <th>@totPier</th>
+                    </tr>
+                }
+
+                @if (ViewBag.AbutmentAndWingwall.Count != 0)
+                {
+                    <tr><td><br /></td></tr>
+                    <tr>
+                        <th rowspan="2">Abutment and Wing Wall</th>
+                        @*<td>Damage Type</td>*@
+                        @foreach (var item in ViewBag.AbutmentAndWingwall)
+                        {
+                            <td>@item.DamageTypeName</td>
+                        }
+                        <th>Total</th>
+                    </tr>
+                    <tr>
+                        @*<td>Bridge Count</td>*@
+                        @{ int totAbutment = 0; }
+                        @foreach (var item in ViewBag.AbutmentAndWingwall)
+                        {
+                            totAbutment += item.BridgeCount;
+                            <td>@item.BridgeCount</td>
+                        }
+                        <th>@totAbutment</th>
+                    </tr>
+                }
+
+                @if (ViewBag.Embankment.Count != 0)
+                {
+                    <tr><td><br /></td></tr>
+                    <tr>
+                        <th rowspan="2">Embankment</th>
+                        @*<td>Damage Type</td>*@
+                        @foreach (var item in ViewBag.Embankment)
+                        {
+                            <td>@item.DamageTypeName</td>
+                        }
+                        <th>Total</th>
+                    </tr>
+                    <tr>
+                        @*<td>Bridge Count</td>*@
+                        @{ int totEmbankment = 0; }
+                        @foreach (var item in ViewBag.Embankment)
+                        {
+                            totEmbankment += item.BridgeCount;
+                            <td>@item.BridgeCount</td>
+                        }
+                        <th>@totEmbankment</th>
+                    </tr>
+                }
+
+                @if (ViewBag.RipRap.Count != 0)
+                {
+                    <tr><td><br /></td></tr>
+                    <tr>
+                        <th rowspan="2">Rip Rap</th>
+                        @*<td>Damage Type</td>*@
+                        @foreach (var item in ViewBag.RipRap)
+                        {
+                            <td>@item.DamageTypeName</td>
+                        }
+                        <th>Total</th>
+                    </tr>
+                    <tr>
+                        @*<td>Bridge Count</td>*@
+                        @{ int totRip = 0; }
+                        @foreach (var item in ViewBag.RipRap)
+                        {
+                            totRip += item.BridgeCount;
+                            <td>@item.BridgeCount</td>
+                        }
+                        <th>@totRip</th>
+                    </tr>
+                }
+
+                @if (ViewBag.DeckSlab.Count != 0)
+                {
+                    <tr><td><br /></td></tr>
+                    <tr>
+                        <th rowspan="2">Deck Slab</th>
+                        @*<td>Damage Type</td>*@
+                        @foreach (var item in ViewBag.DeckSlab)
+                        {
+                            <td>@item.DamageTypeName</td>
+                        }
+                        <th>Total</th>
+                    </tr>
+                    <tr>
+                        @*<td>Bridge Count</td>*@
+                        @{ int totDeck = 0; }
+                        @foreach (var item in ViewBag.DeckSlab)
+                        {
+                            totDeck += item.BridgeCount;
+                            <td>@item.BridgeCount</td>
+                        }
+                        <th>@totDeck</th>
+                    </tr>
+                }
+
+                @if (ViewBag.ConcreteGirder.Count != 0)
+                {
+                    <tr><td><br /></td></tr>
+                    <tr>
+                        <th rowspan="2">Concrete Girder</th>
+                        @*<td>Damage Type</td>*@
+                        @foreach (var item in ViewBag.ConcreteGirder)
+                        {
+                            <td>@item.DamageTypeName</td>
+                        }
+                        <th>Total</th>
+                    </tr>
+                    <tr>
+                        @*<td>Bridge Count</td>*@
+                        @{ int totConcrete = 0; }
+                        @foreach (var item in ViewBag.ConcreteGirder)
+                        {
+                            totConcrete += item.BridgeCount;
+                            <td>@item.BridgeCount</td>
+                        }
+                        <th>@totConcrete</th>
+                    </tr>
+                }
+
+                @if (ViewBag.SteelTruss.Count != 0)
+                {
+                    <tr><td><br /></td></tr>
+                    <tr>
+                        <th rowspan="2">Steel Truss</th>
+                        @*<td>Damage Type</td>*@
+                        @foreach (var item in ViewBag.SteelTruss)
+                        {
+                            <td>@item.DamageTypeName</td>
+                        }
+                        <th>Total</th>
+                    </tr>
+                    <tr>
+                        @*<td>Bridge Count</td>*@
+                        @{ int totSteel = 0; }
+                        @foreach (var item in ViewBag.SteelTruss)
+                        {
+                            totSteel += item.BridgeCount;
+                            <td>@item.BridgeCount</td>
+                        }
+                        <th>@totSteel</th>
+                    </tr>
+                }
+
+                @if (ViewBag.Pavement.Count != 0)
+                {
+                    <tr><td><br /></td></tr>
+                    <tr>
+                        <th rowspan="2">Pavement</th>
+                        @*<td>Damage Type</td>*@
+                        @foreach (var item in ViewBag.Pavement)
+                        {
+                            <td>@item.DamageTypeName</td>
+                        }
+                        <th>Total</th>
+                    </tr>
+                    <tr>
+                        @*<td>Bridge Count</td>*@
+                        @{ int totPavement = 0; }
+                        @foreach (var item in ViewBag.Pavement)
+                        {
+                            totPavement += item.BridgeCount;
+                            <td>@item.BridgeCount</td>
+                        }
+                        <th>@totPavement</th>
+                    </tr>
+                }
+
+                @if (ViewBag.CurbAndRailing.Count != 0)
+                {
+                    <tr><td><br /></td></tr>
+                    <tr>
+                        <th rowspan="2">Curb and Railing</th>
+                        @*<td>Damage Type</td>*@
+                        @foreach (var item in ViewBag.CurbAndRailing)
+                        {
+                            <td>@item.DamageTypeName</td>
+                        }
+                        <th>Total</th>
+                    </tr>
+                    <tr>
+                        @*<td>Bridge Count</td>*@
+                        @{ int totCurb = 0; }
+                        @foreach (var item in ViewBag.CurbAndRailing)
+                        {
+                            totCurb += item.BridgeCount;
+                            <td>@item.BridgeCount</td>
+                        }
+                        <th>@totCurb</th>
+                    </tr>
+                }
+
+                @if (ViewBag.Drainage.Count != 0)
+                {
+                    <tr><td><br /></td></tr>
+                    <tr>
+                        <th rowspan="2">Drainage</th>
+                        @*<td>Damage Type</td>*@
+                        @foreach (var item in ViewBag.Drainage)
+                        {
+                            <td>@item.DamageTypeName</td>
+                        }
+                        <th>Total</th>
+                    </tr>
+                    <tr>
+                        @*<td>Bridge Count</td>*@
+                        @{ int totDrainage = 0; }
+                        @foreach (var item in ViewBag.Drainage)
+                        {
+                            totDrainage += item.BridgeCount;
+                            <td>@item.BridgeCount</td>
+                        }
+                        <th>@totDrainage</th>
+                    </tr>
+                }
+
+                @if (ViewBag.Bearing.Count != 0)
+                {
+                    <tr><td><br /></td></tr>
+                    <tr>
+                        <th rowspan="2">Bearing</th>
+                        @*<td>Damage Type</td>*@
+                        @foreach (var item in ViewBag.Bearing)
+                        {
+                            <td>@item.DamageTypeName</td>
+                        }
+                        <th>Total</th>
+                    </tr>
+                    <tr>
+                        @*<td>Bridge Count</td>*@
+                        @{ int totBearing = 0; }
+                        @foreach (var item in ViewBag.Bearing)
+                        {
+                            totBearing += item.BridgeCount;
+                            <td>@item.BridgeCount</td>
+                        }
+                        <th>@totBearing</th>
+                    </tr>
+                }
+
+                @if (ViewBag.ExpansionJoint.Count != 0)
+                {
+                    <tr><td><br /></td></tr>
+                    <tr>
+                        <th rowspan="2">Expansion Joint</th>
+                        @*<td>Damage Type</td>*@
+                        @foreach (var item in ViewBag.ExpansionJoint)
+                        {
+                            <td>@item.DamageTypeName</td>
+                        }
+                        <th>Total</th>
+                    </tr>
+                    <tr>
+                        @*<td>Bridge Count</td>*@
+                        @{ int totExpansionJoint = 0; }
+                        @foreach (var item in ViewBag.ExpansionJoint)
+                        {
+                            totExpansionJoint += item.BridgeCount;
+                            <td>@item.BridgeCount</td>
+                        }
+                        <th>@totExpansionJoint</th>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="panel-footer">
+        <h3 class="panel-title"></h3>
+    </div>
+</div>

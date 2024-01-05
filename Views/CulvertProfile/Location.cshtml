@@ -1,0 +1,111 @@
+﻿@model ERA_BMS.Models.Culvert
+
+@{
+    ViewBag.Title = "Culvert Location";
+}
+
+<table class="table table-condensed">
+    <tr>
+        <td>
+            @Html.DisplayNameFor(model => model.CulvertNo)
+        </td>
+
+        <th>
+            @Html.DisplayFor(model => model.CulvertNo)
+        </th>
+    </tr>
+    <tr>
+        <td>
+            @Html.DisplayNameFor(model => model.RevisedCulvertNo)
+        </td>
+
+        <th>
+            @Html.DisplayFor(model => model.RevisedCulvertNo)
+        </th>
+    </tr>
+    <tr>
+        <td>
+            @Html.DisplayNameFor(model => model.RevisedCulvertNo)
+        </td>
+
+        <th>
+            @Html.DisplayFor(model => model.RevisedCulvertNo)
+        </th>
+    </tr>
+    <tr>
+        <td>
+            @Html.DisplayNameFor(model => model.CulvertGeneralInfo.KMFromAddis)
+        </td>
+
+        <th>
+            @Html.DisplayFor(model => model.CulvertGeneralInfo.KMFromAddis)
+        </th>
+    </tr>
+    <tr>
+
+        <td>
+            Latitude
+        </td>
+
+        <th>
+            @Html.DisplayFor(model => model.CulvertGeneralInfo.LatitudeDMS)
+        </th>
+    </tr>
+    <tr>
+        <td>
+            Longitude
+        </td>
+        <th>
+            @Html.DisplayFor(model => model.CulvertGeneralInfo.LongitudeDMS)
+        </th>
+    </tr>
+    <tr>
+        <td>
+            @Html.DisplayNameFor(model => model.SubRoute.MainRoute.MainRouteName)
+        </td>
+
+        <th>
+            [@Html.DisplayFor(model => model.SubRoute.MainRoute.MainRouteNo)]
+            @Html.DisplayFor(model => model.SubRoute.MainRoute.MainRouteName)
+        </th>
+    </tr>
+    <tr>
+        <td>
+            @Html.DisplayNameFor(model => model.SubRoute.SubRouteName)
+        </td>
+
+        <th>
+            [@Html.DisplayFor(model => model.SubRoute.SubRouteNo)]
+            @Html.DisplayFor(model => model.SubRoute.SubRouteName)
+        </th>
+    </tr>
+    <tr>
+        <td>
+            @Html.DisplayNameFor(model => model.Segment.SegmentName)
+        </td>
+
+        <th>
+            [@Html.DisplayFor(model => model.Segment.SegmentNo)]
+            @Html.DisplayFor(model => model.Segment.SegmentName)
+        </th>
+    </tr>
+    <tr>
+        <td>
+            @Html.DisplayNameFor(model => model.Segment.Section.SectionName)
+        </td>
+
+        <th>
+            [@Html.DisplayFor(model => model.Segment.Section.SectionNo)]
+            @Html.DisplayFor(model => model.Segment.Section.SectionName)
+        </th>
+    </tr>
+    <tr>
+        <td>
+            @Html.DisplayNameFor(model => model.Segment.Section.District.DistrictName)
+        </td>
+
+        <th>
+            @Html.DisplayFor(model => model.Segment.Section.District.DistrictName)
+        </th>
+    </tr>
+</table>

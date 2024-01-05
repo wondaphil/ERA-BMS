@@ -1,132 +1,442 @@
-﻿
+﻿@model ERA_BMS.ViewModels.BridgeViewModel
+
 @{
-    ViewBag.Title = "Bridge Profile";
+    ViewBag.Title = "Bridge Profile and Media";
 }
 
-<h2>Bridge Profile</h2>
+<h2>Bridge Profile and Media</h2>
 
 @using (Html.BeginForm())
 {
     <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title panel-info">Please select <b>District</b>, <b>Section</b>, <b>Segment</b> and <b>Bridge</b> from the dropdown list</h3>
-        </div>
+        @*<div class="panel-heading">
+                <h3 class="panel-title panel-info">Please select <b>District</b>, <b>Section</b>, <b>Road Segment</b> and <b>Bridge</b> from the dropdown list </h3>
+            </div>*@
         <div class="panel-body">
 
             @Html.AntiForgeryToken()
 
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
                     <div class="form-horizontal">
                         <div class="form-group form-group-sm">
-                            <label class="control-label col-md-2">District</label>
-                            <div class="col-md-8">
-                                @Html.DropDownList("ddlDistrict", (List<SelectListItem>)ViewBag.Districts, new { @class = "form-control" })
-                                <label class="control-label" id="distrIdDIV"> <!-- District id appears here --> </label>
+                            <label class="control-label col-lg-2 col-md-3 col-sm-4">District</label>
+                            <div class="col-lg-9 col-md-8 col-sm-8">
+                                @*@Html.DropDownList("ddlDistrict", (List<SelectListItem>)ViewBag.Districts, new { @class = "form-control" })*@
+                                @Html.DropDownList("ddlDistrict", new SelectList(ViewBag.Districts, "Value", "Text", ViewBag.DistrictId), htmlAttributes: new { @class = "form-control" })
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
                     <div class="form-horizontal">
                         <div class="form-group form-group-sm">
-                            <label class="control-label col-md-2">Section</label>
-                            <div class="col-md-8">
-                                <select class="form-control" id="ddlSection">
-                                    <!-- Sections list populates here -->
-                                </select>
-                                <label class="control-label" id="secIdDIV"> <!-- Section id appears here --> </label>
+                            <label class="control-label col-lg-2 col-md-3 col-sm-4">Section</label>
+                            <div class="col-lg-9 col-md-8 col-sm-8">
+                                @*@Html.DropDownList("ddlSection", (List<SelectListItem>)ViewBag.Sections, new { @class = "form-control" })*@
+                                @Html.DropDownList("ddlSection", new SelectList(ViewBag.Sections, "Value", "Text", ViewBag.SectionId), htmlAttributes: new { @class = "form-control" })
+                                <!--<select class="form-control" id="ddlSection">-->
+                                <!-- Sections list populates here -->
+                                <!--</select>-->
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-md-3">
+                <div class="clearfix visible-sm"></div> <!-- Add clearfix (or new line break) for only the sm -->
+                <div class="clearfix visible-xs"></div> <!-- Add clearfix (or new line break) for only the xs -->
+
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
                     <div class="form-horizontal">
                         <div class="form-group form-group-sm">
-                            <label class="control-label col-md-2">Segment</label>
-                            <div class="col-md-8">
-                                <select class="form-control" id="ddlSegment">
-                                    <!-- Segments list populates here -->
-                                </select>
-                                <label class="control-label" id="segIdDIV"> <!-- Segment id appears here --> </label>
+                            <label class="control-label col-lg-3 col-md-3 col-sm-4">Road Segment</label>
+                            <div class="col-lg-8 col-md-9 col-sm-8">
+                                @*@Html.DropDownList("ddlSegment", (List<SelectListItem>)ViewBag.Segments, new { @class = "form-control" })*@
+                                @Html.DropDownList("ddlSegment", new SelectList(ViewBag.Segments, "Value", "Text", ViewBag.SegmentId), htmlAttributes: new { @class = "form-control" })
+                                <!--<select class="form-control" id="ddlSegment">-->
+                                <!-- Segments list populates here -->
+                                <!--</select>-->
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
                     <div class="form-horizontal">
                         <div class="form-group form-group-sm">
-                            <label class="control-label col-md-2">Bridge</label>
-                            <div class="col-md-8">
-                                <select class="form-control" id="ddlBridge">
-                                    <!-- Bridges list populates here -->
-                                </select>
-                                <label class="control-label" id="brgIdDIV"> <!-- Bridge id appears here --> </label>
+                            <label class="control-label col-lg-2 col-md-3 col-sm-4">Bridge</label>
+                            <div class="col-lg-9 col-md-8 col-sm-8">
+                                @*@Html.DropDownList("ddlBridge", (List<SelectListItem>)ViewBag.Bridges, new { @class = "form-control" })*@
+                                @Html.DropDownList("ddlBridge", new SelectList(ViewBag.Bridges, "Value", "Text", ViewBag.BridgeId), htmlAttributes: new { @class = "form-control" })
+                                <!--<select class="form-control" id="ddlBridge">-->
+                                <!-- Bridges list populates here -->
+                                <!--</select>-->
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-10">
+                    <button type="button" id="printProfile" class="btn btn-primary"><span class="glyphicon glyphicon-print"></span> Printable Profile</button>
+                </div>
+                <div class="col-xs-2" align="right">
+                    <a class="btn btn-primary" data-toggle="tooltip" title="Refresh" id="refresh"> <span class="glyphicon glyphicon-refresh"></span> </a>
                 </div>
             </div>
         </div>
     </div>
 }
 
-<div id="bridgeDetail">
-    <!-- Bridges details displays here -->
+<div class="row">
+    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+        @{
+            <div class="panel panel-primary title" @*style="display: none"*@>
+                <div class="panel-heading">
+                    <h3 class="panel-title panel-info ">Bridge Location </h3>
+                </div>
+                <div class="panel-body">
+                    <div id="location">
+                        <!-- Bridges location info displays here -->
+                        @if (Model != null)
+                        {
+                            if (Model.Bridge != null)
+                            {
+                                @Html.Partial("Location", Model.Bridge, new ViewDataDictionary());
+                            }
+                        }
+                    </div>
+                    <div id="waitLocation" align="center" style="display: none">
+                        <img src="~/images/ajax-loader-big.gif" />
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+        @{
+            <div class="panel panel-primary title" @*style="display: none"*@>
+                <div class="panel-heading">
+                    <h3 class="panel-title panel-info">General Information </h3>
+                </div>
+                <div class="panel-body">
+                    <div id="generalInfo">
+                        <!-- Bridges General Info displays here -->
+                        @if (Model != null)
+                        {
+                            if (Model.GenInfo != null)
+                            {
+                                @Html.Partial("GeneralInfo", Model.GenInfo, new ViewDataDictionary());
+                            }
+                            else
+                            {
+                                @Html.Partial("NoData");
+                            }
+                        }
+                    </div>
+                    <div id="waitGenInfo" align="center" style="display: none">
+                        <img src="~/images/ajax-loader-big.gif" />
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
 </div>
-<div id="bridgeEdit">
-    <!-- Bridges edit controls displays here -->
+
+
+<div class="row">
+    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+        @{
+            <div class="panel panel-primary title" @*style="display: none"*@>
+                <div class="panel-heading">
+                    <h3 class="panel-title panel-info ">Super Structures</h3>
+                </div>
+                <div class="panel-body">
+                    <div id="superStructure">
+                        <!-- Super Structure displays here -->
+                        @if (Model != null)
+                        {
+                            if (Model.SuperStr != null)
+                            {
+                                @Html.Partial("SuperStructure", Model.SuperStr, new ViewDataDictionary());
+                            }
+                            else
+                            {
+                                @Html.Partial("NoData");
+                            }
+                        }
+                    </div>
+                    <div id="waitSuperStr" align="center" style="display: none">
+                        <img src="~/images/ajax-loader-big.gif" />
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+        @{
+            <div class="panel panel-primary title" @*style="display: none"*@>
+                <div class="panel-heading">
+                    <h3 class="panel-title panel-info">Abutments and Foundations</h3>
+                </div>
+                <div class="panel-body">
+                    <div id="abutment">
+                        <!-- Abutment displays here -->
+                        @if (Model != null)
+                        {
+                            if (Model.Abutment != null)
+                            {
+                                @Html.Partial("Abutment", Model.Abutment, new ViewDataDictionary());
+                            }
+                            else
+                            {
+                                @Html.Partial("NoData");
+                            }
+                        }
+                    </div>
+                    <div id="waitAbutment" align="center" style="display: none">
+                        <img src="~/images/ajax-loader-big.gif" />
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
 </div>
-<div id="generalInfo">
-    <!-- Bridges General Info displays here -->
+
+<div class="row">
+    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+        @{
+            <div class="panel panel-primary title" @*style="display: none"*@>
+                <div class="panel-heading">
+                    <h3 class="panel-title panel-info ">Ancillaries</h3>
+                </div>
+                <div class="panel-body">
+                    <div id="ancillary">
+                        <!-- Ancillaries display here -->
+                        @if (Model != null)
+                        {
+                            if (Model.Ancillaries != null)
+                            {
+                                @Html.Partial("Ancillary", Model.Ancillaries, new ViewDataDictionary());
+                            }
+                            else
+                            {
+                                @Html.Partial("NoData");
+                            }
+                        }
+                    </div>
+                    <div id="waitAncillary" align="center" style="display: none">
+                        <img src="~/images/ajax-loader-big.gif" />
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+        @if (Model != null)
+        {
+            <div class="panel panel-primary title" @*style="display: none"*@>
+                <div class="panel-heading">
+                    <h3 class="panel-title panel-info ">Piers and Foundations</h3>
+                </div>
+                <div class="panel-body">
+                    <div id="pier">
+                        <!-- Pier and Foundation displays here -->
+                        @if (Model != null)
+                        {
+                            if (Model.Piers != null)
+                            {
+                                @Html.Partial("Pier", Model.Piers, new ViewDataDictionary());
+                            }
+                            else
+                            {
+                                @Html.Partial("NoData");
+                            }
+                        }
+                    </div>
+                    <div id="waitPier" align="center" style="display: none">
+                        <img src="~/images/ajax-loader-big.gif" />
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
 </div>
-<div id="superStructure">
-    <!-- Super Structure displays here -->
-</div>
-<div id="abutment">
-    <!-- Abutment displays here -->
-</div>
-<div id="pier">
-    <!-- Pier and Foundation displays here -->
-</div>
-<div id="component">
-    <!-- Components display here -->
-</div>
-<div id="bridgeHistory">
-    <!-- Bridge Histories display here -->
-</div>
-<div id="bridgeDoc">
-    <!-- Bridge Docs display here -->
-</div>
-<div id="imageVideoDrawing">
-    <!-- Images/Videos/Drawings display here -->
+
+
+@{
+    <div class="panel panel-primary title" @*style="display: none"*@>
+        <div class="panel-heading">
+            <h3 class="panel-title panel-info ">Bridge Documents</h3>
+        </div>
+        <div class="panel-body">
+            <div id="bridgeDoc">
+                <!-- Bridge Docs display here -->
+                @if (Model != null)
+                {
+                    if (Model.BridgeDoc != null)
+                    {
+                        @Html.Partial("BridgeDoc", Model.BridgeDoc, new ViewDataDictionary());
+                    }
+                }
+            </div>
+            <div id="waitBridgeDoc" align="center" style="display: none">
+                <img src="~/images/ajax-loader-big.gif" />
+            </div>
+        </div>
+    </div>
+}
+
+@{
+    <div class="panel panel-primary title" @*style="display: none"*@>
+        <div class="panel-heading">
+            <h3 class="panel-title panel-info ">Bridge Images</h3>
+        </div>
+        <div class="panel-body">
+            <div id="bridgeImage">
+                <!-- Bridge images display here -->
+                @if (Model != null)
+                {
+                    if (Model.BridgeImage != null)
+                    {
+                        @Html.Partial("BridgeImage", Model.BridgeImage, new ViewDataDictionary());
+                    }
+                }
+            </div>
+            <div id="waitBridgeImage" align="center" style="display: none">
+                <img src="~/images/ajax-loader-big.gif" />
+            </div>
+        </div>
+    </div>
+}
+
+@{
+    <div class="panel panel-primary title" @*style="display: none"*@>
+        <div class="panel-heading">
+            <h3 class="panel-title panel-info ">Bridge Damage Images</h3>
+        </div>
+        <div class="panel-body">
+            <div id="bridgeDamageImage">
+                <!-- Bridge damage images display here -->
+                @if (Model != null)
+                {
+                    if (Model.BridgeDamageImage != null)
+                    {
+                        @Html.Partial("BridgeDamageImage", Model.BridgeDamageImage, new ViewDataDictionary());
+                    }
+                }
+            </div>
+            <div id="waitDamageImage" align="center" style="display: none">
+                <img src="~/images/ajax-loader-big.gif" />
+            </div>
+        </div>
+
+    </div>
+}
+
+@{
+    <div class="panel panel-primary title" @*style="display: none"*@>
+        <div class="panel-heading">
+            <h3 class="panel-title panel-info ">Bridge Videos and Damage Videos</h3>
+        </div>
+        <div class="panel-body">
+            <div id="bridgeVideo">
+                <!-- Bridge videos display here -->
+                @if (Model != null)
+                {
+                    if (Model.BridgeVideo != null)
+                    {
+                        @Html.Partial("BridgeVideo", Model.BridgeVideo, new ViewDataDictionary());
+                    }
+                }
+            </div>
+            <div id="waitBridgeVideo" align="center" style="display: none">
+                <img src="~/images/ajax-loader-big.gif" />
+            </div>
+        </div>
+
+    </div>
+}
+
+@{
+    <div class="panel panel-primary title" @*style="display: none"*@>
+        <div class="panel-heading">
+            <h3 class="panel-title panel-info ">Bridge Drawings</h3>
+        </div>
+        <div class="panel-body">
+            <div id="bridgeDrawing">
+                <!-- Bridge drawings display here -->
+                @if (Model != null)
+                {
+                    if (Model.BridgeDrawing != null)
+                    {
+                        @Html.Partial("BridgeDrawing", Model.BridgeDrawing, new ViewDataDictionary());
+                    }
+                }
+            </div>
+            <div id="waitBridgeDrawing" align="center" style="display: none">
+                <img src="~/images/ajax-loader-big.gif" />
+            </div>
+        </div>
+
+    </div>
+}
+
+<div id="print">
+    <!-- Printable version display here -->
 </div>
 
 <script>
     $(document).ready(function () {
+
+        if (!$('#ddlBridge').has('option').length > 0 || !$('#ddlBridge option:selected').val() != 0)
+            ClearAll();
+
+        function ClearAll() {
+            $('#location').empty(); // clear the bridge info tab
+            $('#generalInfo').empty(); // clear the general info tab
+            $('#superStructure').empty(); // clear the super structure tab
+            $('#abutment').empty(); // clear the abutment tab
+            $('#pier').empty(); // clear the pier tab
+            $('#component').empty(); // clear the component tab
+            $('#bridgeHistory').empty(); // clear the bridge history tab
+            $('#bridgeDoc').empty(); // clear the bridge doc tab
+            $('#bridgeImage').empty(); // clear the bridge image tab
+            $('#bridgeVideo').empty(); // clear the bridge video tab
+            $('#bridgeDrawing').empty(); // clear the bridge drawing Info tab
+            $('#print').empty(); // clear the bridge drawing Info tab
+            $('.title').hide(); // hide all titles
+        }
+
+        function HideAll() {
+            $('#location').hide(); // hide the bridge info tab
+            $('#generalInfo').hide(); // hide the general info tab
+            $('#superStructure').hide(); // hide the super structure tab
+            $('#abutment').hide(); // hide the abutment tab
+            $('#pier').hide(); // hide the pier tab
+            $('#component').hide(); // hide the component tab
+            $('#bridgeHistory').hide(); // hide the bridge history tab
+            $('#bridgeDoc').hide(); // hide the bridge doc tab
+            $('#bridgeImage').hide(); // hide the bridge image tab
+            $('#bridgeVideo').hide(); // hide the bridge video tab
+            $('#bridgeDrawing').hide(); // hide the bridge drawing Info tab
+            $('.title').hide(); // hide all titles
+        }
+
         $('#ddlDistrict').change(function () {
             var selDistrictId = $('#ddlDistrict option:selected').val();
             $('#ddlSection option').remove(); //empty the section dropdown list
-            $('#secIdDIV').text(""); //clear section no. indicator
             $('#ddlSegment option').remove(); //empty the segment dropdown list
-            $('#segIdDIV').text(""); //clear segment no. indicator
             $('#ddlBridge option').remove(); //empty the bridge dropdown list
-            $('#brgIdDIV').text(""); //clear bridge no. indicator
-            $('#bridgeDetail').empty(); // clear the bridges place holder
-            $('#bridgeEdit').empty(); // clear the bridgeEdit place holder
-            $('#generalInfo').empty(); // clear the general Info place holder
-            $('#superStructure').empty(); // clear the super tructure place holder
-            if (selDistrictId == "0") //if no district is selected
+            ClearAll();
+            if (selDistrictId != "0") //if some district is selected
             {
-                $('#distrIdDIV').text(""); //clear district no. indicator
-            }
-            else {
-                $('#distrIdDIV').text("District Id = " + selDistrictId );
                 $.ajax({
-                    url: '@Url.Action("_GetSections", "BridgeProfile")',
+                    url: '@Url.Action("_GetSections", "LocationsDDL")',
                     data: { districtid: selDistrictId },
                     type: 'GET',
                     dataType: 'json',
@@ -144,27 +454,17 @@
         $('#ddlSection').change(function () {
             var selSectionId = $('#ddlSection option:selected').val();
             $('#ddlSegment option').remove(); //empty the segment dropdown list
-            $('#segIdDIV').text(""); //clear segment no. indicator
             $('#ddlBridge option').remove(); //empty the bridge dropdown list
-            $('#brgIdDIV').text(""); //clear bridge no. indicator
-            $('#bridgeDetail').empty(); // clear the bridges place holder
-            $('#bridgeEdit').empty(); // clear the bridgeEdit place holder
-            $('#generalInfo').empty(); // clear the general Info place holder
-            $('#superStructure').empty(); // clear the super tructure place holder
-            if (selSectionId == "0") //if no section is selected
+            ClearAll();
+            if (selSectionId != "0") //if some section is selected
             {
-                $('#secIdDIV').text(""); //clear section no. indicator
-            }
-            else {
-                $('#secIdDIV').text("Section Id = " + selSectionId);
-
                 $.ajax({
-                    url: '@Url.Action("_GetSegments", "BridgeProfile")',
+                    url: '@Url.Action("_GetSegments", "LocationsDDL")',
                     data: { sectionid: selSectionId },
                     type: 'GET',
                     dataType: 'json',
                     success: function (data) {
-                        var markup = '<option value="0" id="noselect"> --Select Section --</option>';
+                        var markup = '<option value="0" id="noselect"> --Select Segment --</option>';
                         $.each(data, function (i, segment) {
                             markup += '<option value="' + segment.Value + '">' + segment.Text + '</option>'
                             $('#ddlSegment').html(markup);
@@ -177,19 +477,11 @@
         $('#ddlSegment').change(function () {
             var selSegmentId = $('#ddlSegment option:selected').val();
             $('#ddlBridge option').remove(); //empty the bridge dropdown list
-            $('#brgIdDIV').text(""); //clear bridge no. indicator
-            $('#bridgeDetail').empty(); // clear the bridges place holder
-            $('#bridgeEdit').empty(); // clear the bridgeEdit place holder
-            $('#generalInfo').empty(); // clear the general Info place holder
-            $('#superStructure').empty(); // clear the super tructure place holder
-            if (selSegmentId == "0") //if no segment is selected
+            ClearAll();
+            if (selSegmentId != "0") //if some segment is selected
             {
-                $('#segIdDIV').text(""); //clear section no. indicator
-            }
-            else {
-                $('#segIdDIV').text("Segment Id = " + selSegmentId);
                 $.ajax({
-                    url: '@Url.Action("_GetBridges", "BridgeProfile")',
+                    url: '@Url.Action("_GetBridges", "LocationsDDL")',
                     data: { segmentid: selSegmentId },
                     type: 'GET',
                     dataType: 'json',
@@ -203,26 +495,24 @@
                 });
             }
         });
-
         $('#ddlBridge').change(function () {
             var selBridgeId = $('#ddlBridge option:selected').val();
-            $('#bridgeDetail').empty(); //clear the bridges place holder
-            $('#bridgeEdit').empty(); // clear the bridgeEdit place holder
-            $('#generalInfo').empty(); // clear the general Info place holder
-            $('#superStructure').empty(); // clear the super tructure place holder
-            $('#brgIdDIV').text("");
-            if (selBridgeId != "0") //if no bridge is selected
+            ClearAll();
+
+            if (selBridgeId != "0") // if some bridge is selected
             {
-                $('#brgIdDIV').text("Bridge Id = " + selBridgeId);
-                //alert("Hello" + selBridgeId);
+                var bridgeNo = $('#ddlBridge option:selected').text().split('[').pop().split(']')[0]; // extract the bridge no
+                $('.title').show(); // show all titles
 
                 $.ajax({
-                    url: '@Url.Action("BridgeDetail", "BridgeProfile")',
+                    url: '@Url.Action("Location", "BridgeProfile")',
                     data: { bridgeid: selBridgeId },
                     type: 'GET',
                     dataType: 'html',
+                    beforeSend: function () { $('#waitLocation').show(); },
+                    complete: function () { $('#waitLocation').hide(); },
                     success: function (data) {
-                        $('#bridgeDetail').html(data);
+                        $('#location').html(data);
                     }
                 });
 
@@ -231,6 +521,8 @@
                     data: { bridgeid: selBridgeId },
                     type: 'GET',
                     dataType: 'html',
+                    beforeSend: function () { $('#waitGenInfo').show(); },
+                    complete: function () { $('#waitGenInfo').hide(); },
                     success: function (data) {
                         $('#generalInfo').html(data);
                     }
@@ -241,6 +533,8 @@
                     data: { bridgeid: selBridgeId },
                     type: 'GET',
                     dataType: 'html',
+                    beforeSend: function () { $('#waitSuperStr').show(); },
+                    complete: function () { $('#waitSuperStr').hide(); },
                     success: function (data) {
                         $('#superStructure').html(data);
                     }
@@ -251,6 +545,8 @@
                     data: { bridgeid: selBridgeId },
                     type: 'GET',
                     dataType: 'html',
+                    beforeSend: function () { $('#waitAbutment').show(); },
+                    complete: function () { $('#waitAbutment').hide(); },
                     success: function (data) {
                         $('#abutment').html(data);
                     }
@@ -261,25 +557,118 @@
                     data: { bridgeid: selBridgeId },
                     type: 'GET',
                     dataType: 'html',
+                    beforeSend: function () { $('#waitPier').show(); },
+                    complete: function () { $('#waitPier').hide(); },
                     success: function (data) {
                         $('#pier').html(data);
                     }
                 });
 
                 $.ajax({
-                    url: '@Url.Action("Component", "BridgeProfile")',
+                    url: '@Url.Action("Ancillary", "BridgeProfile")',
                     data: { bridgeid: selBridgeId },
                     type: 'GET',
                     dataType: 'html',
+                    beforeSend: function () { $('#waitAncillary').show(); },
+                    complete: function () { $('#waitAncillary').hide(); },
                     success: function (data) {
-                        $('#component').html(data);
+                        $('#ancillary').html(data);
                     }
                 });
 
+                $.ajax({
+                    url: '@Url.Action("BridgeDoc", "BridgeProfile")',
+                    data: { bridgeid: selBridgeId },
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () { $('#waitBridgeDoc').show(); },
+                    complete: function () { $('#waitBridgeDoc').hide(); },
+                    success: function (data) {
+                        $('#bridgeDoc').html(data);
+                    }
+                });
+
+                @*$.ajax({
+                    url: '@Url.Action("BridgeMedia", "BridgeProfile")',
+                    data: { bridgeid: selBridgeId },
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () { $('#wait').show(); },
+                    complete: function () { $('#wait').hide(); },
+                    success: function (data) {
+                        $('#bridgeMedia').html(data);
+                    }
+                });*@
+
+                $.ajax({
+                    url: '@Url.Action("BridgeImage", "BridgeProfile")',
+                    data: { bridgeid: selBridgeId },
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () { $('#waitBridgeImage').show(); },
+                    complete: function () { $('#waitBridgeImage').hide(); },
+                    success: function (data) {
+                        $('#bridgeImage').html(data);
+                    }
+                });
+
+                $.ajax({
+                    url: '@Url.Action("BridgeDamageImage", "BridgeProfile")',
+                    data: { bridgeid: selBridgeId },
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () { $('#waitDamageImage').show(); },
+                    complete: function () { $('#waitDamageImage').hide(); },
+                    success: function (data) {
+                        $('#bridgeDamageImage').html(data);
+                    }
+                });
+
+                $.ajax({
+                    url: '@Url.Action("BridgeVideo", "BridgeProfile")',
+                    data: { bridgeid: selBridgeId },
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () { $('#waitBridgeVideo').show(); },
+                    complete: function () { $('#waitBridgeVideo').hide(); },
+                    success: function (data) {
+                        $('#bridgeVideo').html(data);
+                    }
+                });
+
+                $.ajax({
+                    url: '@Url.Action("BridgeDrawing", "BridgeProfile")',
+                    data: { bridgeid: selBridgeId },
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () { $('#waitBridgeDrawing').show(); },
+                    complete: function () { $('#waitBridgeDrawing').hide(); },
+                    success: function (data) {
+                        $('#bridgeDrawing').html(data);
+                    }
+                });
             }
         });
+
+        $('#refresh').click(function () {
+            $('#ddlBridge').trigger('change');
+        });
+
+        $('#printProfile').click(function () {
+            var selBridgeId = $('#ddlBridge option:selected').val();
+
+            //HideAll();
+            ClearAll();
+
+            $.ajax({
+                url: '@Url.Action("PrintProfile", "BridgeProfile")',
+                data: { bridgeid: selBridgeId },
+                type: 'GET',
+                dataType: 'html',
+                success: function (data) {
+                    $('#print').html(data);
+                },
+            });
+        });
     });
-
 </script>
-
-

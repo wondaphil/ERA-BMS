@@ -1,0 +1,29 @@
+﻿
+@{
+    ViewBag.Title = "All Bridges";
+}
+
+<h2 align="center">All Bridges</h2>
+
+<div id="bridgesPartial">
+    <!-- Bridges list displays here -->
+</div>
+
+<div id="wait" align="center" @*style="display: none"*@>
+    <img src="~/images/ajax-loader-big.gif" />
+</div>
+
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            url: '@Url.Action("_GetAllBridges", "BridgeReportsCensus")',
+            type: 'GET',
+            dataType: 'html',
+            beforeSend: function () { $('#wait').show(); },
+            complete: function () { $('#wait').hide(); },
+            success: function (data) {
+                $('#bridgesPartial').html(data);
+            }
+        });
+    });
+</script>

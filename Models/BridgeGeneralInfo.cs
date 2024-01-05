@@ -7,37 +7,43 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ERA_BCMS.Models
+namespace ERA_BMS.Models
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-
+    
     public partial class BridgeGeneralInfo
     {
-        [Key, ForeignKey("Bridge")]
-        public string BridgeGenInfoId { get; set; }
+        public string BridgeId { get; set; }
+        public Nullable<double> KMFromAddis { get; set; }
+        public Nullable<double> XCoord { get; set; }
+        public Nullable<double> YCoord { get; set; }
         public Nullable<double> BridgeLength { get; set; }
-        public double TotBridgeLength { get; set; }
-        public double BridgeWidth { get; set; }
-        public double RiverWidth { get; set; }
+        public Nullable<double> BridgeWidth { get; set; }
+        public Nullable<double> RiverWidth { get; set; }
         public Nullable<double> PresentWaterLevel { get; set; }
         public Nullable<double> HighestWaterLevel { get; set; }
-        public Nullable<double> LoadCapacity { get; set; }
-        public Nullable<int> DailyTraffic { get; set; }
+        public Nullable<double> DesignCapacity { get; set; }
         public string Topography { get; set; }
         public Nullable<double> Altitude { get; set; }
         public Nullable<int> RoadAlignmentId { get; set; }
         public Nullable<int> ConstructionYear { get; set; }
-        public string BeforeYear { get; set; }
+        public Nullable<int> ReplacedYear { get; set; }
+        public Nullable<bool> Before1935 { get; set; }
         public string Contractor { get; set; }
         public string Designer { get; set; }
-        public Nullable<double> BridgeCost { get; set; }
-        public bool SafetySign { get; set; }
-        public bool Detour { get; set; }
+        public Nullable<double> ConstructionCost { get; set; }
+        public Nullable<double> AssetReplacementCost { get; set; }
+        public Nullable<bool> SafetySign { get; set; }
+        public Nullable<bool> DetourPossible { get; set; }
+        public string Remark { get; set; }
+        public Nullable<System.DateTime> ModifiedOn { get; set; }
+        public byte[] Flag { get; set; }
+        public Nullable<int> UtmZoneId { get; set; }
+        public Nullable<bool> BearingCapacity { get; set; }
     
-        public virtual Bridge Bridge { get; set; }
         public virtual RoadAlignmentType RoadAlignmentType { get; set; }
+        public virtual UtmZoneEthiopia UtmZoneEthiopia { get; set; }
+        public virtual Bridge Bridge { get; set; }
     }
 }

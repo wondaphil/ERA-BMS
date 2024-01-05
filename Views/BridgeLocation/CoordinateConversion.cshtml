@@ -1,0 +1,121 @@
+﻿@model ERA_BMS.Models.Bridge
+
+@{
+    ViewBag.Title = "Coordinate Conversion";
+}
+
+<h2>Coordinate Conversion</h2>
+
+<div class="panel panel-primary title">
+    <div class="panel-heading">
+        <h3 class="panel-title panel-info" style="text-align:center">Convert Coordinate between UTM and Lat/Lang</h3>
+    </div>
+    <div class="panel-body">
+        <div class="form-horizontal align-items-center">
+            <div class="row">
+                <div class="col-lg-3 col-md-2">
+
+                </div>
+                <div class="col-lg-3 col-md-4 col-xs-6">
+                    <h4 class="text-center">UTM</h4>
+                    <div class="form-group form-group-sm">
+                        <label for="txtXCoord" class="control-label col-xs-6">X-Coordinate</label>
+                        <input type="number" class="col-xs-4" id="txtXCoord" style="padding: 0px;" />
+                    </div>
+
+                    <div class="form-group form-group-sm">
+                        <label for="txtYCoord" class="control-label col-xs-6">Y-Coordinate</label>
+                        <input type="number" class="col-xs-4" id="txtYCoord" style="padding: 0px;" />
+                    </div>
+
+                    <div class="form-group form-group-sm">
+                        <label for="txtUtmZone" class="control-label col-xs-6">UTM Zone</label>
+                        <input type="number" class="col-xs-4" id="txtUtmZone" style="padding: 0px;" value="37"/>
+                    </div>
+
+                    <div class="form-group form-group-sm col text-center">
+                        <br />
+                        <button type="button" id="btnConvertToLatLong" class="btn btn-primary">Convert to Lat / Long <span class="glyphicon glyphicon-arrow-right"></span></button>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-4 col-xs-6">
+                    <h4 class="text-center">Latitude / Longitude</h4>
+                    <div class="form-group form-group-sm">
+                        <label for="txtLatitude" class="control-label col-xs-6">Latitude</label>
+                        <input type="number" class="col-xs-4" id="txtLatitude" style="padding: 0px;" />
+                    </div>
+
+                    <div class="form-group form-group-sm">
+                        <label for="txtLongitude" class="control-label col-xs-6">Longitude</label>
+                        <input type="number" class="col-xs-4" id="txtLongitude" style="padding: 0px;" />
+                    </div>
+
+                    <!-- Just for spacing -->
+                    <div class="form-group form-group-sm">
+                        <label class="control-label"></label>
+                    </div>
+
+                    <div class="form-group form-group-sm col text-center">
+                        <br />
+                        <button type="button" id="btnConvertToUTM" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-left"></span> Convert to UTM</button>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-2">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#btnConvertToLatLong').click(function () {
+            var xco = Number($('#txtXCoord').val());
+            var yco = Number($('#txtYCoord').val());
+            var latz = "N";
+            var longz = Number($('#txtUtmZone').val());
+
+            //if x and y coordinate values and latitude and longitude values are entered
+            if ($('#txtXCoord').val() != "" && $('#txtYCoord').val() != "" && $('#txtLatZone').val() != "" && $('#txtUtmZone').val() != "") 
+            {
+                $.ajax({
+                    url: '@Url.Action("ConvertToLatLang", "BridgeLocation")',
+                    data: { xcoord: xco, ycoord: yco, latzone: latz, longzone: longz },
+                    type: 'GET',
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    success: function (data) {
+                        $.each(data, function (i, item) {
+                            $('#txtLatitude').val(item.Latitude);
+                            $('#txtLongitude').val(item.Longitude);
+                        });
+                    },
+                });
+            }
+        });
+
+        $('#btnConvertToUTM').click(function () {
+            var lat = Number($('#txtLatitude').val());
+            var long = Number($('#txtLongitude').val());
+
+            if ($('#txtLatitude').val() != "" && $('#txtLongitude').val() != "") //if both latitude and longitude values are entered
+            {
+                $.ajax({
+                    url: '@Url.Action("ConvertToUTM", "BridgeLocation")',
+                    data: { latitude: lat, longitude: long },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        $.each(data, function (i, item) {
+                            $('#txtXCoord').val(item.XCoordinate);
+                            $('#txtYCoord').val(item.YCoordinate);
+                            $('#txtUtmZone').val(item.UtmZone);
+                        });
+                    },
+                });
+            }
+        });
+    });
+</script>

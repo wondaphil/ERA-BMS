@@ -1,0 +1,195 @@
+﻿@model ERA_BMS.ViewModels.InspMajorSuperStructuresViewModel
+
+<!--Change TempData to ViewBag for easy use-->
+@{
+    ViewBag.DeckSlabDamageTypeList = (List<string[]>)TempData["DeckSlabDamageTypeList"];
+    ViewBag.ConcreteGirderDamageTypeList = (List<string[]>)TempData["ConcreteGirderDamageTypeList"];
+    ViewBag.SteelTrussGirderDamageTypeList = (List<string[]>)TempData["SteelTrussGirderDamageTypeList"];
+
+    ViewBag.DamageRankList = (List<string>)TempData["DamageRankList"];
+}
+
+<input type="hidden" id="bridgeId" value="@TempData["BridgeId"]" /> <!-- Bridge Id -->
+<input type="hidden" id="inspectionYear" value="@TempData["InspectionYear"]" /> <!-- Inspection Year -->
+<input type="hidden" id="inspectionDate" value="@TempData["InspectionDate"]" /> <!-- Inspection Date -->
+<div class="row">
+    <div class="panel panel-default panel-collapse col-lg-3 col-md-3 col-sm-4 col-xs-6">
+        <div class="panel-heading" id="heading-1">
+            <h5 class="panel-title panel-info" style="text-align: center">Deck Slab</h5>
+        </div>
+        <div class="panel-body">
+            <table class="table table-striped table-condensed table-responsive small" id="tblDeckSlab" style="border: 1px solid black;">
+                <tr id="heading-1">
+                    <th></th>
+                    <th>DamageType</th>
+                    <th>A+</th>
+                    <th>A</th>
+                    <th>B</th>
+                    <th>C</th>
+                </tr>
+                @for (int i = 0; i < ViewBag.DeckSlabDamageTypeList.Count; i++)
+                {
+                    @: <tr>
+                        <td></td>
+                        <td>
+                            @ViewBag.DeckSlabDamageTypeList[i][1]
+                        </td>
+                        for (int j = 0; j < ViewBag.DamageRankList.Count; j++)
+                        {
+                            // set default values
+                            float damageArea = 0;
+                            string damageid = "-1";
+                            string fontStyle = "";
+
+                            foreach (var item in Model.DeckSlab)
+                            {
+                                if (ViewBag.DamageRankList[j] == item.DamageRank.DamageRankName && ViewBag.DeckSlabDamageTypeList[i][0] == item.DamageTypeId.ToString())
+                                {
+                                    damageArea = (float)item.DamageArea;
+                                    damageid = item.Id;
+                                    fontStyle = "color:red;font-weight: bold;";
+                                }
+                            }
+                            @: <td><span class="damage-rank" name="@damageid" data-damagetype="@ViewBag.DeckSlabDamageTypeList[i][0]" data-damagerank="@ViewBag.DamageRankList[j]" data-structureitem="5" style="@fontStyle">@damageArea</span></td>
+                        }
+                    @: </tr>
+                }
+            </table>
+        </div>
+    </div>
+
+    <div class="panel panel-default col-lg-3 col-md-3 col-sm-4 col-xs-6">
+        <div class="panel-heading" id="heading-2">
+            <h5 class="panel-title panel-info" style="text-align: center">Concrete Girder</h5>
+        </div>
+        <div class="panel-body">
+            <table class="table table-striped table-condensed table-responsive small" id="tblConcreteGirder" style="border: 1px solid black;">
+                <tr id="heading-2">
+                    <th></th>
+                    <th>DamageType</th>
+                    <th>A+</th>
+                    <th>A</th>
+                    <th>B</th>
+                    <th>C</th>
+                </tr>
+                @{
+
+                    for (int i = 0; i < ViewBag.ConcreteGirderDamageTypeList.Count; i++)
+                    {
+                        @: <tr>
+                            <td></td>
+                            <td>
+                                @ViewBag.ConcreteGirderDamageTypeList[i][1]
+                            </td>
+
+                            for (int j = 0; j < ViewBag.DamageRankList.Count; j++)
+                            {
+                                // set default values
+                                float damageArea = 0;
+                                string damageid = "-1";
+                                string fontStyle = "";
+
+                                foreach (var item in Model.ConcreteGirder)
+                                {
+                                    if (ViewBag.DamageRankList[j] == item.DamageRank.DamageRankName && ViewBag.ConcreteGirderDamageTypeList[i][0] == item.DamageTypeId.ToString())
+                                    {
+                                        damageArea = (float)item.DamageArea;
+                                        damageid = item.Id;
+                                        fontStyle = "color:red;font-weight: bold;";
+                                    }
+                                }
+                                @: <td><span class="damage-rank" name="@damageid" data-damagetype="@ViewBag.ConcreteGirderDamageTypeList[i][0]" data-damagerank="@ViewBag.DamageRankList[j]" data-structureitem="6" style="@fontStyle">@damageArea</span></td>
+                            }
+                        @: </tr>
+                    }
+                }
+            </table>
+        </div>
+    </div>
+
+    <div class="panel panel-default col-lg-3 col-md-3 col-sm-4 col-xs-6">
+        <div class="panel-heading" id="heading-1">
+            <h5 class="panel-title panel-info" style="text-align: center">Steel Truss/Girder</h5>
+        </div>
+        <div class="panel-body">
+            <table class="table table-striped table-condensed table-responsive small" id="tblSteelTrussGirder" style="border: 1px solid black;">
+                <tr id="heading-1">
+                    <th></th>
+                    <th>DamageType</th>
+                    <th>A+</th>
+                    <th>A</th>
+                    <th>B</th>
+                    <th>C</th>
+                </tr>
+
+                @for (int i = 0; i < ViewBag.SteelTrussGirderDamageTypeList.Count; i++)
+                {
+                    @: <tr>
+                        <td></td>
+                        <td>
+                            @ViewBag.SteelTrussGirderDamageTypeList[i][1]
+                        </td>
+                        for (int j = 0; j < ViewBag.DamageRankList.Count; j++)
+                        {
+                            // set default values
+                            float damageArea = 0;
+                            string damageid = "-1";
+                            string fontStyle = "";
+
+                            foreach (var item in Model.SteelTrussGirder)
+                            {
+                                if (ViewBag.DamageRankList[j] == item.DamageRank.DamageRankName && ViewBag.SteelTrussGirderDamageTypeList[i][0] == item.DamageTypeId.ToString())
+                                {
+                                    damageArea = (float)item.DamageArea;
+                                    damageid = item.Id;
+                                    fontStyle = "color:red;font-weight: bold;";
+                                }
+                            }
+                            @: <td><span class="damage-rank" name="@damageid" data-damagetype="@ViewBag.SteelTrussGirderDamageTypeList[i][0]" data-damagerank="@ViewBag.DamageRankList[j]" data-structureitem="7" style="@fontStyle">@damageArea</span></td>
+                        }
+                    @: </tr>
+                }
+            </table>
+        </div>
+    </div>
+</div>
+
+@*<div id="status"></div>*@
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        // Makes "Damage Rank" editable
+        $(".damage-rank").each(function () {
+            $(this).editable("/DamageInspMajor/UpdateDamageData", {
+                callback: function (value, settings) {
+                    // If area is other than 0, set the font style to red and bold
+                    if (value != "0") {
+                        $(this).css({ 'color': 'red', 'font-weight': 'bold' });
+                        $(this).attr("name", $('#bridgeId').val());
+                    }
+                    else {
+                        $(this).css({ 'color': '', 'font-weight': '' });
+                        $(this).attr("name", "-1");
+                    }
+                },
+                submitdata: function () {
+                    return {
+                        // Pass parameters to "UpdateDamageData" controller action
+                        id: $(this).attr("name"),
+                        origvalue: this.revert,
+                        bridgeid: $('#bridgeId').val(),
+                        inspyear: $('#inspectionYear').val(),
+                        inspdate: $('#inspectionDate').val(),
+                        stritemid: $(this).attr("data-structureitem"),
+                        dmgtypeid: $(this).attr("data-damagetype"),
+                        dmgrank: $(this).attr("data-damagerank")
+                    };
+                },
+                tooltip: 'Click/Tap to edit...',
+                indicator: 'Saving...',
+                select: true, // highlight all text after editable
+                size: 1
+            });
+        });
+    });
+</script>

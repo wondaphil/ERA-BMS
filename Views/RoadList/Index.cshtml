@@ -1,0 +1,114 @@
+﻿@using ERA_BMS.Models
+
+@{
+    ViewBag.Title = "Road List & Location";
+}
+
+<h2>Road List & Location</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <!-- Tab Buttons -->
+    <ul id="tabstrip" class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#_DistrictsTab" role="tab" data-toggle="tab" id="districttab">Districts</a>
+        </li>
+        <li>
+            <a href="#_SectionsTab" role="tab" data-toggle="tab" id="sectiontab">Sections</a>
+        </li>
+        <li>
+            <a href="#_SegmentsTab" role="tab" data-toggle="tab" id="segmenttab">Road Segments</a>
+        </li>
+    </ul>
+
+    <!-- Tab Content Containers -->
+    <div class="tab-content">
+        <div class="tab-pane fade in active" id="_DistrictsTab">
+            <div id="districts">
+                <!-- Districts display here -->
+            </div>
+            <div id="waitDistricts" align="center" style="display: none">
+                <img src="~/images/ajax-loader-big-1.gif" />
+            </div>
+        </div>
+        <div class="tab-pane fade" id="_SectionsTab">
+            <div id="sections">
+                <!-- Sections display here -->
+            </div>
+            <div id="waitSections" align="center" style="display: none">
+                <img src="~/images/ajax-loader-big-2.gif" />
+            </div>
+        </div>
+        <div class="tab-pane fade" id="_SegmentsTab">
+            <div id="segments">
+                <!-- Road Segments display here -->
+            </div>
+            <div id="waitSegments" align="center" style="display: none">
+                <img src="~/images/ajax-loader-big-3.gif" />
+            </div>
+        </div>
+    </div>
+}
+
+<script>
+    $(document).ready(function () {
+        LoadDistrictList();
+        LoadSectionList();
+        LoadSegmentList();
+
+        function LoadDistrictList() {
+            $.ajax({
+                url: '@Url.Action("_GetDistrictList", "RoadList")',
+                type: 'GET',
+                dataType: 'html',
+                beforeSend: function () { $('#waitDistricts').show(); },
+                complete: function () { $('#waitDistricts').hide(); },
+                success: function (data) {
+                    $('#districts').html(data);
+                }
+            });
+        }
+
+        function LoadSectionList() {
+            $.ajax({
+                url: '@Url.Action("_GetSectionList", "RoadList")',
+                type: 'GET',
+                dataType: 'html',
+                beforeSend: function () { $('#waitSections').show(); },
+                complete: function () { $('#waitSections').hide(); },
+                success: function (data) {
+                    $('#sections').html(data);
+                }
+            });
+        }
+
+        function LoadSegmentList() {
+            $.ajax({
+                url: '@Url.Action("_GetSegmentList", "RoadList")',
+                type: 'GET',
+                dataType: 'html',
+                beforeSend: function () { $('#waitSegments').show(); },
+                complete: function () { $('#waitSegments').hide(); },
+                success: function (data) {
+                    $('#segments').html(data);
+                }
+            });
+        }
+
+        $('#districttab').click(function () {
+            LoadDistrictList();
+        });
+
+        $('#sectiontab').click(function () {
+            LoadSectionList();
+        });
+
+        $('#segmenttab').click(function () {
+            LoadSegmentList();
+        });
+    });
+</script>
+
+
+

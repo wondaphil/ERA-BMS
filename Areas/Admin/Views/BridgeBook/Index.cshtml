@@ -1,0 +1,220 @@
+﻿
+@{
+    ViewBag.Title = "Bridge Book";
+}
+
+
+<h2 id="noprint">Bridge Book</h2>
+
+@using (Html.BeginForm())
+{
+    <div class="panel panel-default">
+        @*<div class="panel-heading">
+                <h3 class="panel-title panel-info">Please select <b>District</b>, <b>Section</b> and <b>Road Segment</b> from the dropdown list</h3>
+            </div>*@
+        <div class="panel-body">
+
+            @Html.AntiForgeryToken()
+
+            <div class="row">
+                <div class="col-sm-4 col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group">
+                            <label class="control-label col-md-2">District</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("ddlDistrict", new SelectList(ViewBag.Districts, "Value", "Text"), new { @class = "form-control" })
+                                <!--<label class="control-label col-lg-6 col-md-8" id="distrIdDIV">--> <!-- District id appears here --> <!--</label>-->
+                                <div class="clearfix visible-lg visible-md visible-sm visible-xs"></div> <!-- Add clearfix (or new line break) for only the sm -->
+                                <button type="button" class="btn btn-primary glyphicon glyphicon-search" id="searchbydistrict" data-toggle="tooltip" title="Search by District"></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-4 col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group">
+                            <label class="control-label col-md-2">Section</label>
+                            <div class="col-md-8">
+                                <select class="form-control" id="ddlSection">
+                                    <!-- Sections list populates here -->
+                                </select>
+                                <!--<label class="control-label col-lg-7 col-md-9" id="secIdDIV">--> <!-- Section id appears here --> <!--</label>-->
+                                <div class="clearfix visible-lg visible-md visible-sm visible-xs"></div> <!-- Add clearfix (or new line break) for only the sm -->
+                                <button type="button" class="btn btn-primary glyphicon glyphicon-search" id="searchbysection" data-toggle="tooltip" title="Search by Section"></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="clearfix visible-xs"></div> <!-- Add clearfix (or new line break) for only the xs -->
+
+                <div class="col-sm-4 col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group">
+                            <label class="control-label col-md-2 col-sm-6 col-xs-12">Road Segment</label>
+                            <div class="clearfix visible-xs"></div> <!-- Add clearfix (or new line break) for only the xs -->
+                            <div class="col-md-8 col-sm-12 col-xs-12">
+                                <select class="form-control" id="ddlSegment">
+                                    <!-- Segments list populates here -->
+                                </select>
+                                <!--<label class="control-label" id="segIdDIV">--> <!-- Segment id appears here --> <!--</label>-->
+                                <div class="clearfix visible-lg visible-md visible-sm visible-xs"></div> <!-- Add clearfix (or new line break) for only the sm -->
+                                <button type="button" class="btn btn-primary glyphicon glyphicon-search" id="searchbysegment" data-toggle="tooltip" title="Search by Road Segment"></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @*<div id="btnPrint" align="right" style="display: none">
+                    <Button id="noprint" class="btn btn-primary" data-toggle="tooltip" title="Please choose 'Landscape' layout" onclick="window.print();return false;"><span class="glyphicon glyphicon-print"></span> Print</Button>
+                </div>*@
+            </div>
+        </div>
+    </div>
+    <div id="bridgeBooksPartial">
+        <!-- Bridges books list displays here -->
+    </div>
+}
+
+<div id="wait" align="center" style="display: none">
+    <img src="~/images/ajax-loader-big.gif" />
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#ddlDistrict').change(function () {
+            var selDistrictId = $('#ddlDistrict option:selected').val();
+            $('#distrIdDIV').text(""); //clear district no. indicator
+            $('#ddlSection option').remove(); //empty the section dropdown list
+            $('#secIdDIV').text(""); //clear section no. indicator
+            $('#ddlSegment option').remove(); //empty the segment dropdown list
+            $('#segIdDIV').text(""); //clear segment no. indicator
+            $('#bridgeBooksPartial').empty(); // clear the bridges place holder
+            $('#btnPrint').hide();
+
+            if (selDistrictId != "0") { //if some district is selected
+                $('#distrIdDIV').text("District No. = " + selDistrictId );
+                $.ajax({
+                    url: '@Url.Action("_GetSections", "LocationsDDL", new { area = "" })',
+                    data: { districtid: selDistrictId },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        var markup = '<option value="0" id="noselect"> --Select Section --</option>';
+                        $.each(data, function (i, section) {
+                            markup += '<option value="' + section.Value + '">' + section.Text + '</option>'
+                            $('#ddlSection').html(markup);
+                        });
+                    }
+                });
+            }
+        });
+
+        $('#ddlSection').change(function () {
+            var selSectionId = $('#ddlSection option:selected').val();
+            $('#secIdDIV').text(""); //clear section no. indicator
+            $('#ddlSegment option').remove(); //empty the segment dropdown list
+            $('#segIdDIV').text(""); //clear segment no. indicator
+            $('#bridgeBooksPartial').empty(); // clear the bridges place holder
+            $('#btnPrint').hide();
+
+            if (selSectionId != "0") { //if some section is selected
+                $('#secIdDIV').text("Section No. = " + selSectionId);
+
+                $.ajax({
+                    url: '@Url.Action("_GetSegments", "LocationsDDL", new { area = "" })',
+                    data: { sectionid: selSectionId },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        var markup = '<option value="0" id="noselect"> --Select Segment --</option>';
+                        $.each(data, function (i, segment) {
+                            markup += '<option value="' + segment.Value + '">' + segment.Text + '</option>'
+                            $('#ddlSegment').html(markup);
+                        });
+                    }
+                });
+            }
+        });
+
+        $('#ddlSegment').change(function () {
+            var selSegmentId = $('#ddlSegment option:selected').val();
+            $('#bridgeBooksPartial').empty(); //clear the bridges place holder
+            $('#SegIdDIV').text("");
+            $('#btnPrint').hide();
+
+            if (selSegmentId != "0") //if some segment is selected
+            {
+                $('#segIdDIV').text("Road Id = " + selSegmentId);
+                $.ajax({
+                    url: '@Url.Action("_GetBridgeBookBySegment", "BridgeBook")',
+                    data: { segmentid: selSegmentId },
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () { $('#wait').show(); },
+                    complete: function () { $('#wait').hide(); },
+                    success: function (data) {
+                        $('#btnPrint').show();
+                        $('#bridgeBooksPartial').html(data);
+                    }
+                });
+            }
+        });
+
+        $('#searchbydistrict').click(function () {
+            var selDistrictId = $('#ddlDistrict option:selected').val();
+            $('#btnPrint').hide();
+
+            if (selDistrictId != "0") //if some district is selected
+            {
+                $('#bridgeBooksPartial').empty(); // clear the bridges place holder
+
+                $.ajax({
+                    url: '@Url.Action("_GetBridgeBookByDistrict", "BridgeBook")',
+                    data: { districtid: selDistrictId },
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () { $('#wait').show(); },
+                    complete: function () { $('#wait').hide(); },
+                    success: function (data) {
+                        $('#btnPrint').show();
+                        $('#bridgeBooksPartial').html(data);
+                    }
+                });
+            }
+        });
+
+        $('#searchbysection').click(function () {
+            var selSectionId = $('#ddlSection option:selected').val();
+            $('#btnPrint').hide();
+
+            if (selSectionId != "0" && typeof selSectionId != 'undefined') //if some section is selected
+            {
+                $('#bridgeBooksPartial').empty(); // clear the bridges place holder
+
+                $.ajax({
+                    url: '@Url.Action("_GetBridgeBookBySection", "BridgeBook")',
+                    data: { sectionid: selSectionId },
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () { $('#wait').show(); },
+                    complete: function () { $('#wait').hide(); },
+                    success: function (data) {
+                        $('#btnPrint').show();
+                        $('#bridgeBooksPartial').html(data);
+                    }
+                });
+            }
+        });
+
+        $('#searchbysegment').click(function () {
+            var selSegmentId = $('#ddlSegment option:selected').val();
+            if (selSegmentId != "0" && typeof selSegmentId != 'undefined') //if some segment is selected
+            {
+                $('#ddlSegment').trigger('change');
+            }
+        });
+    });
+
+</script>

@@ -1,25 +1,25 @@
-﻿@model IEnumerable<ERA_BCMS.Models.District>
+﻿@model IEnumerable<ERA_BMS.Models.District>
 
 @{
     ViewBag.Title = "Districts";
 }
 
-<h2>Index</h2>
+<h2>Districts</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-primary" })
-</p>
 <div class="panel panel-primary">
     <div class="panel-heading">
         <h3 class="panel-title panel-info">List of Districts</h3>
     </div>
 
     <div class="panel-body">
-        <table class="table table-striped table-condensed table-responsive display compact hover" id="districts">
+        <table class="table table-striped table-condensed table-responsive table-bordered display compact hover" id="districts">
             <thead>
                 <tr>
-                    <th>
+                    @*<th>
                         @Html.DisplayNameFor(model => model.DistrictId)
+                    </th>*@
+                    <th>
+                        @Html.DisplayNameFor(model => model.DistrictNo)
                     </th>
                     <th>
                         @Html.DisplayNameFor(model => model.DistrictName)
@@ -27,30 +27,33 @@
                     <th>
                         @Html.DisplayNameFor(model => model.Remark)
                     </th>
-                    <th>Edit</th>
-                    <th>Delete</th>
+                    <th></th>
+                    <th></th>
                 </tr>
             </thead>
 
             <tbody>
                 @foreach (var item in Model)
                 {
-                    <tr>
-                        <td>
+                    <tr> @*contenteditable="true">*@
+                        @*<td>
                             @Html.DisplayFor(modelItem => item.DistrictId)
+                        </td>*@
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DistrictNo)
                         </td>
                         <td>
-                            @Html.ActionLink(@Html.DisplayFor(modelItem => item.DistrictName).ToString(), "Details", new { id = item.DistrictId })
+                            @Html.ActionLink(@Html.DisplayFor(modelItem => item.DistrictName).ToString(), "Details", new { area = "Admin", id = item.DistrictId })
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.Remark)
                         </td>
-                        <td>
+                        <td align="center">
                             <!-- with Tooltips -->
-                            @Html.ActionLink(" ", "Edit", new { id = item.DistrictId }, new { @class = "glyphicon glyphicon-edit", @data_toggle = "tooltip", title = "Edit" })
+                            @Html.ActionLink(" ", "Edit", new { area = "Admin", id = item.DistrictId }, new { @class = "glyphicon glyphicon-edit", @data_toggle = "tooltip", title = "Edit" })
                         </td>
-                        <td>
-                            @Html.ActionLink(" ", "Delete", new { id = item.DistrictId }, new { @class = "glyphicon glyphicon-trash", @data_toggle = "tooltip", title = "Delete" })
+                        <td align="center">
+                            @Html.ActionLink(" ", "Delete", new { area = "Admin", id = item.DistrictId }, new { @class = "glyphicon glyphicon-trash", @data_toggle = "tooltip", title = "Delete" })
                         </td>
                     </tr>
                 }
@@ -58,30 +61,28 @@
         </table>
     </div>
     <div class="panel-footer">
-        <h3 class="panel-title">Total No. of Districts: <strong>@Model.Count()</strong></h3>
+        <h3 class="panel-title">Total No. of Districts: <b>@Model.Count()</b></h3>
     </div>
 </div>
 
-@*<div class="btn-toolbar">
-    @Html.ActionLink("Print", "", null, new { @class = "btn btn-sm btn-primary" })
-    @Html.ActionLink("Export to Excel", "", null, new { @class = "btn btn-sm btn-primary" })
-</div>*@
+<p>
+    <a href="@Url.Action("New", new {area = "Admin"})" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> Register New District</a>
+</p>
 
 <script>
     $(document).ready(function () {
-        $('[data-toggle="tooltip"]').tooltip();
-
         $('#districts').DataTable({
             paging: true,
             pageLength: 15,
             bLengthChange: true,
             scrollY: 400,
+            
             searching: true,
             select: true,
             dom: 'lBfrtip', 
-            //buttons: ['copy', 'excel', 'pdf', 'print']
+            //order: [[1, "asc"]], // order by District No (the 2nd column)
             buttons: [
-                { extend: 'copy', className: 'btn btn-sm btn-success'},
+                { extend: 'copy', className: 'btn btn-sm btn-primary'},
                 { extend: 'excel', className: 'btn btn-sm btn-primary', text: 'Export Excel' },
                 { extend: 'pdf', className: 'btn btn-sm btn-primary', text: 'Export PDF' }, 
                 { extend: 'print', className: 'btn btn-sm btn-primary' }

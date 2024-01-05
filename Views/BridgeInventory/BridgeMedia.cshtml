@@ -1,0 +1,528 @@
+﻿@model IEnumerable<ERA_BMS.Models.BridgeMedia>
+
+@{
+    ViewBag.Title = "Bridge Media";
+}
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "bridgeMediaForm", enctype = "multipart/form-data" }))
+{
+    <input type="hidden" id="BridgeId" value="@TempData["BridgeId"]" /> <!-- Bridge Id -->
+    <table class="table table-striped table-condensed table-responsive table-bordered" id="tblBridgeMedia">
+        <tr>
+            <th></th>
+            <th>Media Type</th>
+            <th>Image No.</th>
+            <th>Media Date</th>
+            <th>Description</th>
+            <th>Media File Path</th>
+            <th>Preview</th>
+            <th></th>
+            <th></th>
+        </tr>
+        @{ int imgIndex = 0;}
+
+        @foreach (var bridgeMedia in Model.Select((value, index) => new { index, value }))
+        {
+            <tr>
+                <td class="Id">
+                    <input type="hidden" id="Id" value="@bridgeMedia.value.Id" /> <!-- Unique Identity (key) -->
+                </td>
+                <td class="MediaTypeId">
+                    <div class="form-group form-group-sm">
+                        <span id="spnMediaType">@bridgeMedia.value.MediaType.MediaTypeName</span>
+                        @Html.DropDownList("ddlMediaTypeId", new SelectList((List<SelectListItem>)TempData["MediaTypes"], "Value", "Text", @bridgeMedia.value.MediaTypeId), new { @class = "form-control FoundationTypeId", style = "display: none; width: 150px;" })
+                    </div>
+                </td>
+                <td class="ImageNo">
+                    <div class="form-group form-group-sm">
+                        <span>@bridgeMedia.value.ImageNo</span>
+                        <input type="text" value="@bridgeMedia.value.ImageNo" style="display:none" size="2" />
+                    </div>
+                </td>
+                <td class="MediaDate">
+                    @{ if (bridgeMedia.value.MediaDate != null)
+                        {
+                            <span>@bridgeMedia.value.MediaDate.Value.ToString("dd/MM/yyyy")</span>
+                        }
+                        else
+                        {
+                            <span></span>
+                        }
+                    }
+                </td>
+                <td class="MediaDescription">
+                    <span>@bridgeMedia.value.Description</span>
+                    <input type="text" value="@bridgeMedia.value.Description" style="display:none" />
+                </td>
+                <td class="MediaFilePath">
+                    <span>@bridgeMedia.value.MediaFilePath</span>
+                    <input type="file" value="@bridgeMedia.value.MediaFilePath" accept="image/*, video/*" style="display:none" size="10"/>
+                </td>
+                <td class="MediaPreview">
+                    @{
+                        // Show preview only if it is bridge image or damage image
+                        if (bridgeMedia.value.MediaTypeId == 1 || bridgeMedia.value.MediaTypeId == 6) // image
+                        {
+                            <span>
+                                <a href="@Url.Action("BridgeAllImages", "ImageGallery", new { id = bridgeMedia.value.BridgeId, val = imgIndex })" target="_blank">
+                                    <img src="@bridgeMedia.value.MediaFilePath" onerror="this.onerror = null; this.src = '../../images/error_2.png'; this.style.width = '30px'; this.title = 'Image Not Found';" alt="not-found" style="height:auto; width: 50px; margin: 5px;" data-toggle="tooltip" title="Preview Photo" />
+                                </a>
+                                <input type="hidden" id="Index" value="@imgIndex" /> <!-- Zero based Index value of brige images -->
+                            </span>
+                            imgIndex++;
+                        }
+                        else if (bridgeMedia.value.MediaTypeId == 2 || bridgeMedia.value.MediaTypeId == 7) // Video
+                        {
+                            <span>
+                                <a href="@bridgeMedia.value.MediaFilePath" target="_blank">
+                                    <img src="~/images/video_1.png" alt="not-found" style="height:auto; width: 40px; margin: 5px;" data-toggle="tooltip" title="Preview Video" />
+                                </a>
+                            </span>
+                        }
+                        else if (bridgeMedia.value.MediaTypeId == 3) // AutoCad drawing
+                        {
+                            <span>
+                                <a href="@bridgeMedia.value.MediaFilePath" target="_blank">
+                                    <img src="~/images/autocad_icon.png" alt="nopic" style="height:auto; width: 30px; margin: 5px;" data-toggle="tooltip" title="Open AutoCAD Document" />
+                                </a>
+                            </span>
+                        }
+                    }
+                </td>
+                <td>
+                    <a class="Edit glyphicon glyphicon-edit" href="javascript:;" data-toggle="tooltip" title="Edit"></a>
+                    <a class="Update glyphicon glyphicon-ok" href="javascript:;" style="display:none" data-toggle="tooltip" title="Update"></a>
+                    <a class="Confirm glyphicon glyphicon-ok" href="javascript:;" style="display:none" data-toggle="tooltip" title="Confirm"></a>
+                </td>
+                <td>
+                    <a class="Cancel glyphicon glyphicon-remove" href="javascript:;" style="display:none" data-toggle="tooltip" title="Cancel"></a>
+                    <a class="Delete glyphicon glyphicon-trash" href="javascript:;" data-toggle="tooltip" title="Delete"></a>
+                </td>
+            </tr>
+        }
+    </table>
+
+    <div class="form-horizontal">
+        <div class="row">
+            <div class="col-lg-2 col-md-2 col-sm-3 col-xs-5">
+                <div class="form-group form-group-sm">
+                    <label for="txtMediaDate" class="col-md-8 col-sm-10 col-xs-10">Media Type</label>
+                    @*@Html.DropDownList("ddlNewMediaTypeId", (List<SelectListItem>)ViewBag.MediaTypes, new { @class = "col-md-10 col-sm-10 col-xs-10" })*@
+                    @Html.DropDownList("ddlNewMediaTypeId", (List<SelectListItem>)TempData["MediaTypes"], htmlAttributes: new { @class = "col-md-10 col-sm-10 col-xs-10" })
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-4                                                                                   ">
+                <div class="form-group form-group-sm">
+                    <label for="txtImageNo" class="col-md-10 col-sm-10 col-xs-10">Image No.</label>
+                    <input type="text" class="col-md-8 col-sm-10 col-xs-10" id="txtImageNo" />
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-3 col-xs-5">
+                <div class="form-group form-group-sm">
+                    <label for="txtMediaDate" class="col-md-10 col-sm-10 col-xs-10">Media Date</label>
+                    <input type="date" class="col-md-10 col-sm-10 col-xs-10" id="txtMediaDate" />
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-4 col-xs-7">
+                <div class="form-group form-group-sm">
+                    <label for="txtMediaDescription" class="col-md-10 col-sm-10 col-xs-10">Media Description</label>
+                    <input type="text" class="col-md-10 col-sm-12 col-xs-11" id="txtMediaDescription" name="txtMediaDescription" style="max-width:100% " />
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-7 col-xs-8">
+                <div class="form-group form-group-sm">
+                    <label for="txtNewMediaFilePath" class="col-md-12 col-sm-10">Enter Bridge Image/Video/Drawing File</label>
+                    <input type="file" class="col-md-12 col-sm-10" id="txtNewMediaFilePath" accept="image/*, video/*" />
+                </div>
+            </div>
+            <div class="col-lg-1 col-md-2 col-sm-4 col-xs-4 navbar-right">
+                <div class="form-group form-group-sm">
+                    <button type="button" id="btnAddBridgeMedia" class="btn btn-primary"><span class="glyphicon glyphicon-save"></span> Save</button>
+                    <div id="uploadprogress" align="center" style="display: none">
+                        <img src="~/images/ajax-loader-big.gif" /> Uploading...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@*<div id="status"></div>*@
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var emptyRow = "<td class='Id'>" +
+            "<input type='hidden' id='Id' > <!-- Unique Identity (key) -->" +
+            "</td>" +
+            "<td class='MediaTypeId'>" +
+            "<span>&nbsp;</span>" +
+            "<select class='form-control FoundationTypeId' id='ddlMediaTypeId' name='ddlMediaTypeId' style='display: none'>" +
+            "<option selected='selected' value='1'>Picture</option>" +
+            "<option value='2'>Video</option>" +
+            "<option value='3'>Autocad Drawing</option>" +
+            "<option value='6'>Damage Picture</option>" +
+            "<option value='7'>Damage Video</option>" +
+            "</select>" +
+            "</td>" +
+            "<td class='ImageNo'>" +
+            "<span>&nbsp;</span>" +
+            "<input type='text' style='display:none'>" +
+            "</td>" +
+            "<td class='MediaDate'>" +
+            "<span>&nbsp;</span>" +
+            "</td>" +
+            "<td class='MediaDescription'>" +
+            "<span>&nbsp;</span>" +
+            "<input type='text' style='display:none'>" +
+            "</td>" +
+            "<td class='MediaFilePath'>" +
+            "<span>&nbsp;</span>" +
+            "<input type='file' style='display:none'>" +
+            "</td>" +
+            "<td class='MediaPreview'>" +
+            "<span><a href='' target='_blank'><img src='' style='height:auto; width: 50px; margin: 5px;'></a></span>" +
+            "</td>" +
+            "<td>" +
+            "<a class='Edit glyphicon glyphicon-edit' href='javascript:;' style='display:none' data-toggle='tooltip' title='Edit'></a>" +
+            "<a class='Update glyphicon glyphicon-ok' href='javascript:;' style='display:none' data-toggle='tooltip' title='Update'></a>" +
+            "<a class='Confirm glyphicon glyphicon-ok' href='javascript:;' style='display:none' data-toggle='tooltip' title='Confirm'></a>" +
+            "</td>" +
+            "<td>" +
+            "<a class='Cancel glyphicon glyphicon-remove' href='javascript:;' style='display:none' data-toggle='tooltip' title='Cancel'></a>" +
+            "<a class='Delete glyphicon glyphicon-trash' href='javascript:;' style='display:none' data-toggle='tooltip' title='Delete'></a>" +
+            "</td>";
+
+        addEmptyRow();
+
+        function addEmptyRow() {
+            if ($("#tblBridgeMedia tr").length == 1) {
+                $("#tblBridgeMedia").append("<tr>" + emptyRow + "</tr>");
+
+            }
+        }
+        var today = new Date().toJSON().slice(0, 10);
+        $('#txtMediaDate').val(today);
+
+        //Add event handler
+        $("#btnAddBridgeMedia").on("click", function () {
+            var BridgeId = '@TempData["BridgeId"]';
+            var MediaTypeId = $("#ddlNewMediaTypeId option:selected");
+            var ImageNo = $("#txtImageNo");
+            var MediaDate = $("#txtMediaDate");
+            var MediaDescription = $("#txtMediaDescription");
+            var MediaFilePath = $("#txtNewMediaFilePath");
+            var mediaFileName = MediaFilePath.val().replace(/^.*[\\\/]/, '');
+            var fullMediaPath = '@TempData["MediaPath"]' + mediaFileName;
+
+            var fileUpload = $("#txtNewMediaFilePath").get(0);
+            var files = fileUpload.files;
+            var formData = new FormData();
+            formData.append(files[0].name, files[0]);
+            //alert(files[0].name);
+            //alert('@TempData["BridgeId"]');
+            // Add bridge media data as keys to FormData object
+            formData.append('BridgeId', BridgeId);
+            formData.append('MediaDate', MediaDate.val());
+            formData.append('Description', MediaDescription.val());
+            formData.append('MediaTypeId', MediaTypeId.val());
+            formData.append('ImageNo', ImageNo.val());
+            formData.append('MediaFilePath', fullMediaPath);
+
+            //alert(JSON.stringify(formData));
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("BridgeMediaInsert", "BridgeInventory")',
+                cache: false,
+                contentType: false,
+                processData: false,
+                dataType: 'json',
+                data: formData,
+                beforeSend: function () { $('#uploadprogress').show(); },
+                complete: function () { $('#uploadprogress').hide(); },
+                success: function (data) {
+                    //alert("first success");
+                    $.ajax({
+                        type: 'GET',
+                        url: '@Url.Action("GetLastBridgeMedia", "BridgeInventory")',
+                        data: { bridgeid: BridgeId },
+                        datatype: 'json',
+                        success: function (data) {
+                            //alert("Second success");
+                            var row = $("#tblBridgeMedia tr:last-child");
+                            if ($("#tblBridgeMedia tr:last-child span").eq(0).html() != "&nbsp;") {
+                                row = row.clone();
+                            }
+                            var Id = data.Id;
+                            //alert(row);
+                            //Bind Id
+                            row.find('input[type=hidden]').val(Id);
+
+                            //Bind all rows
+                            $(".MediaTypeId", row).find("span").html(MediaTypeId.text());
+
+                            $(".ImageNo", row).find("span").html(ImageNo.val());
+                            $(".ImageNo", row).find("input").val(ImageNo.val());
+
+                            $(".MediaDate", row).find("span").html(MediaDate.val());
+                            $(".MediaDate", row).find("input").val(MediaDate.val());
+
+                            $(".MediaDescription", row).find("span").html(MediaDescription.val());
+                            $(".MediaDescription", row).find("input").val(MediaDescription.val());
+
+                            $(".MediaFilePath", row).find("span").html(fullMediaPath);
+
+                            //var preview = "<a href='" + fullMediaPath + "' target='_blank'><img src='" + fullMediaPath + "' alt='nopic' style='height:auto; width: 50px; margin: 5px;' /></a>";
+                            var preview = "";
+                            if (MediaTypeId.val() == 1 || MediaTypeId.val() == 6) // image
+                                preview = `<span><a href="/ImageGallery/BridgeAllImages/` + BridgeId + `/0" target="_blank">
+                                                    <img src="` + fullMediaPath + `" onerror="this.onerror = null; this.src = '../../images/error_2.png'; this.style.width = '30px'; this.title = 'Image Not Found';" alt="not-found" style="height:auto; width: 50px; margin: 5px;" data-toggle="tooltip" title="Preview Photo" />
+                                                </a>
+                                                <input type="hidden" id="Index" value="0" /> <!-- Zero based Index value of brige images -->
+                                            </span>`;
+                            else if (MediaTypeId.val() == 2 || MediaTypeId.val() == 7) // Video
+                                preview = `<span><a href="` + fullMediaPath + `" target="_blank">
+                                                    <img src="/images/video_1.png" alt="not-found" style="height:auto; width: 40px; margin: 5px;" data-toggle="tooltip" title="Preview Video" />
+                                                </a></span>`;
+                            else if (MediaTypeId.val() == 3) // AutoCad drawing
+                                preview = `<span><a href="` + fullMediaPath + `" target="_blank">
+                                                    <img src="/images/autocad_icon.png" alt="nopic" style="height:auto; width: 30px; margin: 5px;" data-toggle="tooltip" title="Open AutoCAD Document" />
+                                                </a></span>`;
+
+                            $(".MediaPreview", row).find("span").html(preview);
+
+                            row.find(".Edit").show();
+                            row.find(".Delete").show();
+                            //alert(row);
+
+                            $("#tblBridgeMedia > tbody").append(row);
+
+                            MediaTypeId.val(1);
+                            var today = new Date().toJSON().slice(0, 10);
+                            MediaDate.val(today);
+                            ImageNo.val("");
+                            MediaDescription.val("");
+                            MediaFilePath.val("");
+                        },
+                        error: function (xhr) {
+                            //$('#status').text(xhr.status);
+                            //alert("Second error: " + xhr.status);
+                        }
+                    });
+                },
+                error: function (xhr) {
+                    //$('#status').text(xhr.status);
+                }
+            });
+        });
+
+        //Edit event handler.
+        $("body").on("click", "#tblBridgeMedia .Edit", function () {
+            //alert($('#ddlMediaTypeId option: selected').val());
+            var row = $(this).closest("tr");
+            $("td", row).each(function () {
+                if ($(this).find("input").length > 0) {
+                    $(this).find("input").show();
+                    //$(this).find("select").show();
+                    $(this).find("span").hide();
+                }
+            });
+
+            row.find("#spnMediaType").hide();
+            row.find("#ddlMediaTypeId").show();
+            row.find(".Update").show();
+            row.find(".Cancel").show();
+            row.find(".Delete").hide();
+            $(this).hide();
+        });
+
+        //Update event handler.
+        $("body").on("click", "#tblBridgeMedia .Update", function () {
+            var row = $(this).closest("tr");
+            $("td", row).each(function () {
+                if ($(this).find("input").length > 0) {
+                    var span = $(this).find("span");
+                    var input = $(this).find("input");
+                    //span.html(input.val());
+                    span.show();
+                    input.hide();
+                }
+            });
+            //alert('@TempData["BridgeId"]');
+            row.find("#spnMediaType").html(row.find("#ddlMediaTypeId option:selected").text());
+            row.find("#spnMediaType").show();
+            row.find("#ddlMediaTypeId").hide();
+            row.find(".Edit").show();
+            row.find(".Delete").show();
+            row.find(".Cancel").hide();
+            $(this).hide();
+
+            var MediaTypeId = row.find("#ddlMediaTypeId");
+            var ImageNo = row.find(".ImageNo").find("input");
+            var MediaDescription = row.find(".MediaDescription").find("input");
+            var MediaFilePath = row.find(".MediaFilePath").find("input").val();
+            var ImageIndex = row.find(".MediaPreview").find("input").val();
+
+            // If user didn't choose another file to be uploaded, keep the existing one
+            var formData = new FormData();
+            if (MediaFilePath == "") {
+                fullMediaPath = row.find(".MediaFilePath").find("span").html();
+            }
+            else {
+                var mediaFileName = MediaFilePath.replace(/^.*[\\\/]/, '');
+                var fullMediaPath = '@TempData["MediaPath"]' + mediaFileName;
+                var fileUpload = row.find(".MediaFilePath").find("input").get(0);
+                var files = fileUpload.files;
+
+                formData.append(files[0].name, files[0]);
+            }
+            // Add bridge media data as keys to FormData object
+            formData.append('BridgeId', '@TempData["BridgeId"]');
+            formData.append('Id', row.find('input[type=hidden]').val());
+            formData.append('MediaTypeId', MediaTypeId.val());
+            formData.append('Description', MediaDescription.val());
+            formData.append('MediaFilePath', fullMediaPath);
+            formData.append('ImageNo', ImageNo.val());
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("BridgeMediaUpdate", "BridgeInventory")',
+                cache: false,
+                contentType: false,
+                processData: false,
+                dataType: 'json',
+                data: formData,
+                beforeSend: function () { $('#uploadprogress').show(); },
+                complete: function () { $('#uploadprogress').hide(); },
+                success: function (data) {
+                    //alet("Sucess");
+                },
+                error: function (xhr) {
+                    //$('#status').text(xhr.status);
+                }
+            });
+            //var preview = "<a href='" + fullMediaPath + "' target='_blank'><img src='" + fullMediaPath + "' alt='nopic' style='height:auto; width: 50px; margin: 5px;' /></a>";
+            var preview = "";
+
+            if (fullMediaPath.toLowerCase().endsWith("jpg") || fullMediaPath.toLowerCase().endsWith("png")) // image
+                preview = `<span><a href="/ImageGallery/BridgeAllImages/` + '@TempData["BridgeId"]' + `/` + ImageIndex + `" target="_blank">
+                                <img src="` + fullMediaPath + `" onerror="this.onerror = null; this.src = '../../images/error_2.png'; this.style.width = '30px'; this.title = 'Image Not Found';" alt="not-found" style="height:auto; width: 50px; margin: 5px;" data-toggle="tooltip" title="Preview Photo" />
+                            </a>
+                            <input type="hidden" id="Index" value="` + ImageIndex + `" /> <!-- Zero based Index value of brige images --></span>`;
+            else if (fullMediaPath.toLowerCase().endsWith("mpg") || fullMediaPath.toLowerCase().endsWith("wmv") || fullMediaPath.toLowerCase().endsWith("mp4")) // Video
+                preview = `<span><a href="` + fullMediaPath + `" target="_blank">
+                                <img src="/images/video_1.png" alt="not-found" style="height:auto; width: 40px; margin: 5px;" data-toggle="tooltip" title="Preview Video" />
+                            </a></span>`;
+            else if (fullMediaPath.toLowerCase().endsWith("dwg")) // AutoCad drawing
+                preview = `<span><a href="` + fullMediaPath + `" target="_blank">
+                                <img src="/images/autocad_icon.png" alt="nopic" style="height:auto; width: 30px; margin: 5px;" data-toggle="tooltip" title="Open AutoCAD Document" />
+                            </a></span>`;
+
+            $(".MediaPreview", row).find("span").html(preview);
+
+            $(".ImageNo", row).find("span").html(ImageNo.val());
+            $(".ImageNo", row).find("input").val(ImageNo.val());
+
+            $(".MediaDescription", row).find("span").html(MediaDescription.val());
+            $(".MediaDescription", row).find("input").val(MediaDescription.val());
+
+            $(".MediaFilePath", row).find("span").html(fullMediaPath);
+        });
+
+        @*//Update event handler.
+        $("body").on("click", "#tblBridgeMedia .Update", function () {
+            var row = $(this).closest("tr");
+            $("td", row).each(function () {
+                if ($(this).find("input").length > 0) {
+                    var span = $(this).find("span");
+                    var input = $(this).find("input");
+                    //span.html(input.val());
+                    span.show();
+                    input.hide();
+                }
+            });
+            row.find(".Edit").show();
+            row.find(".Delete").show();
+            row.find(".Cancel").hide();
+            $(this).hide();
+
+            var bridgeMedia = {};
+            bridgeMedia.BridgeId = $("#bridgeId").val();
+            bridgeMedia.Id = row.find('input[type=hidden]').val();
+            bridgeMedia.ImageNo = row.find(".ImageNo").find("span").html();
+            bridgeMedia.Description = row.find(".MediaDescription").find("span").html();
+            bridgeMedia.MediaFilePath = row.find(".MediaFilePath").find("span").html();
+            //alert(JSON.stringify(bridgeMedia));
+            //$('#status').text(JSON.stringify(bridgeMedia));
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("BridgeMediaUpdate", "Bridgeinventory")',
+                data: '{bridgeMedia:' + JSON.stringify(bridgeMedia) + '}',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'text', //'html',
+                error: function (xhr) {
+                    //$('#status').text(xhr.status);
+                }
+            });
+        });*@
+
+        //Cancel event handler.
+        $("body").on("click", "#tblBridgeMedia .Cancel", function () {
+            var row = $(this).closest("tr");
+            $("td", row).each(function () {
+                if ($(this).find("input").length > 0) {
+                    var span = $(this).find("span");
+                    var input = $(this).find("input");
+                    //input.val(span.html());
+                    span.show();
+                    input.hide();
+                }
+            });
+            row.find("#spnMediaType").show();
+            row.find("#ddlMediaTypeId").hide();
+            row.find(".Edit").show();
+            row.find(".Delete").show();
+            row.find(".Update").hide();
+            row.find(".Confirm").hide();
+            $(this).hide();
+        });
+
+        //Delete event handler.
+        $("body").on("click", "#tblBridgeMedia .Delete", function () {
+            var row = $(this).closest("tr");
+            row.find(".Edit").hide();
+            row.find(".Confirm").show();
+            row.find(".Cancel").show();
+            row.find(".Delete").hide();
+            $(this).hide();
+        });
+
+        //Confirm event handler.
+        $("body").on("click", "#tblBridgeMedia .Confirm", function () {
+            var row = $(this).closest("tr");
+            var id = row.find('input[type=hidden]').val();
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("BridgeMediaDelete", "Bridgeinventory")',
+                data: '{id: "' + id + '"}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (response) {
+                    if ($("#tblBridgeMedia tr").length > 2) {
+                        row.remove();
+
+                    } else {
+                        row.find(".Edit").hide();
+                        row.find(".Delete").hide();
+                        row.find(".Confirm").hide();
+                        row.find(".Cancel").hide();
+                        row.find("span").html('&nbsp;');
+                    }
+                },
+                error: function (xhr) {
+                    //$('#status').text(xhr.status);
+                }
+            });
+        });
+    });
+</script>

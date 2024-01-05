@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace ERA_BCMS.Controllers
+namespace ERA_BMS.Controllers
 {
     public class HelpController : Controller
     {
@@ -16,7 +16,7 @@ namespace ERA_BCMS.Controllers
 
         public ActionResult About()
         {
-            ViewBag.Message = "About ERA BCMS";
+            ViewBag.Message = "About ERA-BMS";
 
             return View();
         }

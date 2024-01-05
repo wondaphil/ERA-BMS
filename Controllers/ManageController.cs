@@ -6,9 +6,9 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
-using ERA_BCMS.Models;
+using ERA_BMS.Models;
 
-namespace ERA_BCMS.Controllers
+namespace ERA_BMS.Controllers
 {
     [Authorize]
     public class ManageController : Controller

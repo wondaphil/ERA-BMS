@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ERA_BCMS.Models
+namespace ERA_BMS.Models
 {
     using System;
     using System.Collections.Generic;
@@ -17,8 +17,8 @@ namespace ERA_BCMS.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public BearingType()
         {
-            this.Components = new HashSet<Component>();
-            this.Components1 = new HashSet<Component>();
+            this.Ancillaries = new HashSet<Ancillary>();
+            this.Ancillaries1 = new HashSet<Ancillary>();
         }
     
         public int BearingTypeId { get; set; }
@@ -26,8 +26,8 @@ namespace ERA_BCMS.Models
         public string Remark { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Component> Components { get; set; }
+        public virtual ICollection<Ancillary> Ancillaries { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Component> Components1 { get; set; }
+        public virtual ICollection<Ancillary> Ancillaries1 { get; set; }
     }
 }

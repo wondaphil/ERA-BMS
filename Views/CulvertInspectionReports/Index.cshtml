@@ -1,0 +1,488 @@
+﻿
+@{
+    ViewBag.Title = "Culvert InspectionReports";
+}
+
+<h2>Culvert Inspection Reports</h2>
+
+@using (Html.BeginForm())
+{
+    <div class="panel panel-default">
+        @*<div class="panel-heading">
+            <h3 class="panel-title panel-info">Please select <b>District</b>, <b>Section</b> and <b>Road Segment</b> from the dropdown list</h3>
+        </div>*@
+        <div class="panel-body">
+
+            @Html.AntiForgeryToken()
+
+            <div class="row">
+                <div class="col-md-3 col-sm-6 col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group-sm">
+                            <label for="ddlDistrict" class="control-label col-md-3 col-sm-4">District</label>
+                            <div class="col-md-8 col-sm-8">
+                                @Html.DropDownList("ddlDistrict", new SelectList(ViewBag.Districts, "Value", "Text"), new { @size = 5, @style = "width: 100%" })
+                                <!--<label class="control-label" id="distrIdDIV">--> <!-- District id appears here --> <!--</label>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-sm-6 col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group-sm">
+                            <label for="ddlSection" class="control-label col-md-3 col-sm-4">Section</label>
+                            <div class="col-md-8 col-sm-8">
+                                <select id="ddlSection" size="5" style="width: 100%">
+                                    <!-- Sections list populates here -->
+                                </select>
+                                <!--<label class="control-label" id="secIdDIV">--> <!-- Section id appears here --> <!--</label>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="clearfix visible-sm"></div> <!-- Add clearfix (or new line break) for only the sm -->
+                <div class="clearfix visible-xs"></div> <!-- Add clearfix (or new line break) for only the xs -->
+
+                <div class="col-md-3 col-sm-6 col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group-sm">
+                            <label for="ddlSegment" class="control-label col-md-3 col-sm-4">Road Segment</label>
+                            <div class="col-md-8 col-sm-8">
+                                <select id="ddlSegment" size="5" style="width: 100%">
+                                    <!-- Segments list populates here -->
+                                </select>
+                                <!--<label class="control-label" id="segIdDIV">--> <!-- Segment id appears here --> <!--</label>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-sm-6 col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group-sm">
+                            <label for="ddlCulvert" class="control-label col-md-2 col-sm-4">Culvert</label>
+                            <div class="col-md-8 col-sm-8">
+                                <select id="ddlCulvert" size="5" style="width: 100%">
+                                    <!-- Culverts list populates here -->
+                                </select>
+                                <!--<label class="control-label" id="culIdDIV">--> <!-- Culvert id appears here --> <!--</label>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-6 col-md-6 col-sm-7 col-xs-8">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group-sm">
+                            <label for="ddlReportType" class="control-label col-lg-3 col-md-3 col-sm-3 col-xs-6">Report Type</label>
+                            <div class="col-lg-7 col-md-9 col-sm-11 col-xs-12">
+                                @Html.DropDownList("ddlReportType", (List<SelectListItem>)ViewBag.ReportTypes, new { @class = "form-control", style = "max-width: 100%" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-4 col-sm-2 col-xs-4">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group-sm" id="inspyear" style="display: none">
+                            <!-- Hide the inspection year -->
+                            <label class="control-label col-md-6 col-sm-12 col-xs-12">Inspection Year</label>
+                            <div class="col-md-6 col-sm-12 col-xs-10">
+                                @Html.DropDownList("ddlInspectionYear", (List<SelectListItem>)ViewBag.InspectionYearList, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-2 col-md-2 col-md-2 col-sm-2 col-xs-2 navbar-right">
+                    <a class="btn btn-primary" data-toggle="tooltip" title="Show Report" id="showreport"> <span class="glyphicon glyphicon-refresh"></span> Report</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="culvertReportPartial">
+        <!-- Culverts condition list displays here -->
+    </div>
+}
+
+<div id="wait" align="center" style="display: none">
+    <img src="~/images/ajax-loader-big.gif" />
+</div>
+
+<script>
+    $(document).ready(function () {
+        // Initializing tooltip
+        
+
+        $('#ddlDistrict').change(function () {
+            var selDistrictId = $('#ddlDistrict option:selected').val();
+            $('#ddlSection option').remove(); //empty the section dropdown list
+            $('#ddlSegment option').remove(); //empty the segment dropdown list
+            $('#ddlCulvert option').remove(); //empty the culvert dropdown list
+            
+            if (selDistrictId != "0") { //if some district is selected
+                $.ajax({
+                    url: '@Url.Action("_GetSections", "LocationsDDL")',
+                    data: { districtid: selDistrictId },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        var markup = '';
+                        $.each(data, function (i, section) {
+                            markup += '<option value="' + section.Value + '">' + section.Text + '</option>'
+                            $('#ddlSection').html(markup);
+                        });
+                    }
+                });
+            }
+
+            //var selReportTypeId = $('#ddlReportType option:selected').val();
+
+            //// Update the reports that require district
+            //if (selReportTypeId == "2" || selReportTypeId == "5") {
+            //    $('#ddlReportType').trigger('change');
+            //}
+            //else if (selReportTypeId != "4") {
+            //    $('#culvertReportPartial').empty(); // clear the culvert condition place holder
+            //}
+        });
+
+        $('#ddlSection').change(function () {
+            var selSectionId = $('#ddlSection option:selected').val();
+            $('#ddlSegment option').remove(); //empty the segment dropdown list
+            $('#ddlCulvert option').remove(); //empty the culvert dropdown list
+            
+            if (selSectionId != "0") {//if no section is selected
+                $.ajax({
+                    url: '@Url.Action("_GetSegments", "LocationsDDL")',
+                    data: { sectionid: selSectionId },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        var markup = '';
+                        $.each(data, function (i, segment) {
+                            markup += '<option value="' + segment.Value + '">' + segment.Text + '</option>'
+                            $('#ddlSegment').html(markup);
+                        });
+                    }
+                });
+            }
+
+            //var selReportTypeId = $('#ddlReportType option:selected').val();
+
+            //// Update the reports that require section
+            //if (selReportTypeId == "6") {
+            //    $('#ddlReportType').trigger('change');
+            //}
+            //else if (selReportTypeId == "1" || selReportTypeId == "3" || selReportTypeId == "7") {
+            //    $('#culvertReportPartial').empty(); // clear the culvert condition place holder
+            //}
+        });
+
+        $('#ddlSegment').change(function () {
+            var selSegmentId = $('#ddlSegment option:selected').val();
+            $('#ddlCulvert option').remove(); //empty the culvert dropdown list
+            
+            if (selSegmentId != "0") { //if no segment is selected
+                $.ajax({
+                    url: '@Url.Action("_GetCulverts", "LocationsDDL")',
+                    data: { segmentid: selSegmentId },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        var markup = '';
+                        $.each(data, function (i, culvert) {
+                            markup += '<option value="' + culvert.Value + '">' + culvert.Text + '</option>'
+                            $('#ddlCulvert').html(markup);
+                        });
+                    }
+                });
+            }
+
+            //var selReportTypeId = $('#ddlReportType option:selected').val();
+
+            //// Update the reports that require segment
+            //if (selReportTypeId == "1" || selReportTypeId == "3") {
+            //    $('#ddlReportType').trigger('change');
+            //}
+            //else if (selReportTypeId == "7") {
+            //    $('#culvertReportPartial').empty(); // clear the culvert condition place holder
+            //}
+        });
+
+        $('#ddlCulvert').change(function () {
+            var selCulvertId = $('#ddlCulvert option:selected').val();
+            
+            if (selCulvertId != "0") //if some culvert is selected
+            {
+                var culvertNo = $('#ddlCulvert option:selected').text(); // extract the culvert no
+            }
+
+            //var selReportTypeId = $('#ddlReportType option:selected').val();
+
+            //// Update the reports that require culvert
+            //if (selReportTypeId == "7") {
+            //    $('#ddlReportType').trigger('change');
+            //}
+        });
+
+        $('#ddlDistrict').click(function () {
+            $('#ddlDistrict').trigger('change');
+        });
+
+        $('#ddlSection').click(function () {
+            $('#ddlSection').trigger('change');
+        });
+
+        $('#ddlSegment').click(function () {
+            $('#ddlSegment').trigger('change');
+        });
+
+        $('#ddlCulvert').click(function () {
+            $('#ddlCulvert').trigger('change');
+        });
+
+        function SelectedLevel() {
+            var selDistrictId = $('#ddlDistrict option:selected').val();
+            var selSectionId = $('#ddlSection option:selected').val();
+            var selSegmentId = $('#ddlSegment option:selected').val();
+            var selCulvertId = $('#ddlCulvert option:selected').val();
+
+            //$('#culvertReportPartial').empty(); //clear the culvert report place holder
+
+            if (typeof selCulvertId != 'undefined')
+                return "Culvert";
+            else {
+                if (typeof selSegmentId != 'undefined')
+                    return "Segment";
+                else {
+                    if (typeof selSectionId != 'undefined')
+                        return "Section";
+                    else {
+                        if (typeof selDistrictId != 'undefined')
+                            if (selDistrictId == "0")
+                                return "All";
+                            else
+                                return "District";
+                        else
+                            return "none";
+                    }
+                }
+            }
+
+        }
+
+        $('#ddlReportType').change(function () {
+            var selReportTypeId = $('#ddlReportType option:selected').val();
+
+            // Show inspection year only for culvert condition by inspection year report
+            if (selReportTypeId == "2" || selReportTypeId == "4")
+                $('#inspyear').show();
+            else
+                $('#inspyear').hide();
+        });
+
+        $('#showreport').click(function () {
+            var selDistrictId = $('#ddlDistrict option:selected').val();
+            var selSectionId = $('#ddlSection option:selected').val();
+            var selSegmentId = $('#ddlSegment option:selected').val();
+            var selCulvertId = $('#ddlCulvert option:selected').val();
+            var selReportTypeId = $('#ddlReportType option:selected').val();
+            var selInspectionYear = $('#ddlInspectionYear option:selected').val();
+
+            $('#culvertReportPartial').empty(); // clear the culvert condition place holder
+
+            switch (selReportTypeId) {
+                case "1":
+                    if (SelectedLevel() == "Segment" || SelectedLevel() == "Culvert") {
+                        $.ajax({
+                            url: '@Url.Action("_GetCulvertDamageConditionBySegment", "CulvertInspectionReports")',
+                            data: { segmentid: selSegmentId },
+                            type: 'GET',
+                            dataType: 'html',
+                            beforeSend: function () { $('#wait').show(); },
+                            complete: function () { $('#wait').hide(); },
+                            success: function (data) {
+                                $('#culvertReportPartial').html(data);
+                            }
+                        });
+                    }
+                    else if (SelectedLevel() == "Section" ) {
+                        $.ajax({
+                            url: '@Url.Action("_GetCulvertDamageConditionBySection", "CulvertInspectionReports")',
+                            data: { sectionid: selSectionId },
+                            type: 'GET',
+                            dataType: 'html',
+                            beforeSend: function () { $('#wait').show(); },
+                            complete: function () { $('#wait').hide(); },
+                            success: function (data) {
+                                $('#culvertReportPartial').html(data);
+                            }
+                        });
+                    }
+                    else if (SelectedLevel() == "District") {
+                        $.ajax({
+                            url: '@Url.Action("_GetCulvertDamageConditionByDistrict", "CulvertInspectionReports")',
+                            data: { districtid: selDistrictId },
+                            type: 'GET',
+                            dataType: 'html',
+                            beforeSend: function () { $('#wait').show(); },
+                            complete: function () { $('#wait').hide(); },
+                            success: function (data) {
+                                $('#culvertReportPartial').html(data);
+                            }
+                        });
+                    }
+                    break;
+
+                case "2":
+                    if (SelectedLevel() == "Segment" || SelectedLevel() == "Culvert") {
+                        $.ajax({
+                            url: '@Url.Action("_GetCulvertConditionByInspectionYearBySegment", "CulvertInspectionReports")',
+                            data: { segmentid: selSegmentId, inspectionYear: selInspectionYear },
+                            type: 'GET',
+                            dataType: 'html',
+                            beforeSend: function () { $('#wait').show(); },
+                            complete: function () { $('#wait').hide(); },
+                            success: function (data) {
+                                $('#culvertReportPartial').html(data);
+                            }
+                        });
+                    }
+                    else if (SelectedLevel() == "Section" ) {
+                        $.ajax({
+                            url: '@Url.Action("_GetCulvertConditionByInspectionYearBySection", "CulvertInspectionReports")',
+                            data: { sectionid: selSectionId, inspectionYear: selInspectionYear },
+                            type: 'GET',
+                            dataType: 'html',
+                            beforeSend: function () { $('#wait').show(); },
+                            complete: function () { $('#wait').hide(); },
+                            success: function (data) {
+                                $('#culvertReportPartial').html(data);
+                            }
+                        });
+                    }
+                    else if (SelectedLevel() == "District") {
+                        $.ajax({
+                            url: '@Url.Action("_GetCulvertConditionByInspectionYearByDistrict", "CulvertInspectionReports")',
+                            data: { districtid: selDistrictId, inspectionYear: selInspectionYear },
+                            type: 'GET',
+                            dataType: 'html',
+                            beforeSend: function () { $('#wait').show(); },
+                            complete: function () { $('#wait').hide(); },
+                            success: function (data) {
+                                $('#culvertReportPartial').html(data);
+                            }
+                        });
+                    }
+                    break;
+
+                case "3":
+                    if (SelectedLevel() == "Segment" || SelectedLevel() == "Culvert") {
+                        $.ajax({
+                            url: '@Url.Action("_GetObservationAndRecommendationBySegment", "CulvertInspectionReports")',
+                            data: { segmentid: selSegmentId },
+                            type: 'GET',
+                            dataType: 'html',
+                            beforeSend: function () { $('#wait').show(); },
+                            complete: function () { $('#wait').hide(); },
+                            success: function (data) {
+                                $('#culvertReportPartial').html(data);
+                            }
+                        });
+                    }
+                    else if (SelectedLevel() == "Section" ) {
+                        $.ajax({
+                            url: '@Url.Action("_GetObservationAndRecommendationBySection", "CulvertInspectionReports")',
+                            data: { sectionid: selSectionId },
+                            type: 'GET',
+                            dataType: 'html',
+                            beforeSend: function () { $('#wait').show(); },
+                            complete: function () { $('#wait').hide(); },
+                            success: function (data) {
+                                $('#culvertReportPartial').html(data);
+                            }
+                        });
+                    }
+                    else if (SelectedLevel() == "District") {
+                        $.ajax({
+                            url: '@Url.Action("_GetObservationAndRecommendationByDistrict", "CulvertInspectionReports")',
+                            data: { districtid: selDistrictId },
+                            type: 'GET',
+                            dataType: 'html',
+                            beforeSend: function () { $('#wait').show(); },
+                            complete: function () { $('#wait').hide(); },
+                            success: function (data) {
+                                $('#culvertReportPartial').html(data);
+                            }
+                        });
+                    }
+                    break;
+
+                case "4":
+                    if (SelectedLevel() == "Section" || SelectedLevel() == "Segment" || SelectedLevel() == "Culvert") {
+                        $.ajax({
+                            url: '@Url.Action("_GetConditionAndRepairCostSummaryBySection", "CulvertInspectionReports")',
+                            data: { sectionid: selSectionId, inspectionyear: selInspectionYear },
+                            type: 'GET',
+                            dataType: 'html',
+                            beforeSend: function () { $('#wait').show(); },
+                            complete: function () { $('#wait').hide(); },
+                            success: function (data) {
+                                $('#culvertReportPartial').html(data);
+                            }
+                        });
+                    }
+                    else if (SelectedLevel() == "District") {
+                        $.ajax({
+                            url: '@Url.Action("_GetConditionAndRepairCostSummaryByDistrict", "CulvertInspectionReports")',
+                            data: { districtid: selDistrictId, inspectionyear: selInspectionYear },
+                            type: 'GET',
+                            dataType: 'html',
+                            beforeSend: function () { $('#wait').show(); },
+                            complete: function () { $('#wait').hide(); },
+                            success: function (data) {
+                                $('#culvertReportPartial').html(data);
+                            }
+                        });
+                    }
+                    else if (SelectedLevel() == "All") {
+                        $.ajax({
+                            url: '@Url.Action("_GetConditionAndRepairCostSummary", "CulvertInspectionReports")',
+                            data: { inspectionyear: selInspectionYear },
+                            type: 'GET',
+                            dataType: 'html',
+                            beforeSend: function () { $('#wait').show(); },
+                            complete: function () { $('#wait').hide(); },
+                            success: function (data) {
+                                $('#culvertReportPartial').html(data);
+                            }
+                        });
+                    }
+                    break;
+
+                case "5":
+                    if (SelectedLevel() == "Culvert") {
+                        $.ajax({
+                            url: '@Url.Action("_GetCulvertConditionAndBOQ", "CulvertInspectionReports")',
+                            data: { culvertid: selCulvertId },
+                            type: 'GET',
+                            dataType: 'html',
+                            beforeSend: function () { $('#wait').show(); },
+                            complete: function () { $('#wait').hide(); },
+                            success: function (data) {
+                                $('#culvertReportPartial').html(data);
+                            }
+                        });
+                    }
+                    break;
+            }
+        });
+    });
+
+</script>
+

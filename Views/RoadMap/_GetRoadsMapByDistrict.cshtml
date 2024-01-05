@@ -1,0 +1,347 @@
+﻿@model List<ERA_BMS.ViewModels.RoadMapViewModel>
+
+@{
+    ViewBag.Title = "Roads Map by District";
+}
+<style>
+    .floating-panel {
+        position: relative;
+        z-index: 5;
+        padding: 5px;
+        text-align: center;
+        line-height: 30px;
+        padding-left: 10px;
+    }
+</style>
+
+<h2>Roads Map by District</h2>
+
+<div class="panel panel-primary title">
+    <div class="panel-heading">
+        <h3 class="panel-title panel-info" id="title">District: <b>@ViewBag.DistrictName</b> | Total Roads: <b>@ViewBag.TotalRoads</b> | Roads with Map: <b>@ViewBag.RoadsWithMapFile</b> </h3>
+    </div>
+    <div class="panel-body">
+        <div id="divStatus" style="font-size:small; font-weight: bold; padding: 10px; display: none;">
+            <div style="float: right">
+                <input type="checkbox" id="chkShowRoads" style="float: inline-end; width: 15px; height: 15px;" onclick="ShowOrHideRoadSegments()" checked>
+                <label for="chkShowRoads" style="background-color: whitesmoke;"> Roads</label>
+                <br />
+                <input type="checkbox" id="chkShowDistricts" style="float: inline-end; width: 15px; height: 15px;" onclick="ShowOrHideDistrictsBoundaries()" checked>
+                <label for="chkShowDistricts" style="background-color: whitesmoke;"> Districts</label>
+                <br />
+                <input type="checkbox" id="chkShowSections" style="float: inline-end; width: 15px; height: 15px;" onclick="ShowOrHideSectionsBoundaries()" checked>
+                <label for="chkShowSections" style="background-color: whitesmoke;"> Sections</label>
+                <br />
+                <input type="checkbox" id="chkShowBridges" style="float: inline-end; width: 15px; height: 15px;" onclick="ShowOrHideBridges()">
+                <label for="chkShowBridges" style="background-color: whitesmoke;"> Bridges </label>
+            </div>
+        </div>
+
+        <div id="Map" style="height: 600px; border: 1px solid #999;">
+            <!-- Map displays here -->
+        </div>
+    </div>
+</div>
+<script>
+    // Get a list of all road segment maps in the given District from the Model and store it in Javascript object
+    @{
+        System.Web.Script.Serialization.JavaScriptSerializer serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+        serializer.MaxJsonLength = Int32.MaxValue; // to avoid maxJsonLength exception
+    }
+    var segmentMapList = '@serializer.Serialize(Model)'.replaceAll("&quot;", "\"");
+    segmentMapList = JSON.parse(segmentMapList); // Convert JSON string to Javascript object
+    var districtBoundaryPointsList = @(Html.Raw(new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(ViewBag.DistrictBoundaryPointsList)));
+    var sectionBoundaryPointsList = @(Html.Raw(new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(ViewBag.SectionBoundaryPointsList)));
+    var districtName = @(Html.Raw(new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(ViewBag.DistrictName)));
+    var noMapFile = @(Html.Raw(new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(ViewBag.NoMapFile)));
+    var i, j, k, map, contentString, infowindow, districtinfowindow, sectioninfowindow;
+    var roadPolylineList = new Array();
+    var districtPolygonList = new Array();
+    var sectionPolygonList = new Array();
+    var districtPolygon, sectionPolygon, roadPath;
+
+    // Get all the bridges in the selected district
+    var bridgeLocList = @(Html.Raw(new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(ViewBag.BridgeLocationList)));
+    var brgMarkerList = new Array();
+
+    $(document).ready(function () {
+        // Go through all segments till the first segment which has map file is found
+        var j, centerSegment;
+
+        for (j = 0; j < segmentMapList.length; j++) {
+            if (segmentMapList[j].RoadPointList == null)
+                continue;
+
+            // Firstsegment which has map file is found. So take it as a center bridge
+            centerSegment = segmentMapList[j];
+            break;
+        }
+
+        // If road has no map file (kml), then prompt error message and do not go to the map page
+        if (centerSegment == null) {
+            document.getElementById('Map').innerHTML = "<h3 style='padding-left: 20px'>Map cannot be displayed</h3>" +
+                "<h4 style='padding-left: 20px; color:red'>The is no map file (kml) associated with all road segments in the selected district.</h4>";
+            return;
+        }
+
+        var centerPoint = centerSegment.RoadPointList[0];
+
+        // Center the map to the first bridge which has complete coordinate info
+        map = new google.maps.Map(document.getElementById('Map'), {
+            zoom: 7,
+            center: {
+                lat: centerPoint.lat,
+                lng: centerPoint.lng
+            },
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            //draggableCursor: 'crosshair'
+        });
+
+        // Hide any open infowindow when anywhere in the map is clicked
+        google.maps.event.addListener(map, 'click', function () {
+            infowindow.close();
+            districtinfowindow.close();
+            sectioninfowindow.close();
+        });
+
+        // Put update controls inside the map
+        map.controls[google.maps.ControlPosition.TOP_RIGHT].push(document.getElementById('divStatus'));
+        document.getElementById('divStatus').style.display = "";
+        districtinfowindow = new google.maps.InfoWindow();
+        sectioninfowindow = new google.maps.InfoWindow();
+        infowindow = new google.maps.InfoWindow();
+
+        ShowDistrictsBoundaries();
+        ShowSectionsBoundaries();
+        ShowRoadSegments();
+    });
+
+    // Toggle district boundaries
+    function ShowOrHideDistrictsBoundaries() {
+        //alert("Hello");
+        if (document.getElementById('chkShowDistricts').checked)
+            ShowDistrictsBoundaries();
+        else
+            HideDistrictsBoundaries();
+    }
+
+    // Toggle section boundaries
+    function ShowOrHideSectionsBoundaries() {
+        //alert("Hello");
+        if (document.getElementById('chkShowSections').checked)
+            ShowSectionsBoundaries();
+        else
+            HideSectionsBoundaries();
+    }
+
+    // Remove all district polygons
+    function HideDistrictsBoundaries() {
+        for (i = 0; i < districtPolygonList.length; i++) {
+            districtPolygonList[i].setMap(null);
+        }
+    }
+
+    // Remove all section polygons
+    function HideSectionsBoundaries() {
+        for (i = 0; i < sectionPolygonList.length; i++) {
+            sectionPolygonList[i].setMap(null);
+        }
+    }
+
+    function AddListenersOnDistrictPolygon(polygon) {
+        var area = google.maps.geometry.spherical.computeArea(polygon.getPath());
+        area = (area / 1000000.0).toFixed(1);
+        var districtContentString = "<h4 style='font-size: 14px'>District Info</h4>" +
+            "<div>Name: <b>" + districtBoundaryPointsList[k].DistrictName + "</b></div>" +
+            "<div>Area: <b>" + area + " km<sup>2</sup></b></div>" +
+            "<div>Total Length: <b>" + districtBoundaryPointsList[k].TotalLength.toFixed(1) + " km</b></div>" +
+            "</div>";
+
+        google.maps.event.addListener(polygon, 'click', function (event) {
+            districtinfowindow.setContent(districtContentString);
+            districtinfowindow.setPosition(event.latLng);
+            districtinfowindow.open(map);
+            infowindow.close();
+            sectioninfowindow.close();
+        });
+    }
+
+    function AddListenersOnSectionPolygon(polygon) {
+        var area = google.maps.geometry.spherical.computeArea(polygon.getPath());
+        area = (area / 1000000.0).toFixed(1);
+        var sectionContentString = "<h4 style='font-size: 14px'>Section Info</h4>" +
+            "<div>Name: <b>" + sectionBoundaryPointsList[k].SectionName + "</b></div>" +
+            "<div>District: <b>" + sectionBoundaryPointsList[k].DistrictName + "</b></div>" +
+            "<div>Area: <b>" + area + " km<sup>2</sup></b></div>" +
+            "<div>Total Length: <b>" + sectionBoundaryPointsList[k].TotalLength.toFixed(1) + " km</b></div>" +
+            "</div>";
+
+        google.maps.event.addListener(polygon, 'click', function (event) {
+            sectioninfowindow.setContent(sectionContentString);
+            sectioninfowindow.setPosition(event.latLng);
+            sectioninfowindow.open(map);
+            infowindow.close();
+            districtinfowindow.close();
+        });
+    }
+
+    function AddListenersOnPolyline(polyline, segmentmap) {
+        var path = polyline.getPath();
+        var length = google.maps.geometry.spherical.computeLength(path);
+        length = (length / 1000.0).toFixed(1);
+
+        segmentmap.RoadId = (segmentmap.RoadId == null) ? "" : segmentmap.RoadId;
+        segmentmap.RevisedRoadId = (segmentmap.RevisedRoadId == null) ? "" : segmentmap.RevisedRoadId;
+
+        //alert(JSON.stringify(segmentmap));
+
+        var contentString = "<h4 style='font-size: 20px; color: red'>Road Information</h4>" +
+            "<div>Road Segment: <b>" + segmentmap.SegmentName + "</b></div>" +
+            "<div>Rev. Road Id: <b>" + segmentmap.RevisedRoadId + "</b></div>" +
+            "<div>Segment No.: <b>" + segmentmap.SegmentNo + "</b></div>" +
+            "<div>Section: <b>" + segmentmap.SectionName + "</b></div>" +
+            "<div>District: <b>" + segmentmap.DistrictName + "</b></div>" +
+            "<div>Length (km): <b>" + segmentmap.RoadLength + "</b></div>" +
+            "<div>Calculated Length (km): <b>" + length + "</b></div>" +
+            "<div>AADT: <b>" + segmentmap.AADT + "</b></div>" +
+            "</div>";
+
+        google.maps.event.addListener(polyline, 'click', function (event) {
+            infowindow.setContent(contentString);
+            infowindow.setPosition(event.latLng);
+            infowindow.open(map, polyline);
+            districtinfowindow.close();
+            sectioninfowindow.close();
+        });
+    }
+
+    function ShowDistrictsBoundaries() {
+        for (k = 0; k < districtBoundaryPointsList.length; k++) {
+            districtPolygon = new google.maps.Polygon({
+                path: districtBoundaryPointsList[k].DistrictBoundaryPoints,
+                geodesic: true,
+                strokeColor: "#000000",
+                strokeOpacity: 1.0,
+                strokeWeight: 1.5,
+                //fillColor: "#00FF00",
+                fillOpacity: 0.0,
+                zIndex: 100,
+                map: map,
+            });
+
+            AddListenersOnDistrictPolygon(districtPolygon);
+            districtPolygonList.push(districtPolygon);
+        }
+    }
+
+    function ShowSectionsBoundaries() {
+        for (k = 0; k < sectionBoundaryPointsList.length; k++) {
+            sectionPolygon = new google.maps.Polygon({
+                path: sectionBoundaryPointsList[k].SectionBoundaryPoints,
+                geodesic: true,
+                strokeColor: "#0000FF",
+                strokeOpacity: 1.0,
+                strokeWeight: 1.5,
+                fillOpacity: 0.0,
+                zIndex: 101,
+                map: map,
+            });
+
+            AddListenersOnSectionPolygon(sectionPolygon);
+            sectionPolygonList.push(sectionPolygon);
+        }
+    }
+
+    // Toggle road segments
+    function ShowOrHideRoadSegments() {
+        if (document.getElementById('chkShowRoads').checked)
+            ShowRoadSegments();
+        else
+            HideRoadSegments();
+    }
+
+    function ShowRoadSegments() {
+        // Loop through all segments in the list and draw polylines
+        for (i = 0; i < segmentMapList.length; i++) {
+            roadPath = new google.maps.Polyline({
+                path: segmentMapList[i].RoadPointList,
+                geodesic: true,
+                strokeColor: "#ff7d00",
+                strokeOpacity: 1.0,
+                strokeWeight: 4,
+                draggableCursor: 'crosshair',
+                zIndex: 102,
+                map: map,
+            });
+
+            AddListenersOnPolyline(roadPath, segmentMapList[i]);
+            //google.maps.addListener(roadPath, "mouseover", function () {
+            //    map.setOptions({ draggableCursor: 'crosshair' }); //'pointer'
+            //});
+
+            google.maps.event.addListener(roadPath, 'mouseover', function (event) {
+                map.setOptions({ draggableCursor: 'crosshair' }); //'pointer'
+            });
+
+            roadPolylineList.push(roadPath);
+        }
+    }
+
+    // Remove all segment polylines
+    function HideRoadSegments() {
+        for (i = 0; i < roadPolylineList.length; i++) {
+            roadPolylineList[i].setMap(null);
+        }
+    }
+
+    // Toggle bridge markers
+    function ShowOrHideBridges() {
+        if (document.getElementById('chkShowBridges').checked)
+            PlaceBridgeMarkers();
+        else
+            RemoveBridgeMarkers();
+    }
+
+    // Remove all bridge markers
+    function RemoveBridgeMarkers() {
+        for (i = 0; i < brgMarkerList.length; i++) {
+            brgMarkerList[i].setMap(null);
+        }
+    }
+
+    function PlaceBridgeMarkers() {
+        var brgMarker, brgContentString, k;
+
+        // Loop through all bridgess in the list and place markers
+        for (k = 0; k < bridgeLocList.length; k++) {
+            // if currrent bridge has no or incomplete coordinate info, do not put pin and continue the loop to the next iteration
+            if (bridgeLocList[k].XCoord == null || bridgeLocList[k].YCoord == null || bridgeLocList[k].UtmZone == null)
+                continue;
+
+            brgMarker = new google.maps.Marker({
+                position: new google.maps.LatLng(bridgeLocList[k].LatitudeDecimal, bridgeLocList[k].LongitudeDecimal),
+                map: map,
+                icon: { url: '/images/bridge_marker_on_road_map.png', scaledSize: new google.maps.Size(22, 25) },
+            });
+            google.maps.event.addListener(brgMarker, 'click', (function (brgMarker, k) {
+                return function () {
+                    brgContentString = "<div style='font-size: 15px; font-weight: bold'>Bridge Info</div>" +
+                        "<div>Revised Bridge Id: <b>" + bridgeLocList[k].RevisedBridgeId + "</b></div>" +
+                        "<div>Bridge Name: <b>" + bridgeLocList[k].BridgeName + "</b></div>" +
+                        "<div>Length (m): <b>" + bridgeLocList[k].BridgeLength + "</b></div>" +
+                        "<div>Type: <b>" + bridgeLocList[k].BridgeType + "</b></div>" +
+                        "</div>";
+
+                    infowindow.setContent(brgContentString);
+                    infowindow.open(map, brgMarker);
+                }
+            })(brgMarker, k));
+
+            // Add each marker to the 'brgMarkerList' array
+            brgMarkerList.push(brgMarker);
+        }
+    }
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?libraries=geometry&sensor=true&key=AIzaSyAE0qRfcQ0xxZq5mWSMOtxT3G_cWkHpBAA&callback=InitializeMap" async defer></script>
+@*<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAE0qRfcQ0xxZq5mWSMOtxT3G_cWkHpBAA&callback=InitializeMap" async defer></script>*@

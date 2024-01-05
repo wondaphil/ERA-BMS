@@ -1,0 +1,147 @@
+﻿
+@{
+    ViewBag.Title = "Annual Bridge Book";
+}
+
+<h2 id="noprint">Annual Bridge Book</h2>
+
+@using (Html.BeginForm())
+{
+    <div class="panel panel-default">
+        @*<div class="panel-heading">
+                <h3 class="panel-title panel-info">Please select <b>District</b>, <b>Section</b> and <b>Road Segment</b> from the dropdown list</h3>
+            </div>*@
+        <div class="panel-body">
+
+            @Html.AntiForgeryToken()
+
+            <div class="row">
+                <div class="col-lg-4 col-md-5 col-sm-6 col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group">
+                            <label class="control-label col-md-2">District</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("ddlDistrict", new SelectList(ViewBag.Districts, "Value", "Text"), new { @class = "form-control" })
+                            </div>
+                            <div class="col-md-2">
+                                <button type="button" class="btn btn-primary glyphicon glyphicon-search" id="searchbydistrict" data-toggle="tooltip" title="Search by District"></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-1 col-md-2"></div>
+
+                <div class="col-lg-4 col-md-5 col-sm-6 col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group">
+                            <label class="control-label col-md-2">Section</label>
+                            <div class="col-md-8">
+                                <select class="form-control" id="ddlSection">
+                                    <!-- Sections list populates here -->
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <button type="button" class="btn btn-primary glyphicon glyphicon-search" id="searchbysection" data-toggle="tooltip" title="Search by Section"></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @*<div id="btnPrint" align="right" style="display: none">
+                <Button id="noprint" class="btn btn-primary" data-toggle="tooltip" title="Please choose 'Portrait' layout" onclick="window.print();return false;"><span class="glyphicon glyphicon-print"></span> Print</Button>
+            </div>*@
+        </div>
+    </div>
+    <div id="annualBridgeBooksPartial">
+        <!-- Bridges books list displays here -->
+    </div>
+}
+
+<div id="wait" align="center" style="display: none">
+    <img src="~/images/ajax-loader-big.gif" />
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#ddlDistrict').change(function () {
+            var selDistrictId = $('#ddlDistrict option:selected').val();
+            $('#ddlSection option').remove(); //empty the section dropdown list
+            $('#annualBridgeBooksPartial').empty(); // clear the bridges place holder
+            $('#btnPrint').hide();
+
+            if (selDistrictId != "0") { //if some district is selected
+                $('#distrIdDIV').text("District No. = " + selDistrictId );
+                $.ajax({
+                    url: '@Url.Action("_GetSections", "LocationsDDL", new { area = "" })',
+                    data: { districtid: selDistrictId },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        var markup = '<option value="0" id="noselect"> --Select Section --</option>';
+                        $.each(data, function (i, section) {
+                            markup += '<option value="' + section.Value + '">' + section.Text + '</option>'
+                            $('#ddlSection').html(markup);
+                        });
+                    }
+                });
+            }
+        });
+
+        $('#ddlSection').change(function () {
+            var selSectionId = $('#ddlSection option:selected').val();
+            $('#annualBridgeBooksPartial').empty(); // clear the bridges place holder
+            $('#btnPrint').hide();
+
+            if (selSectionId != "0") { //if some section is selected
+                $('#secIdDIV').text("Section No. = " + selSectionId);
+
+                $.ajax({
+                    url: '@Url.Action("_GetAnnualBridgeBookBySection", "BridgeBook")',
+                    data: { sectionid: selSectionId },
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () { $('#wait').show(); },
+                    complete: function () { $('#wait').hide(); },
+                    success: function (data) {
+                        $('#btnPrint').show();
+                        $('#annualBridgeBooksPartial').html(data);
+                    }
+                });
+            }
+        });
+
+        $('#searchbydistrict').click(function () {
+            var selDistrictId = $('#ddlDistrict option:selected').val();
+            $('#btnPrint').hide();
+
+            if (selDistrictId != "0") //if some district is selected
+            {
+                $('#annualBridgeBooksPartial').empty(); // clear the bridges place holder
+
+                $.ajax({
+                    url: '@Url.Action("_GetAnnualBridgeBookByDistrict", "BridgeBook")',
+                    data: { districtid: selDistrictId },
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () { $('#wait').show(); },
+                    complete: function () { $('#wait').hide(); },
+                    success: function (data) {
+                        $('#btnPrint').show();
+                        $('#annualBridgeBooksPartial').html(data);
+                    }
+                });
+            }
+        });
+
+        $('#searchbysection').click(function () {
+            var selSectionId = $('#ddlSection option:selected').val();
+            if (selSectionId != "0" && typeof selSectionId != 'undefined') //if some section is selected
+            {
+                 $('#ddlSection').trigger('change');
+            }
+        });
+    });
+
+</script>

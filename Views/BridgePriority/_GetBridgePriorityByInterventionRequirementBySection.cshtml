@@ -1,0 +1,159 @@
+﻿@model IEnumerable<ERA_BMS.Models.BridgePriorityByInterventionRequirement>
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title panel-info">Bridge Priority by Intervention Requirement (District: <b>@ViewBag.District</b>, Section: <b>@ViewBag.Section</b>, Inspection Year: <b>@ViewBag.InspectionYear</b>)</h3>
+    </div>
+
+    <div class="panel-body">
+        <br />
+        <br />
+        <table class="table table-striped table-condensed table-responsive table-bordered display compact hover" id="tblbridgedamagecondition">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.RevisedBridgeNo)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.BridgeName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.DmgPerc)
+                    </th>
+                    <th>
+                        @*@Html.DisplayNameFor(model => model.observation.MaintenanceUrgency.UrgencyName)*@
+                        Inspector's Recomm.
+                    </th>
+                    <th>
+                        @*@Html.DisplayNameFor(model => model.observation.WaterWayAdequacy)*@
+                        Water Way Adequacy
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.RoadClassName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.BridgeLength)
+                    </th>
+                    <th>
+                        @*@Html.DisplayNameFor(model => model.bridges.BridgeGeneralInfo.ConstructionYear)*@
+                        Constr./ Replaced Year
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.DetourPossible)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ADT)
+                    </th>
+                    <th>
+                        @*@Html.DisplayNameFor(model => model.priority)*@
+                        Priority %
+                    </th>
+                    <th>
+                        Required Action
+                    </th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.RevisedBridgeNo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.BridgeName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DmgPerc)
+                        </td>
+                        @{
+                            string bg = item.UrgencyId == 2 ? "red" : "";
+                            string fore = item.UrgencyId == 2 ? "white" : "";
+                        }
+                        <td style="background-color: @bg; color: @fore">
+                            @Html.DisplayFor(model => item.UrgencyName)
+                        </td>
+                        <td>
+                            @*@Html.DisplayFor(model => item.commentRemark.WaterWayAdequacy)*@
+                            @{
+                                string adequacy = (item.WaterWayAdequacy == true) ? "Yes" : "No";
+                            }
+                            @adequacy
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => item.RoadClassName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => item.BridgeLength)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => item.ConstructionYear)
+                        </td>
+                        <td>
+                            @*@Html.DisplayFor(model => item.bridges.BridgeGeneralInfo.DetourPossible)*@
+                            @{
+                                string detour = (item.DetourPossible == true) ? "Yes" : "No";
+                            }
+                            @detour
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => item.ADT)
+                        </td>
+                        <td style="background-color: yellow; font-weight: bold">
+                            @Html.DisplayFor(modelItem => item.PriorityVal)
+                        </td>
+                        @{
+                            bg = item.RequiredActionId == 3 ? "red" : "aqua";
+                            fore = item.RequiredActionId == 3 ? "white" : "";
+                            string RequiredActionName = item.RequiredActionId == 1 ? "Regular Inspection" :
+                                                                item.RequiredActionId == 2 ? "Rehabilitation" :
+                                                                "Urgent Action (Replacement)";
+                        }
+                        <td style="background-color: @bg; color: @fore">
+                            @RequiredActionName
+                        </td>
+                        <td align="center">
+                            <a href="@Url.Action("Index", "BridgeInventory", new { id = item.BridgeId })" target="_blank" class="glyphicon glyphicon-new-window" data-toggle="tooltip" title="Go to Inventory" style="font-size: 14px"></a>
+                        </td>
+                        <td align="center">
+                            <a href="@Url.Action("Index", "DamageInspMajor", new { id = item.BridgeId, val = item.InspectionYear })" target="_blank" class="glyphicon glyphicon-new-window" data-toggle="tooltip" title="Go to Inspection" style="font-size: 14px"></a>
+                        </td>
+                        <td align="center">
+                            <a href="@Url.Action("BridgeMap", "BridgeLocation", new { id = item.BridgeId })" target="_blank" class="glyphicon glyphicon-map-marker" data-toggle="tooltip" title="View on Map" style="font-size: 14px"></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="panel-footer">
+        <h3 class="panel-title">Total No. of Bridges: <b>@Model.Count()</b></h3>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+       $('#tblbridgedamagecondition').dataTable({
+            paging: true,
+            pageLength: 15,
+            bLengthChange: true,
+            scrollY: 400,
+            scrollX: true,
+            searching: true,
+            select: true,
+            dom: 'lBfrtip',
+            order: [[10, "des"]], // order by Priority in descending order
+            buttons: [
+                { extend: 'copy', className: 'btn btn-sm btn-primary' },
+                { extend: 'excel', className: 'btn btn-sm btn-primary', text: 'Export Excel' },
+                { extend: 'pdf', className: 'btn btn-sm btn-primary', text: 'Export PDF' },
+                { extend: 'print', className: 'btn btn-sm btn-primary' }
+            ]
+        });
+    });
+</script>
+

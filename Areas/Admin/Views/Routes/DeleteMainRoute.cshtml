@@ -1,0 +1,73 @@
+﻿@model ERA_BMS.Models.MainRoute
+
+@{
+    ViewBag.Title = "Delete Main Route";
+}
+
+<h2>Delete Main Route</h2>
+
+<h3>Are you sure you want to delete this main route?</h3>
+<div class="row">
+    <hr />
+    <dl class="dl-horizontal col-md-4 col-xs-6">
+        <dt>
+            @Html.DisplayNameFor(model => model.MainRouteId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MainRouteId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MainRouteNo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MainRouteNo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MainRouteName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MainRouteName)
+        </dd>
+    </dl>
+
+    <dl class="dl-horizontal col-md-4 col-xs-6">
+        <dt>
+            @Html.DisplayNameFor(model => model.Length)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Length)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RoadClass.RoadClassName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RoadClass.RoadClassName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Remark)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Remark)
+        </dd>
+    </dl>
+</div>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-actions no-color">
+        <button type="submit" class="btn btn-danger"><span class="glyphicon glyphicon-warning-sign"></span> Delete</button>
+        <a href="@Url.Action("Index", new {area = "Admin"})" class="btn btn-primary"><span class="glyphicon glyphicon-backward"></span> Go to Routes List</a>
+    </div>
+}

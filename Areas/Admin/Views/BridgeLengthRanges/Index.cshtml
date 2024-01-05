@@ -1,0 +1,263 @@
+﻿@model IEnumerable<ERA_BMS.Models.BridgeLength>
+
+@{
+    ViewBag.Title = "Structure Length Ranges";
+}
+
+<h2>Structure Length Ranges</h2>
+
+@{
+    string textColor = "text-success";
+    if (ViewBag.StatusMessage.Contains("error"))
+    {
+        textColor = "text-danger";
+    }
+}
+
+<p id="statusmessage" class="@textColor" style="font-size: 15px">@ViewBag.StatusMessage</p>
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title panel-info">List of Structure Length Ranges (for <b>Bridges vs Structure Length Graph</b>)</h3>
+    </div>
+
+    <div class="panel-body">
+        <table class="table table-striped table-condensed table-bordered centeredtable" id="tblBridgeLengthRange">
+            <tr>
+                <th></th>
+                <th>
+                    Bridge Length Range
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FromLength)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ToLength)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Remark)
+                </th>
+                <th></th>
+                <th></th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        <input type="hidden" value="@item.BridgeLengthId" />  <!-- Unique Id of Bridge (structure) Length Range -->
+                    </td>
+                    <td class="BridgeLengthName">
+                        <span>@item.BridgeLengthName</span>
+                        <input type="text" value="@item.BridgeLengthName" style="display:none; width:50%; max-width:50%" size="5" />
+                    </td>
+                    <td class="FromLength">
+                        <span>@item.FromLength</span>
+                        <input type="text" value="@item.FromLength" style="display:none" size="3" />
+                    </td>
+                    <td class="ToLength">
+                        <span>@item.ToLength</span>
+                        <input type="text" value="@item.ToLength" style="display:none" size="3" />
+                    </td>
+                    <td class="Remark">
+                        <span>@item.Remark</span>
+                        <input type="text" value="@item.Remark" style="display:none" size="30" />
+                    </td>
+                    <td>
+                        <a class="Edit glyphicon glyphicon-edit" href="javascript:;" data-toggle="tooltip" title="Edit"></a>
+                        <a class="Update glyphicon glyphicon-ok" href="javascript:;" style="display:none" data-toggle="tooltip" title="Update"></a>
+                        <a class="Confirm glyphicon glyphicon-ok" href="javascript:;" style="display:none" data-toggle="tooltip" title="Confirm"></a>
+                    </td>
+                    <td>
+                        <a class="Cancel glyphicon glyphicon-remove" href="javascript:;" style="display:none" data-toggle="tooltip" title="Cancel"></a>
+                        <a class="Delete glyphicon glyphicon-trash" href="javascript:;" data-toggle="tooltip" title="Delete"></a>
+                    </td>
+                </tr>
+            }
+
+        </table>
+    </div>
+    <div class="panel-footer">
+        <h3 class="panel-title">No. of Structure Length Ranges: <b>@Model.Count()</b> </h3>
+    </div>
+</div>
+
+<div id="newPartial">
+    <!-- New bridge (structure) length range partial displays here-->
+</div>
+
+<p>
+    <button id="new" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> Register New Structure Length Range</button>
+    <a href="@Url.Action("Index", "ChartGraph", new { area = "", id = 4 })" id="chart" class="btn btn-primary" target="_blank"><span class="glyphicon glyphicon-stats" data-toggle="tooltip" title="Show No. of Bridges vs Length Graph"></span> View Graph</a>
+</p>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        //New event handler.
+        $("#new").on("click", function () {
+            // clear the status message
+            $('#statusmessage').text("");
+
+            $.ajax({
+                url: '@Url.Action("NewBridgeLengthRangePartial", "BridgeLengthRanges")',
+                type: 'GET',
+                dataType: 'html',
+                success: function (data) {
+                    $('#newPartial').html(data);
+                }
+            });
+            $('#new').hide();
+            $('#chart').hide();
+        });
+
+        //Edit event handler.
+        $("body").on("click", "#tblBridgeLengthRange .Edit", function () {
+            // clear the status message
+            $('#statusmessage').text("");
+
+            var row = $(this).closest("tr");
+            $("td", row).each(function () {
+                if ($(this).find("input").length > 0) {
+                    $(this).find("input").show();
+                    $(this).find("span").hide();
+                }
+            });
+            row.find(".Update").show();
+            row.find(".Cancel").show();
+            row.find(".Delete").hide();
+            $(this).hide();
+        });
+
+        //Update event handler.
+        $("body").on("click", "#tblBridgeLengthRange .Update", function () {
+            var row = $(this).closest("tr");
+            $("td", row).each(function () {
+                if ($(this).find("input").length > 0) {
+                    var span = $(this).find("span");
+                    var input = $(this).find("input");
+                    span.html(input.val());
+                    span.show();
+                    input.hide();
+                }
+            });
+            row.find(".Edit").show();
+            row.find(".Delete").show();
+            row.find(".Cancel").hide();
+            $(this).hide();
+
+            var bridgeLengthRange = {};
+            bridgeLengthRange.BridgeLengthId = row.find('input[type=hidden]').val();
+            bridgeLengthRange.BridgeLengthName = row.find(".BridgeLengthName").find("span").html();
+            bridgeLengthRange.FromLength = row.find(".FromLength").find("span").html();
+            bridgeLengthRange.ToLength = row.find(".ToLength").find("span").html();
+            bridgeLengthRange.Remark = row.find(".Remark").find("span").html();
+
+            //alert(JSON.stringify(bridgeLengthRange));
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("UpdateBridgeLengthRange", "BridgeLengthRanges")',
+                data: '{bridgeLengthRange:' + JSON.stringify(bridgeLengthRange) + '}',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'text', //'html',
+                success: function () {
+                    $.ajax({
+                        type: "GET",
+                        url: '/StatusMessage/GetStatusMessage',
+                        data: { id: 1 }, //StatusMessageId.ChangeDataSuccess = 1
+                        dataType: "json",
+                        success: function (data) {
+                            $.each(data, function (i, item) {
+                                if ($('#statusmessage').hasClass("text-danger"))
+                                    $('#statusmessage').removeClass("text-danger");
+                                $('#statusmessage').addClass("text-success");
+
+                                $('#statusmessage').text(item.Message); // set the status message
+                            });
+                        },
+                    });
+                },
+                error: function (xhr) {
+                    //$('#status').text(xhr.status);
+                }
+            });
+        });
+
+        //Cancel event handler.
+        $("body").on("click", "#tblBridgeLengthRange .Cancel", function () {
+            var row = $(this).closest("tr");
+            $("td", row).each(function () {
+                if ($(this).find("input").length > 0) {
+                    var span = $(this).find("span");
+                    var input = $(this).find("input");
+                    input.val(span.html());
+                    span.show();
+                    input.hide();
+                }
+            });
+            row.find(".Edit").show();
+            row.find(".Delete").show();
+            row.find(".Update").hide();
+            row.find(".Confirm").hide();
+            $(this).hide();
+        });
+
+        //Delete event handler.
+        $("body").on("click", "#tblBridgeLengthRange .Delete", function () {
+            // clear the status message
+            $('#statusmessage').text("");
+
+            var row = $(this).closest("tr");
+            row.find(".Edit").hide();
+            row.find(".Confirm").show();
+            row.find(".Cancel").show();
+            row.find(".Delete").hide();
+            $(this).hide();
+        });
+
+        //Confirm event handler.
+        $("body").on("click", "#tblBridgeLengthRange .Confirm", function () {
+            var row = $(this).closest("tr");
+            var id = row.find('input[type=hidden]').val();
+            //alert(id);
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("DeleteBridgeLengthRange", "BridgeLengthRanges")',
+                data: '{id: "' + id + '"}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (response) {
+                    if ($("#tblBridgeLengthRange tr").length > 2) {
+                        row.remove();
+
+                    } else {
+                        row.find(".Edit").hide();
+                        row.find(".Delete").hide();
+                        row.find(".Confirm").hide();
+                        row.find(".Cancel").hide();
+                        row.find("span").html('&nbsp;');
+                    }
+
+                    $.ajax({
+                        type: "GET",
+                        url: '/StatusMessage/GetStatusMessage',
+                        data: { id: 2 }, //StatusMessageId.DeleteDataSuccess = 2
+                        dataType: "json",
+                        success: function (data) {
+                            $.each(data, function (i, item) {
+                                if ($('#statusmessage').hasClass("text-danger"))
+                                    $('#statusmessage').removeClass("text-danger");
+                                $('#statusmessage').addClass("text-success");
+
+                                $('#statusmessage').text(item.Message); // set the status message
+                            });
+                        },
+                    });
+                },
+                error: function (xhr) {
+                    //$('#status').text(xhr.status);
+                }
+            });
+        });
+    });
+</script>

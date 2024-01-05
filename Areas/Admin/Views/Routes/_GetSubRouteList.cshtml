@@ -1,0 +1,420 @@
+﻿@model IEnumerable<ERA_BMS.Models.SubRoute>
+
+@{
+    string textColor = "text-success";
+    if (ViewBag.StatusMessage.Contains("error"))
+    {
+        textColor = "text-danger";
+    }
+}
+
+<p id="statusmessagesubroute" class="@textColor" style="font-size: 15px">@ViewBag.StatusMessage</p>
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title panel-info">List of Sub Routes in Main route <b>@ViewBag.SubRouteName</b></h3>
+    </div>
+
+    <div class="panel-body">
+        <table class="table table-striped table-condensed table-responsive display compact hover" id="tblsubroutes">
+            <thead>
+                <tr>
+                    @*<th>
+                            @Html.DisplayNameFor(model => model.SubRouteId)
+                        </th>*@
+                    <th>
+                        @Html.DisplayNameFor(model => model.SubRouteNo)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.SubRouteName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.FromKm)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ToKm)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Length)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.AverageDailyTraffic)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Remark)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.MainRoute.MainRouteName)
+                    </th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        @*<td>
+                                @Html.DisplayFor(modelItem => item.SubRouteId)
+                            </td>*@
+                        <td>
+                            <span class="SubRouteNo" name="@item.SubRouteId">@item.SubRouteNo</span>
+                        </td>
+                        <td>
+                            <span class="SubRouteName" name="@item.SubRouteId">@item.SubRouteName</span>
+                        </td>
+                        <td>
+                            <span class="FromKm" name="@item.SubRouteId">@item.FromKm</span>
+                        </td>
+                        <td>
+                            <span class="ToKm" name="@item.SubRouteId">@item.ToKm</span>
+                        </td>
+                        <td>
+                            <span class="Length" name="@item.SubRouteId">@item.Length</span>
+                        </td>
+                        <td>
+                            <span class="ADT" name="@item.SubRouteId">@item.AverageDailyTraffic</span>
+                        </td>
+                        <td>
+                            <span class="Remark" name="@item.SubRouteId">@item.Remark</span>
+                        </td>
+                        <td>
+                            <span class="MainRouteId" name="@item.SubRouteId">@item.MainRoute.MainRouteNo - @item.MainRoute.MainRouteName</span>
+                        </td>
+                        <td>
+                            <!-- with Tooltips -->
+                            @Html.ActionLink(" ", "DeleteSubRoute", new { id = item.SubRouteId }, new { @class = "glyphicon glyphicon-trash", @data_toggle = "tooltip", title = "Delete" })
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="panel-footer">
+        <h3 class="panel-title">Total of <b>@Model.Count()</b> sub routes in main route <b>@ViewBag.SubRouteName</b> </h3>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        makeSubRouteNoEditable();
+        makeSubRouteNameEditable();
+        makeFromKmEditable();
+        makeToKmEditable();
+        makeLengthEditable();
+        makeADTEditable();
+        makeRemarkEditable();
+        makeMainRouteEditable();
+        
+        $('#tblsubroutes').DataTable({
+            paging: true,
+            pageLength: 15,
+            bLengthChange: true,
+            scrollY: 400,
+            
+            searching: true,
+            select: true,
+            dom: 'lBfrtip',
+            //order: [[1, "asc"]], // order by Sub Route No (the 2nd column)
+            buttons: [
+                { extend: 'copy', className: 'btn btn-sm btn-primary' },
+                { extend: 'excel', className: 'btn btn-sm btn-primary', text: 'Export Excel' },
+                { extend: 'pdf', className: 'btn btn-sm btn-primary', text: 'Export PDF' },
+                { extend: 'print', className: 'btn btn-sm btn-primary' }
+            ]
+        });
+
+        function makeSubRouteNoEditable() {
+            $(".SubRouteNo").each(function () {
+                $(this).editable("/Admin/Routes/UpdateSubRouteNo", {
+                    callback: function (value, settings) {
+                        var obj = JSON.parse(value);
+                        $(this).html(obj.value);
+
+                        var msg = obj.Message;
+
+                        $('#statusmessagesubroute').removeClass("text-success");
+                        $('#statusmessagesubroute').removeClass("text-danger");
+                        if (msg.toLowerCase().includes("error"))
+                            $('#statusmessagesubroute').addClass("text-danger");
+                        else
+                            $('#statusmessagesubroute').addClass("text-success");
+                        $('#statusmessagesubroute').text(obj.Message);
+                    },
+                    submitdata: function () {
+                        return {
+                            // Pass parameters to "UpdateSubRouteNo" action in "Routes" controller action
+                            id: $(this).attr("name"),
+                            origvalue: this.revert,
+                        };
+                    },
+                    before: function () {
+                        // clear the status message
+                        $('#statusmessagesubroute').text("");
+                    },
+                    onerror: function (settings, original, xhr) {
+                        //var response = $.secureEvalJSON(returned.responseText)
+                        //alert(response.errorMsg);
+                    },
+                    tooltip: 'Click or Tap to edit...',
+                    indicator: 'Saving...',
+                    label: "** Be careful!",
+                    cssclass: "redtextbox",
+                    size: 10
+                });
+            });
+        }
+
+        function makeSubRouteNameEditable() {
+            $(".SubRouteName").each(function () {
+                $(this).editable("/Admin/Routes/UpdateSubRouteName", {
+                    callback: function (value, settings) {
+                        var obj = JSON.parse(value);
+                        $(this).html(obj.value);
+
+                        var msg = obj.Message;
+
+                        $('#statusmessagesubroute').removeClass("text-success");
+                        $('#statusmessagesubroute').removeClass("text-danger");
+                        if (msg.toLowerCase().includes("error"))
+                            $('#statusmessagesubroute').addClass("text-danger");
+                        else
+                            $('#statusmessagesubroute').addClass("text-success");
+                        $('#statusmessagesubroute').text(obj.Message);
+                    },
+                    submitdata: function () {
+                        return {
+                            // Pass parameters to "UpdateSubRouteName" action in "Routes" controller action
+                            id: $(this).attr("name"),
+                            origvalue: this.revert,
+                        };
+                    },
+                    before: function () {
+                        // clear the status message
+                        $('#statusmessagesubroute').text("");
+                    },
+                    tooltip: 'Click or Tap to edit...',
+                    indicator: 'Saving...',
+                    size: 30
+                });
+            });
+        }
+
+        function makeFromKmEditable() {
+            $(".FromKm").each(function () {
+                $(this).editable("/Admin/Routes/UpdateSubRouteFromKm", {
+                    callback: function (value, settings) {
+                        var obj = JSON.parse(value);
+                        $(this).html(obj.value);
+
+                        var msg = obj.Message;
+
+                        $('#statusmessagesubroute').removeClass("text-success");
+                        $('#statusmessagesubroute').removeClass("text-danger");
+                        if (msg.toLowerCase().includes("error"))
+                            $('#statusmessagesubroute').addClass("text-danger");
+                        else
+                            $('#statusmessagesubroute').addClass("text-success");
+                        $('#statusmessagesubroute').text(obj.Message);
+                    },
+                    submitdata: function () {
+                        return {
+                            // Pass parameters to "UpdateSubRouteFromKm" action in "Routes" controller action
+                            id: $(this).attr("name"),
+                            origvalue: this.revert,
+                        };
+                    },
+                    before: function () {
+                        // clear the status message
+                        $('#statusmessagesubroute').text("");
+                    },
+                    placeholder: '-',
+                    tooltip: 'Click or Tap to edit...',
+                    indicator: 'Saving...',
+                    size: 4
+                });
+            });
+        }
+
+        function makeToKmEditable() {
+            $(".ToKm").each(function () {
+                $(this).editable("/Admin/Routes/UpdateSubRouteToKm", {
+                    callback: function (value, settings) {
+                        var obj = JSON.parse(value);
+                        $(this).html(obj.value);
+
+                        var msg = obj.Message;
+
+                        $('#statusmessagesubroute').removeClass("text-success");
+                        $('#statusmessagesubroute').removeClass("text-danger");
+                        if (msg.toLowerCase().includes("error"))
+                            $('#statusmessagesubroute').addClass("text-danger");
+                        else
+                            $('#statusmessagesubroute').addClass("text-success");
+                        $('#statusmessagesubroute').text(obj.Message);
+                    },
+                    submitdata: function () {
+                        return {
+                            // Pass parameters to "UpdateSubRouteToKm" action in "Routes" controller action
+                            id: $(this).attr("name"),
+                            origvalue: this.revert,
+                        };
+                    },
+                    before: function () {
+                        // clear the status message
+                        $('#statusmessagesubroute').text("");
+                    },
+                    placeholder: '-',
+                    tooltip: 'Click or Tap to edit...',
+                    indicator: 'Saving...',
+                    size: 4
+                });
+            });
+        }
+
+        function makeLengthEditable() {
+            $(".Length").each(function () {
+                $(this).editable("/Admin/Routes/UpdateSubRouteLength", {
+                    callback: function (value, settings) {
+                        var obj = JSON.parse(value);
+                        $(this).html(obj.value);
+
+                        var msg = obj.Message;
+
+                        $('#statusmessagesubroute').removeClass("text-success");
+                        $('#statusmessagesubroute').removeClass("text-danger");
+                        if (msg.toLowerCase().includes("error"))
+                            $('#statusmessagesubroute').addClass("text-danger");
+                        else
+                            $('#statusmessagesubroute').addClass("text-success");
+                        $('#statusmessagesubroute').text(obj.Message);
+                    },
+                    submitdata: function () {
+                        return {
+                            // Pass parameters to "UpdateSubRouteLength" action in "Routes" controller action
+                            id: $(this).attr("name"),
+                            origvalue: this.revert,
+                        };
+                    },
+                    before: function () {
+                        // clear the status message
+                        $('#statusmessagesubroute').text("");
+                    },
+                    placeholder: '-',
+                    tooltip: 'Click or Tap to edit...',
+                    indicator: 'Saving...',
+                    size: 4
+                });
+            });
+        }
+
+        function makeADTEditable() {
+            $(".ADT").each(function () {
+                $(this).editable("/Admin/Routes/UpdateSubRouteADT", {
+                    callback: function (value, settings) {
+                        var obj = JSON.parse(value);
+                        $(this).html(obj.value);
+
+                        var msg = obj.Message;
+
+                        $('#statusmessagesubroute').removeClass("text-success");
+                        $('#statusmessagesubroute').removeClass("text-danger");
+                        if (msg.toLowerCase().includes("error"))
+                            $('#statusmessagesubroute').addClass("text-danger");
+                        else
+                            $('#statusmessagesubroute').addClass("text-success");
+                        $('#statusmessagesubroute').text(obj.Message);
+                    },
+                    submitdata: function () {
+                        return {
+                            // Pass parameters to "UpdateSubRouteADT" action in "Routes" controller action
+                            id: $(this).attr("name"),
+                            origvalue: this.revert,
+                        };
+                    },
+                    before: function () {
+                        // clear the status message
+                        $('#statusmessagesubroute').text("");
+                    },
+                    placeholder: '-',
+                    tooltip: 'Click or Tap to edit...',
+                    indicator: 'Saving...',
+                    size: 4
+                });
+            });
+        }
+
+        function makeRemarkEditable() {
+            $(".Remark").each(function () {
+                $(this).editable("/Admin/Routes/UpdateSubRouteRemark", {
+                    callback: function (value, settings) {
+                        var obj = JSON.parse(value);
+                        $(this).html(obj.value);
+
+                        var msg = obj.Message;
+
+                        $('#statusmessagesubroute').removeClass("text-success");
+                        $('#statusmessagesubroute').removeClass("text-danger");
+                        if (msg.toLowerCase().includes("error"))
+                            $('#statusmessagesubroute').addClass("text-danger");
+                        else
+                            $('#statusmessagesubroute').addClass("text-success");
+                        $('#statusmessagesubroute').text(obj.Message);
+                    },
+                    submitdata: function () {
+                        return {
+                            // Pass parameters to "UpdateSubRouteRemark" action in "Routes" controller action
+                            id: $(this).attr("name"),
+                            origvalue: this.revert,
+                        };
+                    },
+                    before: function () {
+                        // clear the status message
+                        $('#statusmessagesubroute').text("");
+                    },
+                    placeholder: '-',
+                    tooltip: 'Click or Tap to edit...',
+                    indicator: 'Saving...',
+                    size: 30
+                });
+            });
+        }
+
+        function makeMainRouteEditable() {
+            $(".MainRouteId").each(function () {
+                $(this).editable("/Admin/Routes/UpdateSubRouteMainRouteId", {
+                    type: "select", // drop down
+                    loadurl: '/Admin/Routes/SelectMainRoute', // list all main routes
+                    callback: function (value, settings) {
+                        var obj = JSON.parse(value);
+                        $(this).html(obj.value);
+
+                        var msg = obj.Message;
+
+                        $('#statusmessagesubroute').removeClass("text-success");
+                        $('#statusmessagesubroute').removeClass("text-danger");
+                        if (msg.toLowerCase().includes("error"))
+                            $('#statusmessagesubroute').addClass("text-danger");
+                        else
+                            $('#statusmessagesubroute').addClass("text-success");
+                        $('#statusmessagesubroute').text(obj.Message);
+                    },
+                    submitdata: function () {
+                        return {
+                            // Pass parameters to "UpdateSubRouteMainRouteId" action in "Routes" controller action
+                            id: $(this).attr("name"),
+                            origvalue: this.revert,
+                        };
+                    },
+                    before: function () {
+                        // clear the status message
+                        $('#statusmessagesubroute').text("");
+                    },
+                    tooltip: 'Click or Tap to edit...',
+                    indicator: 'Saving...',
+                    size: 30
+                });
+            });
+        }
+    });
+</script>

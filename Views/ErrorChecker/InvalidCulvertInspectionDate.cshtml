@@ -1,0 +1,105 @@
+﻿@model IEnumerable<ERA_BMS.ViewModels.InvalidInspectionDateViewModel>
+
+<br />
+<br />
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title panel-info">List of Inspected Culverts with <b>Invalid Inspection Date</b></h3>
+    </div>
+
+    <div class="panel-body">
+        <table class="table table-striped table-condensed table-responsive table-bordered display compact hover" id="tblculvertinspectiondate">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Culverts.CulvertNo)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.InvalidInspDate.SegmentName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.InvalidInspDate.SectionName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.InvalidInspDate.DistrictName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.InvalidInspDate.InspectionDate)
+                    </th>
+                    <th>
+                        Intervention Type
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.InvalidInspDate.RepairCost)
+                    </th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Culverts.CulvertNo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.InvalidInspDate.SegmentName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.InvalidInspDate.SectionName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.InvalidInspDate.DistrictName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.InvalidInspDate.InspectionDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Culverts.ObservationAndRecommendation.MaintenanceUrgency.UrgencyId) -
+                            @Html.DisplayFor(modelItem => item.Culverts.ObservationAndRecommendation.MaintenanceUrgency.UrgencyName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.InvalidInspDate.RepairCost)
+                        </td>
+                        <td>
+                            <a href="@Url.Action("Index", "DamageInspCulvert", new { id = item.Culverts.CulvertId })" target="_blank" class="glyphicon glyphicon-new-window" data-toggle="tooltip" title="Go to Inspection" style="font-size: 14px"></a>
+                        </td>
+                        <td>
+                            <a href="@Url.Action("BillOfQuantity", "CulvertInspectionReports", new { id = item.Culverts.CulvertId })" target="_blank" class="glyphicon glyphicon-new-window" data-toggle="tooltip" title="Go to BOQ" style="font-size: 14px"></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="panel-footer">
+        <h3 class="panel-title">Total No. of Culverts: <b>@Model.Count()</b></h3>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+
+
+        $('#tblculvertinspectiondate').dataTable({
+            paging: true,
+            pageLength: 15,
+            bLengthChange: true,
+            scrollY: 400,
+            
+            searching: true,
+            select: true,
+            dom: 'lBfrtip',
+            //buttons: ['copy', 'excel', 'pdf', 'print']
+            buttons: [
+                { extend: 'copy', className: 'btn btn-sm btn-primary' },
+                { extend: 'excel', className: 'btn btn-sm btn-primary', text: 'Export Excel' },
+                { extend: 'pdf', className: 'btn btn-sm btn-primary', text: 'Export PDF' },
+                { extend: 'print', className: 'btn btn-sm btn-primary' }
+            ]
+        });
+    });
+</script>
+
+

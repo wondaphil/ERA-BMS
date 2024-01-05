@@ -1,0 +1,546 @@
+﻿
+@{
+    ViewBag.Title = "Culvert Map by Sub Route";
+}
+<style>
+    .floating-panel {
+        position: relative;
+        z-index: 5;
+        padding: 5px;
+        text-align: center;
+        line-height: 30px;
+        padding-left: 10px;
+    }
+</style>
+
+<h2>Culvert Map by Sub Route</h2>
+
+<div class="panel panel-primary title">
+    <div class="panel-heading">
+        <h3 class="panel-title panel-info" id="title">Sub Route: <b>@ViewBag.SubRouteName</b></h3>
+    </div>
+    <div class="panel-body">
+        <div id="divStatus" style="font-size:small; font-weight: bold; padding: 10px; display: none;">
+            @if (User.Identity.IsAuthenticated)
+            {
+                <div style="float: right">
+                    <input type="checkbox" id="chkShowBridges" style="float: inline-end; width: 15px; height: 15px;" onclick="ShowOrHideBridges()" checked>
+                    <label for="chkShowBridges" style="background-color: whitesmoke;"> Show Bridges</label>
+                </div>
+            }
+            <br /><br />
+            <label id="lblSelectedCulvert" style="background-color: whitesmoke; float: right"></label>
+            <br />
+            <label id="lblNewCoordinates" style="background-color: whitesmoke; float: right "></label>
+            <br />
+            <!-- Only logged in users are allowed to update coordinates-->
+            @if (User.Identity.IsAuthenticated)
+            {
+                <button type="button" id="btnUpdateCoordinate" onclick="UpdateCoordinate()"
+                        style="background-color: white; border-color: whitesmoke; padding: 10px; float: right; display: none">
+                    Update Coordinate
+                </button>
+                <br />
+                <button type="button" id="btnMoveAllToNextZone" onclick="MoveAllToNextZone()"
+                        style="background-color: white; border-color: whitesmoke; padding: 10px; float: right;">
+                    Move All To Next Zone
+                </button>
+                <br />
+            }
+
+        </div>
+
+        <div id="Map" style="height: 600px; border: 1px solid #999;">
+            <!-- Map displays here -->
+        </div>
+    </div>
+</div>
+
+<script>
+    // Get all the culverts in the selected road segment
+    var culvertLocList = @(Html.Raw(new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(ViewBag.CulvertLocationList)));
+
+    // Get all the bridges in the selected road segment
+    var bridgeLocList = @(Html.Raw(new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(ViewBag.BridgeLocationList)));
+
+    var map, selectedCulvertMarker, newmarker;
+    var infowindow;
+    var selectedCulvert;
+    var newXCoord, newYCoord, newUtmZone;
+    var brgMarkerList = new Array();
+
+    $(document).ready(function () {
+        // Go through all culverts till the first culvert which has complete coordinate info is found
+        var j, centerCulvert;
+        for (j = 0; j < culvertLocList.length; j++) {
+            if (culvertLocList[j].XCoord == null || culvertLocList[j].YCoord == null || culvertLocList[j].UtmZone == null)
+                continue;
+
+            // First culvert with complete coordinate is found. So take it as a center culvert
+            centerCulvert = culvertLocList[j];
+            break;
+        }
+
+        // If all culverts have no inventory or no coordinate info, then prompt error message and do not go to the map page
+        if (centerCulvert == null) {
+            document.getElementById('Map').innerHTML = "<h3 style='padding-left: 20px'>Map cannot be displayed</h3>" +
+                                                        "<h4 style='padding-left: 20px; color:red'>There are no culverts in the selected road segment or all culverts in the selected road segment have no or incomplete coordinate information.</h4>";
+            return;
+        }
+
+
+        // Center the map to the first culvert which has complete coordinate info
+        map = new google.maps.Map(document.getElementById('Map'), {
+            zoom: 10,
+            center: {
+                lat: centerCulvert.LatitudeDecimal,
+                lng: centerCulvert.LongitudeDecimal
+            },
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            draggableCursor: 'crosshair'
+        });
+
+        infowindow = new google.maps.InfoWindow();
+        var marker, i, noofPins = 0;
+
+
+        // Loop through all culverts in the list and place markers
+        for (i = 0; i < culvertLocList.length; i++) {
+            // if currrent culvert has no or incomplete coordinate info, do not put pin and continue the loop to the next iteration
+            if (culvertLocList[i].XCoord == null || culvertLocList[i].YCoord == null || culvertLocList[i].UtmZone == null)
+                continue;
+
+            marker = new google.maps.Marker({
+                position: new google.maps.LatLng(culvertLocList[i].LatitudeDecimal, culvertLocList[i].LongitudeDecimal),
+                map: map,
+                icon: { url: '/images/culvert_map_marker_orange.png', scaledSize: new google.maps.Size(35, 40) },
+            });
+
+            // increment no. of pins
+            noofPins++;
+
+            // Can also use 'doubleclick', 'rightclick' or 'mouseover' instead of 'click'
+            // If 'mouseover' is used, we need a corresponding 'mouseout' and use infowindow.close()
+            google.maps.event.addListener(marker, 'click', (function (marker, i) {
+                return function () {
+                    // Clicking on the image will open the image in another tab
+                    // If image is missing, "Image Not Found" icon will be shown and the link to open the image will be disabled
+                    contentString = "<h4 style='font-size: 20px'>Culvert Location Information</h4>" +
+                        "<div style='float:left; padding: 5px 15px 5px 5px;'><a href='" + culvertLocList[i].ImageFilePath + "' target='_blank'>" +
+                        "<img src='" + culvertLocList[i].ImageFilePath + "' onerror='this.parentNode.onclick=function() {return(false);}; this.onerror = null; this.src = \"/images/error_2.png\"; this.style.width = \"60px\"; this.title = \"Image Not Found\";' alt='Photo' width='160'></a>" +
+                        "@if (User.Identity.IsAuthenticated) { <br /><br /><div><button onclick='ChangeZone()'>Move to Next Zone</button></div>}" +
+                        "</div><div style='float:right'>" +
+                        "<div>Old Culvert Id: <b>" + culvertLocList[i].OldCulvertId + "</b></div>" +
+                        "<div>Revised Culvert Id: <b>" + culvertLocList[i].RevisedCulvertId + "</b></div>" +
+                        "<div>District: <b>" + culvertLocList[i].District + "</b></div>" +
+                        "<div>Segment: <b>" + culvertLocList[i].Segment + "</b></div>" +
+                        "<div>Length (m): <b>" + culvertLocList[i].CulvertLength + "</b></div>" +
+                        "<div>Culvert Type: <b>" + culvertLocList[i].CulvertType + "</b></div>" +
+                        "<div>X-Coordinate: <b>" + parseFloat(culvertLocList[i].XCoord).toFixed(3) + "</b></div>" +
+                        "<div>Y-Coordinate: <b>" + parseFloat(culvertLocList[i].YCoord).toFixed(3) + "</b></div>" +
+                        "<div>UTM Zone: <b>" + culvertLocList[i].UtmZone + "</b></div>" +
+                        "<div>Latitude: <b>" + parseFloat(culvertLocList[i].LatitudeDecimal).toFixed(6) + "</b></div>" +
+                        "<div>Longitude: <b>" + parseFloat(culvertLocList[i].LongitudeDecimal).toFixed(6) + "</b></div>" +
+                        //"<div>Latitude (DMS): <b>" + culvertLocList[i].LatitudeDMS + "</b></div>" +
+                        //"<div>Longitude (DMS): <b>" + culvertLocList[i].LongitudeDMS + "</b></div>" +
+                        @*"@if (User.Identity.IsAuthenticated) { <br /><div><a href='../../CulvertInventory/Index/" + culvertLocList[i].CulvertId + "' target='_blank'>Go to Inventory</a></div>}" +*@
+                        "</div>";
+
+                    infowindow.setContent(contentString);
+                    infowindow.open(map, marker);
+
+                    selectedCulvert = culvertLocList[i];
+                    document.getElementById('lblSelectedCulvert').innerHTML = selectedCulvert.OldCulvertId;
+                    selectedCulvertMarker = marker;
+
+                    // Show the 'Update Coordinate' button if new coordinate is already selected
+                    if (document.getElementById('lblNewCoordinates').innerHTML != "")
+                        document.getElementById('btnUpdateCoordinate').style.display = "";
+
+                    ResetMarkerColors();
+
+                    // Set selected marker color to Green
+                    marker.setIcon({ url: '/images/culvert_map_marker_green.png', scaledSize: new google.maps.Size(35, 40) });
+                }
+            })(marker, i));
+
+            //markers.push(marker);
+            culvertLocList[i].marker = marker;
+        }
+
+        newmarker = null;
+        var newinfowindow = new google.maps.InfoWindow({
+            size: new google.maps.Size(150, 50)
+        });
+
+        // Gets a new marker to be placed where the user has clicked
+        function GetNewMarker(latlng, contentString) {
+            var marker = new google.maps.Marker({
+                position: latlng,
+                map: map,
+                icon: { url: '/images/map_marker_new.png', scaledSize: new google.maps.Size(60, 45) },
+                zIndex: Math.round(latlng.lat() * -100000) << 5
+            });
+
+            //map.setCenter(location);
+
+            google.maps.event.addListener(marker, 'click', function () {
+                infowindow.setContent(contentString);
+                infowindow.open(map, marker);
+            });
+
+            google.maps.event.trigger(marker, 'click');
+            return marker;
+        }
+
+        google.maps.event.addListener(map, 'click', function () {
+            newinfowindow.close();
+        });
+
+        google.maps.event.addListener(map, 'click', function (event) {
+            var latLngObj = event.latLng.toJSON();
+            var newContentString;
+
+            // Convert UTM (x/y coordinate) to latitude/longitude
+            $.ajax({
+                url: '@Url.Action("ConvertToUTM", "BridgeLocation")',
+                data: { latitude: latLngObj.lat, longitude: latLngObj.lng },
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    $.each(data, function (i, item) {
+                        newXCoord = item.XCoordinate;
+                        newYCoord = item.YCoordinate;
+                        newUtmZone = item.UtmZone;
+
+                        newContentString = "Lat: <b>" + parseFloat(latLngObj.lat).toFixed(8) + "</b><br>" +
+                                            "Long: <b>" + parseFloat(latLngObj.lng).toFixed(8) + "</b><br>" +
+                                            "UTM Zone: <b>" + newUtmZone + "</b><br>" +
+                                            "X: <b>" + parseFloat(newXCoord).toFixed(6) + "</b><br>" +
+                                            "Y: <b>" + parseFloat(newYCoord).toFixed(6) + "</b>";
+
+                        document.querySelector("#lblNewCoordinates").innerHTML =
+                                            "[ x: " + parseFloat(newXCoord).toFixed(3) +
+                                            ", y: " + parseFloat(newYCoord).toFixed(3) +
+                                            ", zone: " + newUtmZone + " ]";
+
+                        // Show the 'Update Coordinate' button if some culvert is already selected
+                        if (document.getElementById('lblSelectedCulvert').innerHTML != "")
+                            document.getElementById('btnUpdateCoordinate').style.display = "";
+                    });
+                    if (newmarker) {
+                        newmarker.setMap(null);
+                        newmarker = null;
+                    }
+                    newmarker = GetNewMarker(event.latLng, newContentString);
+                },
+            });
+
+
+        });
+
+
+        // append no. of total culverts in the road segment vs no. of pins (i.e. culverts which have coordinate info)
+        document.getElementById("title").insertAdjacentHTML("beforeend", " | No of Culverts: <b>" + noofPins + "</b> of <b>" + i + "</b>");
+
+        // Put update controls inside the map
+        map.controls[google.maps.ControlPosition.TOP_RIGHT].push(document.getElementById('divStatus'));
+        document.getElementById('divStatus').style.display = "";
+
+        // Place markers to all bridges on the same road segment so that shifting culverts does not cover their place
+        // And do this only for admins and data encoders
+        if (@User.Identity.IsAuthenticated.ToString().ToLower() == true)
+            PlaceBridgeMarkers();
+    });
+
+    // Toggle bridge markers
+    function ShowOrHideBridges() {
+        if (document.getElementById('chkShowBridges').checked)
+            PlaceBridgeMarkers();
+        else
+            RemoveBridgeMarkers();
+    }
+
+    // Remove all bridge markers
+    function RemoveBridgeMarkers() {
+        for (i = 0; i < brgMarkerList.length; i++) {
+            brgMarkerList[i].setMap(null);
+        }
+    }
+
+    function PlaceBridgeMarkers() {
+        var brgMarker, brgContentString, k;
+
+        // Loop through all bridgess in the list and place markers
+        for (k = 0; k < bridgeLocList.length; k++) {
+            // if currrent bridge has no or incomplete coordinate info, do not put pin and continue the loop to the next iteration
+            if (bridgeLocList[k].XCoord == null || bridgeLocList[k].YCoord == null || bridgeLocList[k].UtmZone == null)
+                continue;
+
+            brgMarker = new google.maps.Marker({
+                position: new google.maps.LatLng(bridgeLocList[k].LatitudeDecimal, bridgeLocList[k].LongitudeDecimal),
+                map: map,
+                icon: { url: '/images/culvert_map_marker_B.png', scaledSize: new google.maps.Size(34, 39) },
+            });
+            google.maps.event.addListener(brgMarker, 'click', (function (brgMarker, k) {
+                return function () {
+                    brgContentString = "<div style='font-size: 15px; font-weight: bold'>Bridge Info</div>" +
+                        "<div>Old Bridge Id: <b>" + bridgeLocList[k].OldBridgeId + "</b></div>" +
+                        "<div>Revised Bridge Id: <b>" + bridgeLocList[k].RevisedBridgeId + "</b></div>" +
+                        "<div>Bridge Name: <b>" + bridgeLocList[k].BridgeName + "</b></div>" +
+                        "<div>Length (m): <b>" + bridgeLocList[k].BridgeLength + "</b></div>" +
+                        "</div>";
+
+                    infowindow.setContent(brgContentString);
+                    infowindow.open(map, brgMarker);
+                }
+            })(brgMarker, k));
+
+            // Add each marker to the 'brgMarkerList' array
+            brgMarkerList.push(brgMarker);
+        }
+    }
+
+    // Change all marker colors to Orange
+    function ResetMarkerColors() {
+        // Go through each culvert marker and change its color to orange
+        for (let i = 0; i < culvertLocList.length; i++) {
+            culvertLocList[i].marker.setIcon({ url: '/images/culvert_map_marker_orange.png', scaledSize: new google.maps.Size(35, 40) });
+        }
+    }
+
+    function UpdateCoordinate() {
+        // If some culvert is selected and a new coordinate place has been chosen by clicking on it
+        if (document.querySelector("#lblSelectedCulvert").innerHTML != "" && document.querySelector("#lblNewCoordinates").innerHTML != "") {
+            // Save updated X-Y coordinate values into database through Ajax call
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("UpdateCoordinate", "CulvertLocation")',
+                data: '{ CulvertId: "' + selectedCulvert.CulvertId + '", XCoordinate: ' + newXCoord + ', YCoordinate: ' + newYCoord + ', UtmZone: ' + newUtmZone + ' }',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'html',
+                success: function (data) {
+                    // Convert X-Y coordinates (UTM) to lat/lang coordinates
+                    $.ajax({
+                        url: '@Url.Action("ConvertToLatLang", "BridgeLocation")',
+                        data: { xcoord: newXCoord, ycoord: newYCoord, longzone: newUtmZone, DMS: 0 },
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (data) {
+                            $.each(data, function (i, item) {
+                                // Capture the lat/lang coordinate values of the updated coordinate values
+                                var updatedlatDb = item.Latitude;
+                                var updatedlongDb = item.Longitude;
+
+                                // move marker to the updated coordinate postion
+                                var newLatLng = new google.maps.LatLng(updatedlatDb, updatedlongDb);
+                                selectedCulvertMarker.setPosition(newLatLng);
+
+                                // remove the new marker
+                                newmarker.setMap(null);
+                                newmarker = null;
+                                infowindow.close(); // close old infowindow if it is open
+
+                                google.maps.event.addListener(selectedCulvertMarker, 'click', (function (selectedCulvertMarker, i) {
+                                    return function () {
+                                        // reconstruct a new content string and info window
+                                        var contentString = "<h4 style='font-size: 20px'>Culvert Location Information</h4>" +
+                                                        "<div style='float:left; padding: 5px 15px 5px 5px;'><a href='" + selectedCulvert.ImageFilePath + "' target='_blank'>" +
+                                                        "<img src='" + selectedCulvert.ImageFilePath + "' onerror='this.parentNode.onclick=function() {return(false);}; this.onerror = null; this.src = \"/images/error_2.png\"; this.style.width = \"60px\"; this.title = \"Image Not Found\";' alt='Photo' width='160'></a>" +
+                                                        "@if (User.Identity.IsAuthenticated) { <br /><br /><div><button onclick='ChangeZone()'>Move to Next Zone</button></div>}" +
+                                                        "</div><div style='float:right'>" +
+                                                        "<div>Old Culvert Id: <b>" + selectedCulvert.OldCulvertId + "</b></div>" +
+                                                        "<div>Revised Culvert Id: <b>" + selectedCulvert.RevisedCulvertId + "</b></div>" +
+                                                        "<div>District: <b>" + selectedCulvert.District + "</b></div>" +
+                                                        "<div>Segment: <b>" + selectedCulvert.Segment + "</b></div>" +
+                                                        "<div>Length (m): <b>" + selectedCulvert.CulvertLength + "</b></div>" +
+                                                        "<div>Culvert Type: <b>" + selectedCulvert.CulvertType + "</b></div>" +
+                                                        "<div>X-Coordinate: <b>" + parseFloat(newXCoord).toFixed(3) + "</b></div>" +
+                                                        "<div>Y-Coordinate: <b>" + parseFloat(newYCoord).toFixed(3) + "</b></div>" +
+                                                        "<div>UTM Zone: <b>" + newUtmZone + "</b></div>" +
+                                                        "<div>Latitude: <b>" + parseFloat(updatedlatDb).toFixed(6) + "</b></div>" +
+                                                        "<div>Longitude: <b>" + parseFloat(updatedlongDb).toFixed(6) + "</b></div>" +
+                                                        //"<div>Latitude (DMS): <b>" + item.LatitudeDMS + "</b></div>" +
+                                                        //"<div>Longitude (DMS): <b>" + item.LongitudeDMS + "</b></div>" +
+                                                        @*"@if (User.Identity.IsAuthenticated) { <br /><div><a href='../../CulvertInventory/Index/" + selectedCulvert.CulvertId + "' target='_blank'>Go to Inventory</a></div>}" +*@
+                                                        "</div>";
+                                        infowindow.setContent(contentString);
+                                        infowindow.open(map, selectedCulvertMarker);
+                                    }
+                                })(selectedCulvertMarker, i));
+
+                                // clear the new coordinate label and selected culvert label
+                                document.querySelector("#lblNewCoordinates").innerHTML = "";
+                                document.querySelector("#lblSelectedCulvert").innerHTML = "";
+
+                                // Hide the 'Update Coordinate' button
+                                document.getElementById('btnUpdateCoordinate').style.display = "none";
+                                ResetMarkerColors();
+                            });
+                        }
+                    });
+                },
+                error: function (xhr) {
+                    //alert("Coordinate NOT updated");
+                }
+            });
+        }
+    }
+
+    function ChangeZone() {
+        var nextUtmZone = (selectedCulvert.UtmZone < 38) ? selectedCulvert.UtmZone + 1 : selectedCulvert.UtmZone - 2;
+        //alert(nextUtmZone);
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("ChangeZone", "CulvertLocation")',
+            data: '{ CulvertId: "' + selectedCulvert.CulvertId + '", NextUtmZone: ' + nextUtmZone + ' }',
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'html',
+            success: function (data) {
+                $.ajax({
+                    url: '@Url.Action("ConvertToLatLang", "BridgeLocation")',
+                    data: { xcoord: selectedCulvert.XCoord, ycoord: selectedCulvert.YCoord, longzone: nextUtmZone, DMS: 0 },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        $.each(data, function (i, item) {
+                            // Capture the lat/lang coordinate values of the updated coordinate values
+                            var updatedlatDb = item.Latitude;
+                            var updatedlongDb = item.Longitude;
+
+                            // Update UTM zone of selected culvert
+                            selectedCulvert.UtmZone = nextUtmZone;
+
+                            // move marker to the updated coordinate postion
+                            var newLatLng = new google.maps.LatLng(updatedlatDb, updatedlongDb);
+                            selectedCulvertMarker.setPosition(newLatLng);
+
+                            infowindow.close(); // close old infowindow if it is open
+
+                            google.maps.event.addListener(selectedCulvertMarker, 'click', (function (selectedCulvertMarker, i) {
+                                return function () {
+                                    // reconstruct a new content string and info window
+                                    var contentString = "<h4 style='font-size: 20px'>Culvert Location Information</h4>" +
+                                                    "<div style='float:left; padding: 5px 15px 5px 5px;'><a href='" + selectedCulvert.ImageFilePath + "' target='_blank'>" +
+                                                    "<img src='" + selectedCulvert.ImageFilePath + "' onerror='this.parentNode.onclick=function() {return(false);}; this.onerror = null; this.src = \"/images/error_2.png\"; this.style.width = \"60px\"; this.title = \"Image Not Found\";' alt='Photo' width='160'></a>" +
+                                                    "@if (User.Identity.IsAuthenticated) { <br /><br /><div><button onclick='ChangeZone()'>Move to Next Zone</button></div>}" +
+                                                    "</div><div style='float:right'>" +
+                                                    "<div>Old Culvert Id: <b>" + selectedCulvert.OldCulvertId + "</b></div>" +
+                                                    "<div>Revised Culvert Id: <b>" + selectedCulvert.RevisedCulvertId + "</b></div>" +
+                                                    "<div>District: <b>" + selectedCulvert.District + "</b></div>" +
+                                                    "<div>Segment: <b>" + selectedCulvert.Segment + "</b></div>" +
+                                                    "<div>Length (m): <b>" + selectedCulvert.CulvertLength + "</b></div>" +
+                                                    "<div>Culvert Type: <b>" + selectedCulvert.CulvertType + "</b></div>" +
+                                                    "<div>X-Coordinate: <b>" + selectedCulvert.XCoord + "</b></div>" +
+                                                    "<div>Y-Coordinate: <b>" + selectedCulvert.YCoord + "</b></div>" +
+                                                    "<div>UTM Zone: <b>" + selectedCulvert.UtmZone + "</b></div>" +
+                                                    "<div>Latitude: <b>" + parseFloat(updatedlatDb).toFixed(6) + "</b></div>" +
+                                                    "<div>Longitude: <b>" + parseFloat(updatedlongDb).toFixed(6) + "</b></div>" +
+                                                    //"<div>Latitude (DMS): <b>" + item.LatitudeDMS + "</b></div>" +
+                                                    //"<div>Longitude (DMS): <b>" + item.LongitudeDMS + "</b></div>" +
+                                                    @*"@if (User.Identity.IsAuthenticated) { <br /><div><a href='../../CulvertInventory/Index/" + selectedCulvert.CulvertId + "' target='_blank'>Go to Inventory</a></div>}" +*@
+                                                    "</div>";
+                                    infowindow.setContent(contentString);
+                                    infowindow.open(map, selectedCulvertMarker);
+                                }
+                            })(selectedCulvertMarker, i));
+
+                            // clear the new coordinate label and selected culvert label
+                            document.querySelector("#lblNewCoordinates").innerHTML = "";
+                            document.querySelector("#lblSelectedCulvert").innerHTML = "";
+
+                            // Hide the 'Update Coordinate' button
+                            document.getElementById('btnUpdateCoordinate').style.display = "none";
+                        });
+                    }
+                });
+            },
+            error: function (xhr) {
+                //alert("Coordinate NOT updated");
+            }
+        });
+    }
+
+    // Move all culverts in the road segment to the next zone
+    function MoveAllToNextZone() {
+        for (let i = 0; i < culvertLocList.length; i++) {
+            ChangeZoneOneByOne(culvertLocList[i], culvertLocList[i].marker);
+        }
+    }
+
+    // Move a culvert to next zone 36 -> 37 -> 38 -> 36 -> 37 -> 38 -> and so on
+    function ChangeZoneOneByOne(thisculvert, thismarker) {
+        var nextUtmZone = (thisculvert.UtmZone < 38) ? thisculvert.UtmZone + 1 : thisculvert.UtmZone - 2;
+        //alert(nextUtmZone);
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("ChangeZone", "CulvertLocation")',
+            data: '{ CulvertId: "' + thisculvert.CulvertId + '", NextUtmZone: ' + nextUtmZone + ' }',
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'html',
+            success: function (data) {
+                $.ajax({
+                    url: '@Url.Action("ConvertToLatLang", "BridgeLocation")',
+                    data: { xcoord: thisculvert.XCoord, ycoord: thisculvert.YCoord, longzone: nextUtmZone, DMS: 0 },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        $.each(data, function (i, item) {
+                            // Capture the lat/lang coordinate values of the updated coordinate values
+                            var updatedlatDb = item.Latitude;
+                            var updatedlongDb = item.Longitude;
+
+                            // Update UTM zone of selected culvert
+                            thisculvert.UtmZone = nextUtmZone;
+
+                            // move marker to the updated coordinate postion
+                            var newLatLng = new google.maps.LatLng(updatedlatDb, updatedlongDb);
+                            thismarker.setPosition(newLatLng);
+                            infowindow.close(); // close old infowindow if it is open
+
+                            google.maps.event.addListener(thismarker, 'click', (function (thismarker, i) {
+                                return function () {
+                                    // reconstruct a new content string and info window
+                                    var contentString = "<h4 style='font-size: 20px'>Culvert Location Information</h4>" +
+                                                    "<div style='float:left; padding: 5px 15px 5px 5px;'><a href='" + thisculvert.ImageFilePath + "' target='_blank'>" +
+                                                    "<img src='" + thisculvert.ImageFilePath + "' onerror='this.parentNode.onclick=function() {return(false);}; this.onerror = null; this.src = \"/images/error_2.png\"; this.style.width = \"60px\"; this.title = \"Image Not Found\";' alt='Photo' width='160'></a>" +
+                                                    "@if (User.Identity.IsAuthenticated) { <br /><br /><div><button onclick='ChangeZone()'>Move to Next Zone</button></div>}" +
+                                                    "</div><div style='float:right'>" +
+                                                    "<div>Old Culvert Id: <b>" + thisculvert.OldCulvertId + "</b></div>" +
+                                                    "<div>Revised Culvert Id: <b>" + thisculvert.RevisedCulvertId + "</b></div>" +
+                                                    "<div>District: <b>" + thisculvert.District + "</b></div>" +
+                                                    "<div>Segment: <b>" + thisculvert.Segment + "</b></div>" +
+                                                    "<div>Length (m): <b>" + thisculvert.CulvertLength + "</b></div>" +
+                                                    "<div>Culvert Type: <b>" + thisculvert.CulvertType + "</b></div>" +
+                                                    "<div>X-Coordinate: <b>" + thisculvert.XCoord + "</b></div>" +
+                                                    "<div>Y-Coordinate: <b>" + thisculvert.YCoord + "</b></div>" +
+                                                    "<div>UTM Zone: <b>" + thisculvert.UtmZone + "</b></div>" +
+                                                    "<div>Latitude: <b>" + parseFloat(updatedlatDb).toFixed(6) + "</b></div>" +
+                                                    "<div>Longitude: <b>" + parseFloat(updatedlongDb).toFixed(6) + "</b></div>" +
+                                                    //"<div>Latitude (DMS): <b>" + item.LatitudeDMS + "</b></div>" +
+                                                    //"<div>Longitude (DMS): <b>" + item.LongitudeDMS + "</b></div>" +
+                                                    @*"@if (User.Identity.IsAuthenticated) { <br /><div><a href='../../CulvertInventory/Index/" + thisculvert.CulvertId + "' target='_blank'>Go to Inventory</a></div>}" +*@
+                                                    "</div>";
+                                    infowindow.setContent(contentString);
+                                    infowindow.open(map, thismarker);
+                                }
+                            })(thismarker, i));
+
+                            // clear the new coordinate label and selected culvert label
+                            document.querySelector("#lblNewCoordinates").innerHTML = "";
+                            document.querySelector("#lblSelectedCulvert").innerHTML = "";
+
+                            // Hide the 'Update Coordinate' button
+                            document.getElementById('btnUpdateCoordinate').style.display = "none";
+                        });
+                    }
+                });
+            },
+            error: function (xhr) {
+                //alert("Coordinate NOT updated");
+            }
+        });
+    }
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAE0qRfcQ0xxZq5mWSMOtxT3G_cWkHpBAA&callback=InitializeMap" async defer></script>

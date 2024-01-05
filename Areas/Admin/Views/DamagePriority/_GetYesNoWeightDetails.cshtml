@@ -1,0 +1,114 @@
+﻿@model IEnumerable<ERA_BMS.Models.DamagePriority>
+
+<table class="table table-striped table-condensed table-bordered centeredtable" id="tblYesNo">
+    <tr>
+        <th></th>
+        <th>
+            @Html.DisplayNameFor(model => model.CriteriaSerNo)
+        </th>
+        <th>
+            @*@Html.DisplayNameFor(model => model.DmgValTo)*@
+            Yes/No
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DmgWtVal)
+        </th>
+        <th>Edit</th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        string val = (item.DmgValTo == 1) ? "Yes" : "No";
+        <tr>
+            <td class="Id">
+                <input type="hidden" id="Id" value="@item.Id" size="3" /> <!-- Unique Identity (key) -->
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CriteriaSerNo)
+            </td>
+            <td>
+                @val
+                @*@Html.DisplayFor(modelItem => item.DmgValTo)*@
+            </td>
+            <td class="DmgWtVal">
+                <span>@Html.DisplayFor(modelItem => item.DmgWtVal)</span>
+                <input type="text" value="@item.DmgWtVal" style="display:none" size="3" />
+            </td>
+            <td>
+                <a class="Edit glyphicon glyphicon-edit" href="javascript:;" data-toggle="tooltip" title="Edit"></a>
+                <a class="Update glyphicon glyphicon-ok" href="javascript:;" style="display:none" data-toggle="tooltip" title="Update"></a>
+                &nbsp;&nbsp;&nbsp;<a class="Cancel glyphicon glyphicon-remove" href="javascript:;" style="display:none" data-toggle="tooltip" title="Cancel"></a>
+            </td>
+        </tr>
+    }
+
+</table>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        //Edit event handler.
+        $("body").on("click", "#tblYesNo .Edit", function () {
+            var row = $(this).closest("tr");
+            $("td", row).each(function () {
+                if ($(this).find("input").length > 0) {
+                    $(this).find("input").show();
+                    $(this).find("span").hide();
+                }
+             });
+            row.find(".Update").show();
+            row.find(".Cancel").show();
+            $(this).hide();
+        });
+
+        //Update event handler.
+        $("body").on("click", "#tblYesNo .Update", function () {
+            var row = $(this).closest("tr");
+            $("td", row).each(function () {
+                if ($(this).find("input").length > 0) {
+                    var span = $(this).find("span");
+                    var input = $(this).find("input");
+                    span.html(input.val());
+                    span.show();
+                    input.hide();
+                }
+            });
+            row.find(".Edit").show();
+            row.find(".Cancel").hide();
+            $(this).hide();
+
+            var DmgPriority = {};
+            DmgPriority.Id = row.find('input[type=hidden]').val();
+            DmgPriority.DmgWtVal = row.find(".DmgWtVal").find("span").html();
+
+            //alert(JSON.stringify(DmgPriority));
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("UpdatePriority", "DamagePriority")',
+                data: '{dmgPriority:' + JSON.stringify(DmgPriority) + '}',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'text', //'html',
+                error: function (xhr) {
+                    //$('#status').text(xhr.status);
+                }
+            });
+        });
+
+        //Cancel event handler.
+        $("body").on("click", "#tblYesNo .Cancel", function () {
+            var row = $(this).closest("tr");
+            $("td", row).each(function () {
+                if ($(this).find("input").length > 0) {
+                    var span = $(this).find("span");
+                    var input = $(this).find("input");
+                    input.val(span.html());
+                    span.show();
+                    input.hide();
+                }
+            });
+            row.find(".Edit").show();
+            row.find(".Update").hide();
+            $(this).hide();
+        });
+    });
+</script>

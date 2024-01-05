@@ -1,0 +1,100 @@
+﻿@model IEnumerable<ERA_BMS.Models.DamageRateAndCost>
+
+@{
+    ViewBag.Title = "Damage Rate and Cost";
+}
+
+@using (Html.BeginForm())
+{
+    <div class="panel panel-default">
+        
+        <div class="panel-body">
+
+            @Html.AntiForgeryToken()
+
+            <div class="row">
+                <div class="col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group">
+                            <label class="control-label col-md-4">Structure Item</label>
+                            <div class="col-md-5">
+                                @Html.DropDownList("ddlStructureItem", (List<SelectListItem>)ViewBag.StructureItems, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group">
+                            <label class="control-label col-md-4">Damage Type</label>
+                            <div class="col-md-5">
+                                <select class="form-control" id="ddlDamageType">
+                                    <!-- Damage Types list populates here -->
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="damageWeightsPartial">
+            <!-- Damage Weight list displays here -->
+        </div>
+    </div>
+}
+
+<div id="temp">
+
+</div>
+<div id="status">
+
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#ddlStructureItem').change(function () {
+            //alert("Hello");
+            var selStructureItemId = $('#ddlStructureItem option:selected').val();
+            $('#ddlDamageType option').remove(); //empty the damage type dropdown list
+            if (selStructureItemId == "0") //if no structure item is selected
+                $('#damageWeightsPartial').empty(); // clear the damage weights place holder
+            else {
+                $('#damageWeightsPartial').empty(); //empty the segment table
+
+                $.ajax({
+                    url: '@Url.Action("_GetDamageType", "DamageWeightAndCostRate")',
+                    data: { structureItemid: selStructureItemId },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        var markup = '<option value="0" id="noselect"> --Select DamageType --</option>';
+                        $.each(data, function (i, damageType) {
+                            markup += '<option value="' + damageType.Value + '">' + damageType.Value + ' - ' + damageType.Text + '</option>'
+                            $('#ddlDamageType').html(markup);
+                        });
+                    }
+                });
+            }
+        });
+
+        $('#ddlDamageType').change(function () {
+            var selDamageTypeId = $('#ddlDamageType option:selected').val();
+            var selStructureItemId = $('#ddlStructureItem option:selected').val();
+            if (selDamageTypeId == "0") //if no damage type is selected
+                $('#damageWeightsPartial').empty(); //clear the damage weights place holder
+            else {
+                $.ajax({
+                    url: '@Url.Action("_GetDamageWeight", "DamageWeightAndCostRate", new { area = "Admin" })',
+                    data: { damageTypeid: selDamageTypeId, structureItemid: selStructureItemId },
+                    type: 'GET',
+                    dataType: 'html',
+                    success: function (data) {
+                        $('#damageWeightsPartial').html(data);
+                    }
+                });
+            }
+        });
+    });
+
+</script>

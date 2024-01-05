@@ -1,0 +1,67 @@
+﻿@model ERA_BMS.Models.District
+
+@{
+    ViewBag.Title = "Duplicate Error";
+}
+
+<h2>Duplicate Error</h2>
+
+@{ 
+    string errorCode = ViewBag.ErrorCode;
+    HtmlString message1;
+    HtmlString message2;
+}
+@switch (errorCode)
+{
+    //District
+    case "1":
+        message1 = new HtmlString("Unable to save District");
+        message2 = new HtmlString("The <b>District No.</b> you are trying to save already exists and will create duplicate values. <br /><br />Please choose another <b>District No.</b> and try again.");
+        break;
+
+    //Section
+    case "2":
+        message1 = new HtmlString("Unable to save Section");
+        message2 = new HtmlString("The <b>Section No.</b> you are trying to save already exists and will create duplicate values. <br /><br />Please choose another <b>Section No.</b> and try again.");
+        break;
+
+    //Road Segment
+    case "3":
+        message1 = new HtmlString("Unable to save Road Segment");
+        message2 = new HtmlString("The <b>Road Id</b> you are trying to save already exists and will create duplicate values. <br /><br />Please choose another <b>Road Id</b> and try again.");
+        break;
+
+    //Main Route
+    case "4":
+        message1 = new HtmlString("Unable to save Main Route");
+        message2 = new HtmlString("The <b>Main Route No.</b> you are trying to save already exists and will create duplicate values. <br /><br />Please choose another <b>Main Route No.</b> and try again.");
+        break;
+
+    //Sub Route
+    case "5":
+        message1 = new HtmlString("Unable to save Sub Route");
+        message2 = new HtmlString("The <b>Sub Route No.</b> you are trying to save already exists and will create duplicate values. <br /><br />Please choose another <b>Sub Route No.</b> and try again.");
+        break;
+
+    //Bridge
+    case "6":
+        message1 = new HtmlString("Unable to save Bridge");
+        message2 = new HtmlString("The <b>Bridge No.</b> you are trying to save already exists and will create duplicate values. <br /><br />Please choose another <b>Bridge No.</b> and try again.");
+        break;
+
+    //Culvert
+    case "7":
+        message1 = new HtmlString("Unable to save Culvert");
+        message2 = new HtmlString("The <b>Culvert No.</b> you are trying to save already exists and will create duplicate values. <br /><br />Please choose another <b>Culvert No.</b> and try again.");
+        break;
+
+    default:
+        message1 = new HtmlString("Unable to save");
+        message2 = new HtmlString("The value you are trying to save already exists and will create a <b>duplicate</b>. <br /><br />Please choose another value and try again.");
+        break;
+}
+
+<h3 style="color: red"><u>@message1</u></h3>
+<h4>@message2</h4>
+<br />
+<a href="javascript:history.back()" class="btn btn-primary"><span class="glyphicon glyphicon-backward"></span> Go back</a>

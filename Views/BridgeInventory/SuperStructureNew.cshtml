@@ -1,0 +1,217 @@
+﻿@model ERA_BMS.Models.SuperStructure
+
+@{
+    ViewBag.Title = "Super Structure Inventory";
+}
+
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "superStrForm" }))
+{
+    <hr />
+    <h5 align="center" class="text-danger"><b>Super Structure data is empty for this bridge. Please enter data and save.</b></h5>
+    <hr />
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @*@Html.HiddenFor(model => model.BridgeId)*@
+        <input type="hidden" id="BridgeId" value="@TempData["BridgeId"]" />
+
+        <div class="row">
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.BridgeTypeId, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @*@Html.DropDownList("BridgeTypeId", null, "", htmlAttributes: new { @class = "form-control" })*@
+                        @Html.DropDownList("BridgeTypeId", (List<SelectListItem>)TempData["BridgeTypeId"], htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.BridgeTypeId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.NoOfSpan, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.NoOfSpan, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.NoOfSpan, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.SpanLengthComposition, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.SpanLengthComposition, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.SpanLengthComposition, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.TotalSpanLength, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.TotalSpanLength, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.TotalSpanLength, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.CarriageWayWidth, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.CarriageWayWidth, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.CarriageWayWidth, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.SideWalkWidth, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.SideWalkWidth, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.SideWalkWidth, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.NoOfLane, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.NoOfLane, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.NoOfLane, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.SpanSupportTypeId, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @*@Html.DropDownList("SpanSupportTypeId", null, "", htmlAttributes: new { @class = "form-control" })*@
+                        @Html.DropDownList("SpanSupportTypeId", (List<SelectListItem>)TempData["SpanSupportTypeId"], htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.SpanSupportTypeId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.DeckSlabTypeId, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @*@Html.DropDownList("DeckSlabTypeId", null, "", htmlAttributes: new { @class = "form-control" })*@
+                        @Html.DropDownList("DeckSlabTypeId", (List<SelectListItem>)TempData["DeckSlabTypeId"], htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.DeckSlabTypeId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.SlabThickness, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.SlabThickness, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.SlabThickness, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.GirderTypeId, null, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-8">
+                        @*@Html.DropDownList("GirderTypeId", null, htmlAttributes: new { @class = "form-control" })*@
+                        @Html.DropDownList("GirderTypeId", (List<SelectListItem>)TempData["GirderTypeId"], htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.GirderTypeId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.NoOfGirder, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.NoOfGirder, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.NoOfGirder, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.GirderDepth, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.GirderDepth, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.GirderDepth, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.SpacingGirder, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.SpacingGirder, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.SpacingGirder, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.GirderBoxWidth, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.GirderBoxWidth, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.GirderBoxWidth, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class=" form-group form-group-sm form-group form-group-sm-sm">
+            <div class="col-md-offset-2 col-md-5">
+                <button type="button" id="saveSuperStr" class="btn btn-primary"><span class="glyphicon glyphicon-save"></span> Save</button>
+                <button type="reset" id="resetSuperStr" class="btn btn-primary"><span class="glyphicon glyphicon-refresh"></span> Reset</button>
+                <div id="statusSuperStr" class="success">
+                    <!-- Save success or failure status text appears here-->
+                </div>
+            </div>
+
+        </div>
+    </div>
+}
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#saveSuperStr').on('click', function () {
+            var superStr = {};
+
+            superStr.BridgeId = $('#BridgeId').val();
+            superStr.BridgeTypeId = $('#BridgeTypeId').val();
+            superStr.NoOfSpan = $('#NoOfSpan').val();
+            superStr.SpanLengthComposition = $('#SpanLengthComposition').val();
+            superStr.TotalSpanLength = $('#TotalSpanLength').val();
+            superStr.CarriageWayWidth = $('#CarriageWayWidth').val();
+            superStr.SideWalkWidth = $('#SideWalkWidth').val();
+            superStr.NoOfLane = $('#NoOfLane').val();
+            superStr.SpanSupportTypeId = $('#SpanSupportTypeId').val();
+            superStr.DeckSlabTypeId = $('#DeckSlabTypeId').val();
+            superStr.SlabThickness = $('#SlabThickness').val();
+            superStr.GirderTypeId = $('#GirderTypeId').val();
+            superStr.NoOfGirder = $('#NoOfGirder').val();
+            superStr.GirderDepth = $('#GirderDepth').val();
+            superStr.SpacingGirder = $('#SpacingGirder').val();
+            superStr.GirderBoxWidth = $('#GirderBoxWidth').val();
+
+            //alert(JSON.stringify(superStr));
+
+            $.ajax({
+                type: 'POST',
+                cache: false,
+                url: '@Url.Action("SuperStructureNew", "BridgeInventory")',
+                data: '{superStructure:' + JSON.stringify(superStr) + '}',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'html',
+                success: function (data) {
+                    if ($('#statusSuperStr').hasClass("text-danger"))
+                        $('#statusSuperStr').removeClass("text-danger");
+                    $('#statusSuperStr').addClass("text-success");
+                    $('#statusSuperStr').text("Data is saved successfully");
+                },
+                error: function (xhr) {
+                    if ($('#statusSuperStr').hasClass("text-success"))
+                        $('#statusSuperStr').removeClass("text-success");
+                    $('#statusSuperStr').addClass("text-danger");
+                    $('#statusSuperStr').text("Data is NOT saved!!");
+                }
+            });
+        });
+
+        $('#resetSuperStr').on('click', function () {
+            $('#superStrForm').trigger("reset"); // triger the normal reset function
+        });
+    });
+</script>
+

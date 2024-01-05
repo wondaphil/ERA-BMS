@@ -1,0 +1,481 @@
+﻿@using ERA_BMS.Models
+@using ERA_BMS.ViewModels
+@*@using System.Linq*@
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title panel-info">Major Inspection Details (District: <b>@ViewBag.District</b>, Section: <b>@ViewBag.Section</b>, Road Segment: <b>@ViewBag.Segment</b>, Bridge: <b>@ViewBag.BridgeName</b>, Inspection Year: <b>@ViewBag.InspectionYear</b>@*, Inspection Date: <b>@ViewBag.InspectionDate.ToString("dd/MM/yyyy")</b>*@)</h3>
+    </div>
+    @{
+        List<string> damageRankList = ViewBag.DamageRankList;
+
+        List<List<DamageInspMajor>> substructureInspection = ViewBag.SubstructureInspection;
+        List<List<DamageInspMajor>> superstructureInspection = ViewBag.SuperstructureInspection;
+        List<List<DamageInspMajor>> ancillariesInspection = ViewBag.AncillariesInspection;
+
+        List<List<DamageRateAndCost>> damageRateSubstructure = ViewBag.DamageRateSubstructure;
+        List<List<DamageRateAndCost>> damageRateSuperstructure = ViewBag.DamageRateSuperstructure;
+        List<List<DamageRateAndCost>> damageRateAncillaries = ViewBag.DamageRateAncillaries;
+
+        List<double?> substructureStrItemDmgWt = ViewBag.SubstructureStrItemDmgWt;
+        List<double?> superstructureStrItemDmgWt = ViewBag.SuperstructureStrItemDmgWt;
+        List<double?> ancillariesStrItemDmgWt = ViewBag.AncillariesStrItemDmgWt;
+
+        List<double> bridgePartDmgWt = ViewBag.BrgPartDmgWt;
+
+        List<string> comments = ViewBag.Comments;
+        string inspectorRecommendation = ViewBag.InspectorRecommendation;
+        bool? waterWayAdequacy = ViewBag.WaterWayAdequacy;
+
+        int girderTypeId = ViewBag.GirderTypeId;
+    }
+    <div class="panel-body">
+        <br />
+        <br />
+        <table class="table table-striped table-condensed table-responsive table-bordered display compact hover" id="tblpmajorinspectiondetails">
+            <thead>
+                <tr><th colspan="10" align="center">SUBSTRUCTURE</th></tr>
+                <tr>
+                    <th>Structure Item</th>
+                    <th>Damage Type</th>
+                    <th style="text-align: center">Unit</th>
+                    <th style="text-align: center">A+</th>
+                    <th style="text-align: center">A</th>
+                    <th style="text-align: center">B</th>
+                    <th style="text-align: center">C</th>
+                    <th style="text-align: center">Repair Cost</th>
+                    <th style="text-align: center">Damage %</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @{
+                        var subStrCost = 0.0;
+                    var subStrDmgPerc = 0.0;
+                }
+                @for (int i = 0; i < substructureInspection.Count; i++)
+                {
+                    var strItemCost = 0.0;
+                    var strItemDmgPerc = 0.0;
+
+                    for (int j = 0; j < substructureInspection[i].Count; j++)
+                    {
+                        DamageInspMajor currentDamage = substructureInspection[i][j];
+
+                        // If there is already an A+, just ignore A
+                        //if (currentDamage.DamageRankId == 2)
+                        //{
+                        //    List<DamageInspMajor> sub_list = substructureInspection[i];
+                        //    if (sub_list.Where(s => s.DamageRankId == 1 && s.DamageTypeId == currentDamage.DamageTypeId).ToList().Count != 0)
+                        //    {
+                        //        continue;
+                        //    }
+                        //}
+
+                        <tr>
+                            <td>
+                                @{ var strItemName = "";
+                                    if (j == 0)
+                                    {
+                                        strItemName = currentDamage.DamageType.StructureItemId + " " + currentDamage.DamageType.StructureItem.StructureItemName;
+                                    }
+                                }
+                                <b>@strItemName</b>
+                            </td>
+                            <td>
+                                @currentDamage.DamageType.DamageTypeName
+                            </td>
+                            @{
+                                // Get the current rate by corresponding it to the current damage
+                                List<DamageRateAndCost> subRateList = damageRateSubstructure[i];
+                                DamageRateAndCost currentRate = subRateList.Where(d => d.StructureItemId == currentDamage.StructureItemId &&
+                                                                                        d.DamageTypeId == currentDamage.DamageTypeId &&
+                                                                                        d.DamageRankId == currentDamage.DamageRankId).FirstOrDefault();
+                            }
+                            <td style="text-align: center">
+                                @currentRate.Unit
+                            </td>
+                            @for (int k = 0; k < damageRankList.Count; k++)
+                            {
+                                <td style="text-align: center">
+                                    @{ var dmgArea = 0.0;
+                                        if (currentDamage.DamageRank.DamageRankName == damageRankList[k])
+                                        {
+                                            dmgArea = (double)currentDamage.DamageArea;
+                                        }
+                                    }
+                                    @dmgArea.ToString("0.00")  @*format it to two decimal places*@
+                                </td>
+                            }
+                            <td style="text-align: right">
+                                @*@currentDamage.DamageRank.DamageRankName*@
+                                @{
+                                    double cost = (double)(currentRate.UnitRepairCost * currentDamage.DamageArea);
+                                    strItemCost += cost;
+                                }
+                                @cost.ToString("#,0.00")
+                            </td>
+                            <td style="text-align: center">
+                                @{
+                                    int strItemId = (int)currentDamage.StructureItemId;
+                                    //var dmgPerc = (double)(currentRate.DamagePercentValue / substructureStrItemDmgWt[strItemId - 1]) * 100;
+                                    var dmgPerc = (double) currentRate.DamagePercentValue;
+                                    strItemDmgPerc += (double)dmgPerc;
+                                    subStrDmgPerc += (double)currentRate.DamagePercentValue;
+                                }
+                                @dmgPerc.ToString("0.000")
+                            </td>
+                        </tr>
+                    }
+                    // If cost of structure item is zero, skip the entire row
+                    if (strItemCost != 0)
+                    {
+                        <tr>
+                            <td colspan="7"></td>
+                            <td style="text-align: right"><b>@strItemCost.ToString("#,0.00")</b></td>
+                            <td style="text-align: center"><b>@strItemDmgPerc.ToString("0.000") %</b></td>
+                            @{
+                                subStrCost += strItemCost;
+                            }
+                        </tr>
+                    }
+                }
+                <tr>
+                    <td colspan="7" style="text-align: right"><b>Substructure</b></td>
+                    <td style="text-align: right"><b>@subStrCost.ToString("#,0.00")</b></td>
+                    @{
+                        //var totSubStrDmgPerc = (subStrDmgPerc / bridgePartDmgWt[0]) * 100;
+                        var totSubStrDmgPerc = subStrDmgPerc;
+                    }
+                    <td style="text-align: center"><b>@totSubStrDmgPerc.ToString("0.000") %</b></td>
+                </tr>
+            </tbody>
+
+        </table>
+    </div>
+
+    <div class="panel-body">
+        <br />
+        <br />
+        <table class="table table-striped table-condensed table-responsive table-bordered display compact hover" id="damageinspmajor">
+            <thead>
+                <tr><th colspan="10" align="center">SUPERSTRUCTURE</th></tr>
+                <tr>
+                    <th>Structure Item</th>
+                    <th>Damage Type</th>
+                    <th style="text-align: center">Unit</th>
+                    <th style="text-align: center">A+</th>
+                    <th style="text-align: center">A</th>
+                    <th style="text-align: center">B</th>
+                    <th style="text-align: center">C</th>
+                    <th style="text-align: center">Repair Cost</th>
+                    <th style="text-align: center">Damage %</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @{
+                    var superStrCost = 0.0;
+                    var superStrDmgPerc = 0.0;
+                }
+                @for (int i = 0; i < superstructureInspection.Count; i++)
+                {
+                    var strItemCost = 0.0;
+                    var strItemDmgPerc = 0.0;
+
+                    for (int j = 0; j < superstructureInspection[i].Count; j++)
+                    {
+                        DamageInspMajor currentDamage = superstructureInspection[i][j];
+
+                        /*
+                            StructureItemId == 6 (Concrete Girder/Arch) has to be ignored for Steel bridge
+                            StructureItemId == 7 (Steel Truss/Girder) has to be ignored for Concrete bridge
+                            GirderType == 1 for Concrete and GirderType == 2 for Steel
+                        */
+                        if ((currentDamage.StructureItemId == 6 && girderTypeId == 2) ||
+                                        (currentDamage.StructureItemId == 7 && girderTypeId == 1))
+                        {
+                            continue;
+                        }
+                        <tr>
+                            <td>
+                                @{ var strItemName = "";
+                                    if (j == 0)
+                                    {
+                                        strItemName = currentDamage.DamageType.StructureItemId + " " + currentDamage.DamageType.StructureItem.StructureItemName;
+                                    }
+                                }
+                                <b>@strItemName</b>
+                            </td>
+                            <td>
+                                @currentDamage.DamageType.DamageTypeName
+                            </td>
+                            @{
+                                // Get the current rate by corresponding it to the current damage
+                                List<DamageRateAndCost> superRateList = damageRateSuperstructure[i];
+                                DamageRateAndCost currentRate = superRateList.Where(d => d.StructureItemId == currentDamage.StructureItemId &&
+                                                                                        d.DamageTypeId == currentDamage.DamageTypeId &&
+                                                                                        d.DamageRankId == currentDamage.DamageRankId).FirstOrDefault();
+                            }
+                            <td style="text-align: center">
+                                @currentRate.Unit
+                            </td>
+                            @for (int k = 0; k < damageRankList.Count; k++)
+                            {
+                                <td style="text-align: center">
+                                    @{ var dmgArea = 0.0;
+                                        if (currentDamage.DamageRank.DamageRankName == damageRankList[k])
+                                        {
+                                            dmgArea = (double)currentDamage.DamageArea;
+                                        }
+                                    }
+                                    @dmgArea.ToString("0.00")  @*format it to two decimal places*@
+                                </td>
+                            }
+                            <td style="text-align: right">
+                                @{
+                                    double cost = (double)(currentRate.UnitRepairCost * currentDamage.DamageArea);
+                                    strItemCost += cost;
+                                }
+                                @cost.ToString("#,0.00")
+                            </td>
+                            <td style="text-align: center">
+                                @{ int strItemId = (int)currentDamage.StructureItemId;
+                                    //var dmgPerc = (double)(currentRate.DamagePercentValue / superstructureStrItemDmgWt[strItemId - 5]) * 100;
+                                    var dmgPerc = (double)currentRate.DamagePercentValue;
+                                    strItemDmgPerc += (double)dmgPerc;
+                                    superStrDmgPerc += (double)currentRate.DamagePercentValue;
+                                }
+                                @dmgPerc.ToString("0.000")
+                            </td>
+                        </tr>
+                    }
+                    // If cost of structure item is zero, skip the entire row
+                    if (strItemCost != 0)
+                    {
+                        <tr>
+                            <td colspan="7"></td>
+                            <td style="text-align: right"><b>@strItemCost.ToString("#,0.00")</b></td>
+                            <td style="text-align: center"><b>@strItemDmgPerc.ToString("0.000") %</b></td>
+                            @{
+                                superStrCost += strItemCost;
+                            }
+                        </tr>
+                    }
+                }
+                <tr>
+                    <td colspan="7" style="text-align: right"><b>Superstructure</b></td>
+                    <td style="text-align: right"><b>@superStrCost.ToString("#,0.00")</b></td>
+                    @{
+                        //var totSuperStrDmgPerc = (superStrDmgPerc / bridgePartDmgWt[1]) * 100;
+                        var totSuperStrDmgPerc = superStrDmgPerc;
+                    }
+                    <td style="text-align: center"><b>@totSuperStrDmgPerc.ToString("0.000") %</b></td>
+                </tr>
+            </tbody>
+
+        </table>
+    </div>
+
+    <div class="panel-body">
+        <br />
+        <br />
+        <table class="table table-striped table-condensed table-responsive table-bordered display compact hover" id="damageinspmajor">
+            <thead>
+                <tr><th colspan="10" align="center">Ancillarries</th></tr>
+                <tr>
+                    <th>Structure Item</th>
+                    <th>Damage Type</th>
+                    <th style="text-align: center">Unit</th>
+                    <th style="text-align: center">A+</th>
+                    <th style="text-align: center">A</th>
+                    <th style="text-align: center">B</th>
+                    <th style="text-align: center">C</th>
+                    <th style="text-align: center">Repair Cost</th>
+                    <th style="text-align: center">Damage %</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @{
+                    var ancillariesCost = 0.0;
+                    var ancillariesDmgPerc = 0.0;
+                }
+                @for (int i = 0; i < ancillariesInspection.Count; i++)
+                {
+                    var strItemCost = 0.0;
+                    var strItemDmgPerc = 0.0;
+
+                    for (int j = 0; j < ancillariesInspection[i].Count; j++)
+                    {
+                        DamageInspMajor currentDamage = ancillariesInspection[i][j];
+
+                        <tr>
+                            <td>
+                                @{ var strItemName = "";
+                                    if (j == 0)
+                                    {
+                                        strItemName = currentDamage.DamageType.StructureItemId + " " + currentDamage.DamageType.StructureItem.StructureItemName;
+                                    }
+                                }
+                                <b>@strItemName</b>
+                            </td>
+                            <td>
+                                @currentDamage.DamageType.DamageTypeName
+                            </td>
+                            @{
+                                // Get the current rate by corresponding it to the current damage
+                                List<DamageRateAndCost> ancillRateList = damageRateAncillaries[i];
+                                DamageRateAndCost currentRate = ancillRateList.Where(d => d.StructureItemId == currentDamage.StructureItemId &&
+                                                                                        d.DamageTypeId == currentDamage.DamageTypeId &&
+                                                                                        d.DamageRankId == currentDamage.DamageRankId).FirstOrDefault();
+                            }
+                            <td style="text-align: center">
+                                @currentRate.Unit
+                            </td>
+                            @for (int k = 0; k < damageRankList.Count; k++)
+                            {
+                                <td style="text-align: center">
+                                    @{ var dmgArea = 0.0;
+                                        if (currentDamage.DamageRank.DamageRankName == damageRankList[k])
+                                        {
+                                            dmgArea = (double)currentDamage.DamageArea;
+                                        }
+                                    }
+                                    @dmgArea.ToString("0.00")  @*format it to two decimal places*@
+                                </td>
+                            }
+                            <td style="text-align: right">
+                                @{
+                                    double cost = (double)(currentRate.UnitRepairCost * currentDamage.DamageArea);
+                                    strItemCost += cost;
+                                }
+                                @cost.ToString("#,0.00")
+                            </td>
+                            <td style="text-align: center">
+                                @{ int strItemId = (int)currentDamage.StructureItemId;
+                                    //var dmgPerc = (double)(currentRate.DamagePercentValue / ancillariesStrItemDmgWt[strItemId - 8]) * 100;
+                                    var dmgPerc = (double)currentRate.DamagePercentValue;
+                                    strItemDmgPerc += (double)dmgPerc;
+                                    ancillariesDmgPerc += (double)currentRate.DamagePercentValue;
+                                }
+                                @dmgPerc.ToString("0.000")
+                            </td>
+                        </tr>
+                    }
+                    // If cost of structure item is zero, skip the entire row
+                    if (strItemCost != 0)
+                    {
+                        <tr>
+                            <td colspan="7"></td>
+                            <td style="text-align: right"><b>@strItemCost.ToString("#,0.00")</b></td>
+                            <td style="text-align: center"><b>@strItemDmgPerc.ToString("0.000") %</b></td>
+                            @{
+                                ancillariesCost += strItemCost;
+                            }
+                        </tr>
+                    }
+                }
+                <tr>
+                    <td colspan="7" style="text-align: right"><b>Ancillaries</b></td>
+                    <td style="text-align: right"><b>@ancillariesCost.ToString("#,0.00")</b></td>
+                    @{
+                        //var totAncillariesDmgPerc = (ancillariesDmgPerc / bridgePartDmgWt[2]) * 100;
+                        var totAncillariesDmgPerc = ancillariesDmgPerc;
+                    }
+                    <td style="text-align: center"><b>@totAncillariesDmgPerc.ToString("0.000") %</b></td>
+                </tr>
+                <tr>
+                    <td class="panel-title" colspan="7" style="text-align: right"><b>Bridge</b></td>
+                    @{
+                        double bridgeCost = subStrCost + superStrCost + ancillariesCost;
+                        //double totBridgeDmgPerc = (new List<double> { totSubStrDmgPerc, totSuperStrDmgPerc, totAncillariesDmgPerc }).Max();
+                        double totBridgeDmgPerc = totSubStrDmgPerc + totSuperStrDmgPerc + totAncillariesDmgPerc;
+                        //double maxDamageRate = (new List<double> { subStrDamageRate, superStrDamageRate, ancillariesDamageRate }).Max();
+                    }
+
+                    <td class="panel-title" style="text-align: right"><b>@bridgeCost.ToString("#,0.00")</b></td>
+                    <td class="panel-title" style="text-align: center"><b>@totBridgeDmgPerc.ToString("0.000") %</b> </td>
+                </tr>
+            </tbody>
+
+        </table>
+    </div>
+
+    <div class="panel-body">
+        <br />
+        <br />
+        <table class="table table-striped table-condensed table-responsive table-bordered display compact hover" id="damageinspmajor">
+            <tr><th colspan="10" align="center">RECOMMENDATION AND COMMENTS</th></tr>
+        </table>
+    </div>
+
+    <div class="row">
+        <div class="col-md-5 col-xs-12">
+            <dl class="dl-horizontal">
+                <dt>Comments</dt>
+
+                @foreach (var comment in comments)
+                {
+                    <dd>@comment</dd>
+                }
+            </dl>
+        </div>
+
+        <div class="col-md-3 col-xs-6">
+            <dl class="dl-horizontal">
+                <dt>Inspector's Recommendation</dt>
+                <dd>@inspectorRecommendation</dd>
+            </dl>
+        </div>
+
+        <div class="col-md-4 col-xs-6">
+            <dl class="dl-horizontal">
+                <dt>Water Way Adequacy Problems</dt>
+                @{
+                    var wateradeq = (waterWayAdequacy == true) ? "Yes" : "No";
+                }
+                <dd>@wateradeq</dd>
+            </dl>
+        </div>
+    </div>
+
+    <div class="panel-footer">
+        @*<h5><u>N.B.</u>: Total Bridge damage percent is <b>maximum</b> of damage percents of the three Bridge Parts (<i>Substructures</i>, <i>Superstructures</i> and <i>Ancillaries</i>)</h5>*@
+        <h5><u>N.B.</u>: Total Bridge damage percent is <b>sum</b> of damage percents of the three Bridge Parts (<i>Substructures</i>, <i>Superstructures</i> and <i>Ancillaries</i>)</h5>
+    </div>
+</div>
+
+
+
+<script>
+    $(document).ready(function () {
+
+
+        $('#tblpmajorinspectiondetails').dataTable({
+            paging: false,
+            pageLength: 15,
+            bLengthChange: true,
+            scrollY: 400,
+
+            searching: true,
+            select: true,
+            dom: 'lBfrtip',
+            language: {
+                "emptyTable": " "
+            },
+            bInfo: false,
+            //buttons: ['copy', 'excel', 'pdf', 'print']
+            buttons: [
+                { extend: 'copy', className: 'btn btn-sm btn-primary' },
+                { extend: 'excel', className: 'btn btn-sm btn-primary', text: 'Export Excel' },
+                { extend: 'pdf', className: 'btn btn-sm btn-primary', text: 'Export PDF' },
+                { extend: 'print', className: 'btn btn-sm btn-primary' }
+            ]
+        });
+    });
+</script>
+

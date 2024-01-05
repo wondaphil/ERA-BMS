@@ -1,0 +1,1715 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
+  <Import Project="packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{F5116C9A-A25E-4805-A69C-F0DA317F06B4}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ERA_BMS</RootNamespace>
+    <AssemblyName>ERA-BMS</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>false</UseIISExpress>
+    <Use64BitIISExpress>true</Use64BitIISExpress>
+    <IISExpressSSLPort>44387</IISExpressSSLPort>
+    <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
+    <IISExpressWindowsAuthentication>disabled</IISExpressWindowsAuthentication>
+    <IISExpressUseClassicPipelineMode>false</IISExpressUseClassicPipelineMode>
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="CoordinateSharp, Version=2.13.1.1, Culture=neutral, PublicKeyToken=f45e02df057b7725, processorArchitecture=MSIL">
+      <HintPath>packages\CoordinateSharp.2.13.1.1\lib\net40\CoordinateSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+    </Reference>
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>packages\Microsoft.AspNet.Mvc.5.2.7\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Optimization">
+      <HintPath>packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>packages\Microsoft.AspNet.Razor.3.2.7\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="WebGrease">
+      <Private>True</Private>
+      <HintPath>packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
+    </Reference>
+    <Reference Include="Antlr3.Runtime">
+      <Private>True</Private>
+      <HintPath>packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.AspNet.Identity.Core">
+      <HintPath>packages\Microsoft.AspNet.Identity.Core.2.2.3\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Owin">
+      <HintPath>packages\Microsoft.AspNet.Identity.Owin.2.2.3\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework">
+      <HintPath>packages\Microsoft.AspNet.Identity.EntityFramework.2.2.3\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin">
+      <HintPath>packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin">
+      <HintPath>packages\Microsoft.Owin.4.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb">
+      <HintPath>packages\Microsoft.Owin.Host.SystemWeb.4.0.1\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security">
+      <HintPath>packages\Microsoft.Owin.Security.4.0.1\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Cookies">
+      <HintPath>packages\Microsoft.Owin.Security.Facebook.4.0.1\lib\net45\Microsoft.Owin.Security.Facebook.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Cookies">
+      <HintPath>packages\Microsoft.Owin.Security.Cookies.4.0.1\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Google">
+      <HintPath>packages\Microsoft.Owin.Security.Google.4.0.1\lib\net45\Microsoft.Owin.Security.Google.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Twitter">
+      <HintPath>packages\Microsoft.Owin.Security.Twitter.4.0.1\lib\net45\Microsoft.Owin.Security.Twitter.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.MicrosoftAccount">
+      <HintPath>packages\Microsoft.Owin.Security.MicrosoftAccount.4.0.1\lib\net45\Microsoft.Owin.Security.MicrosoftAccount.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.OAuth">
+      <HintPath>packages\Microsoft.Owin.Security.OAuth.4.0.1\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform">
+      <HintPath>packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\IdentityConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Areas\Admin\Controllers\BridgeLengthRangesController.cs" />
+    <Compile Include="Areas\Admin\Controllers\UserManagementController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ConstructionYearRangesController.cs" />
+    <Compile Include="Areas\Admin\Controllers\CulvertDamageRateAndCostController.cs" />
+    <Compile Include="Areas\Admin\Controllers\DamagePriorityController.cs" />
+    <Compile Include="Areas\Admin\Controllers\DamageWeightAndCostRateController.cs" />
+    <Compile Include="Areas\Admin\Controllers\EndWallTypesController.cs" />
+    <Compile Include="Areas\Admin\Controllers\BridgeBookController.cs" />
+    <Compile Include="Areas\Admin\Controllers\RoadFunctionClassController.cs" />
+    <Compile Include="Controllers\KmlController.cs" />
+    <Compile Include="Controllers\RoadMapController.cs" />
+    <Compile Include="Controllers\TrafficDataController.cs" />
+    <Compile Include="Models\AssetValueByDistrict.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BridgePriorityByHighestDamageRank.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BridgePriorityByInterventionRequirement.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BridgeTypeByRegion.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CulvertConditionIndex.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CulvertTypeByRegion.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DesignStandard.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DistrictMap.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DocType.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\MetaData\BridgePriorityByHighestDamageRank.metadata.cs" />
+    <Compile Include="Models\MetaData\BridgeTypeByRegion.metadata.cs" />
+    <Compile Include="Models\MetaData\CulvertConditionIndex.metadata.cs" />
+    <Compile Include="Models\MetaData\CulvertTypeByRegion.metadata.cs" />
+    <Compile Include="Models\MetaData\DesignStandard.metadata.cs" />
+    <Compile Include="Models\MetaData\DistrictMap.metadata.cs" />
+    <Compile Include="Models\MetaData\DocType.metadata.cs" />
+    <Compile Include="Models\MetaData\RegionalGovernment.metadata.cs" />
+    <Compile Include="Models\MetaData\RoadSurfaceType.cs" />
+    <Compile Include="Models\MetaData\SectionMap.metadata.cs" />
+    <Compile Include="Models\RegionalGovernment.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\RepairCostAndRecommendation.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\RoadSurfaceType.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SectionMap.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SegmentMap.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\BearingCapacityViewModel.cs" />
+    <Compile Include="ViewModels\BridgeCulvertRegionSegmentViewModel.cs" />
+    <Compile Include="ViewModels\RoadMapViewModel.cs" />
+    <Compile Include="ViewModels\BridgePriorityByAverageViewModel.cs" />
+    <Compile Include="ViewModels\StatusMessageViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\UserViewModel.cs" />
+    <Compile Include="Controllers\StatusMessageController.cs" />
+    <Compile Include="Controllers\SearchController.cs" />
+    <Compile Include="Controllers\CulvertLocationController.cs" />
+    <Compile Include="Controllers\BridgeLocationController.cs" />
+    <Compile Include="Controllers\ErrorCheckerController.cs" />
+    <Compile Include="Controllers\ErrorHandlerController.cs" />
+    <Compile Include="Controllers\ImageGalleryController.cs" />
+    <Compile Include="Controllers\RoadListController.cs" />
+    <Compile Include="Areas\Admin\Controllers\MajorInspectionYearController.cs" />
+    <Compile Include="Areas\Admin\Controllers\RoutesController.cs" />
+    <Compile Include="Areas\Admin\Controllers\SoilTypesController.cs" />
+    <Compile Include="Areas\Admin\Controllers\CulvertTypesController.cs" />
+    <Compile Include="Areas\Admin\Controllers\MediaTypesController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ParapetMaterialTypesController.cs" />
+    <Compile Include="Controllers\AdminAreaRegistration.cs" />
+    <Compile Include="Areas\Admin\Controllers\AbutmentTypesController.cs" />
+    <Compile Include="Areas\Admin\Controllers\BearingTypesController.cs" />
+    <Compile Include="Areas\Admin\Controllers\BridgeTypesController.cs" />
+    <Compile Include="Areas\Admin\Controllers\DeckSlabTypesController.cs" />
+    <Compile Include="Areas\Admin\Controllers\DistrictsController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ExpansionJointTypesController.cs" />
+    <Compile Include="Areas\Admin\Controllers\FoundationTypesController.cs" />
+    <Compile Include="Areas\Admin\Controllers\GirderTypesController.cs" />
+    <Compile Include="Areas\Admin\Controllers\GuardRailingTypesController.cs" />
+    <Compile Include="Areas\Admin\Controllers\PierTypesController.cs" />
+    <Compile Include="Areas\Admin\Controllers\RoadAlignmentTypesController.cs" />
+    <Compile Include="Areas\Admin\Controllers\SectionsController.cs" />
+    <Compile Include="Areas\Admin\Controllers\SegmentsController.cs" />
+    <Compile Include="Areas\Admin\Controllers\SpanSupportTypesController.cs" />
+    <Compile Include="Areas\Admin\Controllers\SurfaceTypesController.cs" />
+    <Compile Include="Areas\Guest\GuestAreaRegistration.cs" />
+    <Compile Include="Areas\Manager\ManagerAreaRegistration.cs" />
+    <Compile Include="Areas\User\UserAreaRegistration.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Areas\Admin\Controllers\AssetValueController.cs" />
+    <Compile Include="Controllers\ChartGraphController.cs" />
+    <Compile Include="Controllers\BridgeImprovementController.cs" />
+    <Compile Include="Controllers\BridgePriorityController.cs" />
+    <Compile Include="Controllers\CulvertImprovementController.cs" />
+    <Compile Include="Controllers\CulvertInspectionReportsController.cs" />
+    <Compile Include="Controllers\LocationsDDLController.cs" />
+    <Compile Include="Controllers\BridgeProfileController.cs" />
+    <Compile Include="Controllers\BridgeInventoryController.cs" />
+    <Compile Include="Controllers\BridgeReportsCensusController.cs" />
+    <Compile Include="Controllers\BridgeInspectionReportsController.cs" />
+    <Compile Include="Controllers\BridgesController.cs" />
+    <Compile Include="Controllers\CulvertInventoryController.cs" />
+    <Compile Include="Controllers\CulvertProfileController.cs" />
+    <Compile Include="Controllers\CulvertReportsCensusController.cs" />
+    <Compile Include="Controllers\CulvertsController.cs" />
+    <Compile Include="Controllers\DamageInspCulvertController.cs" />
+    <Compile Include="Controllers\DamageInspMajorController.cs" />
+    <Compile Include="Controllers\DamageInspVisualController.cs" />
+    <Compile Include="Controllers\HelpController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\Abutment.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AbutmentType.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Ancillary.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AspNetRole.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AspNetUser.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BearingType.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Bridge.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BridgeComment.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BridgeCondition2006.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BridgeCondition2010.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BridgeCondition2013.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BridgeCondition2016.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BridgeCondition2017.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BridgeCondition2020.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BridgeConditionAndRepairCostByDistrict.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BridgeConditionAndRepairCostBySection.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BridgeConditionAndRepairCostBySegment.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BridgeConditionByInspectionYear.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BridgeCurrentValue.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BridgeDoc.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BridgeGeneralInfo.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BridgeImprovement.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BridgeLength.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BridgeLengthByDistrict.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BridgeMedia.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BridgeObservation.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BridgePart.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BridgePartDmgWt.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BridgeRequiredActionByDistrict.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BridgeType.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BridgeTypeByDistrict.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BridgeTypeByMainRoute.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BridgeTypeBySection.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BridgeTypeBySegment.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BridgeValuePerLm.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ConstructionYear.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\culDamageInspHydraulic.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\culDamageInspStructure.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\culDamageRateAndCost.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\culEndWallType.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\culHydrDamageType.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\culStructureItem.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Culvert.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CulvertConditionAndRepairCostByDistrict.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CulvertConditionAndRepairCostBySection.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CulvertConditionAndRepairCostBySegment.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CulvertCurrentValue.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CulvertGeneralInfo.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CulvertImprovement.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CulvertLengthByDistrict.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CulvertMedia.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CulvertsForUpgrading.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CulvertStructure.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CulvertType.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CulvertTypeByDistrict.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CulvertTypeBySection.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CulvertTypeBySegment.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CulvertValuePerLm.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DamageConditionRange.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DamageInspMajor.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DamageInspVisual.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DamagePrioritizationCriteria.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DamagePriority.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DamagePriorityCriteriaAndSum.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DamageRank.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DamageRateAndCost.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DamageSeverity.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DamageType.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DeckSlabType.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\District.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ERABMSModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ERABMSModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ERABMSModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ERABMSModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ERABMSModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ExpansionJointType.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FoundationType.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GirderType.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GuardRailingType.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ImprovementType.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\InvalidCulvertInspectionDate.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\MainRoute.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\MaintenanceUrgency.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\MajorInspectionYear.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\MediaType.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\MetaData\AspNetRole.metadata.cs" />
+    <Compile Include="Models\MetaData\AspNetUser.metadata.cs" />
+    <Compile Include="Models\MetaData\Abutment.metadata.cs" />
+    <Compile Include="Models\MetaData\AbutmentType.metadata.cs" />
+    <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\MetaData\AssetValueByDistrict.metadata.cs" />
+    <Compile Include="Models\MetaData\BridgeConditionAndRepairCostByDistrict.metadata.cs" />
+    <Compile Include="Models\MetaData\BridgeConditionAndRepairCostBySection.metadata.cs" />
+    <Compile Include="Models\MetaData\BridgeConditionAndRepairCostBySegment.metadata.cs" />
+    <Compile Include="Models\MetaData\BridgeConditionByInspectionYear.metadata.cs" />
+    <Compile Include="Models\MetaData\BridgeCurrentValue.metadata.cs" />
+    <Compile Include="Models\MetaData\BridgeImprovement.metadata.cs" />
+    <Compile Include="Models\MetaData\BridgeObservation.metadata.cs" />
+    <Compile Include="Models\MetaData\BridgeTypeByMainRoute.metadata.cs" />
+    <Compile Include="Models\MetaData\BridgeTypeBySection.metadata.cs" />
+    <Compile Include="Models\MetaData\BridgeValuePerLm.metadata.cs" />
+    <Compile Include="Models\MetaData\BridgePriorityByInterventionRequirement.metadata.cs" />
+    <Compile Include="Models\MetaData\CulvertConditionAndRepairCostBySection.metadata.cs" />
+    <Compile Include="Models\MetaData\CulvertConditionAndRepairCostBySegment.metadata.cs" />
+    <Compile Include="Models\MetaData\CulvertCurrentValue.metadata.cs" />
+    <Compile Include="Models\MetaData\CulvertImprovement.metadata.cs" />
+    <Compile Include="Models\MetaData\CulvertsForUpgrading.metadata.cs" />
+    <Compile Include="Models\MetaData\CulvertTypeBySection.metadata.cs" />
+    <Compile Include="Models\MetaData\CulvertValuePerLm.metadata.cs" />
+    <Compile Include="Models\MetaData\DamagePriorityCriteriaAndSum.metadata.cs" />
+    <Compile Include="Models\MetaData\ImprovementType.metadata.cs" />
+    <Compile Include="Models\MetaData\InvalidCulvertInspectionDate.metadata.cs" />
+    <Compile Include="Models\MetaData\MainRoute.metadata.cs" />
+    <Compile Include="Models\MetaData\MajorInspectionYear.metadata.cs" />
+    <Compile Include="Models\MetaData\ObservationAndRecommendation.metadata.cs" />
+    <Compile Include="Models\MetaData\BearingType.metadata.cs" />
+    <Compile Include="Models\MetaData\Bridge.metadata.cs" />
+    <Compile Include="Models\MetaData\BridgeDoc.metadata.cs" />
+    <Compile Include="Models\MetaData\BridgeGeneralInfo.metadata.cs" />
+    <Compile Include="Models\MetaData\BridgeLength.metadata.cs" />
+    <Compile Include="Models\MetaData\BridgeMedia.metadata.cs" />
+    <Compile Include="Models\MetaData\BridgePart.metadata.cs" />
+    <Compile Include="Models\MetaData\BridgePartDmgWt.metadata.cs" />
+    <Compile Include="Models\MetaData\BridgeType.metadata.cs" />
+    <Compile Include="Models\MetaData\ConstructionYear.metadata.cs" />
+    <Compile Include="Models\MetaData\CulvertConditionAndRepairCostByDistrict.metadata.cs" />
+    <Compile Include="Models\MetaData\CulvertTypeByDistrict.metadata.cs" />
+    <Compile Include="Models\MetaData\BridgeTypeByDistrict.metadata.cs" />
+    <Compile Include="Models\MetaData\CulvertTypeBySegment.metadata.cs" />
+    <Compile Include="Models\MetaData\BridgeTypeBySegment.metadata.cs" />
+    <Compile Include="Models\MetaData\BridgeComment.metadata.cs" />
+    <Compile Include="Models\MetaData\Ancillary.metadata.cs" />
+    <Compile Include="Models\MetaData\culDamageInspHydraulic.metadata.cs" />
+    <Compile Include="Models\MetaData\culDamageInspStructure.metadata.cs" />
+    <Compile Include="Models\MetaData\culEndWallType.metadata.cs" />
+    <Compile Include="Models\MetaData\culHydrDamageType.metadata.cs" />
+    <Compile Include="Models\MetaData\culPierType.metadata.cs" />
+    <Compile Include="Models\MetaData\SoilType.metadata.cs" />
+    <Compile Include="Models\MetaData\culDamageRateAndCost.metadata.cs" />
+    <Compile Include="Models\MetaData\culStructureItem.metadata.cs" />
+    <Compile Include="Models\MetaData\Culvert.metadata.cs" />
+    <Compile Include="Models\MetaData\CulvertGeneralInfo.metadata.cs" />
+    <Compile Include="Models\MetaData\CulvertMedia.metadata.cs" />
+    <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\MetaData\CulvertStructure.metadata.cs" />
+    <Compile Include="Models\MetaData\CulvertType.metadata.cs" />
+    <Compile Include="Models\MetaData\DamageInspMajor.metadata.cs" />
+    <Compile Include="Models\MetaData\DamageInspVisual.metadata.cs" />
+    <Compile Include="Models\MetaData\DamagePriority.metadata.cs" />
+    <Compile Include="Models\MetaData\DamagePrioritizationCriteria.metadata.cs" />
+    <Compile Include="Models\MetaData\DamageConditionRange.metadata.cs" />
+    <Compile Include="Models\MetaData\DamageRank.metadata.cs" />
+    <Compile Include="Models\MetaData\DamageRateAndCost.metadata.cs" />
+    <Compile Include="Models\MetaData\DamageSeverity.metadata.cs" />
+    <Compile Include="Models\MetaData\DamageType.metadata.cs" />
+    <Compile Include="Models\MetaData\DeckSlabType.metadata.cs" />
+    <Compile Include="Models\MetaData\District.metadata.cs" />
+    <Compile Include="Models\MetaData\ExpansionJointType.metadata.cs" />
+    <Compile Include="Models\MetaData\FoundationType.metadata.cs" />
+    <Compile Include="Models\MetaData\GirderType.metadata.cs" />
+    <Compile Include="Models\MetaData\GuardRailingType.metadata.cs" />
+    <Compile Include="Models\MetaData\MaintenanceUrgency.metadata.cs" />
+    <Compile Include="Models\MetaData\MediaType.metadata.cs" />
+    <Compile Include="Models\MetaData\ParapetMaterialType.metadata.cs" />
+    <Compile Include="Models\MetaData\PierType.metadata.cs" />
+    <Compile Include="Models\MetaData\Repair.metadata.cs" />
+    <Compile Include="Models\MetaData\RequiredAction.metadata.cs" />
+    <Compile Include="Models\MetaData\ResultInspCulvert.metadata.cs" />
+    <Compile Include="Models\MetaData\ResultInspMajor.metadata.cs" />
+    <Compile Include="Models\MetaData\RoadAlignmentType.metadata.cs" />
+    <Compile Include="Models\MetaData\RoadClass.metadata.cs" />
+    <Compile Include="Models\MetaData\RoadType.metadata.cs" />
+    <Compile Include="Models\MetaData\SubRoute.metadata.cs" />
+    <Compile Include="Models\MetaData\Section.metadata.cs" />
+    <Compile Include="Models\MetaData\Segment.metadata.cs" />
+    <Compile Include="Models\MetaData\SpanSupportType.metadata.cs" />
+    <Compile Include="Models\MetaData\StructureItemDmgWt.metadata.cs" />
+    <Compile Include="Models\MetaData\StructureItem.metadata.cs" />
+    <Compile Include="Models\MetaData\UtmZoneEthiopia.metadata.cs" />
+    <Compile Include="Models\MetaData\Pier.metadata.cs" />
+    <Compile Include="Models\MetaData\SuperStructure.metadata.cs" />
+    <Compile Include="Models\NoOfBridgesByDistrict.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ObservationAndRecommendation.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ParapetMaterialType.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Pier.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PierType.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PriorityParameter.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Repair.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\RequiredAction.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ResultInspCulvert.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ResultInspMajor.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\RoadAlignmentType.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\RoadClass.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Section.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Segment.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SoilType.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SpanSupportType.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\StructureItem.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\StructureItemDmgWt.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SubRoute.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SuperStructure.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SurfaceType.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\UtmZoneEthiopia.cs">
+      <DependentUpon>ERABMSModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\AbandonedBridgeViewModel.cs" />
+    <Compile Include="ViewModels\BridgeConstructionYearViewModel.cs" />
+    <Compile Include="ViewModels\BridgeCulvertMainRouteSubRouteViewModel.cs" />
+    <Compile Include="ViewModels\BridgeCulvertDistrictSectionSegmentViewModel.cs" />
+    <Compile Include="ViewModels\BridgeImprovementIndicatorViewModel.cs" />
+    <Compile Include="ViewModels\BridgeInspectionViewModel.cs" />
+    <Compile Include="ViewModels\CulvertLocationViewModel.cs" />
+    <Compile Include="ViewModels\BridgePriorityViewModel.cs" />
+    <Compile Include="ViewModels\BridgeLocationViewModel.cs" />
+    <Compile Include="ViewModels\CulvertSubRouteViewModel.cs" />
+    <Compile Include="ViewModels\CulvertViewModel.cs" />
+    <Compile Include="ViewModels\BridgeSubRouteViewModel.cs" />
+    <Compile Include="ViewModels\BridgeImageListViewModel.cs" />
+    <Compile Include="ViewModels\CulvertInspectionViewModel.cs" />
+    <Compile Include="ViewModels\ImageGalleryViewModel.cs" />
+    <Compile Include="ViewModels\InvalidInspectionDateViewModel.cs" />
+    <Compile Include="ViewModels\LocationViewModel.cs" />
+    <Compile Include="ViewModels\VisualInspectionViewModel.cs" />
+    <Compile Include="ViewModels\MajorInspectionViewModel.cs" />
+    <Compile Include="ViewModels\BridgeViewModel.cs" />
+    <Compile Include="ViewModels\CulvertValueViewModel.cs" />
+    <Compile Include="ViewModels\BridgeValueViewModel.cs" />
+    <Compile Include="ViewModels\CulvertsForUpgradingViewModel.cs" />
+    <Compile Include="ViewModels\DamageByStructureItemByDamgeTypeViewModel.cs" />
+    <Compile Include="ViewModels\CommentAndObservationViewModel.cs" />
+    <Compile Include="ViewModels\CulvertDamageInspectionViewModel.cs" />
+    <Compile Include="ViewModels\BridgeDamageConditionViewModel.cs" />
+    <Compile Include="ViewModels\BridgeLengthViewModel.cs" />
+    <Compile Include="ViewModels\BridgeTypeViewModel.cs" />
+    <Compile Include="ViewModels\BSSDViewModel.cs" />
+    <Compile Include="ViewModels\CSSDViewModel.cs" />
+    <Compile Include="ViewModels\BridgeDistrictViewModel.cs" />
+    <Compile Include="ViewModels\CulvertDistrictViewModel.cs" />
+    <Compile Include="ViewModels\BridgeSectionViewModel.cs" />
+    <Compile Include="ViewModels\CulvertSectionViewModel.cs" />
+    <Compile Include="ViewModels\CulvertTypeViewModel.cs" />
+    <Compile Include="ViewModels\InspMajorAncillariesViewModel.cs" />
+    <Compile Include="ViewModels\InspCulvertStructureViewModel.cs" />
+    <Compile Include="ViewModels\InspMajorBridgePartsViewModel.cs" />
+    <Compile Include="ViewModels\InspVisualAncillariesViewModel.cs" />
+    <Compile Include="ViewModels\InspMajorSubStructuresViewModel.cs" />
+    <Compile Include="ViewModels\InspVisualSubStructuresViewModel.cs" />
+    <Compile Include="ViewModels\InspMajorSuperStructuresViewModel.cs" />
+    <Compile Include="ViewModels\InspVisualSuperStructuresViewModel.cs" />
+    <Compile Include="ViewModels\BridgeFoundationViewModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\bootstrap-theme.css" />
+    <Content Include="Content\bootstrap-theme.min.css" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\buttons.dataTables.css" />
+    <Content Include="Content\buttons.dataTables.min.css" />
+    <Content Include="Content\editor.dataTables.css" />
+    <Content Include="Content\editor.dataTables.min.css" />
+    <Content Include="Content\select.dataTables.css" />
+    <Content Include="Content\select.dataTables.min.css" />
+    <Content Include="images\ajax-loader-big-2.gif" />
+    <Content Include="images\ajax-loader-big-3.gif" />
+    <Content Include="images\ajax-loader-big-4.gif" />
+    <Content Include="images\ajax-loader-big-5.gif" />
+    <Content Include="images\ajax-loader-big-1.gif" />
+    <Content Include="images\ajax-loader-big.gif" />
+    <Content Include="images\ajax-loader-small.gif" />
+    <Content Include="images\autocad_icon.png" />
+    <Content Include="images\autocad_icon_1.png" />
+    <Content Include="images\background-2.jpg" />
+    <Content Include="images\background.jpg" />
+    <Content Include="images\bridge_map_marker_abandoned.png" />
+    <Content Include="images\bridge_map_marker_green.png" />
+    <Content Include="images\bridge_marker_on_road_map.png" />
+    <Content Include="images\culvert_map_marker_B.png" />
+    <Content Include="images\bridge_map_marker_orange.png" />
+    <Content Include="images\culvert_map_marker_green.png" />
+    <Content Include="images\culvert_map_marker_orange.png" />
+    <Content Include="images\culvert_marker_on_road_map.png" />
+    <Content Include="images\era_logo.jpg" />
+    <Content Include="images\error_1.png" />
+    <Content Include="images\error_2.png" />
+    <Content Include="images\error_3.png" />
+    <Content Include="images\favicon.ico" />
+    <Content Include="images\home_01.jpg" />
+    <Content Include="images\home_02.jpg" />
+    <Content Include="images\home_03.jpg" />
+    <Content Include="images\home_04.jpg" />
+    <Content Include="images\home_05.jpg" />
+    <Content Include="images\home_06.jpg" />
+    <Content Include="images\home_07.jpg" />
+    <Content Include="images\home_08.jpg" />
+    <Content Include="images\home_09.jpg" />
+    <Content Include="images\map_marker_new.png" />
+    <Content Include="images\map_marker_red.png" />
+    <Content Include="images\processing.gif" />
+    <Content Include="images\searching.gif" />
+    <Content Include="images\success_1.gif" />
+    <Content Include="images\video_1.png" />
+    <Content Include="images\video_2.png" />
+    <Content Include="images\video_3.png" />
+    <Content Include="images\video_4.png" />
+    <Content Include="media\bridge\Alemgena\Modjo\Addis - Modjo\3333\3333 %281%29.jpg" />
+    <Content Include="media\bridge\Alemgena\Modjo\Addis - Modjo\3333\3333 %281%29.mp4" />
+    <Content Include="media\bridge\Alemgena\Modjo\Addis - Modjo\3333\3333 %282%29.jpg" />
+    <Content Include="media\bridge\Alemgena\Modjo\Addis - Modjo\3333\3333 %282%29.mp4" />
+    <Content Include="media\bridge\Alemgena\Modjo\Addis - Modjo\3333\3333 %283%29.jpg" />
+    <Content Include="media\bridge\Alemgena\Modjo\Addis - Modjo\3333\cracking 2.jpg" />
+    <Content Include="media\bridge\Alemgena\Modjo\Addis - Modjo\3333\cracking.jpg" />
+    <Content Include="media\bridge\Alemgena\Modjo\Addis - Modjo\A1-1-001\outlet_compressed.jpg" />
+    <Content Include="media\bridge\Alemgena\Modjo\Addis - Modjo\A1-1-001\plan_compressed.jpg" />
+    <Content Include="media\bridge\Alemgena\Modjo\Addis - Modjo\A1-1-002\Downstream or outlet_compressed.jpg" />
+    <Content Include="media\bridge\Alemgena\Modjo\Addis - Modjo\A1-1-002\plan_compressed.jpg" />
+    <Content Include="media\bridge\Alemgena\Modjo\Addis - Modjo\A1-1-003\outlet_compressed.jpg" />
+    <Content Include="media\bridge\Alemgena\Modjo\Addis - Modjo\A1-1-003\plan_compressed.jpg" />
+    <Content Include="media\bridge\Alemgena\Modjo\Addis - Modjo\A1-1-004\outlet_compressed.jpg" />
+    <Content Include="media\bridge\Alemgena\Modjo\Addis - Modjo\A1-1-004\plan_compressed.jpg" />
+    <Content Include="media\bridge\Alemgena\Modjo\Addis - Modjo\A1-1-005\INLET_2021-09-24_01-33-57.jpg" />
+    <Content Include="media\bridge\Alemgena\Modjo\Addis - Modjo\A1-1-005\outlet_compressed.jpg" />
+    <Content Include="media\bridge\Alemgena\Modjo\Addis - Modjo\A1-1-005\plan_compressed.jpg" />
+    <Content Include="media\bridge\Alemgena\Modjo\Addis - Modjo\A1-1-006\outlet_compressed.jpg" />
+    <Content Include="media\bridge\Alemgena\Modjo\Addis - Modjo\A1-1-006\plan_compressed.jpg" />
+    <Content Include="media\bridge\Alemgena\Modjo\Addis - Modjo\A1-1-007\outlet_compressed.jpg" />
+    <Content Include="media\bridge\Alemgena\Modjo\Addis - Modjo\A1-1-007\plan_compressed.jpg" />
+    <Content Include="media\bridge\Alemgena\Modjo\Addis - Modjo\A1-1-008\outlet_compressed.jpg" />
+    <Content Include="media\bridge\Alemgena\Modjo\Addis - Modjo\A1-1-008\PLAN_2021-09-24_01-35-01.jpg" />
+    <Content Include="media\bridge\Alemgena\Modjo\Addis - Modjo\A1-1-008\plan_compressed.jpg" />
+    <Content Include="media\bridge\Alemgena\Modjo\Addis - Modjo\A1-1-009\outlet_compressed.jpg" />
+    <Content Include="media\bridge\Alemgena\Modjo\Addis - Modjo\A1-1-009\plan_compressed.jpg" />
+    <Content Include="media\bridge\Alemgena\Modjo\Addis - Modjo\A1-1-010\outlet_compressed.jpg" />
+    <Content Include="media\bridge\Alemgena\Modjo\Addis - Modjo\A1-1-010\plan_compressed.jpg" />
+    <Content Include="media\bridge\Alemgena\Modjo\Addis - Modjo\A1-1-012\outlet vegitation_compressed.jpg" />
+    <Content Include="media\bridge\Alemgena\Modjo\Addis - Modjo\A1-1-012\plan_compressed.jpg" />
+    <Content Include="media\bridge\Alemgena\Modjo\Addis - Modjo\A1-1-013N\outlet_compressed.jpg" />
+    <Content Include="media\bridge\Alemgena\Modjo\Addis - Modjo\A1-1-013N\plan_compressed.jpg" />
+    <Content Include="media\bridge\Alemgena\Modjo\Addis - Modjo\A1-1-013\outlet_compressed.jpg" />
+    <Content Include="media\bridge\Alemgena\Modjo\Addis - Modjo\A1-1-013\plan_compressed.jpg" />
+    <Content Include="media\culvert\Alemgena\Mojo\Addis - Mojo\3333\3333 %281%29.jpg" />
+    <Content Include="media\culvert\Alemgena\Mojo\Addis - Mojo\3333\3333 %282%29.jpg" />
+    <Content Include="media\culvert\Alemgena\Mojo\Addis - Mojo\3333\3333 %283%29.jpg" />
+    <Content Include="media\culvert\Alemgena\Mojo\Addis - Mojo\3333\3333 %284%29.jpg" />
+    <Content Include="Scripts\canvasjs.min.js" />
+    <Content Include="Content\dropdown-submenu.css" />
+    <Content Include="Content\erabms-bootstrap.css" />
+    <Content Include="Content\jquery.dataTables.css" />
+    <Content Include="Content\jquery.dataTables.min.css" />
+    <Content Include="Content\themes\base\accordion.css" />
+    <Content Include="Content\themes\base\all.css" />
+    <Content Include="Content\themes\base\autocomplete.css" />
+    <Content Include="Content\themes\base\base.css" />
+    <Content Include="Content\themes\base\button.css" />
+    <Content Include="Content\themes\base\core.css" />
+    <Content Include="Content\themes\base\datepicker.css" />
+    <Content Include="Content\themes\base\dialog.css" />
+    <Content Include="Content\themes\base\draggable.css" />
+    <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_75_dadada_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <Content Include="Content\themes\base\images\ui-icons_222222_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_444444_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_454545_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_555555_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_777620_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_777777_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_888888_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_cc0000_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_ffffff_256x240.png" />
+    <Content Include="Content\themes\base\jquery-ui.css" />
+    <Content Include="Content\themes\base\jquery-ui.min.css" />
+    <Content Include="Content\themes\base\menu.css" />
+    <Content Include="Content\themes\base\progressbar.css" />
+    <Content Include="Content\themes\base\resizable.css" />
+    <Content Include="Content\themes\base\selectable.css" />
+    <Content Include="Content\themes\base\selectmenu.css" />
+    <Content Include="Content\themes\base\slider.css" />
+    <Content Include="Content\themes\base\sortable.css" />
+    <Content Include="Content\themes\base\spinner.css" />
+    <Content Include="Content\themes\base\tabs.css" />
+    <Content Include="Content\themes\base\theme.css" />
+    <Content Include="Content\themes\base\tooltip.css" />
+    <Content Include="favicon.ico" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Global.asax" />
+    <Content Include="Content\Site.css" />
+    <Content Include="icons\action-highlight.png" />
+    <Content Include="icons\action-highlight2.png" />
+    <Content Include="icons\action.png" />
+    <Content Include="icons\action1.png" />
+    <Content Include="icons\caret-down-fill.svg" />
+    <Content Include="icons\caret-down-square-fill.svg" />
+    <Content Include="icons\caret-down-square.svg" />
+    <Content Include="icons\caret-down.svg" />
+    <Content Include="icons\caret-right-fill.svg" />
+    <Content Include="icons\caret-right-square-fill.svg" />
+    <Content Include="icons\caret-right-square.svg" />
+    <Content Include="icons\caret-right.svg" />
+    <Content Include="icons\collapsed-white.png" />
+    <Content Include="icons\collapsed.png" />
+    <Content Include="icons\collapsed2.png" />
+    <Content Include="icons\expanded-white.png" />
+    <Content Include="icons\expanded.png" />
+    <Content Include="icons\expanded2.png" />
+    <Content Include="icons\file-text-fill.svg" />
+    <Content Include="icons\file-text.svg" />
+    <Content Include="images\app-icon.jpg" />
+    <Content Include="images\era_logo.png" />
+    <Content Include="images\logo.jpg" />
+    <Content Include="images\logo.png" />
+    <Content Include="images\pdf_icon.png" />
+    <Content Include="images\word_icon.png" />
+    <Content Include="media\bridge\Alemgena\Modjo\Addis - Modjo\A1-1-004 %28GOGECHA%29\Cracked patch repairs.JPG" />
+    <Content Include="media\bridge\Alemgena\Modjo\Addis - Modjo\A1-1-004 %28GOGECHA%29\Crushed Bearing.jpg" />
+    <Content Include="media\bridge\Alemgena\Modjo\Addis - Modjo\A1-1-004 %28GOGECHA%29\Deskslab concrete deterioration &amp; Girder Deflection.JPG" />
+    <Content Include="media\bridge\Alemgena\Modjo\Addis - Modjo\A1-1-004 %28GOGECHA%29\Deskslab concrete deterioration.JPG" />
+    <Content Include="media\bridge\Alemgena\Modjo\Addis - Modjo\A1-1-004 %28GOGECHA%29\Upstream view with broken guardrail.JPG" />
+    <Content Include="media\bridge\Alemgena\Modjo\Addis - Modjo\A1-1-004 %28GOGECHA%29\Water leakage through Joint.JPG" />
+    <Content Include="media\bridge\Alemgena\Modjo\Addis - Modjo\A1-1-001\DSC03939.JPG" />
+    <Content Include="media\bridge\Alemgena\Modjo\Addis - Modjo\A1-1-001\DSC03940.JPG" />
+    <Content Include="media\bridge\Alemgena\Modjo\Addis - Modjo\A1-1-001\Inlet side silter.jpg" />
+    <Content Include="media\bridge\Alemgena\Modjo\Addis - Modjo\A1-1-004\DSC03954.jpg" />
+    <Content Include="media\bridge\Alemgena\MOJO\Addis- Mojo\A1-1-004 %28GOGECHA%29\Cracked patch repairs.JPG" />
+    <Content Include="media\bridge\Alemgena\MOJO\Addis- Mojo\A1-1-004 %28GOGECHA%29\Crushed Bearing.jpg" />
+    <Content Include="media\bridge\Alemgena\MOJO\Addis- Mojo\A1-1-004 %28GOGECHA%29\Deskslab concrete deterioration &amp; Girder Deflection.JPG" />
+    <Content Include="media\bridge\Alemgena\MOJO\Addis- Mojo\A1-1-004 %28GOGECHA%29\Deskslab concrete deterioration.JPG" />
+    <Content Include="media\bridge\Alemgena\MOJO\Addis- Mojo\A1-1-004 %28GOGECHA%29\Upstream view with broken guardrail.JPG" />
+    <Content Include="media\bridge\Alemgena\MOJO\Addis- Mojo\A1-1-004 %28GOGECHA%29\Water leakage through Joint.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-001\B22-1-001.mpg" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-001\Downstream.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-001\Front View.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-001\Shelae One-Sketch.jpg" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-001\upstream .JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-002\B22-1-002.mpg" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-002\Front view.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-002\Shelae-Sketch.jpg" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-002\Upstream View.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-003\B22-1-003.mpg" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-003\Defect.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-003\Downstream.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-003\Front.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-003\Wuha-Sketch.jpg" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-004 %28Naqalaa%29\B22-1-004.mpg" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-004 %28Naqalaa%29\Downstream.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-004 %28Naqalaa%29\Front view.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-004 %28Naqalaa%29\Upstream side.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-005 %28Kechen Wuha%29\B22-1-005.mpg" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-005 %28Kechen Wuha%29\Downstream.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-005 %28Kechen Wuha%29\Front.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-005 %28Kechen Wuha%29\kechen wuha-Sketch.jpg" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-005 %28Kechen Wuha%29\Upstream.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-006 %28KotiWuha%29\B22-1-006.mpg" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-006 %28KotiWuha%29\Downstream.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-006 %28KotiWuha%29\front .JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-006 %28KotiWuha%29\KotiWuha-Sketch.jpg" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-006 %28KotiWuha%29\Upstream.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-007 %28Derekfefa%29\B22-1-007.mpg" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-007 %28Derekfefa%29\Downstream.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-007 %28Derekfefa%29\Front.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-007 %28Derekfefa%29\Upstream.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-008 %28Ginbora%29\B22-1-008.mpg" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-008 %28Ginbora%29\Downstream.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-008 %28Ginbora%29\Front.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-008 %28Ginbora%29\Ginbora-Sketch.jpg" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-008 %28Ginbora%29\Under side.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-008 %28Ginbora%29\Upstream.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-009 %28Kurakura%29\B22-1-009.mpg" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-009 %28Kurakura%29\Downstream.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-009 %28Kurakura%29\Front .JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-009 %28Kurakura%29\KuraKura-Sketch.jpg" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-009 %28Kurakura%29\upstream.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-010 %28Felek%29\B22-1-010.mpg" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-010 %28Felek%29\Downstream.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-010 %28Felek%29\Felek-Sketch.jpg" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-010 %28Felek%29\Front.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-010 %28Felek%29\Upstream.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-011 %28Gimbora%29\B22-1-011.mpg" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-011 %28Gimbora%29\downstream.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-011 %28Gimbora%29\Front.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-011 %28Gimbora%29\Gimbora-Sketch.jpg" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-011 %28Gimbora%29\Upstream.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-012 %28Ambofefa%29\B22-1-012.mpg" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-012 %28Ambofefa%29\Downstream.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-012 %28Ambofefa%29\Front.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-012 %28Ambofefa%29\upstream.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-013 %28Baba%29\B22-1-013.mpg" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-013 %28Baba%29\Baba-Sketch.jpg" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-013 %28Baba%29\Downstream.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-013 %28Baba%29\front.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-013 %28Baba%29\Upstream.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-014 %28Birebire%29\B22-1-014.mpg" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-014 %28Birebire%29\Bire Bire-Sketch.jpg" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-014 %28Birebire%29\downstream side.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-014 %28Birebire%29\Front view.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-014 %28Birebire%29\Upstream side.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-015 %28Baria Yemotew%29\B22-1-015.mpg" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-015 %28Baria Yemotew%29\Downstream side.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-015 %28Baria Yemotew%29\Front.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-015 %28Baria Yemotew%29\Upstream.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-016 %28Gibeit%29\B22-1-016.mpg" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-016 %28Gibeit%29\Downstream.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-016 %28Gibeit%29\Front.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-016 %28Gibeit%29\Upstream.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-017 %28Wacho%29\B22-1-017.mpg" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-017 %28Wacho%29\Donwstream.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-017 %28Wacho%29\front.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-017 %28Wacho%29\Upstream.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-017 %28Wacho%29\Wacho-Sketch.jpg" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-018 %28Debot%29\B22-1-018.mpg" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-018 %28Debot%29\Debot-Sketch.jpg" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-018 %28Debot%29\Downstream.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-018 %28Debot%29\Front.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-019 %28Embuahoch-1%29\B22-1-019.mpg" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-019 %28Embuahoch-1%29\Downstream.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-019 %28Embuahoch-1%29\Front.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-019 %28Embuahoch-1%29\Upstrem.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-020 %28Embuahoch-2%29\B22-1-020.mpg" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-020 %28Embuahoch-2%29\Downstream.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-020 %28Embuahoch-2%29\Front.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-020 %28Embuahoch-2%29\Guilly.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-020 %28Embuahoch-2%29\Upstream.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-021 %28Sekela-1%29\B22-1-021.mpg" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-021 %28Sekela-1%29\Downstream.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-021 %28Sekela-1%29\Front.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-022 %28Sekela-2%29\B22-1-022.mpg" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-022 %28Sekela-2%29\Downstream.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-022 %28Sekela-2%29\front.JPG" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-022 %28Sekela-2%29\Upstream.JPG" />
+    <Content Include="Models\ERABMSModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>ERABMSModel.edmx</DependentUpon>
+      <LastGenOutput>ERABMSModel.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\ERABMSModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>ERABMSModel.edmx</DependentUpon>
+      <LastGenOutput>ERABMSModel.cs</LastGenOutput>
+    </Content>
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Areas\Admin\Views\web.config" />
+    <Content Include="Areas\User\Views\web.config" />
+    <Content Include="Areas\Guest\Views\web.config" />
+    <Content Include="docs\bms_user_manual_dec_2020.docx" />
+    <Content Include="docs\bms_user_manual_dec_2020.pdf" />
+    <Content Include="Areas\Manager\Views\web.config" />
+    <Content Include="Areas\Admin\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Admin\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\Admin\Views\GirderTypes\New.cshtml" />
+    <Content Include="Areas\Admin\Views\GirderTypes\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\GirderTypes\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\GirderTypes\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\GirderTypes\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\RoadAlignmentTypes\New.cshtml" />
+    <Content Include="Areas\Admin\Views\RoadAlignmentTypes\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\RoadAlignmentTypes\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\RoadAlignmentTypes\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\RoadAlignmentTypes\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\BridgeTypes\New.cshtml" />
+    <Content Include="Areas\Admin\Views\BridgeTypes\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\BridgeTypes\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\BridgeTypes\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\BridgeTypes\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\SpanSupportTypes\New.cshtml" />
+    <Content Include="Areas\Admin\Views\SpanSupportTypes\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\SpanSupportTypes\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\SpanSupportTypes\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\SpanSupportTypes\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\DeckSlabTypes\New.cshtml" />
+    <Content Include="Areas\Admin\Views\DeckSlabTypes\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\DeckSlabTypes\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\DeckSlabTypes\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\DeckSlabTypes\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\AbutmentTypes\New.cshtml" />
+    <Content Include="Areas\Admin\Views\AbutmentTypes\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\AbutmentTypes\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\AbutmentTypes\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\AbutmentTypes\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\FoundationTypes\New.cshtml" />
+    <Content Include="Areas\Admin\Views\FoundationTypes\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\FoundationTypes\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\FoundationTypes\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\FoundationTypes\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\PierTypes\New.cshtml" />
+    <Content Include="Areas\Admin\Views\PierTypes\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\PierTypes\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\PierTypes\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\PierTypes\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\ExpansionJointTypes\New.cshtml" />
+    <Content Include="Areas\Admin\Views\ExpansionJointTypes\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\ExpansionJointTypes\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\ExpansionJointTypes\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\ExpansionJointTypes\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\BearingTypes\New.cshtml" />
+    <Content Include="Areas\Admin\Views\BearingTypes\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\BearingTypes\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\BearingTypes\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\BearingTypes\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\GuardRailingTypes\New.cshtml" />
+    <Content Include="Areas\Admin\Views\GuardRailingTypes\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\GuardRailingTypes\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\GuardRailingTypes\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\GuardRailingTypes\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\SurfaceTypes\New.cshtml" />
+    <Content Include="Areas\Admin\Views\SurfaceTypes\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\SurfaceTypes\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\SurfaceTypes\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\SurfaceTypes\Index.cshtml" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
+    <Content Include="Scripts\proj4.js" />
+    <Content Include="Areas\Admin\Views\Districts\New.cshtml" />
+    <Content Include="Areas\Admin\Views\Districts\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\Districts\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\Districts\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Districts\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Sections\New.cshtml" />
+    <Content Include="Areas\Admin\Views\Sections\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\Sections\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\Sections\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Sections\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Sections\_GetSectionsList.cshtml" />
+    <Content Include="Areas\Admin\Views\Segments\New.cshtml" />
+    <Content Include="Areas\Admin\Views\Segments\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\Segments\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\Segments\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Segments\_GetSegmentsList.cshtml" />
+    <Content Include="Areas\Admin\Views\Segments\Index.cshtml" />
+    <Content Include="Scripts\buttons.flash.js" />
+    <Content Include="Scripts\buttons.flash.min.js" />
+    <Content Include="Scripts\buttons.html5.js" />
+    <Content Include="Scripts\buttons.html5.min.js" />
+    <Content Include="Scripts\buttons.print.js" />
+    <Content Include="Scripts\buttons.print.min.js" />
+    <Content Include="Scripts\Chart.js" />
+    <Content Include="Scripts\Chart.min.js" />
+    <Content Include="Scripts\dataTables.buttons.js" />
+    <Content Include="Scripts\dataTables.buttons.min.js" />
+    <Content Include="Scripts\jquery-3.5.1.js" />
+    <Content Include="Scripts\jquery-3.5.1.min.js" />
+    <Content Include="Scripts\jquery-ui-1.12.1.js" />
+    <Content Include="Scripts\jquery-ui-1.12.1.min.js" />
+    <Content Include="Scripts\jquery.dataTables.js" />
+    <Content Include="Scripts\jquery.dataTables.min.js" />
+    <Content Include="Scripts\jquery.jeditable.js" />
+    <Content Include="Scripts\jquery.jeditable.min.js" />
+    <Content Include="Scripts\jszip.js" />
+    <Content Include="Scripts\jszip.min.js" />
+    <Content Include="Scripts\pdfmake.js" />
+    <Content Include="Scripts\pdfmake.min.js" />
+    <Content Include="Scripts\vfs_fonts.js" />
+    <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Areas\Admin\Views\BridgeTypes\Temp.cshtml" />
+    <Content Include="Areas\Admin\Views\BridgeTypes\_CreatePartial.cshtml" />
+    <Content Include="Areas\Admin\Views\BridgeTypes\_EditPartial.cshtml" />
+    <Content Include="media\bridge\Alemgena\Modjo\Addis - Modjo\A1-1-004\A1-1-004 %28Gogecha%29.pdf" />
+    <Content Include="media\bridge\Alemgena\Modjo\Addis - Modjo\A1-1-004\A1-1-004.pdf" />
+    <Content Include="media\bridge\BMS-ABOUTold.pdf" />
+    <Content Include="Areas\Admin\Views\MediaTypes\Index.cshtml" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-001\Shelae one %28 B22-1-001%29.dwg" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-002\B22-1-002 .dwg" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-003\B22 -1 -003 %28Tikur Wuha%29.pdf" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-003\Tikur Weha %28B22-1-003%29.dwg" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-004 %28Naqalaa%29\B22-1-004 .dwg" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-005 %28Kechen Wuha%29\Kechen Wuha %28B22-1-005%29.dwg" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-006 %28KotiWuha%29\B22-1-006.dwg" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-007 %28Derekfefa%29\B22-1-007.dwg" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-008 %28Ginbora%29\B22-1-008.dwg" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-009 %28Kurakura%29\B22-1-009.dwg" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-010 %28Felek%29\B22-1-010.dwg" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-011 %28Gimbora%29\B22-1-011.dwg" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-012 %28Ambofefa%29\B22-1-012 .dwg" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-013 %28Baba%29\B22-1-013 .dwg" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-014 %28Birebire%29\B22-1-014 .dwg" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-015 %28Baria Yemotew%29\B22-1-015 .dwg" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-016 %28Gibeit%29\Gibeit %28B22-1-016%29.dwg" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-017 %28Wacho%29\B22-1-017.dwg" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-018 %28Debot%29\B22-1-018.dwg" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-019 %28Embuahoch-1%29\B22-1-019.dwg" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-020 %28Embuahoch-2%29\B22-1-020.dwg" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-021 %28Sekela-1%29\B22-1-021.dwg" />
+    <Content Include="media\bridge\Combolcha\Woldiya\Woldia-Dilb\B22-1-022 %28Sekela-2%29\Sekela - 2 %28B22-1-022%29.dwg" />
+    <Content Include="Areas\Admin\Views\CulvertTypes\New.cshtml" />
+    <Content Include="Areas\Admin\Views\CulvertTypes\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\CulvertTypes\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\CulvertTypes\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\CulvertTypes\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\SoilTypes\New.cshtml" />
+    <Content Include="Areas\Admin\Views\SoilTypes\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\SoilTypes\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\SoilTypes\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\SoilTypes\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\EndWallTypes\New.cshtml" />
+    <Content Include="Areas\Admin\Views\EndWallTypes\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\EndWallTypes\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\EndWallTypes\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\EndWallTypes\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\ParapetMaterialTypes\New.cshtml" />
+    <Content Include="Areas\Admin\Views\ParapetMaterialTypes\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\ParapetMaterialTypes\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\ParapetMaterialTypes\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\ParapetMaterialTypes\Index.cshtml" />
+    <EntityDeploy Include="Models\ERABMSModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>ERABMSModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\ERABMSModel.edmx.diagram">
+      <DependentUpon>ERABMSModel.edmx</DependentUpon>
+    </Content>
+    <Content Include="Areas\Admin\Views\DamagePriority\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\DamagePriority\_GetDamagePercDetails.cshtml" />
+    <Content Include="Areas\Admin\Views\DamagePriority\_GetYesNoWeightDetails.cshtml" />
+    <Content Include="Areas\Admin\Views\DamagePriority\_GetRoadClassWeightDetails.cshtml" />
+    <Content Include="Areas\Admin\Views\DamagePriority\RequiredAction.cshtml" />
+    <Content Include="Areas\Admin\Views\DamageWeightAndCostRate\BridgePartDmgWt.cshtml" />
+    <Content Include="Areas\Admin\Views\DamageWeightAndCostRate\StructureItemDmgWt.cshtml" />
+    <Content Include="Areas\Admin\Views\DamageWeightAndCostRate\DamageConditionRange.cshtml" />
+    <Content Include="Areas\Admin\Views\DamageWeightAndCostRate\DamageRateAndCost.cshtml" />
+    <Content Include="Areas\Admin\Views\DamageWeightAndCostRate\_GetDamageWeight.cshtml" />
+    <Content Include="Areas\Admin\Views\DamageWeightAndCostRate\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\CulvertDamageRateAndCost\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\CulvertDamageRateAndCost\_GetDamageRateAndCost.cshtml" />
+    <Content Include="Areas\Admin\Views\Routes\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Routes\MainRoutes.cshtml" />
+    <Content Include="Areas\Admin\Views\Routes\SubRoutes.cshtml" />
+    <Content Include="Areas\Admin\Views\Routes\_GetSubRouteList.cshtml" />
+    <Content Include="Areas\Admin\Views\Routes\NewMainRoute.cshtml" />
+    <Content Include="Areas\Admin\Views\Routes\DeleteMainRoute.cshtml" />
+    <Content Include="Areas\Admin\Views\Routes\NewSubRoute.cshtml" />
+    <Content Include="Areas\Admin\Views\Routes\DeleteSubRoute.cshtml" />
+    <Content Include="Areas\Admin\Views\DamagePriority\_GetADTDetails.cshtml" />
+    <Content Include="Areas\Admin\Views\DamagePriority\_GetBridgeLengthDetails.cshtml" />
+    <Content Include="Areas\Admin\Views\DamagePriority\_GetConstructionYearDetails.cshtml" />
+    <Content Include="Areas\Admin\Views\DamagePriority\_GetMaintenanceUrgencyWeightDetails.cshtml" />
+    <Content Include="Areas\Admin\Views\DamagePriority\CriteriaTypes.cshtml" />
+    <Content Include="Areas\Admin\Views\DamagePriority\CriteriaWeightsSum.cshtml" />
+    <Content Include="media\bridge\Alemgena\Modjo\Addis - Modjo\3333\3333 %282%29.pdf" />
+    <Content Include="media\bridge\Alemgena\Modjo\Addis - Modjo\3333\3333 %281%29.docx" />
+    <Content Include="media\bridge\Alemgena\Modjo\Addis - Modjo\3333\3333 %283%29.pdf" />
+    <Content Include="media\bridge\Alemgena\Modjo\Addis - Modjo\3333\3333 %284%29.doc" />
+    <Content Include="Areas\Admin\Views\ConstructionYearRanges\Index.cshtml" />
+    <Content Include="docs\bms_software_develeopment_history.pdf" />
+    <Content Include="Areas\Admin\Views\ConstructionYearRanges\NewConstructionYearRangePartial.cshtml" />
+    <Content Include="Areas\Admin\Views\BridgeLengthRanges\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\BridgeLengthRanges\NewBridgeLengthRangePartial.cshtml" />
+    <Content Include="Areas\Admin\Views\BridgeBook\AnnualBridgeBook.cshtml" />
+    <Content Include="Areas\Admin\Views\BridgeBook\_GetAnnualBridgeBookByDistrict.cshtml" />
+    <Content Include="Areas\Admin\Views\BridgeBook\_GetAnnualBridgeBookBySection.cshtml" />
+    <Content Include="Areas\Admin\Views\RoadFunctionClass\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\RoadFunctionClass\NewRoadFunctionClassPartial.cshtml" />
+    <Content Include="Areas\Admin\Views\MediaTypes\NewMediaTypePartial.cshtml" />
+    <Content Include="Areas\Admin\Views\UserManagement\ChangePassword.cshtml" />
+    <Content Include="Areas\Admin\Views\UserManagement\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\UserManagement\New.cshtml" />
+    <Content Include="Areas\Admin\Views\UserManagement\Delete.cshtml" />
+    <Compile Include="Models\MetaData\SegmentMap.metadata.cs" />
+    <None Include="Scripts\jquery-3.4.1.intellisense.js" />
+    <Content Include="Scripts\jquery-3.4.1.js" />
+    <Content Include="Scripts\jquery-3.4.1.min.js" />
+    <Content Include="Scripts\jquery-3.4.1.slim.js" />
+    <Content Include="Scripts\jquery-3.4.1.slim.min.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Web.config" />
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Views\Web.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Help\About.cshtml" />
+    <Content Include="Views\Help\Contact.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Account\ForgotPassword.cshtml" />
+    <Content Include="Views\Account\ForgotPasswordConfirmation.cshtml" />
+    <Content Include="Views\Home\Login.cshtml" />
+    <Content Include="Views\Account\Register.cshtml" />
+    <Content Include="Views\Account\ResetPassword.cshtml" />
+    <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
+    <Content Include="Views\Manage\AddPhoneNumber.cshtml" />
+    <Content Include="Views\Manage\ChangePassword.cshtml" />
+    <Content Include="Views\Manage\Index.cshtml" />
+    <Content Include="Views\Manage\ManageLogins.cshtml" />
+    <Content Include="Views\Manage\SetPassword.cshtml" />
+    <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
+    <Content Include="Views\Shared\Lockout.cshtml" />
+    <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\Shared\_LoginRegisterPartial.cshtml" />
+    <Content Include="Views\Bridges\New.cshtml" />
+    <Content Include="Views\Bridges\Delete.cshtml" />
+    <Content Include="Views\Bridges\Details.cshtml" />
+    <Content Include="Views\Bridges\Edit.cshtml" />
+    <Content Include="Views\Bridges\Index.cshtml" />
+    <Content Include="Views\Culverts\New.cshtml" />
+    <Content Include="Views\Culverts\Delete.cshtml" />
+    <Content Include="Views\Culverts\Details.cshtml" />
+    <Content Include="Views\Culverts\Edit.cshtml" />
+    <Content Include="Views\Culverts\Index.cshtml" />
+    <Content Include="Views\Culverts\_GetCulvertListBySegment.cshtml" />
+    <Content Include="Views\BridgeInventory\Index.cshtml" />
+    <Content Include="Views\BridgeInventory\SuperStructure.cshtml" />
+    <Content Include="Views\BridgeInventory\Abutment.cshtml" />
+    <Content Include="Views\BridgeInventory\Ancillary.cshtml" />
+    <Content Include="Views\BridgeInventory\Pier.cshtml" />
+    <Content Include="Views\BridgeReportsCensus\_GetAllBridges.cshtml" />
+    <Content Include="Views\BridgeReportsCensus\BridgesWithDistrict.cshtml" />
+    <Content Include="Views\BridgeInventory\BridgeDoc.cshtml" />
+    <Content Include="Views\BridgeInventory\BridgeDrawing.cshtml" />
+    <Content Include="Views\BridgeReportsCensus\BridgesCountByDistrict.cshtml" />
+    <Content Include="Views\CulvertReportsCensus\CulvertsCountByDistrict.cshtml" />
+    <Content Include="Views\CulvertReportsCensus\_GetAllCulvertsByDistrict.cshtml" />
+    <Content Include="Views\BridgeReportsCensus\BridgesCountBySection.cshtml" />
+    <Content Include="Views\BridgeReportsCensus\_GetBridgesCountBySection.cshtml" />
+    <Content Include="Views\CulvertReportsCensus\_GetCulvertsCountBySection.cshtml" />
+    <Content Include="Views\CulvertReportsCensus\CulvertsCountBySection.cshtml" />
+    <Content Include="Views\BridgeInventory\GeneralInfo.cshtml" />
+    <Content Include="Views\BridgeProfile\Abutment.cshtml" />
+    <Content Include="Views\BridgeProfile\Location.cshtml" />
+    <Content Include="Views\BridgeProfile\BridgeDoc.cshtml" />
+    <Content Include="Views\BridgeProfile\BridgeDrawing.cshtml" />
+    <Content Include="Views\BridgeProfile\BridgeImage.cshtml" />
+    <Content Include="Views\BridgeProfile\BridgeVideo.cshtml" />
+    <Content Include="Views\BridgeProfile\Ancillary.cshtml" />
+    <Content Include="Views\BridgeProfile\GeneralInfo.cshtml" />
+    <Content Include="Views\BridgeProfile\PrintProfile.cshtml" />
+    <Content Include="Views\BridgeProfile\Pier.cshtml" />
+    <Content Include="Views\BridgeProfile\SuperStructure.cshtml" />
+    <Content Include="Views\CulvertProfile\Index.cshtml" />
+    <Content Include="Views\CulvertProfile\Location.cshtml" />
+    <Content Include="Views\CulvertProfile\GeneralInfo.cshtml" />
+    <Content Include="Views\CulvertProfile\StructuralInfo.cshtml" />
+    <Content Include="Views\CulvertProfile\CulvertImage.cshtml" />
+    <Content Include="Views\CulvertInventory\CulvertMedia.cshtml" />
+    <Content Include="Views\CulvertInventory\Index.cshtml" />
+    <Content Include="Views\BridgeInventory\GeneralInfoNew.cshtml" />
+    <Content Include="Views\BridgeInventory\SuperStructureNew.cshtml" />
+    <Content Include="Views\BridgeInventory\AbutmentNew.cshtml" />
+    <Content Include="Views\BridgeInventory\AncillaryNew.cshtml" />
+    <Content Include="Views\BridgeInventory\BridgeMedia.cshtml" />
+    <Content Include="Views\DamageInspVisual\Index.cshtml" />
+    <Content Include="Views\DamageInspVisual\SubStructure.cshtml" />
+    <Content Include="Views\DamageInspVisual\SuperStructure.cshtml" />
+    <Content Include="Views\DamageInspVisual\Ancillaries.cshtml" />
+    <Content Include="Views\DamageInspMajor\Index.cshtml" />
+    <Content Include="Views\DamageInspMajor\SubStructure.cshtml" />
+    <Content Include="Views\DamageInspMajor\SuperStructure.cshtml" />
+    <Content Include="Views\DamageInspMajor\Ancillaries.cshtml" />
+    <Content Include="Views\DamageInspCulvert\Index.cshtml" />
+    <Content Include="Views\DamageInspCulvert\StructureDamage.cshtml" />
+    <Content Include="Views\DamageInspCulvert\HydraulicAndChannelDamage.cshtml" />
+    <Content Include="Views\DamageInspCulvert\ObservationAndRecommendation.cshtml" />
+    <Content Include="Views\BridgeInspectionReports\_GetMajorInspectionDetails.cshtml" />
+    <Content Include="Views\BridgeInspectionReports\_GetBillOfQuantity.cshtml" />
+    <Content Include="Views\BridgeInspectionReports\_GetVisualInspectionDetails.cshtml" />
+    <Content Include="Views\BridgeReportsCensus\_GetBridgeTypeBySegmentInSection.cshtml" />
+    <Content Include="Views\CulvertReportsCensus\_GetCulvertTypeByDistrict.cshtml" />
+    <Content Include="Views\CulvertReportsCensus\_GetCulvertTypeBySegmentInSection.cshtml" />
+    <Content Include="Views\Shared\_Layout - Copy.cshtml" />
+    <Content Include="Views\BridgeReportsCensus\BridgesCountByBridgeType.cshtml" />
+    <Content Include="Views\BridgeReportsCensus\BridgesCountByConstructionYear.cshtml" />
+    <Content Include="Views\BridgeReportsCensus\BridgesCountByBridgeLength.cshtml" />
+    <Content Include="Views\CulvertReportsCensus\CulvertsCountByCulvertType.cshtml" />
+    <Content Include="Views\CulvertInventory\GeneralInfo.cshtml" />
+    <Content Include="Views\CulvertInventory\StructuralInfo.cshtml" />
+    <Content Include="Views\CulvertInventory\StructuralInfoNew.cshtml" />
+    <Content Include="Views\CulvertInventory\GeneralInfoNew.cshtml" />
+    <Content Include="Views\CulvertInspectionReports\_GetCulvertDamageConditionBySection.cshtml" />
+    <Content Include="Views\CulvertInspectionReports\_GetObservationAndRecommendationBySegment.cshtml" />
+    <Content Include="Views\CulvertInspectionReports\_GetBillOfQuantity.cshtml" />
+    <Content Include="Views\CulvertInspectionReports\_GetCulvertInspectionDetails.cshtml" />
+    <Content Include="Views\CulvertProfile\NoData.cshtml" />
+    <Content Include="Views\BridgeProfile\NoData.cshtml" />
+    <Content Include="Views\BridgeInspectionReports\_GetConditionAndRepairCostSummary.cshtml" />
+    <Content Include="Views\BridgeInspectionReports\_GetConditionAndRepairCostSummaryByDistrict.cshtml" />
+    <Content Include="Views\CulvertInspectionReports\_GetConditionAndRepairCostSummaryByDistrict.cshtml" />
+    <Content Include="Views\BridgeInspectionReports\_GetConditionAndRepairCostSummaryBySection.cshtml" />
+    <Content Include="Views\CulvertInspectionReports\_GetConditionAndRepairCostSummaryBySection.cshtml" />
+    <Content Include="Views\BridgeImprovement\Index.cshtml" />
+    <Content Include="Views\BridgeImprovement\_GetBridgeImprovement.cshtml" />
+    <Content Include="Views\BridgeImprovement\BridgeImprovementActionRecords.cshtml" />
+    <Content Include="Views\CulvertImprovement\Index.cshtml" />
+    <Content Include="Views\CulvertImprovement\_GetCulvertImprovement.cshtml" />
+    <Content Include="Views\CulvertImprovement\CulvertImprovementActionRecords.cshtml" />
+    <Content Include="Views\CulvertImprovement\_GetCulvertImprovementActionRecords.cshtml" />
+    <Content Include="Views\BridgeInspectionReports\_GetBridgeImprovementPriority.cshtml" />
+    <Content Include="Views\BridgeInspectionReports\_GetRecommendationsAndCommentsBySegment.cshtml" />
+    <Content Include="Views\BridgeInspectionReports\_GetBridgeImprovementIndicatorByDistrict.cshtml" />
+    <Content Include="Views\BridgeImprovement\_GetBridgeImprovementHistoryAll.cshtml" />
+    <Content Include="Views\BridgeImprovement\BridgeImprovementHistory.cshtml" />
+    <Content Include="Views\BridgeProfile\BridgeDamageImage.cshtml" />
+    <Content Include="Areas\Admin\Views\BridgeBook\BridgeBookByBridge.cshtml" />
+    <Content Include="Areas\Admin\Views\BridgeBook\_GetBridgeBookByBridge.cshtml" />
+    <Content Include="Views\BridgePriority\_GetBridgePriorityByInterventionRequirementByDistrict.cshtml" />
+    <Content Include="Views\DamageInspMajor\RecommendationAndComments.cshtml" />
+    <Content Include="Views\BridgePriority\_GetBridgePriorityByInterventionRequirementBySegment.cshtml" />
+    <Content Include="Views\BridgeInspectionReports\_GetPrevalentDamageType.cshtml" />
+    <Content Include="Views\CulvertImprovement\CulvertsForUpgrading.cshtml" />
+    <Content Include="Views\CulvertImprovement\_GetCulvertsForUpgradingAll.cshtml" />
+    <Content Include="Views\Bridges\BridgeList.cshtml" />
+    <Content Include="Views\Culverts\CulvertList.cshtml" />
+    <Content Include="Views\Culverts\_GetCulvertIndex.cshtml" />
+    <Content Include="Views\Bridges\_GetBridgeIndex.cshtml" />
+    <Content Include="Views\Shared\_MenuBar.cshtml" />
+    <Content Include="Views\BridgeInspectionReports\Index.cshtml" />
+    <Content Include="Views\BridgeInspectionReports\BridgeConditionAndBOQ.cshtml" />
+    <Content Include="Views\CulvertInspectionReports\Index.cshtml" />
+    <Content Include="Views\CulvertInspectionReports\_GetConditionAndRepairCostSummary.cshtml" />
+    <Content Include="Areas\Admin\Views\AssetValue\_GetTotalAssetValue.cshtml" />
+    <Content Include="Areas\Admin\Views\AssetValue\_GetCulvertCurrentValueBySegment.cshtml" />
+    <Content Include="Areas\Admin\Views\AssetValue\_GetBridgeCurrentValueBySegment.cshtml" />
+    <Content Include="Views\BridgeInspectionReports\_GetBridgeMainPartsDamageConditionBySegment.cshtml" />
+    <Content Include="Views\BridgeImprovement\_GetBridgeImprovementActionRecords.cshtml" />
+    <Content Include="Views\BridgeReportsCensus\_GetBridgesAndCulvertsCountByDistrict.cshtml" />
+    <Content Include="Views\BridgeReportsCensus\BridgesAndCulvertsCount.cshtml" />
+    <Content Include="Views\BridgeReportsCensus\BridgesAndCulvertsCountBySection.cshtml" />
+    <Content Include="Views\BridgeReportsCensus\_GetBridgesAndCulvertsCountBySection.cshtml" />
+    <Content Include="Views\BridgeInventory\FileUpload.cshtml" />
+    <Content Include="Areas\Admin\Views\BridgeBook\Index.cshtml" />
+    <Content Include="Views\BridgeProfile\Index.cshtml" />
+    <Content Include="Views\BridgeReportsCensus\BridgesCount.cshtml" />
+    <Content Include="Views\BridgeReportsCensus\BridgesCountBySegment.cshtml" />
+    <Content Include="Views\BridgeReportsCensus\_GetBridgesAndCulvertsCountBySegment.cshtml" />
+    <Content Include="Views\BridgeReportsCensus\BridgesAndCulvertsCountBySegment.cshtml" />
+    <Content Include="Views\Home\Index - Copy.cshtml" />
+    <Content Include="Views\CulvertProfile\PrintProfile.cshtml" />
+    <Content Include="Views\CulvertInspectionReports\_GetCulvertInspectionDetails - Copy.cshtml" />
+    <Content Include="Views\CulvertInspectionReports\_GetCulvertConditionAndBOQ.cshtml" />
+    <Content Include="Areas\Admin\Views\AssetValue\Index.cshtml" />
+    <Content Include="Views\BridgeReportsCensus\CountReport.cshtml" />
+    <Content Include="Views\ChartGraph\BridgeAndCulvertGraphs.cshtml" />
+    <Content Include="Views\ChartGraph\Index.cshtml" />
+    <Content Include="Views\ChartGraph\CulvertGraphs.cshtml" />
+    <Content Include="Views\Bridges\DeleteBridge.cshtml" />
+    <Content Include="Views\Culverts\DeleteCulvert.cshtml" />
+    <Content Include="Views\Bridges\BridgeListByRoute.cshtml" />
+    <Content Include="Views\Bridges\_GetBridgeListByMainRoute.cshtml" />
+    <Content Include="Views\BridgeReportsCensus\_GetBridgesAndCulvertsCountByMainRoute.cshtml" />
+    <Content Include="Views\BridgeReportsCensus\_GetBridgesAndCulvertsCountBySubRoute.cshtml" />
+    <Content Include="Views\BridgeReportsCensus\BridgesAndCulvertsCountBySubRoute.cshtml" />
+    <Content Include="Views\Search\_FindBridge.cshtml" />
+    <Content Include="Views\BridgeInspectionReports\_GetBridgeDamageConditionByDistrict.cshtml" />
+    <Content Include="Views\CulvertInspectionReports\_GetCulvertConditionByInspectionYearByDistrict.cshtml" />
+    <Content Include="Views\BridgeReportsCensus\AllBridges.cshtml" />
+    <Content Include="Views\CulvertReportsCensus\AllCulvertsByDistrict.cshtml" />
+    <Content Include="Views\CulvertInspectionReports\BillOfQuantity.cshtml" />
+    <Content Include="Views\BridgeInspectionReports\BillOfQuantity.cshtml" />
+    <Content Include="Views\DamageInspCulvert\HydraulicAndChannelDamageNew.cshtml" />
+    <Content Include="Views\BridgeReportsCensus\BridgeTypeCensusByLocation.cshtml" />
+    <Content Include="Views\BridgeReportsCensus\_GetBridgeTypeByDistrict.cshtml" />
+    <Content Include="Views\BridgeReportsCensus\_GetBridgeTypeByMainRoute.cshtml" />
+    <Content Include="Views\BridgeReportsCensus\_GetBridgeTypeBySection.cshtml" />
+    <Content Include="Views\CulvertReportsCensus\CulvertTypeCensusByLocation.cshtml" />
+    <Content Include="Views\CulvertReportsCensus\_GetCulvertTypeBySection.cshtml" />
+    <Content Include="Views\BridgePriority\BridgePriorityByInterventionRequirement.cshtml" />
+    <Content Include="Views\BridgePriority\_GetBridgePriorityByInterventionRequirementAll.cshtml" />
+    <Content Include="Views\BridgePriority\_GetBridgePriorityByInterventionRequirementBySection.cshtml" />
+    <Content Include="Views\Bridges\_GetBridgeListByDistrict.cshtml" />
+    <Content Include="Views\Bridges\_GetBridgeListBySegment.cshtml" />
+    <Content Include="Views\Bridges\_GetBridgeListBySection.cshtml" />
+    <Content Include="Views\Culverts\_GetCulvertListByDistrict.cshtml" />
+    <Content Include="Views\Culverts\_GetCulvertListBySection.cshtml" />
+    <Content Include="Areas\Admin\Views\BridgeBook\_GetBridgeBookBySection.cshtml" />
+    <Content Include="Areas\Admin\Views\BridgeBook\_GetBridgeBookByDistrict.cshtml" />
+    <Content Include="Areas\Admin\Views\BridgeBook\_GetBridgeBookBySegment.cshtml" />
+    <Content Include="Areas\Admin\Views\AssetValue\_GetCulvertCurrentValueByDistrict.cshtml" />
+    <Content Include="Areas\Admin\Views\AssetValue\_GetBridgeCurrentValueByDistrict.cshtml" />
+    <Content Include="Areas\Admin\Views\AssetValue\_GetCulvertCurrentValueBySection.cshtml" />
+    <Content Include="Areas\Admin\Views\AssetValue\_GetBridgeCurrentValueBySection.cshtml" />
+    <Content Include="Views\CulvertImprovement\_GetCulvertsForUpgradingByDistrict.cshtml" />
+    <Content Include="Views\CulvertImprovement\_GetCulvertsForUpgradingBySection.cshtml" />
+    <Content Include="Views\CulvertImprovement\_GetCulvertsForUpgradingBySegment.cshtml" />
+    <Content Include="Views\TrafficData\Index.cshtml" />
+    <Content Include="Views\TrafficData\_GetTrafficData.cshtml" />
+    <Content Include="Views\BridgeInspectionReports\_GetBridgeMainPartsDamageConditionBySection.cshtml" />
+    <Content Include="Views\BridgeInspectionReports\_GetBridgeMainPartsDamageConditionByDistrict.cshtml" />
+    <Content Include="Views\BridgeInspectionReports\_GetBridgeDamageConditionBySegment.cshtml" />
+    <Content Include="Views\BridgeInspectionReports\_GetBridgeDamageConditionBySection.cshtml" />
+    <Content Include="Views\BridgeInspectionReports\_GetBridgeDamageCondition.cshtml" />
+    <Content Include="Views\BridgeInspectionReports\_GetRecommendationsAndCommentsByDistrict.cshtml" />
+    <Content Include="Views\BridgeInspectionReports\_GetRecommendationsAndCommentsBySection.cshtml" />
+    <Content Include="Views\BridgeInspectionReports\_GetBridgeImprovementPriorityByDistrict.cshtml" />
+    <Content Include="Views\BridgeInspectionReports\_GetBridgeImprovementPriorityBySegment.cshtml" />
+    <Content Include="Views\BridgeInspectionReports\_GetBridgeImprovementPriorityBySection.cshtml" />
+    <Content Include="Views\BridgeInspectionReports\_GetBridgeImprovementIndicatorBySegment.cshtml" />
+    <Content Include="Views\BridgeInspectionReports\_GetBridgeImprovementIndicatorBySection.cshtml" />
+    <Content Include="Views\BridgeInspectionReports\_GetBridgeImprovementIndicator.cshtml" />
+    <Content Include="Views\CulvertInspectionReports\_GetCulvertDamageConditionByDistrict.cshtml" />
+    <Content Include="Views\CulvertInspectionReports\_GetCulvertDamageConditionBySegment.cshtml" />
+    <Content Include="Views\CulvertInspectionReports\_GetCulvertConditionByInspectionYearBySection.cshtml" />
+    <Content Include="Views\CulvertInspectionReports\_GetCulvertConditionByInspectionYearBySegment.cshtml" />
+    <Content Include="Views\CulvertInspectionReports\_GetObservationAndRecommendationBySection.cshtml" />
+    <Content Include="Views\CulvertInspectionReports\_GetObservationAndRecommendationByDistrict.cshtml" />
+    <Content Include="Areas\Admin\Views\MajorInspectionYear\Index.cshtml" />
+    <Content Include="Views\BridgeImprovement\_GetBridgeImprovementHistoryBySegment.cshtml" />
+    <Content Include="Views\BridgeImprovement\_GetBridgeImprovementHistoryByDistrict.cshtml" />
+    <Content Include="Views\BridgeImprovement\_GetBridgeImprovementHistoryBySection.cshtml" />
+    <Content Include="Areas\Admin\Views\MajorInspectionYear\NewMajorInspectionYearPartial.cshtml" />
+    <Content Include="Views\Bridges\_GetBridgeListAll.cshtml" />
+    <Content Include="Views\Culverts\_GetCulvertListAll.cshtml" />
+    <Content Include="Views\Search\_FindCulvert.cshtml" />
+    <Content Include="Views\ImageGallery\BridgeImages.cshtml" />
+    <Content Include="Views\ImageGallery\_ImagePartial.cshtml" />
+    <Content Include="Views\ImageGallery\CulvertImages.cshtml" />
+    <Content Include="Views\ImageGallery\BridgeDamageImages.cshtml" />
+    <Content Include="Views\Search\Index.cshtml" />
+    <Content Include="Views\BridgeReportsCensus\PileFoundationBridges.cshtml" />
+    <Content Include="Views\ErrorChecker\InvalidCulvertInspectionDate.cshtml" />
+    <Content Include="Views\ErrorHandler\Index.cshtml" />
+    <Content Include="Views\ImageGallery\BridgeAllImages.cshtml" />
+    <Content Include="Views\DamageInspMajor\ProcessBridgeInspectionData.cshtml" />
+    <Content Include="Views\ErrorHandler\DeleteError.cshtml" />
+    <Content Include="Views\BridgeReportsCensus\AbandonedBridges.cshtml" />
+    <Content Include="Views\ErrorChecker\Index.cshtml" />
+    <Content Include="Views\ErrorChecker\DuplicateBridgeNo.cshtml" />
+    <Content Include="Views\ErrorChecker\DuplicateCulvertNo.cshtml" />
+    <Content Include="Views\ErrorChecker\DuplicateSubRouteNo.cshtml" />
+    <Content Include="Views\ErrorChecker\DuplicateMainRouteNo.cshtml" />
+    <Content Include="Views\ErrorChecker\DuplicateSegmentNo.cshtml" />
+    <Content Include="Views\ErrorChecker\DuplicateSectionNo.cshtml" />
+    <Content Include="Views\ErrorHandler\DuplicateError.cshtml" />
+    <Content Include="Views\RoadList\Index.cshtml" />
+    <Content Include="Views\RoadList\_GetDistrictList.cshtml" />
+    <Content Include="Views\RoadList\_GetSectionList.cshtml" />
+    <Content Include="Views\RoadList\_GetSegmentList.cshtml" />
+    <Content Include="Views\Culverts\CulvertListByRoute.cshtml" />
+    <Content Include="Views\Culverts\_GetCulvertListByMainRoute.cshtml" />
+    <Content Include="Areas\Admin\Views\AssetValue\_GetBridgeValuePerLm.cshtml" />
+    <Content Include="Areas\Admin\Views\AssetValue\_GetCulvertValuePerLm.cshtml" />
+    <Content Include="Views\BridgeLocation\Index.cshtml" />
+    <Content Include="Views\BridgeLocation\_GetBridgeLocationBySegment.cshtml" />
+    <Content Include="Views\BridgeLocation\_GetBridgeLocationByDistrict.cshtml" />
+    <Content Include="Views\BridgeLocation\_GetBridgeLocationAll.cshtml" />
+    <Content Include="Views\BridgeLocation\_GetBridgeLocationBySection.cshtml" />
+    <Content Include="Views\BridgeLocation\_GetBridgeLocationByMainRoute.cshtml" />
+    <Content Include="Views\BridgeLocation\BridgeLocationByRoute.cshtml" />
+    <Content Include="Views\BridgeImprovement\PrintImprovement.cshtml" />
+    <Content Include="Views\CulvertLocation\CulvertLocationByRoute.cshtml" />
+    <Content Include="Views\CulvertLocation\Index.cshtml" />
+    <Content Include="Views\CulvertLocation\_GetCulvertLocationAll.cshtml" />
+    <Content Include="Views\CulvertLocation\_GetCulvertLocationByDistrict.cshtml" />
+    <Content Include="Views\CulvertLocation\_GetCulvertLocationBySection.cshtml" />
+    <Content Include="Views\CulvertLocation\_GetCulvertLocationBySegment.cshtml" />
+    <Content Include="Views\CulvertLocation\_GetCulvertLocationByMainRoute.cshtml" />
+    <Content Include="Views\CulvertImprovement\PrintImprovement.cshtml" />
+    <Content Include="Views\BridgeLocation\BridgeMap.cshtml" />
+    <Content Include="Views\BridgeLocation\BridgeMapBySegment.cshtml" />
+    <Content Include="Views\CulvertLocation\CulvertMap.cshtml" />
+    <Content Include="Views\CulvertLocation\CulvertMapBySegment.cshtml" />
+    <Content Include="Views\BridgeLocation\CoordinateConversion.cshtml" />
+    <Content Include="Views\ImageGallery\CulvertAllImages.cshtml" />
+    <Content Include="Views\BridgeLocation\AbandonedBridgesMap.cshtml" />
+    <Content Include="Views\BridgeLocation\PileFoundationBridgesMap.cshtml" />
+    <Content Include="Views\BridgePriority\BridgePriorityByHighestDamageRank.cshtml" />
+    <Content Include="Views\BridgePriority\_GetBridgePriorityByHighestDamageRankBySegment.cshtml" />
+    <Content Include="Views\BridgePriority\_GetBridgePriorityByHighestDamageRankBySection.cshtml" />
+    <Content Include="Views\BridgePriority\_GetBridgePriorityByHighestDamageRankByDistrict.cshtml" />
+    <Content Include="Views\BridgePriority\_GetBridgePriorityByHighestDamageRankAll.cshtml" />
+    <Content Include="Views\BridgePriority\BridgePriorityByAverage.cshtml" />
+    <Content Include="Views\BridgePriority\_GetBridgePriorityByAverageBySection.cshtml" />
+    <Content Include="Views\BridgePriority\_GetBridgePriorityByAverageBySegment.cshtml" />
+    <Content Include="Views\BridgePriority\_GetBridgePriorityByAverageByDistrict.cshtml" />
+    <Content Include="Views\BridgePriority\_GetBridgePriorityByAverageAll.cshtml" />
+    <Content Include="Views\BridgeReportsCensus\_GetBridgeTypeBySegmentInDistrict.cshtml" />
+    <Content Include="Views\CulvertReportsCensus\_GetCulvertTypeBySegmentInDistrict.cshtml" />
+    <Content Include="Views\BridgeLocation\_GetRoadsMapBySegment.cshtml" />
+    <Content Include="Views\BridgeLocation\_GetRoadsMapByDIstrict.cshtml" />
+    <Content Include="Views\BridgeLocation\RoadsMapBySegment.cshtml" />
+    <Content Include="Views\BridgeLocation\RoadsMap.cshtml" />
+    <Content Include="Views\BridgeLocation\_GetSegmentsListBySection.cshtml" />
+    <Content Include="Views\BridgeLocation\_GetSegmentsListByDistrict.cshtml" />
+    <Content Include="Views\Bridges\_GetBridgeListBySubRoute.cshtml" />
+    <Content Include="Views\BridgeLocation\_GetBridgeLocationBySubRoute.cshtml" />
+    <Content Include="Views\BridgeLocation\BridgeMapBySubRoute.cshtml" />
+    <Content Include="Views\Culverts\_GetCulvertListBySubRoute.cshtml" />
+    <Content Include="Views\CulvertLocation\_GetCulvertLocationBySubRoute.cshtml" />
+    <Content Include="Views\CulvertLocation\CulvertMapBySubRoute.cshtml" />
+    <Content Include="Views\BridgeInventory\BearingCapacity.cshtml" />
+    <Content Include="Views\RoadMap\Index.cshtml" />
+    <Content Include="Views\RoadMap\_GetSegmentsListBySection.cshtml" />
+    <Content Include="Views\RoadMap\_GetSegmentsListByDistrict.cshtml" />
+    <Content Include="Views\RoadMap\_GetRoadMap.cshtml" />
+    <Content Include="Views\Kml\Index.cshtml" />
+    <Content Include="Views\Kml\_GetSegmentKmlUpload.cshtml" />
+    <Content Include="Views\BridgeImprovement\_GetBridgeImprovementCostBySegment.cshtml" />
+    <Content Include="Views\BridgeImprovement\BridgeImprovementCost.cshtml" />
+    <Content Include="Views\BridgeImprovement\_GetBridgeImprovementCostBySection.cshtml" />
+    <Content Include="Views\BridgeImprovement\_GetBridgeImprovementCostByDistrict.cshtml" />
+    <Content Include="Views\BridgeImprovement\_GetBridgeImprovementCostAll.cshtml" />
+    <Content Include="Views\RoadMap\_GetRoadsMapByDistrict.cshtml" />
+    <Content Include="Views\RoadMap\_GetRoadsMapBySection.cshtml" />
+    <Content Include="Views\RoadMap\_GetSegmentsListAll.cshtml" />
+    <Content Include="Views\BridgeImprovement\BridgesAndCulvertsRepairCostByDistrict.cshtml" />
+    <Content Include="Views\Kml\UploadKmlFile.cshtml" />
+    <Content Include="Views\Kml\UploadRoadKmlByName.cshtml" />
+    <Content Include="Views\Kml\_FindSegmentByName.cshtml" />
+    <Content Include="Views\Kml\_GetDistrictKmlUpload.cshtml" />
+    <Content Include="Views\Kml\_GetSectionKmlUpload.cshtml" />
+    <Content Include="Views\Kml\NoMapSegments.cshtml" />
+    <Content Include="Views\BridgeInspectionReports\_GetMajorInspectionDetails - Copy.cshtml" />
+    <Content Include="Views\Kml\SimilarSegmentKml.cshtml" />
+    <Content Include="Views\BridgeReportsCensus\_GetBridgesAndCulvertsCountByRegion.cshtml" />
+    <Content Include="Views\BridgeReportsCensus\_GetBridgeTypeByRegion.cshtml" />
+    <Content Include="Views\CulvertReportsCensus\_GetCulvertTypeByRegion.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="Areas\Admin\Data\" />
+    <Folder Include="Areas\Guest\Controllers\" />
+    <Folder Include="Areas\Guest\Data\" />
+    <Folder Include="Areas\Guest\Views\Shared\" />
+    <Folder Include="Areas\Manager\Controllers\" />
+    <Folder Include="Areas\Manager\Data\" />
+    <Folder Include="Areas\Manager\Views\Shared\" />
+    <Folder Include="Areas\User\Controllers\" />
+    <Folder Include="Areas\User\Data\" />
+    <Folder Include="Areas\User\Views\Shared\" />
+    <Folder Include="Views\LocationsDDL\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\bootstrap.min.css.map" />
+    <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Content\bootstrap-theme.min.css.map" />
+    <Content Include="Content\bootstrap-theme.css.map" />
+    <None Include="packages.config" />
+    <Content Include="Scripts\jquery-3.4.1.slim.min.map" />
+    <Content Include="Scripts\jquery-3.4.1.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>53876</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:4444</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+    <Error Condition="!Exists('packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
+  </Target>
+  <Import Project="packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+</Project>

@@ -7,22 +7,24 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ERA_BCMS.Models
+namespace ERA_BMS.Models
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-
+    
     public partial class BridgeDoc
     {
-        [Key, ForeignKey("Bridge")]
-        public string BridgeDocId { get; set; }
+        public string Id { get; set; }
+        public string BridgeId { get; set; }
         public Nullable<int> SerNo { get; set; }
         public Nullable<System.DateTime> DocDate { get; set; }
         public string Description { get; set; }
-        public string DocPath { get; set; }
+        public string DocFilePath { get; set; }
+        public Nullable<System.DateTime> ModifiedOn { get; set; }
+        public byte[] Flag { get; set; }
+        public int DocTypeId { get; set; }
     
+        public virtual DocType DocType { get; set; }
         public virtual Bridge Bridge { get; set; }
     }
 }

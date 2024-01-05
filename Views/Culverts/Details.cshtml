@@ -1,90 +1,108 @@
-﻿@model ERA_BCMS.Models.Culvert
+﻿@model ERA_BMS.Models.Culvert
 
 @{
     ViewBag.Title = "Culvert Details";
 }
 
-<h2>Details</h2>
+<h2>Culvert Details</h2>
 
-<div>
-    <h4>Culvert</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.CulvertId)
-        </dt>
+<div class="row">
+    <div class="col-xs-6">
+        <table class="table">
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.CulvertId)
+                </td>
 
-        <dd>
-            @Html.DisplayFor(model => model.CulvertId)
-        </dd>
+                <th>
+                    @Html.DisplayFor(model => model.CulvertId)
+                </th>
+            </tr>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.CulvertName)
-        </dt>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.CulvertNo)
+                </td>
 
-        <dd>
-            @Html.DisplayFor(model => model.CulvertName)
-        </dd>
+                <th>
+                    @Html.DisplayFor(model => model.CulvertNo)
+                </th>
+            </tr>
 
-        <dt>
-            District @*Label for district*@
-        </dt>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.RevisedCulvertNo)
+                </td>
 
-        <dd>
-            @ViewBag.DistrictName @*Dispalys district name*@
-        </dd>
+                <th>
+                    @Html.DisplayFor(model => model.RevisedCulvertNo)
+                </th>
+            </tr>
 
-        <dt>
-            Section @*Label for section*@
-        </dt>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.SubRoute.MainRoute.MainRouteName)
+                </td>
 
-        <dd>
-            @ViewBag.SectionName @*Dispalys section name*@
-        </dd>
+                <th>
+                    @Html.DisplayFor(model => model.SubRoute.MainRoute.MainRouteName)
+                </th>
+            </tr>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Segment.SegmentName)
-        </dt>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.SubRoute.SubRouteName)
+                </td>
 
-        <dd>
-            @Html.DisplayFor(model => model.Segment.SegmentName)
-        </dd>
-        
-        <dt>
-            @Html.DisplayNameFor(model => model.RouteId)
-        </dt>
+                <th>
+                    @Html.DisplayFor(model => model.SubRoute.SubRouteName)
+                </th>
+            </tr>
+        </table>
+    </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.RouteId)
-        </dd>
+    <div class="col-xs-6">
+        <table class="table">
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.Segment.Section.District.DistrictName)
+                </td>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.KMFromAddis)
-        </dt>
+                <th>
+                    @Html.DisplayFor(model => model.Segment.Section.District.DistrictName)
+                </th>
+            </tr>
 
-        <dd>
-            @Html.DisplayFor(model => model.KMFromAddis)
-        </dd>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.Segment.Section.SectionName)
+                </td>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.XCoord)
-        </dt>
+                <th>
+                    @Html.DisplayFor(model => model.Segment.Section.SectionName)
+                </th>
+            </tr>
 
-        <dd>
-            @Html.DisplayFor(model => model.XCoord)
-        </dd>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.Segment.SegmentName)
+                </td>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.YCoord)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.YCoord)
-        </dd>
-
-    </dl>
+                <th>
+                    @Html.DisplayFor(model => model.Segment.SegmentName)
+                </th>
+            </tr>
+        </table>
+    </div>
 </div>
+
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.CulvertId }, new { @class = "btn btn-primary" })
-    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+    @*Show Edit button for admin only*@
+    @if (User.IsInRole("Admin"))
+    {
+        <a href="@Url.Action("Edit", new { id = Model.CulvertId })" class="btn btn-primary"><span class="glyphicon glyphicon-edit"></span> Edit Culvert</a>
+    }
+    <a href="@Url.Action("New", new { id = Model.SegmentId })" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> Register New Culvert</a>
+    <a href="@Url.Action("Index", new { id = Model.SegmentId })" class="btn btn-primary"><span class="glyphicon glyphicon-backward"></span> Go to Culvert List</a>
+    <a href="@Url.Action("Index", "CulvertInventory", new { id = Model.CulvertId })" target="_blank" class="btn btn-primary"><span class="glyphicon glyphicon-new-window"></span> Go to Inventory</a>
 </p>

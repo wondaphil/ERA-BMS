@@ -1,0 +1,230 @@
+﻿@model IEnumerable<ERA_BMS.ViewModels.BridgeImprovementIndicatorViewModel>
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title panel-info">Bridge Improvement Indicator by Inspection Years (District: <b>All</b>)</h3>
+    </div>
+
+    <div class="panel-body">
+        <table class="table table-condensed table-striped table-bordered centeredtable" id="tblbridgeimprovementindicator">
+            <thead>
+                @foreach (var dis in Model.GroupBy(s => s.districts))
+                {
+                    foreach (var sec in dis.GroupBy(s => s.sections))
+                    {
+                        foreach (var seg in sec.GroupBy(s => s.segments))
+                        {
+                            <tr>
+                                <td colspan="23">
+                                    <br />
+                                    <h5 style="text-align: left">District: <b>@dis.Key.DistrictName</b>, Section: <b>@sec.Key.SectionName</b>, Segment: <b>@seg.Key.SegmentName</b></h5>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th colspan="3"></th>
+                                <th colspan="4">Inspection Year 2006</th>
+                                <th colspan="4">Inspection Year 2010</th>
+                                <th colspan="4">Inspection Year 2013</th>
+                                <th colspan="4">Inspection Year 2016</th>
+                                <th colspan="4">Inspection Year 2020</th>
+                            </tr>
+                            <tr>
+                                <th>@Html.DisplayNameFor(model => model.bridges.BridgeNo)</th>
+                                <th>@Html.DisplayNameFor(model => model.bridges.BridgeName)</th>
+                                <th>@Html.DisplayNameFor(model => model.bridges.SuperStructure.BridgeType.BridgeTypeName)</th>
+
+                                <th>Dmg<br />%</th>
+                                <th>Bad</th>
+                                <th>Fair</th>
+                                <th>Good</th>
+                                <th>Dmg<br />%</th>
+                                <th>Bad</th>
+                                <th>Fair</th>
+                                <th>Good</th>
+                                <th>Dmg<br />%</th>
+                                <th>Bad</th>
+                                <th>Fair</th>
+                                <th>Good</th>
+                                <th>Dmg<br />%</th>
+                                <th>Bad</th>
+                                <th>Fair</th>
+                                <th>Good</th>
+                                <th>Dmg<br />%</th>
+                                <th>Bad</th>
+                                <th>Fair</th>
+                                <th>Good</th>
+                            </tr>
+                            foreach (var item in seg)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.bridges.BridgeNo)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.bridges.BridgeName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.bridges.SuperStructure.BridgeType.BridgeTypeName)
+                                    </td>
+                                    <td>
+                                        @item.bridgeConditionByInspYear.DmgPerc2006.ToString("0.00")
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(model => item.bridgeConditionByInspYear.Bad2006)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(model => item.bridgeConditionByInspYear.Fair2006)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(model => item.bridgeConditionByInspYear.Good2006)
+                                    </td>
+
+                                    <td>
+                                        @item.bridgeConditionByInspYear.DmgPerc2010.ToString("0.00")
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(model => item.bridgeConditionByInspYear.Bad2010)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(model => item.bridgeConditionByInspYear.Fair2010)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(model => item.bridgeConditionByInspYear.Good2010)
+                                    </td>
+
+                                    <td>
+                                        @item.bridgeConditionByInspYear.DmgPerc2013.ToString("0.00")
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(model => item.bridgeConditionByInspYear.Bad2013)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(model => item.bridgeConditionByInspYear.Fair2013)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(model => item.bridgeConditionByInspYear.Good2013)
+                                    </td>
+
+                                    <td>
+                                        @item.bridgeConditionByInspYear.DmgPerc2016.ToString("0.00")
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(model => item.bridgeConditionByInspYear.Bad2016)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(model => item.bridgeConditionByInspYear.Fair2016)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(model => item.bridgeConditionByInspYear.Good2016)
+                                    </td>
+
+                                    <td>
+                                        @item.bridgeConditionByInspYear.DmgPerc2020.ToString("0.00")
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(model => item.bridgeConditionByInspYear.Bad2020)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(model => item.bridgeConditionByInspYear.Fair2020)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(model => item.bridgeConditionByInspYear.Good2020)
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    }
+                }
+                <tr><td colspan="23">&nbsp;</td></tr>
+
+                <tr>
+                    <th colspan="4"></th>
+                    <th>@Model.Sum(s => s.bridgeConditionByInspYear.Bad2006)</th>
+                    <th>@Model.Sum(s => s.bridgeConditionByInspYear.Fair2006)</th>
+                    <th>@Model.Sum(s => s.bridgeConditionByInspYear.Good2006)</th>
+                    <th></th>
+                    <th>@Model.Sum(s => s.bridgeConditionByInspYear.Bad2010)</th>
+                    <th>@Model.Sum(s => s.bridgeConditionByInspYear.Fair2010)</th>
+                    <th>@Model.Sum(s => s.bridgeConditionByInspYear.Good2010)</th>
+                    <th></th>
+                    <th>@Model.Sum(s => s.bridgeConditionByInspYear.Bad2013)</th>
+                    <th>@Model.Sum(s => s.bridgeConditionByInspYear.Fair2013)</th>
+                    <th>@Model.Sum(s => s.bridgeConditionByInspYear.Good2013)</th>
+                    <th></th>
+                    <th>@Model.Sum(s => s.bridgeConditionByInspYear.Bad2016)</th>
+                    <th>@Model.Sum(s => s.bridgeConditionByInspYear.Fair2016)</th>
+                    <th>@Model.Sum(s => s.bridgeConditionByInspYear.Good2016)</th>
+                    <th></th>
+                    <th>@Model.Sum(s => s.bridgeConditionByInspYear.Bad2020)</th>
+                    <th>@Model.Sum(s => s.bridgeConditionByInspYear.Fair2020)</th>
+                    <th>@Model.Sum(s => s.bridgeConditionByInspYear.Good2020)</th>
+                </tr>
+                <tr>
+                    <td colspan="4" style="text-align: right">Inspected Bridges in <b>All</b> Districts</td>
+                    <th colspan="3">@((Model.Sum(s => s.bridgeConditionByInspYear.Bad2006) + Model.Sum(s => s.bridgeConditionByInspYear.Fair2006) + Model.Sum(s => s.bridgeConditionByInspYear.Good2006)).ToString("#,##0"))</th>
+                    <th></th>
+                    <th colspan="3">@((Model.Sum(s => s.bridgeConditionByInspYear.Bad2010) + Model.Sum(s => s.bridgeConditionByInspYear.Fair2010) + Model.Sum(s => s.bridgeConditionByInspYear.Good2010)).ToString("#,##0"))</th>
+                    <th></th>
+                    <th colspan="3">@((Model.Sum(s => s.bridgeConditionByInspYear.Bad2013) + Model.Sum(s => s.bridgeConditionByInspYear.Fair2013) + Model.Sum(s => s.bridgeConditionByInspYear.Good2013)).ToString("#,##0"))</th>
+                    <th></th>
+                    <th colspan="3">@((Model.Sum(s => s.bridgeConditionByInspYear.Bad2016) + Model.Sum(s => s.bridgeConditionByInspYear.Fair2016) + Model.Sum(s => s.bridgeConditionByInspYear.Good2016)).ToString("#,##0"))</th>
+                    <th></th>
+                    <th colspan="3">@((Model.Sum(s => s.bridgeConditionByInspYear.Bad2020) + Model.Sum(s => s.bridgeConditionByInspYear.Fair2020) + Model.Sum(s => s.bridgeConditionByInspYear.Good2020)).ToString("#,##0"))</th>
+                </tr>
+                <tr>
+                    <td colspan="4" style="text-align: right">Registered Bridges in <b>All</b> Districts</td>
+                    <th colspan="3">@ViewBag.NoOfBridges[0].ToString("#,##0")</th>
+                    <th></th>
+                    <th colspan="3">@ViewBag.NoOfBridges[1].ToString("#,##0")</th>
+                    <th></th>
+                    <th colspan="3">@ViewBag.NoOfBridges[2].ToString("#,##0")</th>
+                    <th></th>
+                    <th colspan="3">@ViewBag.NoOfBridges[3].ToString("#,##0")</th>
+                    <th></th>
+                    <th colspan="3">@ViewBag.NoOfBridges[4].ToString("#,##0")</th>
+                </tr>
+                <tr>
+                    <td colspan="4" style="text-align: right">Inspection % in <b>All</b> Districts</td>
+                    <th colspan="3">@(((Model.Sum(s => s.bridgeConditionByInspYear.Bad2006) + Model.Sum(s => s.bridgeConditionByInspYear.Fair2006) + Model.Sum(s => s.bridgeConditionByInspYear.Good2006)) * 100.00 / ViewBag.NoOfBridges[0]).ToString("0.00"))% </th>
+                    <th></th>
+                    <th colspan="3">@(((Model.Sum(s => s.bridgeConditionByInspYear.Bad2010) + Model.Sum(s => s.bridgeConditionByInspYear.Fair2010) + Model.Sum(s => s.bridgeConditionByInspYear.Good2010)) * 100.00 / ViewBag.NoOfBridges[1]).ToString("0.00"))% </th>
+                    <th></th>
+                    <th colspan="3">@(((Model.Sum(s => s.bridgeConditionByInspYear.Bad2013) + Model.Sum(s => s.bridgeConditionByInspYear.Fair2013) + Model.Sum(s => s.bridgeConditionByInspYear.Good2013)) * 100.00 / ViewBag.NoOfBridges[2]).ToString("0.00"))% </th>
+                    <th></th>
+                    <th colspan="3">@(((Model.Sum(s => s.bridgeConditionByInspYear.Bad2016) + Model.Sum(s => s.bridgeConditionByInspYear.Fair2016) + Model.Sum(s => s.bridgeConditionByInspYear.Good2016)) * 100.00 / ViewBag.NoOfBridges[3]).ToString("0.00"))% </th>
+                    <th></th>
+                    <th colspan="3">@(((Model.Sum(s => s.bridgeConditionByInspYear.Bad2020) + Model.Sum(s => s.bridgeConditionByInspYear.Fair2020) + Model.Sum(s => s.bridgeConditionByInspYear.Good2020)) * 100.00 / ViewBag.NoOfBridges[4]).ToString("0.00"))% </th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    @*<div class="panel-footer">
+        <h3 class="panel-title">Total No. of Bridges in <b>All</b> Districts: <b>@Model.Count()</b></h3>
+    </div>*@
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#tblbridgeimprovementindicator').dataTable({
+            paging: false,
+            pageLength: 15,
+            bLengthChange: true,
+            scrollY: 400,
+            
+            searching: true,
+            select: true,
+            dom: 'lBfrtip',
+            language: {
+                "emptyTable": " "
+            },
+            bInfo: false,
+            //buttons: ['copy', 'excel', 'pdf', 'print']
+            buttons: [
+                { extend: 'copy', className: 'btn btn-sm btn-primary' },
+                { extend: 'excel', className: 'btn btn-sm btn-primary', text: 'Export Excel' },
+                { extend: 'pdf', className: 'btn btn-sm btn-primary', text: 'Export PDF' },
+                { extend: 'print', className: 'btn btn-sm btn-primary' }
+            ]
+        });
+    });
+</script>

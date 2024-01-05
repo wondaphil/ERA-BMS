@@ -1,131 +1,159 @@
-﻿@model ERA_BCMS.Models.SuperStructure
+﻿@model ERA_BMS.Models.SuperStructure
 
 @{
     ViewBag.Title = "SuperStructure";
 }
 
-<div>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
+
+<table class="table table-condensed">
+    <tr>
+        <td>
             @Html.DisplayNameFor(model => model.NoOfSpan)
-        </dt>
+        </td>
 
-        <dd>
+        <th>
             @Html.DisplayFor(model => model.NoOfSpan)
-        </dd>
+        </th>
+    </tr>
 
-        <dt>
+    <tr>
+        <td>
             @Html.DisplayNameFor(model => model.SpanLengthComposition)
-        </dt>
+        </td>
 
-        <dd>
+        <th>
             @Html.DisplayFor(model => model.SpanLengthComposition)
-        </dd>
+        </th>
+    </tr>
 
-        <dt>
+    <tr>
+        <td>
             @Html.DisplayNameFor(model => model.TotalSpanLength)
-        </dt>
+        </td>
 
-        <dd>
+        <th>
             @Html.DisplayFor(model => model.TotalSpanLength)
-        </dd>
+        </th>
+    </tr>
 
-        <dt>
+    <tr>
+        <td>
             @Html.DisplayNameFor(model => model.CarriageWayWidth)
-        </dt>
+        </td>
 
-        <dd>
+        <th>
             @Html.DisplayFor(model => model.CarriageWayWidth)
-        </dd>
+        </th>
+    </tr>
 
-        <dt>
+    <tr>
+        <td>
             @Html.DisplayNameFor(model => model.SideWalkWidth)
-        </dt>
+        </td>
 
-        <dd>
+        <th>
             @Html.DisplayFor(model => model.SideWalkWidth)
-        </dd>
+        </th>
+    </tr>
 
-        <dt>
+    <tr>
+        <td>
             @Html.DisplayNameFor(model => model.NoOfLane)
-        </dt>
+        </td>
 
-        <dd>
+        <th>
             @Html.DisplayFor(model => model.NoOfLane)
-        </dd>
+        </th>
+    </tr>
 
-        <dt>
+    <tr>
+        <td>
             @Html.DisplayNameFor(model => model.SlabThickness)
-        </dt>
+        </td>
 
-        <dd>
+        <th>
             @Html.DisplayFor(model => model.SlabThickness)
-        </dd>
+        </th>
+    </tr>
 
-        <dt>
+    <tr>
+        <td>
+            @Html.DisplayNameFor(model => model.GirderType.GirderTypeName)
+        </td>
+
+        <th>
+            @Html.DisplayFor(model => model.GirderType.GirderTypeName)
+        </th>
+    </tr>
+
+    <tr>
+        <td>
             @Html.DisplayNameFor(model => model.NoOfGirder)
-        </dt>
+        </td>
 
-        <dd>
+        <th>
             @Html.DisplayFor(model => model.NoOfGirder)
-        </dd>
+        </th>
+    </tr>
 
-        <dt>
+    <tr>
+        <td>
             @Html.DisplayNameFor(model => model.GirderDepth)
-        </dt>
+        </td>
 
-        <dd>
+        <th>
             @Html.DisplayFor(model => model.GirderDepth)
-        </dd>
+        </th>
+    </tr>
 
-        <dt>
+    <tr>
+        <td>
             @Html.DisplayNameFor(model => model.SpacingGirder)
-        </dt>
+        </td>
 
-        <dd>
+        <th>
             @Html.DisplayFor(model => model.SpacingGirder)
-        </dd>
+        </th>
+    </tr>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.BoxWidth)
-        </dt>
+    <tr>
+        <td>
+            @Html.DisplayNameFor(model => model.GirderBoxWidth)
+        </td>
 
-        <dd>
-            @Html.DisplayFor(model => model.BoxWidth)
-        </dd>
+        <th>
+            @Html.DisplayFor(model => model.GirderBoxWidth)
+        </th>
+    </tr>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Bridge.BridgeName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Bridge.BridgeName)
-        </dd>
-
-        <dt>
+    <tr>
+        <td>
             @Html.DisplayNameFor(model => model.BridgeType.BridgeTypeName)
-        </dt>
+        </td>
 
-        <dd>
+        <th>
             @Html.DisplayFor(model => model.BridgeType.BridgeTypeName)
-        </dd>
+        </th>
+    </tr>
 
-        <dt>
+    <tr>
+        <td>
             @Html.DisplayNameFor(model => model.DeckSlabType.DeckSlabTypeName)
-        </dt>
+        </td>
 
-        <dd>
+        <th>
             @Html.DisplayFor(model => model.DeckSlabType.DeckSlabTypeName)
-        </dd>
+        </th>
+    </tr>
 
-        <dt>
+    <tr>
+        <td>
             @Html.DisplayNameFor(model => model.SpanSupportType.SpanSupportTypeName)
-        </dt>
+        </td>
 
-        <dd>
+        <th>
             @Html.DisplayFor(model => model.SpanSupportType.SpanSupportTypeName)
-        </dd>
-
-    </dl>
-</div>
+        </th>
+    </tr>
+</table>
+    

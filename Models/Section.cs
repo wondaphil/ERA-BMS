@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ERA_BCMS.Models
+namespace ERA_BMS.Models
 {
     using System;
     using System.Collections.Generic;
@@ -20,12 +20,16 @@ namespace ERA_BCMS.Models
             this.Segments = new HashSet<Segment>();
         }
     
-        public int SectionId { get; set; }
+        public string SectionId { get; set; }
+        public string SectionNo { get; set; }
         public string SectionName { get; set; }
-        public Nullable<int> DistrictId { get; set; }
+        public string DistrictId { get; set; }
         public string Remark { get; set; }
+        public Nullable<System.DateTime> ModifiedOn { get; set; }
+        public byte[] Flag { get; set; }
     
         public virtual District District { get; set; }
+        public virtual SectionMap SectionMap { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Segment> Segments { get; set; }
     }

@@ -1,0 +1,89 @@
+﻿
+<hr />
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="row">
+        <div class="col-xs-6">
+            <div class="form-horizontal">
+                <div class="form-group form-group-sm">
+                    <label class="control-label col-md-2 col-sm-4">District</label>
+                    <div class="col-md-5 col-sm-8">
+                        @Html.DropDownList("ddlDistrict2", new SelectList(ViewBag.Districts, "Value", "Text"), new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xs-6">
+            <div class="form-horizontal">
+                <div class="form-group form-group-sm">
+                    <label class="control-label col-md-2 col-sm-4">Section</label>
+                    <div class="col-md-5 col-sm-8">
+                        <select class="form-control" id="ddlSection2">
+                            <!-- Sections list populates here -->
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+        <div id="bridgesAndCulvertsCountBySegmentPartial">
+        <!-- Bridges and culverts count displays here -->
+    </div>
+}
+
+<div id="waitsegment" align="center" style="display: none">
+    <img src="~/images/ajax-loader-big.gif" />
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#ddlDistrict2').change(function () {
+            var selDistrictId2 = $('#ddlDistrict2 option:selected').val();
+            $('#ddlSection2 option').remove(); //empty the section dropdown list
+            $('#bridgesAndCulvertsCountBySegmentPartial').empty(); // clear the count place holder
+
+            if (selDistrictId2 != "0") //if some district is selected
+            {
+                $.ajax({
+                    url: '@Url.Action("_GetSections", "LocationsDDL", new { area = "" })',
+                    data: { districtid: selDistrictId2 },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        var markup = '<option value="0" id="noselect"> --Select Section --</option>';
+                        $.each(data, function (i, section) {
+                            markup += '<option value="' + section.Value + '">' + section.Text + '</option>'
+                            $('#ddlSection2').html(markup);
+                        });
+                    }
+                });
+            }
+        });
+
+        $('#ddlSection2').change(function () {
+            var selSectionId2 = $('#ddlSection2 option:selected').val();
+            $('#bridgesAndCulvertsCountBySegmentPartial').empty(); //clear the count place holder
+            
+            if (selSectionId2 != "0") //if some section is selected
+            {
+                $.ajax({
+                    url: '@Url.Action("_GetBridgesAndCulvertsCountBySegment", "BridgeReportsCensus")',
+                    data: { sectionid: selSectionId2 },
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () { $('#waitsegment').show(); },
+                    complete: function () { $('#waitsegment').hide(); },
+                    success: function (data) {
+                        $('#bridgesAndCulvertsCountBySegmentPartial').html(data);
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+

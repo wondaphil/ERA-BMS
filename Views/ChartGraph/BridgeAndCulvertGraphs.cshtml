@@ -1,0 +1,235 @@
+﻿
+@{
+    ViewBag.Title = "Bridge/Culver Graphs";
+}
+
+<h2>Bridge/Culver Graphs</h2>
+
+@using (Html.BeginForm())
+{
+    <div class="panel panel-default">
+        @*<div class="panel-heading">
+                <h3 class="panel-title panel-info">Please select <b>Graph Type</b> and <b>Inspection Year</b> from the dropdown list</h3>
+            </div>*@
+        <div class="panel-body">
+
+            @Html.AntiForgeryToken()
+
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group-sm">
+                            <label for="ddlGraphType" class="control-label col-md-3">Graph Type</label>
+                            <div class="col-md-7">
+                                @Html.DropDownList("ddlGraphType", (List<SelectListItem>)ViewBag.GraphTypes, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-1 navbar-right">
+                    <a class="btn btn-primary" data-toggle="tooltip" title="Refresh" id="refresh"> <span class="glyphicon glyphicon-refresh"></span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div id="wait" align="center" style="display: none">
+    <img src="~/images/ajax-loader-big.gif" />
+</div>
+
+<script>
+    $(document).ready(function () {
+        var selGraphTypeId
+        var bridgeAndCulvertChart;
+
+        function destroyChart() {
+            if (typeof bridgeAndCulvertChart != 'undefined')
+                bridgeAndCulvertChart.destroy();
+        }
+
+        $('#ddlGraphType').change(function () {
+            selGraphTypeId = $('#ddlGraphType option:selected').val();
+            destroyChart(); //clear the chart place holder
+
+            switch (selGraphTypeId) {
+                case "0":
+                    break; // Do nothing!!
+                case "1":
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("_NoOfBridgesAndCulvertsVsDistrictChart", "BridgeGraphs")',
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        beforeSend: function () { $('#wait').show(); },
+                        complete: function () { $('#wait').hide(); },
+                        success: function (chartData) {
+                            var labels = chartData[0];
+                            var dataSets1 = chartData[1];
+                            var dataSets2 = chartData[2];
+                            var dataTable = {
+                                labels: labels,
+                                datasets: [{
+                                    label: "No. of Bridges",
+                                    data: dataSets1,
+                                    fill: false,
+                                    backgroundColor: ["rgba(54, 162, 235, 0.8)", "rgba(54, 162, 235, 0.8)", "rgba(54, 162, 235, 0.8)", "rgba(54, 162, 235, 0.8)", "rgba(54, 162, 235, 0.8)", "rgba(54, 162, 235, 0.8)", "rgba(54, 162, 235, 0.8)", "rgba(54, 162, 235, 0.8)", "rgba(54, 162, 235, 0.8)", "rgba(54, 162, 235, 0.8)", "rgba(54, 162, 235, 0.8)"],
+                                    borderColor: ["rgb(54, 162, 235)", "rgb(54, 162, 235)", "rgb(54, 162, 235)", "rgb(54, 162, 235)", "rgb(54, 162, 235)", "rgb(54, 162, 235)", "rgb(54, 162, 235)", "rgb(54, 162, 235)", "rgb(54, 162, 235)", "rgb(54, 162, 235)", "rgb(54, 162, 235)"],
+                                    borderWidth: 1
+                                },
+                                {
+                                    label: "No. of Culverts",
+                                    data: dataSets2,
+                                    fill: false,
+                                    backgroundColor: ["rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)"],
+                                    borderColor: ["rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)"],
+                                    borderWidth: 1
+                                }]
+                            };
+
+                            var ctx = $("#bridgeAndCulvertChart").get(0).getContext("2d");
+                            bridgeAndCulvertChart = new Chart(ctx, {
+                                type: 'bar', //'line', 'pie'
+                                data: dataTable,
+                                options: {
+                                    responsive: true,
+                                    title: { display: true, text: 'No. of Bridges vs District' },
+                                    legend: { position: 'right', display: true },
+                                    scales: {
+                                        xAxes: [{ gridLines: { display: false }, display: true, scaleLabel: { display: true, labelString: 'Districts' } }],
+                                        yAxes: [{ gridLines: { display: false }, display: true, scaleLabel: { display: true, labelString: 'No. of Bridges/Culverts' }, ticks: { stepSize: 1000, beginAtZero: true } }]
+                                    },
+                                    tooltips: {
+                                        enabled: true
+                                    },
+                                    hover: {
+                                        animationDuration: 1
+                                    },
+                                    animation: {
+                                        duration: 1,
+                                        onComplete: function () {
+                                            var chartInstance = this.chart,
+                                                ctx = chartInstance.ctx;
+                                            ctx.textAlign = 'center';
+                                            ctx.fillStyle = "rgba(0, 0, 0, 1)";
+                                            ctx.textBaseline = 'bottom';
+                                            // Loop through each data in the datasets
+                                            this.data.datasets.forEach(function (dataset, i) {
+                                                var meta = chartInstance.controller.getDatasetMeta(i);
+                                                meta.data.forEach(function (bar, index) {
+                                                    var data = dataset.data[index];
+                                                    ctx.fillText(data, bar._model.x, bar._model.y - 5);
+                                                });
+                                            });
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    });
+                    break;
+
+                case "2":
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("_BridgeAndCulvertAssetValuesVsDistrictsChart", "BridgeGraphs")',
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        beforeSend: function () { $('#wait').show(); },
+                        complete: function () { $('#wait').hide(); },
+                        success: function (chartData) {
+                            var labels = chartData[0];
+                            var dataSets1 = chartData[1];
+                            var dataSets2 = chartData[2];
+                            var dataSets3 = chartData[3];
+                            var dataTable = {
+                                labels: labels,
+                                datasets: [{
+                                    label: "Bridge Asset Value",
+                                    data: dataSets1,
+                                    fill: false,
+                                    backgroundColor: ["rgba(75, 192, 192, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(75, 192, 192, 0.8)", "rgba(75, 192, 192, 0.8)"],
+                                    borderColor: ["rgb(75, 192, 192)", "rgb(75, 192, 192)", "rgb(75, 192, 192)", "rgb(75, 192, 192)", "rgb(75, 192, 192)", "rgb(75, 192, 192)", "rgb(75, 192, 192)", "rgb(75, 192, 192)", "rgb(75, 192, 192)", "rgb(75, 192, 192)", "rgb(75, 192, 192)"],
+                                    borderWidth: 1
+                                },
+                                {
+                                    label: "Culvert Asset Value",
+                                    data: dataSets2,
+                                    fill: false,
+                                    backgroundColor: ["rgba(255, 205, 86, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(255, 205, 86, 0.8)", "rgba(255, 205, 86, 0.8)"],
+                                    borderColor: ["rgb(255, 205, 86)", "rgb(255, 205, 86)", "rgb(255, 205, 86)", "rgb(255, 205, 86)", "rgb(255, 205, 86)", "rgb(255, 205, 86)", "rgb(255, 205, 86)", "rgb(255, 205, 86)", "rgb(255, 205, 86)", "rgb(255, 205, 86)", "rgb(255, 205, 86)", "rgb(255, 205, 86)"],
+                                    borderWidth: 1
+                                },
+                                {
+                                    label: "Total Asset Value",
+                                    data: dataSets3,
+                                    fill: false,
+                                    backgroundColor: ["rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)", "rgba(255, 99, 132, 0.8)"],
+                                    borderColor: ["rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)", "rgb(255, 99, 132)"],
+                                    borderWidth: 1
+                                }
+                                ]
+                            };
+                            var ctx = $("#bridgeAndCulvertChart").get(0).getContext("2d");
+                            bridgeAndCulvertChart = new Chart(ctx, {
+                                type: 'bar', //'line', 'pie'
+                                data: dataTable,
+                                options: {
+                                    responsive: true,
+                                    title: { display: true, text: 'Bridge, Culvert and Total Asset Value vs Districts (in billion)' },
+                                    legend: { position: 'right', display: true },
+                                    scales: {
+                                        xAxes: [{ gridLines: { display: false }, display: true, scaleLabel: { display: true, labelString: 'Districts' } }],
+                                        yAxes: [{ gridLines: { display: false }, display: true, scaleLabel: { display: true, labelString: 'Asset Value (in billion)' }, ticks: { stepSize: 2, beginAtZero: true } }]
+                                    },
+                                    tooltips: {
+                                        enabled: true
+                                    },
+                                    hover: {
+                                        animationDuration: 1
+                                    },
+                                    animation: {
+                                        duration: 1,
+                                        onComplete: function () {
+                                            var chartInstance = this.chart,
+                                                ctx = chartInstance.ctx;
+                                            ctx.textAlign = 'center';
+                                            ctx.fillStyle = "rgba(0, 0, 0, 1)";
+                                            ctx.textBaseline = 'bottom';
+                                            // Loop through each data in the datasets
+                                            this.data.datasets.forEach(function (dataset, i) {
+                                                var meta = chartInstance.controller.getDatasetMeta(i);
+                                                meta.data.forEach(function (bar, index) {
+                                                    var data = dataset.data[index];
+                                                    ctx.fillText(data, bar._model.x, bar._model.y - 5);
+                                                });
+                                            });
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    });
+                    break;
+                }
+        });
+
+        $('#ddlInspectionYear').change(function () {
+            if (selGraphTypeId == "5")
+                $('#ddlGraphType').trigger('change');
+        });
+
+        $('#refresh').click(function () {
+            $('#ddlGraphType').trigger('change');
+        });
+    });
+
+</script>
+
+<div Style="font-family: Corbel; font-size: small ;text-align:center " class="row">
+    <div style="width:100%;height:100%">
+        <canvas id="bridgeAndCulvertChart" style="padding: 0;margin: auto;display: block; "> </canvas>
+    </div>
+</div>
+

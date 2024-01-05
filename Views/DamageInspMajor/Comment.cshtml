@@ -1,0 +1,215 @@
+﻿@model IEnumerable<ERA_BMS.Models.BridgeComment>
+
+@{
+    ViewBag.Title = "Comments and Remarks";
+}
+
+<input type="hidden" id="bridgeId" value="@ViewBag.BridgeId" /> <!-- Bridge Id -->
+<input type="hidden" id="inspectionYear" value="@ViewBag.InspectionYear" /> <!-- Inspection Year -->
+<input type="hidden" id="inspectionDate" value="@ViewBag.InspectionDate" /> <!-- Inspection Date -->
+
+<hr />
+<div class="form-group form-group-sm">
+    <div class="row">
+        <div class="col-md-3">
+            <label for="ddlMaintenanceUrgency" class="control-label">Maintenance Urgency Index</label>&nbsp;&nbsp;&nbsp;
+            @Html.DropDownList("ddlMaintenanceUrgency", (List<SelectListItem>)ViewBag.MaintenanceUrgency, new { @class = "form-control urgencywaterway" })&nbsp;&nbsp;&nbsp;
+        </div>
+
+        <div class="col-md-3">
+            <div><label>Water way Adequacy (Over flooding, Siltation, Scouring)</label></div>
+            <div class="checkbox">
+                @{
+                    if (ViewBag.WaterWayAdequacy == true)
+                    {
+                        <input type="radio" class="urgencywaterway" id="waterwayadequacy" name="waterwayadequacy" value="yes" checked="checked">
+                        <label for="yes">Yes</label><br />
+                        <input type="radio" class="urgencywaterway" id="waterwayadequacy" name="waterwayadequacy" value="no">
+                        <label for="no">No</label>
+                    }
+                    else
+                    {
+                        <input type="radio" class="urgencywaterway" id="waterwayadequacy" name="waterwayadequacy" value="yes">
+                        <label for="yes">Yes</label><br />
+                        <input type="radio" class="urgencywaterway" id="waterwayadequacy" name="waterwayadequacy" value="no" checked="checked">
+                        <label for="no">No</label>
+                    }
+                }
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <table class="table table-striped table-condensed table-responsive" id="tblCommentsAndRemarks">
+                <tr>
+                    <th style="width:1px"></th>
+                    <th style="width:150px">Endgineer's Comment</th>
+                    <th style="width:5px"></th>
+                </tr>
+                @foreach (var comment in Model)
+                {
+                    <tr>
+                        <td>
+                            <input type="hidden" id="commentId" value="@comment.Id" />  <!-- Unique Id of comment and remark -->
+                        </td>
+                        <td>
+                            <span class="comment" name="@comment.Id">@comment.Comment</span>
+                        </td>
+                        <td>
+                            <a class="Delete glyphicon glyphicon-trash" href="javascript:;" data-toggle="tooltip" title="Delete"></a>
+                            <a class="Confirm glyphicon glyphicon-ok" href="javascript:;" style="display:none" data-toggle="tooltip" title="Confirm"></a>
+                            &nbsp;&nbsp;&nbsp;<a class="Cancel glyphicon glyphicon-remove" href="javascript:;" style="display:none" data-toggle="tooltip" title="Cancel"></a>
+                        </td>
+                    </tr>
+                }
+            </table>
+
+            <div class="form-group form-group-sm">
+                <div>
+                    <label for="txtComment">New Comment/Remark</label>
+                    <input type="text" id="txtComment" class="form-control" />
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <button id="btnSave" class="btn btn-primary"><span class="glyphicon glyphicon-save"></span> Save</button>
+        </div>
+    </div>
+</div>
+
+
+
+<div id="status"></div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        makeCommentEditable();
+
+        // A function that makes "Comment and Remark" editable
+        function makeCommentEditable() {
+            $(".comment").each(function () {
+                $(this).editable("/DamageInspMajor/UpdateCommentAndRemark", {
+                    callback: function (value, settings) {
+                        $(this).html(jQuery.parseJSON(settings.data)[value]);
+                    },
+                    submitdata: function () {
+                        return {
+                            // Pass parameters to "UpdateCommentAndRemark" controller action
+                            id: $(this).attr("name"),
+                        };
+                    },
+                    tooltip: 'Click to edit...',
+                    indicator: 'Saving...',
+                    size: 50
+                });
+            });
+        }
+
+        //Add event handler.
+        $("#btnSave").on("click", function () {
+            var BridgeId = $("#bridgeId").val();
+            var InspectionYear = $('#inspectionYear').val();
+            var InspectionDate = $('#inspectionDate').val();
+            var Comment = $("#txtComment").val();
+            var UrgencyId = $('#ddlMaintenanceUrgency option:selected').val();
+            var WaterWayAdequacy = ($('#waterwayadequacy').prop("checked")) ? "true" : "false"; // Set value based on checked status of checkbox
+            alert('{bridgeid: "' + BridgeId + '", inspectionyear: ' + InspectionYear + ', inspectiondate: "' + InspectionDate + '", comment: "' + Comment + '", urgencyid: ' + UrgencyId + ', waterwayadequacy: ' + WaterWayAdequacy + ' }',);
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("AddCommentAndRemark", "DamageInspMajor")',
+                data: '{bridgeid: "' + BridgeId + '", inspectionyear: ' + InspectionYear + ', inspectiondate: "' + InspectionDate + '", comment: "' + Comment
+                                + '", urgencyid: ' + UrgencyId + ', waterwayadequacy: ' + WaterWayAdequacy + ' }',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'html',
+                success: function (data) {
+                    // add the table row only if some comment is entered
+                    if (Comment.trim() != "")
+                    {
+                        $.ajax({
+                            type: 'GET',
+                            url: '@Url.Action("GetLastAddedComment", "DamageInspMajor")',
+                            data: { bridgeid: BridgeId },
+                            //data: '{bridgeid: "' + BridgeId.val() + '" }',
+                            datatype: 'html',
+                            success: function (data) {
+                                alert("second success");
+                                var Id = data.Id;
+                                alert(Id);
+                                var row = '<tr><td><input type="hidden" id="commentId" value="' + Id + '" /></td>'
+                                    + '<td><span class="comment" name="' + Id + '">' + $('#txtComment').val() + '</span></td>'
+                                    + '<td><a class="Confirm glyphicon glyphicon-ok" href="javascript:;" style="display:none" data-toggle="tooltip" title="Confirm"></a>'
+                                    + '<a class="Cancel glyphicon glyphicon-remove" href="javascript:;" style="display:none" data-toggle="tooltip" title="Cancel"></a>'
+                                    + '<a class="Delete glyphicon glyphicon-trash" href = "javascript:;" data - toggle="tooltip" title = "Delete" ></a ></td>'
+                                    + '</tr>';
+                                //alert(row);
+                                $("#tblCommentsAndRemarks > tbody").append(row);
+                                makeCommentEditable();
+                                $('#txtComment').val("");
+                            },
+                            error: function (xhr) {
+                                $('#status').text(xhr.status);
+                                alert("Second error: " + xhr.status);
+                            }
+                        });
+                    }
+                },
+                error: function (xhr) {
+                    $('#status').text(xhr.status);
+                }
+            });
+        });
+
+        //Cancel event handler.
+        $("body").on("click", "#tblCommentsAndRemarks .Cancel", function () {
+            var row = $(this).closest("tr");
+            $("td", row).each(function () {
+                if ($(this).find("input").length > 0) {
+                    var span = $(this).find("span");
+                    var input = $(this).find("input");
+                    input.val(span.html());
+                    span.show();
+                    input.hide();
+                }
+            });
+            row.find(".Delete").show();
+            row.find(".Confirm").hide();
+            $(this).hide();
+        });
+
+        //Delete event handler.
+        $("body").on("click", "#tblCommentsAndRemarks .Delete", function () {
+            var row = $(this).closest("tr");
+            row.find(".Confirm").show();
+            row.find(".Cancel").show();
+            row.find(".Delete").hide();
+            $(this).hide();
+        });
+
+        //Confirm event handler.
+        $("body").on("click", "#tblCommentsAndRemarks .Confirm", function () {
+            var row = $(this).closest("tr");
+            var id = row.find('#commentId').val();
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("DeleteCommentAndRemark", "DamageInspMajor")',
+                data: '{id: ' + id + '}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (response) {
+                    if ($("#tblCommentsAndRemarks tr").length > 2) {
+                        row.remove();
+
+                    } else {
+                        row.find(".Delete").hide();
+                        row.find(".Confirm").hide();
+                        row.find(".Cancel").hide();
+                        row.find("span").html('&nbsp;');
+                    }
+                },
+                error: function (xhr) {
+                    $('#status').text(xhr.status);
+                }
+            });
+        });
+    });
+    </script>

@@ -1,4 +1,4 @@
-﻿@model ERA_BCMS.Models.BridgeType
+﻿@model ERA_BMS.Models.BridgeType
 
 @{
     ViewBag.Title = "Bridge Type Details";
@@ -45,6 +45,6 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.BridgeTypeId }, new { @class = "btn btn-primary" })
-    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+    <a href="@Url.Action("Edit", new { id = Model.BridgeTypeId })" class="btn btn-primary"><span class="glyphicon glyphicon-edit"></span> Edit</a>
+    <a href="@Url.Action("Index")" class="btn btn-primary"><span class="glyphicon glyphicon-backward"></span> Go to List</a>
 </p>

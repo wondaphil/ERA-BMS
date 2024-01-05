@@ -1,0 +1,665 @@
+﻿
+@{
+    ViewBag.Title = "Bridge Inspection Reports";
+}
+
+<h2>Bridge Inspection Reports</h2>
+
+@using (Html.BeginForm())
+{
+    <div class="panel panel-default">
+        @*<div class="panel-heading">
+            <h3 class="panel-title panel-info">Please select <b>District</b>, <b>Section</b>, <b>Road Segment</b> and <b>Inspection Year</b> from the dropdown list</h3>
+        </div>*@
+        <div class="panel-body">
+
+            @Html.AntiForgeryToken()
+
+            <div class="row">
+                <div class="col-md-3 col-sm-6 col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group-sm">
+                            <label for="ddlDistrict" class="control-label col-md-3 col-sm-4">District</label>
+                            <div class="col-md-8 col-sm-8">
+                                @Html.DropDownList("ddlDistrict", new SelectList(ViewBag.Districts, "Value", "Text"), new { @size = 5, @style="width: 100%" })
+                                <!--<label class="control-label" id="distrIdDIV">--> <!-- District id appears here --> <!--</label>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-sm-6 col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group-sm">
+                            <label for="ddlSection" class="control-label col-md-3 col-sm-4">Section</label>
+                            <div class="col-md-8 col-sm-8">
+                                <select id="ddlSection" size="5" style="width: 100%">
+                                    <!-- Sections list populates here -->
+                                </select>
+                                <!--<label class="control-label" id="secIdDIV">--> <!-- Section id appears here --> <!--</label>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="clearfix visible-sm"></div> <!-- Add clearfix (or new line break) for only the sm -->
+                <div class="clearfix visible-xs"></div> <!-- Add clearfix (or new line break) for only the xs -->
+
+                <div class="col-md-3 col-sm-6 col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group-sm">
+                            <label for="ddlSegment" class="control-label col-md-3 col-sm-4">Road Segment</label>
+                            <div class="col-md-8 col-sm-8">
+                                <select id="ddlSegment" size="5" style="width: 100%">
+                                    <!-- Segments list populates here -->
+                                </select>
+                                <!--<label class="control-label" id="segIdDIV">--> <!-- Segment id appears here --> <!--</label>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-sm-6 col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group-sm">
+                            <label for="ddlBridge" class="control-label col-md-2 col-sm-4">Bridge</label>
+                            <div class="col-md-8 col-sm-8">
+                                <select id="ddlBridge" size="5" style="width: 100%">
+                                    <!-- Bridges list populates here -->
+                                </select>
+                                <!--<label class="control-label" id="brgIdDIV">--> <!-- Bridge id appears here --> <!--</label>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-3 col-md-3 col-sm-2 col-sm-offset-1 col-xs-4">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group-sm">
+                            <label class="control-label col-md-6 col-sm-12">Inspection Year</label>
+                            <div class="col-md-6 col-sm-12">
+                                @Html.DropDownList("ddlInspectionYear", (List<SelectListItem>)ViewBag.InspectionYear, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6 col-md-6 col-sm-7 col-xs-8">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group-sm">
+                            <label for="ddlReportType" class="control-label col-md-3 col-sm-4 col-xs-12">Report Type</label>
+                            <div class="col-md-9 col-sm-11 col-xs-12">
+                                @Html.DropDownList("ddlReportType", (List<SelectListItem>)ViewBag.ReportTypes, new { @class = "form-control", style = "max-width: 100%" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-2 col-md-2 col-md-2 col-sm-2 col-xs-2 navbar-right">
+                    <a class="btn btn-primary" data-toggle="tooltip" title="Show Report" id="showreport"> <span class="glyphicon glyphicon-refresh"></span> Report</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="bridgeReportPartial">
+        <!-- Bridges reports display here -->
+    </div>
+}
+
+<div id="wait" align="center" style="display: none">
+    <img src="~/images/ajax-loader-big.gif" />
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#ddlDistrict').change(function () {
+            var selDistrictId = $('#ddlDistrict option:selected').val();
+            $('#distrIdDIV').text(""); //clear district no. indicator
+            $('#ddlSection option').remove(); //empty the section dropdown list
+            $('#secIdDIV').text(""); //clear section no. indicator
+            $('#ddlSegment option').remove(); //empty the segment dropdown list
+            $('#segIdDIV').text(""); //clear segment no. indicator
+            $('#ddlBridge option').remove(); //empty the bridge dropdown list
+            $('#brgIdDIV').text(""); //clear bridge no. indicator
+
+            if (selDistrictId != "0") { //if some district is selected
+                $('#distrIdDIV').text("District No. = " + selDistrictId);
+                $.ajax({
+                    url: '@Url.Action("_GetSections", "LocationsDDL")',
+                    data: { districtid: selDistrictId },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        //var markup = '<option value="0" id="noselect"> --Select Section --</option>';
+                        var markup = '';
+                        $.each(data, function (i, section) {
+                            markup += '<option value="' + section.Value + '">' + section.Text + '</option>'
+                            $('#ddlSection').html(markup);
+                        });
+                    }
+                });
+            }
+
+            //var selReportTypeId = $('#ddlReportType option:selected').val();
+            //// Update the reports that require district
+            //if (selReportTypeId == "8") {
+            //    $('#ddlReportType').trigger('change');
+            //}
+            //else if (selReportTypeId != "2" && selReportTypeId != "6" && selReportTypeId != "7") {
+            //    $('#bridgeReportPartial').empty(); // clear the bridge condition place holder
+            //}
+        });
+
+        $('#ddlSection').change(function () {
+            var selSectionId = $('#ddlSection option:selected').val();
+            $('#secIdDIV').text(""); //clear section no. indicator
+            $('#ddlSegment option').remove(); //empty the segment dropdown list
+            $('#segIdDIV').text(""); //clear segment no. indicator
+            $('#ddlBridge option').remove(); //empty the bridge dropdown list
+            $('#brgIdDIV').text(""); //clear bridge no. indicator
+
+            if (selSectionId != "0") { //if some section is selected
+                $('#secIdDIV').text("Section No. = " + selSectionId);
+
+                $.ajax({
+                    url: '@Url.Action("_GetSegments", "LocationsDDL")',
+                    data: { sectionid: selSectionId },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        //var markup = '<option value="0" id="noselect"> --Select Segment --</option>';
+                        var markup = '';
+                        $.each(data, function (i, segment) {
+                            markup += '<option value="' + segment.Value + '">' + segment.Text + '</option>'
+                            $('#ddlSegment').html(markup);
+                        });
+                    }
+                });
+            }
+
+            //var selReportTypeId = $('#ddlReportType option:selected').val();
+
+            //// Update the reports that require section
+            //if (selReportTypeId == "9") {
+            //    $('#ddlReportType').trigger('change');
+            //}
+            //else if (selReportTypeId != "2" && selReportTypeId != "6" && selReportTypeId != "7" && selReportTypeId != "8") {
+            //    $('#bridgeReportPartial').empty(); // clear the bridge condition place holder
+            //}
+        });
+
+        $('#ddlSegment').change(function () {
+            var selSegmentId = $('#ddlSegment option:selected').val();
+            $('#segIdDIV').text(""); //clear section no. indicator
+            $('#ddlBridge option').remove(); //empty the bridge dropdown list
+            $('#brgIdDIV').text(""); //clear bridge no. indicator
+
+            if (selSegmentId != "0") { //if no segment is selected
+                $('#segIdDIV').text("Road Id = " + selSegmentId);
+                $.ajax({
+                    url: '@Url.Action("_GetBridges", "LocationsDDL")',
+                    data: { segmentid: selSegmentId },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        //var markup = '<option value="0" id="noselect"> --Select Bridge --</option>';
+                        var markup = '';
+                        $.each(data, function (i, bridge) {
+                            markup += '<option value="' + bridge.Value + '">' + bridge.Text + '</option>'
+                            $('#ddlBridge').html(markup);
+                        });
+                    }
+                });
+            }
+
+            //var selReportTypeId = $('#ddlReportType option:selected').val();
+
+            //// Update the reports that require segment
+            //if (selReportTypeId == "1" || selReportTypeId == "3" || selReportTypeId == "4" || selReportTypeId == "5") {
+            //    $('#ddlReportType').trigger('change');
+            //}
+            //else if (selReportTypeId == "10" || selReportTypeId == "11" || selReportTypeId == "12") {
+            //    $('#bridgeReportPartial').empty(); // clear the bridge condition place holder
+            //}
+        });
+
+        $('#ddlBridge').change(function () {
+            var selBridgeId = $('#ddlBridge option:selected').val();
+            $('#brgIdDIV').text(""); //clear bridge no. indicator
+
+            if (selBridgeId != "0") //if some bridge is selected
+            {
+                var bridgeNo = $('#ddlBridge option:selected').text().split('[').pop().split(']')[0]; // extract the bridge no
+                $('#brgIdDIV').text("Bridge No = " + bridgeNo);
+            }
+
+            //var selReportTypeId = $('#ddlReportType option:selected').val();
+
+            //// Update the reports that require bridge
+            //if (selReportTypeId == "10" || selReportTypeId == "11" || selReportTypeId == "12") {
+            //    $('#ddlReportType').trigger('change');
+            //}
+        });
+
+        $('#ddlDistrict').click(function () {
+            $('#ddlDistrict').trigger('change');
+        });
+
+        $('#ddlSection').click(function () {
+            $('#ddlSection').trigger('change');
+        });
+
+        $('#ddlSegment').click(function () {
+            $('#ddlSegment').trigger('change');
+        });
+
+        $('#ddlBridge').click(function () {
+            $('#ddlBridge').trigger('change');
+        });
+
+        function SelectedLevel() {
+            var selDistrictId = $('#ddlDistrict option:selected').val();
+            var selSectionId = $('#ddlSection option:selected').val();
+            var selSegmentId = $('#ddlSegment option:selected').val();
+            var selBridgeId = $('#ddlBridge option:selected').val();
+
+            //$('#bridgeReportPartial').empty(); //clear the bridge report place holder
+
+            if (typeof selBridgeId != 'undefined')
+                return "Bridge";
+            else {
+                if (typeof selSegmentId != 'undefined')
+                    return "Segment";
+                else {
+                    if (typeof selSectionId != 'undefined')
+                        return "Section";
+                    else {
+                        if (typeof selDistrictId != 'undefined')
+                            if (selDistrictId == "0")
+                                return "All";
+                            else
+                                return "District";
+                        else
+                            return "none";
+                    }
+                }
+            }
+
+        }
+
+        $('#showreport').click(function () {
+            //$('#ddlReportType').trigger('change');
+            var selDistrictId = $('#ddlDistrict option:selected').val();
+            var selSectionId = $('#ddlSection option:selected').val();
+            var selSegmentId = $('#ddlSegment option:selected').val();
+            var selBridgeId = $('#ddlBridge option:selected').val();
+            var selInspectionYear = $('#ddlInspectionYear option:selected').val();
+            var selReportTypeId = $('#ddlReportType option:selected').val();
+
+            $('#bridgeReportPartial').empty(); //clear the bridge report place holder
+
+            if (typeof selSegmentId != 'undefined')
+                    $('#segIdDIV').text("Road Id = " + selSegmentId);
+
+                switch (selReportTypeId) {
+                    case "1":
+                        if (SelectedLevel() == "Segment" || SelectedLevel() == "Bridge" ) {
+                            $.ajax({
+                                url: '@Url.Action("_GetBridgeMainPartsDamageConditionBySegment", "BridgeInspectionReports")',
+                                data: { segmentid: selSegmentId, inspectionyear: selInspectionYear },
+                                type: 'GET',
+                                dataType: 'html',
+                                beforeSend: function () { $('#wait').show(); },
+                                complete: function () { $('#wait').hide(); },
+                                success: function (data) {
+                                    $('#bridgeReportPartial').html(data);
+                                }
+                            });
+                        }
+                        else if (SelectedLevel() == "Section" ) {
+                            $.ajax({
+                                url: '@Url.Action("_GetBridgeMainPartsDamageConditionBySection", "BridgeInspectionReports")',
+                                data: { sectionid: selSectionId, inspectionyear: selInspectionYear },
+                                type: 'GET',
+                                dataType: 'html',
+                                beforeSend: function () { $('#wait').show(); },
+                                complete: function () { $('#wait').hide(); },
+                                success: function (data) {
+                                    $('#bridgeReportPartial').html(data);
+                                }
+                            });
+                        }
+                        else if (SelectedLevel() == "District") {
+                            $.ajax({
+                                url: '@Url.Action("_GetBridgeMainPartsDamageConditionByDistrict", "BridgeInspectionReports")',
+                                data: { districtid: selDistrictId, inspectionyear: selInspectionYear },
+                                type: 'GET',
+                                dataType: 'html',
+                                beforeSend: function () { $('#wait').show(); },
+                                complete: function () { $('#wait').hide(); },
+                                success: function (data) {
+                                    $('#bridgeReportPartial').html(data);
+                                }
+                            });
+                        }
+
+                        break;
+
+                    case "2":
+                        if (SelectedLevel() == "Segment" || SelectedLevel() == "Bridge") {
+                            $.ajax({
+                                url: '@Url.Action("_GetBridgeDamageConditionBySegment", "BridgeInspectionReports")',
+                                data: { segmentid: selSegmentId, inspectionyear: selInspectionYear },
+                                type: 'GET',
+                                dataType: 'html',
+                                beforeSend: function () { $('#wait').show(); },
+                                complete: function () { $('#wait').hide(); },
+                                success: function (data) {
+                                    $('#bridgeReportPartial').html(data);
+                                }
+                            });
+                        }
+                        else if (SelectedLevel() == "Section" ) {
+                            $.ajax({
+                                url: '@Url.Action("_GetBridgeDamageConditionBySection", "BridgeInspectionReports")',
+                                data: { sectionid: selSectionId, inspectionyear: selInspectionYear },
+                                type: 'GET',
+                                dataType: 'html',
+                                beforeSend: function () { $('#wait').show(); },
+                                complete: function () { $('#wait').hide(); },
+                                success: function (data) {
+                                    $('#bridgeReportPartial').html(data);
+                                }
+                            });
+                        }
+                        else if (SelectedLevel() == "District") {
+                            $.ajax({
+                                url: '@Url.Action("_GetBridgeDamageConditionByDistrict", "BridgeInspectionReports")',
+                                data: { districtid: selDistrictId, inspectionyear: selInspectionYear },
+                                type: 'GET',
+                                dataType: 'html',
+                                beforeSend: function () { $('#wait').show(); },
+                                complete: function () { $('#wait').hide(); },
+                                success: function (data) {
+                                    $('#bridgeReportPartial').html(data);
+                                }
+                            });
+                        }
+                        else if (SelectedLevel() == "All") {
+                            $.ajax({
+                                url: '@Url.Action("_GetBridgeDamageCondition", "BridgeInspectionReports")',
+                                data: { inspectionyear: selInspectionYear },
+                                type: 'GET',
+                                dataType: 'html',
+                                beforeSend: function () { $('#wait').show(); },
+                                complete: function () { $('#wait').hide(); },
+                                success: function (data) {
+                                    $('#bridgeReportPartial').html(data);
+                                }
+                            });
+                        }
+
+                        break;
+
+                    case "3":
+                        if (SelectedLevel() == "Segment" || SelectedLevel() == "Bridge" ) {
+                            $.ajax({
+                                url: '@Url.Action("_GetRecommendationsAndCommentsBySegment", "BridgeInspectionReports")',
+                                data: { segmentid: selSegmentId, inspectionyear: selInspectionYear },
+                                type: 'GET',
+                                dataType: 'html',
+                                beforeSend: function () { $('#wait').show(); },
+                                complete: function () { $('#wait').hide(); },
+                                success: function (data) {
+                                    $('#bridgeReportPartial').html(data);
+                                }
+                            });
+                        }
+                        else if (SelectedLevel() == "Section" ) {
+                            $.ajax({
+                                url: '@Url.Action("_GetRecommendationsAndCommentsBySection", "BridgeInspectionReports")',
+                                data: { sectionid: selSectionId, inspectionyear: selInspectionYear },
+                                type: 'GET',
+                                dataType: 'html',
+                                beforeSend: function () { $('#wait').show(); },
+                                complete: function () { $('#wait').hide(); },
+                                success: function (data) {
+                                    $('#bridgeReportPartial').html(data);
+                                }
+                            });
+                        }
+                        else if (SelectedLevel() == "District") {
+                            $.ajax({
+                                url: '@Url.Action("_GetRecommendationsAndCommentsByDistrict", "BridgeInspectionReports")',
+                                data: { districtid: selDistrictId, inspectionyear: selInspectionYear },
+                                type: 'GET',
+                                dataType: 'html',
+                                beforeSend: function () { $('#wait').show(); },
+                                complete: function () { $('#wait').hide(); },
+                                success: function (data) {
+                                    $('#bridgeReportPartial').html(data);
+                                }
+                            });
+                        }
+                        break;
+
+                    case "4":
+                        if (SelectedLevel() == "Segment" || SelectedLevel() == "Bridge") {
+                            $.ajax({
+                                url: '@Url.Action("_GetBridgeImprovementPriorityBySegment", "BridgeInspectionReports")',
+                                data: { segmentid: selSegmentId, inspectionyear: selInspectionYear },
+                                type: 'GET',
+                                dataType: 'html',
+                                beforeSend: function () { $('#wait').show(); },
+                                complete: function () { $('#wait').hide(); },
+                                success: function (data) {
+                                    $('#bridgeReportPartial').html(data);
+                                }
+                            });
+                        }
+                        else if (SelectedLevel() == "Section" ) {
+                            $.ajax({
+                                url: '@Url.Action("_GetBridgeImprovementPriorityBySection", "BridgeInspectionReports")',
+                                data: { sectionid: selSectionId, inspectionyear: selInspectionYear },
+                                type: 'GET',
+                                dataType: 'html',
+                                beforeSend: function () { $('#wait').show(); },
+                                complete: function () { $('#wait').hide(); },
+                                success: function (data) {
+                                    $('#bridgeReportPartial').html(data);
+                                }
+                            });
+                        }
+                        else if (SelectedLevel() == "District") {
+                            $.ajax({
+                                url: '@Url.Action("_GetBridgeImprovementPriorityByDistrict", "BridgeInspectionReports")',
+                                data: { districtid: selDistrictId, inspectionyear: selInspectionYear },
+                                type: 'GET',
+                                dataType: 'html',
+                                beforeSend: function () { $('#wait').show(); },
+                                complete: function () { $('#wait').hide(); },
+                                success: function (data) {
+                                    $('#bridgeReportPartial').html(data);
+                                }
+                            });
+                        }
+                        else if (SelectedLevel() == "All") {
+                            $.ajax({
+                                url: '@Url.Action("_GetBridgeImprovementPriority", "BridgeInspectionReports")',
+                                data: { inspectionyear: selInspectionYear },
+                                type: 'GET',
+                                dataType: 'html',
+                                beforeSend: function () { $('#wait').show(); },
+                                complete: function () { $('#wait').hide(); },
+                                success: function (data) {
+                                    $('#bridgeReportPartial').html(data);
+                                }
+                            });
+                        }
+                        break;
+
+                    case "5":
+                        if (SelectedLevel() == "Segment" || SelectedLevel() == "Bridge") {
+                            $.ajax({
+                                url: '@Url.Action("_GetBridgeImprovementIndicatorBySegment", "BridgeInspectionReports")',
+                                data: { segmentid: selSegmentId  },
+                                type: 'GET',
+                                dataType: 'html',
+                                beforeSend: function () { $('#wait').show(); },
+                                complete: function () { $('#wait').hide(); },
+                                success: function (data) {
+                                    $('#bridgeReportPartial').html(data);
+                                }
+                            });
+                        }
+                        else if (SelectedLevel() == "Section" ) {
+                            $.ajax({
+                                url: '@Url.Action("_GetBridgeImprovementIndicatorBySection", "BridgeInspectionReports")',
+                                data: { sectionid: selSectionId },
+                                type: 'GET',
+                                dataType: 'html',
+                                beforeSend: function () { $('#wait').show(); },
+                                complete: function () { $('#wait').hide(); },
+                                success: function (data) {
+                                    $('#bridgeReportPartial').html(data);
+                                }
+                            });
+                        }
+                        else if (SelectedLevel() == "District") {
+                            $.ajax({
+                                url: '@Url.Action("_GetBridgeImprovementIndicatorByDistrict", "BridgeInspectionReports")',
+                                data: { districtid: selDistrictId },
+                                type: 'GET',
+                                dataType: 'html',
+                                beforeSend: function () { $('#wait').show(); },
+                                complete: function () { $('#wait').hide(); },
+                                success: function (data) {
+                                    $('#bridgeReportPartial').html(data);
+                                }
+                            });
+                        }
+                        else if (SelectedLevel() == "All") {
+                            $.ajax({
+                                url: '@Url.Action("_GetBridgeImprovementIndicator", "BridgeInspectionReports")',
+                                type: 'GET',
+                                dataType: 'html',
+                                beforeSend: function () { $('#wait').show(); },
+                                complete: function () { $('#wait').hide(); },
+                                success: function (data) {
+                                    $('#bridgeReportPartial').html(data);
+                                }
+                            });
+                        }
+                        break;
+
+                    case "6":
+                        $.ajax({
+                            url: '@Url.Action("_GetPrevalentDamageType", "BridgeInspectionReports")',
+                            data: { inspectionyear: selInspectionYear },
+                            type: 'GET',
+                            dataType: 'html',
+                            beforeSend: function () { $('#wait').show(); },
+                            complete: function () { $('#wait').hide(); },
+                            success: function (data) {
+                                $('#bridgeReportPartial').html(data);
+                            }
+                        });
+                        break;
+
+                    case "7":
+                        if (SelectedLevel() == "Section" || SelectedLevel() == "Segment" || SelectedLevel() == "Bridge") {
+                            $.ajax({
+                                url: '@Url.Action("_GetConditionAndRepairCostSummaryBySection", "BridgeInspectionReports")',
+                                data: { sectionid: selSectionId, inspectionyear: selInspectionYear },
+                                type: 'GET',
+                                dataType: 'html',
+                                beforeSend: function () { $('#wait').show(); },
+                                complete: function () { $('#wait').hide(); },
+                                success: function (data) {
+                                    $('#bridgeReportPartial').html(data);
+                                }
+                            });
+                        }
+                        else if (SelectedLevel() == "District") {
+                            $.ajax({
+                                url: '@Url.Action("_GetConditionAndRepairCostSummaryByDistrict", "BridgeInspectionReports")',
+                                data: { districtid: selDistrictId, inspectionyear: selInspectionYear },
+                                type: 'GET',
+                                dataType: 'html',
+                                beforeSend: function () { $('#wait').show(); },
+                                complete: function () { $('#wait').hide(); },
+                                success: function (data) {
+                                    $('#bridgeReportPartial').html(data);
+                                }
+                            });
+                        }
+                        else if (SelectedLevel() == "All") {
+                            $.ajax({
+                                url: '@Url.Action("_GetConditionAndRepairCostSummary", "BridgeInspectionReports")',
+                                data: { inspectionyear: selInspectionYear },
+                                type: 'GET',
+                                dataType: 'html',
+                                beforeSend: function () { $('#wait').show(); },
+                                complete: function () { $('#wait').hide(); },
+                                success: function (data) {
+                                    $('#bridgeReportPartial').html(data);
+                                }
+                            });
+                        }
+                        break;
+
+                    case "8":
+                        if (SelectedLevel() == "Bridge") {
+                            $.ajax({
+                                url: '@Url.Action("_GetVisualInspectionDetails", "BridgeInspectionReports")',
+                                data: { bridgeid: selBridgeId },
+                                type: 'GET',
+                                dataType: 'html',
+                                beforeSend: function () { $('#wait').show(); },
+                                complete: function () { $('#wait').hide(); },
+                                success: function (data) {
+                                    $('#bridgeReportPartial').html(data);
+                                }
+                            });
+                        }
+                        break;
+
+                    case "9":
+                        if (SelectedLevel() == "Bridge") {
+                            $.ajax({
+                                url: '@Url.Action("_GetMajorInspectionDetails", "BridgeInspectionReports")',
+                                data: { bridgeid: selBridgeId, inspectionyear: selInspectionYear },
+                                type: 'GET',
+                                dataType: 'html',
+                                beforeSend: function () { $('#wait').show(); },
+                                complete: function () { $('#wait').hide(); },
+                                success: function (data) {
+                                    $('#bridgeReportPartial').html(data);
+                                }
+                            });
+                        }
+                        break;
+
+                    case "10":
+                        if (SelectedLevel() == "Bridge") {
+                            $.ajax({
+                                url: '@Url.Action("_GetBillOfQuantity", "BridgeInspectionReports")',
+                                data: { bridgeid: selBridgeId, inspectionyear: selInspectionYear },
+                                type: 'GET',
+                                dataType: 'html',
+                                beforeSend: function () { $('#wait').show(); },
+                                complete: function () { $('#wait').hide(); },
+                                success: function (data) {
+                                    $('#bridgeReportPartial').html(data);
+                                }
+                            });
+                        }
+                        break;
+                }
+        });
+    });
+
+</script>
+

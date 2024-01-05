@@ -1,0 +1,94 @@
+﻿
+@{
+    ViewBag.Title = "Damage Weight and Cost Rate";
+}
+
+<h2>Damage Weight and Cost Rate</h2>
+<hr />
+@using (Html.BeginForm())
+{
+   @Html.AntiForgeryToken()
+    <!-- Tab Buttons -->
+    <ul id="tabstrip" class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#_BridgePartsDamageWeightTab" role="tab" data-toggle="tab">Bridge Parts Damage Weight</a>
+        </li>
+        <li>
+            <a href="#_StructureItemsDamageWeightTab" role="tab" data-toggle="tab">Structure Items Damage Weight</a>
+        </li>
+        <li>
+            <a href="#_DamageRateAndCostTab" role="tab" data-toggle="tab">Damage Rate and Cost</a>
+        </li>
+        <li>
+            <a href="#_DamageConditionRangeTab" role="tab" data-toggle="tab">Damage Condition Range</a>
+        </li>
+    </ul>
+
+    <!-- Tab Content Containers -->
+    <div class="tab-content">
+        <div class="tab-pane fade in active" id="_BridgePartsDamageWeightTab">
+            <div id="bridgePartsDamageWeight">
+                <!-- Bridge Parts Damage Weight display here -->
+            </div>
+        </div>
+        <div class="tab-pane fade" id="_StructureItemsDamageWeightTab">
+            <div id="structureItemsDamageWeight">
+                <!-- Structure Items Damage Weight displays here -->
+            </div>
+        </div>
+        <div class="tab-pane fade" id="_DamageRateAndCostTab">
+            <div id="damageRateAndCost">
+                <!-- Damage Rate and Cost displays here -->
+            </div>
+        </div>
+        <div class="tab-pane fade" id="_DamageConditionRangeTab">
+            <div id="damageConditionRange">
+                <!-- Damage Condition Range displays here -->
+            </div>
+        </div>
+    </div>
+}
+<script>
+    $(document).ready(function () {
+        // Initializing tooltip
+        
+
+        $.ajax({
+            url: '@Url.Action("BridgePartDmgWt", "DamageWeightAndCostRate")',
+            type: 'GET',
+            dataType: 'html',
+            success: function (data) {
+                $('#bridgePartsDamageWeight').html(data);
+            }
+        });
+
+        $.ajax({
+            url: '@Url.Action("StructureItemDmgWt", "DamageWeightAndCostRate")',
+            type: 'GET',
+            dataType: 'html',
+            success: function (data) {
+                $('#structureItemsDamageWeight').html(data);
+            }
+        });
+
+        $.ajax({
+            url: '@Url.Action("DamageRateAndCost", "DamageWeightAndCostRate")',
+            type: 'GET',
+            dataType: 'html',
+            success: function (data) {
+                $('#damageRateAndCost').html(data);
+            }
+        });
+
+        $.ajax({
+            url: '@Url.Action("DamageConditionRange", "DamageWeightAndCostRate")',
+            type: 'GET',
+            dataType: 'html',
+            success: function (data) {
+                $('#damageConditionRange').html(data);
+            }
+        });
+    });
+</script>
+
+

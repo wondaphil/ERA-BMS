@@ -1,0 +1,132 @@
+﻿@model IEnumerable<ERA_BMS.Models.culDamageRateAndCost>
+
+<table class="table table-striped table-condensed table-responsive display compact hover" id="tblCulDamageRateAndCost">
+    <thead>
+        <tr>
+            <th></th>
+            <th>
+                @Html.DisplayNameFor(model => model.DamageTypeName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Unit)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DamageValue)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UnitRepairCost)
+            </th>
+            <th>Edit</th><th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <input type="hidden" id="DamageTypeId" value="@item.DamageTypeId" />  <!-- Unique Id of Damage Rate and Cost -->
+                </td>
+                <td class="DamageTypeName">
+                    @item.DamageTypeName
+                </td>
+                <td class="Unit">
+                    <span>@item.Unit</span>
+                    <input type="text" value="@item.Unit" style="display:none" size="5" />
+                </td>
+                <td class="DamageValue">
+                    <span>@item.DamageValue</span>
+                    <input type="text" value="@item.DamageValue" style="display:none" size="3" />
+                </td>
+                <td class="UnitRepairCost">
+                    <span>@item.UnitRepairCost</span>
+                    <input type="text" value="@item.UnitRepairCost" style="display:none" size="6" />
+                </td>
+                <td>
+                    <a class="Edit glyphicon glyphicon-edit" href="javascript:;" data-toggle="tooltip" title="Edit"></a>
+                    <a class="Update glyphicon glyphicon-ok" href="javascript:;" style="display:none" data-toggle="tooltip" title="Update"></a>
+                </td>
+                <td>
+                    <a class="Cancel glyphicon glyphicon-remove" href="javascript:;" style="display:none" data-toggle="tooltip" title="Cancel"></a>
+                </td>
+            </tr>
+        }
+
+</table>
+<div class="panel-footer">
+    <h3 class="panel-title">No. of Damage Type Items: <b>@Model.Count()</b> </h3>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        //Edit event handler.
+        $("body").on("click", "#tblCulDamageRateAndCost .Edit", function () {
+            var row = $(this).closest("tr");
+            $("td", row).each(function () {
+                if ($(this).find("input").length > 0) {
+                    $(this).find("input").show();
+                    $(this).find("span").hide();
+                }
+                if ($(this).find("textarea").length > 0) {
+                    $(this).find("textarea").show();
+                    $(this).find("span").hide();
+                }
+            });
+            row.find(".Update").show();
+            row.find(".Cancel").show();
+            $(this).hide();
+        });
+
+        //Update event handler.
+        $("body").on("click", "#tblCulDamageRateAndCost .Update", function () {
+            var row = $(this).closest("tr");
+            $("td", row).each(function () {
+                if ($(this).find("input").length > 0) {
+                    var span = $(this).find("span");
+                    var input = $(this).find("input");
+                    span.html(input.val());
+                    span.show();
+                    input.hide();
+                }
+            });
+            row.find(".Edit").show();
+            row.find(".Cancel").hide();
+            $(this).hide();
+
+            var culDmgRateAndCost = {};
+            culDmgRateAndCost.DamageTypeId = row.find('input[type=hidden]').val();
+            culDmgRateAndCost.Unit = row.find(".Unit").find("span").html();
+            culDmgRateAndCost.DamageValue = row.find(".DamageValue").find("span").html();
+            culDmgRateAndCost.UnitRepairCost = row.find(".UnitRepairCost").find("span").html();
+            
+            //alert(JSON.stringify(culDmgRateAndCost));
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("UpdateDamageRateAndCost", "CulvertDamageRateAndCost")',
+                data: '{culDmgRateAndCost:' + JSON.stringify(culDmgRateAndCost) + '}',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'text', //'html',
+                error: function (xhr) {
+                    //$('#status').text(xhr.status);
+                }
+            });
+        });
+
+        //Cancel event handler.
+        $("body").on("click", "#tblCulDamageRateAndCost .Cancel", function () {
+            var row = $(this).closest("tr");
+            $("td", row).each(function () {
+                if ($(this).find("input").length > 0) {
+                    var span = $(this).find("span");
+                    var input = $(this).find("input");
+                    input.val(span.html());
+                    span.show();
+                    input.hide();
+                }
+            });
+            row.find(".Edit").show();
+            row.find(".Update").hide();
+            $(this).hide();
+        });
+    });
+</script>

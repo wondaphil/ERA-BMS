@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 
-namespace ERA_BCMS.Models
+namespace ERA_BMS.Models
 {
     // You can add profile data for the user by adding more properties to your ApplicationUser class, please visit https://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
     public class ApplicationUser : IdentityUser
@@ -30,6 +30,6 @@ namespace ERA_BCMS.Models
             return new ApplicationDbContext();
         }
 
-        public System.Data.Entity.DbSet<ERA_BCMS.Models.RoadAlignmentType> RoadAlignments { get; set; }
+        public System.Data.Entity.DbSet<ERA_BMS.Models.RoadAlignmentType> RoadAlignments { get; set; }
     }
 }

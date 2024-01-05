@@ -1,0 +1,70 @@
+﻿
+@{
+    ViewBag.Title = "Culvert Damage Rate and Cost";
+}
+
+<h2>Culvert Damage Rate and Cost</h2>
+
+@using (Html.BeginForm())
+{
+    <div class="panel panel-default">
+
+        <div class="panel-body">
+
+            @Html.AntiForgeryToken()
+
+            <div class="row">
+                <div class="col-md-6 col-xs-9">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group-sm">
+                            <label class="control-label col-md-4 col-xs-4">Structure Item</label>
+                            <div class="col-md-5 col-xs-7">
+                                @Html.DropDownList("ddlStructureItem", (List<SelectListItem>)ViewBag.StructureItems, new { @class = "form-control" })
+                                <label class="control-label" id="structItemIdDiv"> <!-- Structure Item id appears here --> </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="damageWeightsPartial">
+            <!-- Damage Weight list displays here -->
+        </div>
+    </div>
+}
+
+<div id="temp">
+
+</div>
+<div id="status">
+
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#ddlStructureItem').change(function () {
+            //alert("Hello");
+            var selStructureItemId = $('#ddlStructureItem option:selected').val();
+            $('#ddlDamageType option').remove(); //empty the damage type dropdown list
+            if (selStructureItemId == "0") //if no structure item is selected
+            {
+                $('#structItemIdDiv').text(""); //clear structure item no. indicator
+                $('#damageWeightsPartial').empty(); // clear the damage weights place holder
+            }
+            else {
+                $('#structItemIdDiv').text("Structure Item Id = " + selStructureItemId);
+                
+                $.ajax({
+                    url: '@Url.Action("_GetDamageRateAndCost", "CulvertDamageRateAndCost", new { area = "Admin" })',
+                    data: { structureItemid: selStructureItemId },
+                    type: 'GET',
+                    dataType: 'html',
+                    success: function (data) {
+                        $('#damageWeightsPartial').html(data);
+                    }
+                });
+            }
+        });
+    });
+
+</script>

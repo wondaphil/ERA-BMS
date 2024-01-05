@@ -1,0 +1,43 @@
+﻿@model ERA_BMS.Models.SoilType
+
+@{
+    ViewBag.Title = "Soil Type";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Soil Type</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.SoilTypeId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SoilTypeId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SoilTypeName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SoilTypeName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Remark)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Remark)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    <a href="@Url.Action("Edit", new { id = Model.SoilTypeId })" class="btn btn-primary"><span class="glyphicon glyphicon-edit"></span> Edit</a>
+    <a href="@Url.Action("Index")" class="btn btn-primary"><span class="glyphicon glyphicon-backward"></span> Go to List</a>
+</p>
+

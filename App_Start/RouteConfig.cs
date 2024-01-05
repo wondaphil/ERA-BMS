@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 
-namespace ERA_BCMS
+namespace ERA_BMS
 {
     public class RouteConfig
     {
@@ -13,33 +13,34 @@ namespace ERA_BCMS
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
-            ////I added this
-            //routes.MapRoute(
-            //    name: "Admin",
-            //    url: "Admin/{controller}/{action}/{id}",
-            //    defaults: new { action = "Index", id = UrlParameter.Optional }
-            //);
-
-            //routes.MapRoute(
-            //    name: "Bridge",
-            //    url: "{controller}/{id}",
-            //    defaults: new { controller = "Bridge", action = "Details", id = UrlParameter.Optional }
-            //);
-
-            //routes.MapRoute(
-            //    name: "District",
-            //    url: "Admin/{controller}/{id}",
-            //    defaults: new { controller = "Districts", action = "Details", id = UrlParameter.Optional }
-            //);
-
-
-
+            //e.g. Bridges/Edit/A1-1-001 = Bridges/Edit?id=A1-1-001
+            //     DamageInspMajor/Index/A1-1-001 = DamageInspMajor/Index?id=A2-10-006
+            //     DamageInspMajor/Index/A1-1-001/2013 = DamageInspMajor/Index?id=A2-10-006&year=2006
             routes.MapRoute(
                 name: "Default",
-                url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+                url: "{controller}/{action}/{id}/{val}", 
+                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional, val = UrlParameter.Optional }
                 //namespaces: new string[] { "MyApp.Controllers" }
             );
+
+            //routes.MapRoute(
+            //    name: "MajorInspection",
+            //    url: "{controller}/{action}/{id}/{year}", 
+            //    defaults: new { controller = "DamageInspMajor", action = "Index", id = UrlParameter.Optional, year = UrlParameter.Optional }
+            //    //namespaces: new string[] { "MyApp.Controllers" }
+            //);
+
+            //routes.MapRoute(
+            //    name: "Inventory",
+            //    url: "BridgeInventory/{id}", 
+            //    defaults: new { controller = "BridgeInventory", action = "Index", id = UrlParameter.Optional }
+            //);
+
+            //routes.MapRoute(
+            //    name: "Inventory",
+            //    url: "{id}",
+            //    defaults: new { controller = "BridgeInventory", action = "Index", id = UrlParameter.Optional }
+            //);
         }
     }
 }

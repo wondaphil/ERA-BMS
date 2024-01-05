@@ -1,0 +1,86 @@
+﻿
+@{
+    ViewBag.Title = "Bridges Count";
+}
+
+<!-- Tab Buttons -->
+<ul id="tabstrip" class="nav nav-tabs" role="tablist">
+    <li class="active">
+        <a href="#_CountByBridgeTypeTab" role="tab" data-toggle="tab">Bridge Count By Bridge Type</a>
+    </li>
+    <li>
+        <a href="#_CountByConstructionYearTab" role="tab" data-toggle="tab">Bridge Count By Construction Year</a>
+    </li>
+    <li>
+        <a href="#_CountByBridgeLengthTab" role="tab" data-toggle="tab">Bridge Count By Structure Length</a>
+    </li>
+</ul>
+
+<!-- Tab Content Containers -->
+<div class="tab-content">
+    <div class="tab-pane fade in active" id="_CountByBridgeTypeTab">
+        <div id="countByBridgeType">
+            <!-- Bridges count by construction type display here -->
+        </div>
+        <div id="waitCountByBridgeType" align="center" style="display: none">
+            <img src="~/images/ajax-loader-big-1.gif" />
+        </div>
+    </div>
+    <div class="tab-pane fade" id="_CountByConstructionYearTab">
+        <div id="countByConstructionYear">
+            <!-- Bridges count by construction year displays here -->
+        </div>
+        <div id="waitCountByConstructionYear" align="center" style="display: none">
+            <img src="~/images/ajax-loader-big-2.gif" />
+        </div>
+    </div>
+    <div class="tab-pane fade" id="_CountByBridgeLengthTab">
+        <div id="countByBridgeLength">
+            <!-- Bridges count by bridge (structure) length displays here -->
+        </div>
+        <div id="waitCountByBridgeLength" align="center" style="display: none">
+            <img src="~/images/ajax-loader-big-3.gif" />
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+
+        $.ajax({
+            url: '@Url.Action("BridgesCountByBridgeType", "BridgeReportsCensus")',
+            type: 'GET',
+            dataType: 'html',
+            beforeSend: function () { $('#waitCountByBridgeType').show(); },
+            complete: function () { $('#waitCountByBridgeType').hide(); },
+            success: function (data) {
+                $('#countByBridgeType').html(data);
+            }
+        });
+
+        $.ajax({
+            url: '@Url.Action("BridgesCountByConstructionYear", "BridgeReportsCensus")',
+            type: 'GET',
+            dataType: 'html',
+            beforeSend: function () { $('#waitCountByConstructionYear').show(); },
+            complete: function () { $('#waitCountByConstructionYear').hide(); },
+            success: function (data) {
+                $('#countByConstructionYear').html(data);
+            }
+        });
+
+         $.ajax({
+            url: '@Url.Action("BridgesCountByBridgeLength", "BridgeReportsCensus")',
+            type: 'GET',
+             dataType: 'html',
+             beforeSend: function () { $('#waitCountByBridgeLength').show(); },
+             complete: function () { $('#waitCountByBridgeLength').hide(); },
+            success: function (data) {
+                $('#countByBridgeLength').html(data);
+            }
+        });
+    });
+</script>
+
+
+

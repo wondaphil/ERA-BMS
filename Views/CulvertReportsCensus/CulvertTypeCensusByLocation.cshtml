@@ -1,0 +1,203 @@
+﻿
+@{
+    ViewBag.Title = "Culvert Type Census By Location";
+}
+
+<h2>Culvert Type Census By Location</h2>
+
+@using (Html.BeginForm())
+{
+    <div class="panel panel-default">
+        @*<div class="panel-heading">
+                <h3 class="panel-title panel-info">Please select <b>District</b> and <b>Road Segment</b> from the dropdown list</h3>
+            </div>*@
+        <div class="panel-body">
+
+            @Html.AntiForgeryToken()
+
+            <div class="row">
+                <div class="col-lg-3 col-md-3 col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group">
+                            <label class="control-label col-md-3 col-sm-4 col-xs-3">District</label>
+                            <div class="col-md-8 col-sm-7 col-xs-9">
+                                @Html.DropDownList("ddlDistrict", new SelectList(ViewBag.Districts, "Value", "Text"), new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-3 col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group">
+                            <label class="control-label col-md-3 col-sm-4 col-xs-3">Section</label>
+                            <div class="col-md-8 col-sm-7 col-xs-9">
+                                <select class="form-control" id="ddlSection">
+                                    <!-- Sections list populates here -->
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-5 col-md-5 col-sm-8 col-xs-9">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group">
+                            <label for="ddlReportType" class="control-label col-lg-4 col-md-4 col-sm-3 col-xs-3">Report Type</label>
+                            <div class="col-lg-8 col-md-8 col-sm-7 col-xs-9">
+                                @Html.DropDownList("ddlReportType", (List<SelectListItem>)ViewBag.ReportTypes, new { @class = "form-control", style = "max-width: 100%" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-1 col-md-2 col-sm-4 col-xs-2 navbar-right">
+                    <a class="btn btn-primary" data-toggle="tooltip" title="Refresh" id="refresh"> <span class="glyphicon glyphicon-refresh"></span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="culvertTypeByLocationPartial">
+        <!-- Culvert type by location list displays here -->
+    </div>
+}
+
+<div id="wait" align="center" style="display: none">
+    <img src="~/images/ajax-loader-big.gif" />
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#ddlDistrict').change(function () {
+            var selDistrictId = $('#ddlDistrict option:selected').val();
+            $('#ddlSection option').remove(); //empty the section dropdown list
+
+            if (selDistrictId != "0") //if some district is selected
+            {
+                $.ajax({
+                    url: '@Url.Action("_GetSections", "LocationsDDL")',
+                    data: { districtid: selDistrictId },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        var markup = '<option value="0" id="noselect"> --Select Section --</option>';
+                        $.each(data, function (i, section) {
+                            markup += '<option value="' + section.Value + '">' + section.Text + '</option>'
+                            $('#ddlSection').html(markup);
+                        });
+                    }
+                });
+            }
+
+            var selReportTypeId = $('#ddlReportType option:selected').val();
+
+            // Update the reports that require district
+            if (selReportTypeId == "2") {
+                $('#ddlReportType').trigger('change');
+            }
+            else if (selReportTypeId == "1") {
+                $('#culvertTypeByLocationPartial').empty(); // clear the culvert type by location place holder
+            }
+        });
+
+        $('#ddlSection').change(function () {
+            var selSectionId = $('#ddlSection option:selected').val();
+
+            var selReportTypeId = $('#ddlReportType option:selected').val();
+
+            // Update the reports that require section
+            if (selReportTypeId == "1") {
+                $('#ddlReportType').trigger('change');
+            }
+        });
+
+        $('#ddlReportType').change(function () {
+            var selDistrictId = $('#ddlDistrict option:selected').val();
+            var selSectionId = $('#ddlSection option:selected').val();
+            var selReportTypeId = $('#ddlReportType option:selected').val();
+
+            $('#culvertTypeByLocationPartial').empty(); //clear  culvert type by location place holder
+
+            switch (selReportTypeId) {
+                case "1":
+                    if (selSectionId == "0") {
+                        $.ajax({
+                            url: '@Url.Action("_GetCulvertTypeBySegmentInDistrict", "CulvertReportsCensus")',
+                            data: { districtid: selDistrictId },
+                            type: 'GET',
+                            dataType: 'html',
+                            beforeSend: function () { $('#wait').show(); },
+                            complete: function () { $('#wait').hide(); },
+                            success: function (data) {
+                                $('#culvertTypeByLocationPartial').html(data);
+                            }
+                        });
+                    }
+                    else {
+                        $.ajax({
+                            url: '@Url.Action("_GetCulvertTypeBySegmentInSection", "CulvertReportsCensus")',
+                            data: { sectionid: selSectionId },
+                            type: 'GET',
+                            dataType: 'html',
+                            beforeSend: function () { $('#wait').show(); },
+                            complete: function () { $('#wait').hide(); },
+                            success: function (data) {
+                                $('#culvertTypeByLocationPartial').html(data);
+                            }
+                        });
+                    }
+                    break;
+
+                case "2":
+                    if (selDistrictId != "0") {
+                        $.ajax({
+                            url: '@Url.Action("_GetCulvertTypeBySection", "CulvertReportsCensus")',
+                            data: { districtid: selDistrictId },
+                            type: 'GET',
+                            dataType: 'html',
+                            beforeSend: function () { $('#wait').show(); },
+                            complete: function () { $('#wait').hide(); },
+                            success: function (data) {
+                                $('#culvertTypeByLocationPartial').html(data);
+                            }
+                        });
+                    }
+                    break;
+
+                case "3":
+                    $.ajax({
+                        url: '@Url.Action("_GetCulvertTypeByDistrict", "CulvertReportsCensus")',
+                        type: 'GET',
+                        dataType: 'html',
+                        beforeSend: function () { $('#wait').show(); },
+                        complete: function () { $('#wait').hide(); },
+                        success: function (data) {
+                            $('#culvertTypeByLocationPartial').html(data);
+                        }
+                    });
+                    break;
+
+                case "4":
+                    $.ajax({
+                        url: '@Url.Action("_GetCulvertTypeByRegion", "CulvertReportsCensus")',
+                        type: 'GET',
+                        dataType: 'html',
+                        beforeSend: function () { $('#wait').show(); },
+                        complete: function () { $('#wait').hide(); },
+                        success: function (data) {
+                            $('#culvertTypeByLocationPartial').html(data);
+                        }
+                    });
+                    break;
+
+
+            }
+        });
+
+        $('#refresh').click(function () {
+            $('#ddlReportType').trigger('change');
+        });
+    });
+
+</script>
+

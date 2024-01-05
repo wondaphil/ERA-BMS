@@ -1,0 +1,122 @@
+﻿@model IEnumerable<ERA_BMS.ViewModels.BSSDViewModel>
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title panel-info">List of Bridges Grouped by <b>District</b>, <b>Section</b> and <b>Road Segment</b></h3>
+    </div>
+
+    <div class="panel-body">
+        <table class="table table-striped table-condensed table-responsive table-bordered display compact hover" id="allBridges">
+            <tbody>
+                @foreach (var dist in Model.GroupBy(d => d.districts))
+                {
+                    <tr>
+                        <td colspan="15">
+                            <h4><b>District: @dist.Key.DistrictName</b> <i>(No. of Sections: @dist.GroupBy(b => b.sections).Count())</i></h4>
+                        </td>
+                    </tr>
+                    foreach (var sec in dist.GroupBy(s => s.sections))
+                    {
+                        <tr>
+                            <td colspan="15">
+                                <h5><b>Section: [@sec.Key.SectionNo] @sec.Key.SectionName</b> <i>(No. of Road Segments: @sec.GroupBy(b => b.segments).Count())</i></h5>
+                            </td>
+                        </tr>
+                        foreach (var seg in sec.GroupBy(b => b.segments))
+                        {
+                            <tr>
+                                <td colspan="15">
+                                    <h5><b>Road Segment: [@seg.Key.RevisedRoadId] @seg.Key.SegmentName <i>(No. of Bridges: @seg.GroupBy(b => b.bridges).Count())</i></b></h5>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th></th>
+                                <th>Revised Bridge Id</th>
+                                <th>Bridge Name</th>
+                                <th>Dist. from AA (Km)</th>
+                                <th>Bridge Length (m)</th>
+                                <th>Bridge Type</th>
+                                <th>Orig. Constr. Year</th>
+                                <th>Replaced Year</th>
+                                <th>Init. Constr. Cost, ETB</th>
+                                <th>Contractor</th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+
+                            foreach (var bridge in seg.GroupBy(b => b.bridges).Select((x, i) => new { Data = x, Index = i }))
+                            {
+                                <tr>
+                                    <td> @( (@bridge.Index + (Int32)1)) </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => bridge.Data.Key.RevisedBridgeNo)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => bridge.Data.Key.BridgeName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => bridge.Data.Key.BridgeGeneralInfo.KMFromAddis)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => bridge.Data.Key.BridgeGeneralInfo.BridgeLength)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => bridge.Data.Key.SuperStructure.BridgeType.BridgeTypeName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => bridge.Data.Key.BridgeGeneralInfo.ConstructionYear)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => bridge.Data.Key.BridgeGeneralInfo.ReplacedYear)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => bridge.Data.Key.BridgeGeneralInfo.ConstructionCost)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => bridge.Data.Key.BridgeGeneralInfo.Contractor)
+                                    </td>
+                                    <td align="center">
+                                        <a href="@Url.Action("Index", "BridgeInventory", new { id = bridge.Data.Key.BridgeId })" target="_blank" class="glyphicon glyphicon-new-window" data-toggle="tooltip" title="Go to Inventory" style="font-size: 14px"></a>
+                                    </td>
+                                    <td align="center">
+                                        <a href="@Url.Action("Index", "BridgeProfile", new { id = bridge.Data.Key.BridgeId })" target="_blank" class="glyphicon glyphicon-new-window" data-toggle="tooltip" title="Go to Profile" style="font-size: 14px"></a>
+                                    </td>
+                                    <td align="center">
+                                        <a href="@Url.Action("Index", "DamageInspMajor", new { id = bridge.Data.Key.BridgeId })" target="_blank" class="glyphicon glyphicon-new-window" data-toggle="tooltip" title="Go to Inspection" style="font-size: 14px"></a>
+                                    </td>
+                                    <td align="center">
+                                        <a href="@Url.Action("BridgeMap", "BridgeLocation", new { id = bridge.Data.Key.BridgeId })" target="_blank" class="glyphicon glyphicon-map-marker" data-toggle="tooltip" title="View Map" style="font-size: 14px"></a>
+                                    </td>
+                                </tr>
+                            }
+                            @*<tr>Total Segment: @seg.Count(), Total No. of Bridges in Segment: @seg.GroupBy(b => b.bridges).Count()</tr>*@
+                        }
+                        @*<tr>Section Total: @sec.Count()</tr>*@
+                    }
+                    @*<tr>District Total: @dist.Count()</tr>*@
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="panel-footer">
+        <h3 class="panel-title">Total No. of Bridges: <b>@Model.Count()</b></h3>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#allBridges').dataTable({
+            paging: true,
+            pageLength: 15,
+            bLengthChange: true,
+            scrollY: 400,
+            scrollX: true,
+            searching: true,
+            select: true,
+            dom: 'lBfrtip',
+            buttons: ['copy', 'excel', 'pdf', 'print']
+        });
+    });
+</script>

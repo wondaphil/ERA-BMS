@@ -1,0 +1,292 @@
+﻿@model ERA_BMS.ViewModels.CulvertViewModel
+
+@{
+    ViewBag.Title = "Culvert Inventory";
+}
+
+<h2>Culvert Inventory</h2>
+
+@using (Html.BeginForm())
+{
+    <div class="panel panel-default">
+        @*<div class="panel-heading">
+            <h3 class="panel-title panel-info">Please select <b>District</b>, <b>Section</b>, <b>Road Segment</b> and <b>Culvert</b> from the dropdown list</h3>
+        </div>*@
+        <div class="panel-body">
+
+            @Html.AntiForgeryToken()
+
+            <div class="row">
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group-sm">
+                            <label class="control-label col-lg-2 col-md-3 col-sm-4">District</label>
+                            <div class="col-lg-9 col-md-8 col-sm-8">
+                                @*@Html.DropDownList("ddlDistrict", (List<SelectListItem>)ViewBag.Districts, new { @class = "form-control" })*@
+                                @Html.DropDownList("ddlDistrict", new SelectList(ViewBag.Districts, "Value", "Text", ViewBag.DistrictId), htmlAttributes: new { @class = "form-control" })
+                                <!--<label class="control-label" id="distrIdDIV">--> <!-- District id appears here --> <!--</label>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group-sm">
+                            <label class="control-label col-lg-2 col-md-3 col-sm-4">Section</label>
+                            <div class="col-lg-9 col-md-8 col-sm-8">
+                                @*@Html.DropDownList("ddlSection", (List<SelectListItem>)ViewBag.Sections, new { @class = "form-control" })*@
+                                @Html.DropDownList("ddlSection", new SelectList(ViewBag.Sections, "Value", "Text", ViewBag.SectionId), htmlAttributes: new { @class = "form-control" })
+                                <!--<select class="form-control" id="ddlSection">-->
+                                <!-- Sections list populates here -->
+                                <!--</select>-->
+                                <!--<label class="control-label" id="secIdDIV">--> <!-- Section id appears here --> <!--</label>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="clearfix visible-sm"></div> <!-- Add clearfix (or new line break) for only the sm -->
+                <div class="clearfix visible-xs"></div> <!-- Add clearfix (or new line break) for only the xs -->
+
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group-sm">
+                            <label class="control-label col-lg-3 col-md-3 col-sm-4">Road Segment</label>
+                            <div class="col-lg-8 col-md-9 col-sm-8">
+                                @*@Html.DropDownList("ddlSegment", (List<SelectListItem>)ViewBag.Segments, new { @class = "form-control" })*@
+                                @Html.DropDownList("ddlSegment", new SelectList(ViewBag.Segments, "Value", "Text", ViewBag.SegmentId), htmlAttributes: new { @class = "form-control" })
+                                <!--<select class="form-control" id="ddlSegment">-->
+                                <!-- Segments list populates here -->
+                                <!--</select>-->
+                                <!--<label class="control-label" id="segIdDIV">--> <!-- Segment id appears here --> <!--</label>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group-sm">
+                            <label class="control-label col-lg-2 col-md-3 col-sm-4">Culvert</label>
+                            <div class="col-lg-9 col-md-8 col-sm-8">
+                                @*@Html.DropDownList("ddlCulvert", (List<SelectListItem>)ViewBag.Culverts, new { @class = "form-control" })*@
+                                @Html.DropDownList("ddlCulvert", new SelectList(ViewBag.Culverts, "Value", "Text", TempData["CulvertId"]), htmlAttributes: new { @class = "form-control" })
+                                <!--<select class="form-control" id="ddlCulvert">-->
+                                <!-- Culverts list populates here -->
+                                <!--</select>-->
+                                <!--<label class="control-label" id="culIdDIV">--> <!-- Culvert id appears here --> <!--</label>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Tab Buttons -->
+<ul id="tabstrip" class="nav nav-tabs" role="tablist">
+    <li class="active">
+        <a href="#_StructuralInfoTab" role="tab" data-toggle="tab">Structural Information</a>
+    </li>
+    <li>
+        <a href="#_GeneralInfoTab" role="tab" data-toggle="tab">General Information</a>
+    </li>
+    <li>
+        <a href="#_CulvertMediaTab" role="tab" data-toggle="tab">Culvert Media Files</a>
+    </li>
+    <li>
+        <div class="col-xs-2 navbar-right">
+            <a class="btn btn-primary" data-toggle="tooltip" title="Refresh" id="refresh"> <span class="glyphicon glyphicon-refresh"></span> </a>
+        </div>
+    </li>
+</ul>
+
+<!-- Tab Content Containers -->
+<div class="tab-content">
+    <div class="tab-pane fade in active" id="_StructuralInfoTab">
+        <div id="structuralInfo">
+            <!-- Culvert structural info displays here -->
+            @if (Model != null)
+            {
+                if (Model.CulvertStr == null)
+                {
+                    @Html.Partial("StructuralInfoNew", Model.CulvertStr, new ViewDataDictionary());
+                }
+                else
+                {
+                    @Html.Partial("StructuralInfo", Model.CulvertStr);
+                }
+            }
+        </div>
+    </div>
+    <div class="tab-pane fade" id="_GeneralInfoTab">
+        <div id="generalInfo">
+            <!-- Culverts general info displays here -->
+            <!-- If index is opened with some bridge id value, populate the general info -->
+            @if (Model != null)
+            {
+                if (Model.GenInfo == null)
+                {
+                    @Html.Partial("GeneralInfoNew", Model.GenInfo, new ViewDataDictionary());
+                }
+                else
+                {
+                    @Html.Partial("GeneralInfo", Model.GenInfo);
+                }
+            }
+        </div>
+    </div>
+    <div class="tab-pane fade" id="_CulvertMediaTab">
+        <div id="culvertMedia">
+            <!-- Culvert medias display here -->
+            @if (Model != null)
+            {
+                @Html.Partial("CulvertMedia", Model.CulvertMedia);
+            }
+        </div>
+    </div>
+</div>
+
+<div id="wait" align="center" style="display: none">
+    <img src="~/images/ajax-loader-big.gif" />
+</div>
+
+<script>
+    $(document).ready(function () {
+        function ClearAll() {
+            //alert("Hello");
+            $('#generalInfo').empty(); // clear the general Info tab
+            $('#structuralInfo').empty(); // clear the structure info tab
+            $('#roadOverInfo').empty(); // clear the road over info tab
+            $('#culvertMedia').empty(); // clear the culvert media tab
+        }
+
+        $('#ddlDistrict').change(function () {
+            var selDistrictId = $('#ddlDistrict option:selected').val();
+            $('#ddlSection option').remove(); //empty the section dropdown list
+            $('#ddlSegment option').remove(); //empty the segment dropdown list
+            $('#ddlCulvert option').remove(); //empty the culvert dropdown list
+            ClearAll();
+
+            if (selDistrictId != "0") //if some district is selected
+            {
+                $('#distrIdDIV').text("District No. = " + selDistrictId );
+                $.ajax({
+                    url: '@Url.Action("_GetSections", "LocationsDDL")',
+                    data: { districtid: selDistrictId },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        var markup = '<option value="0" id="noselect"> --Select Section --</option>';
+                        $.each(data, function (i, section) {
+                            markup += '<option value="' + section.Value + '">' + section.Text + '</option>'
+                            $('#ddlSection').html(markup);
+                        });
+                    }
+                });
+            }
+        });
+
+        $('#ddlSection').change(function () {
+            var selSectionId = $('#ddlSection option:selected').val();
+            $('#ddlSegment option').remove(); //empty the segment dropdown list
+            $('#ddlCulvert option').remove(); //empty the culvert dropdown list
+            ClearAll();
+
+            if (selSectionId != "0") //if some section is selected
+            {
+                $.ajax({
+                    url: '@Url.Action("_GetSegments", "LocationsDDL")',
+                    data: { sectionid: selSectionId },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        var markup = '<option value="0" id="noselect"> --Select Segment --</option>';
+                        $.each(data, function (i, segment) {
+                            markup += '<option value="' + segment.Value + '">' + segment.Text + '</option>'
+                            $('#ddlSegment').html(markup);
+                        });
+                    }
+                });
+            }
+        });
+
+        $('#ddlSegment').change(function () {
+            var selSegmentId = $('#ddlSegment option:selected').val();
+            $('#ddlCulvert option').remove(); //empty the culvert dropdown list
+            ClearAll();
+
+            if (selSegmentId != "0") //if some segment is selected
+            {
+                $('#segIdDIV').text("Road Id = " + selSegmentId);
+                $.ajax({
+                    url: '@Url.Action("_GetCulverts", "LocationsDDL")',
+                    data: { segmentid: selSegmentId },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        var markup = '<option value="0" id="noselect"> --Select Culvert --</option>';
+                        $.each(data, function (i, culvert) {
+                            markup += '<option value="' + culvert.Value + '">' + culvert.Text + '</option>'
+                            $('#ddlCulvert').html(markup);
+                        });
+                    }
+                });
+            }
+        });
+
+        $('#ddlCulvert').change(function () {
+            var selCulvertId = $('#ddlCulvert option:selected').val();
+            ClearAll();
+
+            if (selCulvertId != "0") //only if a culvert is selected
+            {
+                var culvertNo = $('#ddlCulvert option:selected').text(); // extract the culvert no
+                $('#culIdDIV').text("Culvert No = " + culvertNo);
+
+                $.ajax({
+                    url: '@Url.Action("StructuralInfo", "CulvertInventory")',
+                    data: { culvertid: selCulvertId },
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () { $('#wait').show(); },
+                    complete: function () { $('#wait').hide(); },
+                    success: function (data) {
+                        $('#structuralInfo').html(data);
+                    }
+                });
+
+                $.ajax({
+                    url: '@Url.Action("GeneralInfo", "CulvertInventory")',
+                    data: { culvertid: selCulvertId },
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () { $('#wait').show(); },
+                    complete: function () { $('#wait').hide(); },
+                    success: function (data) {
+                        $('#generalInfo').html(data);
+                    }
+                });
+
+                $.ajax({
+                    url: '@Url.Action("CulvertMedia", "CulvertInventory")',
+                    data: { culvertid: selCulvertId },
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () { $('#wait').show(); },
+                    complete: function () { $('#wait').hide(); },
+                    success: function (data) {
+                        $('#culvertMedia').html(data);
+                    }
+                });
+            }
+        });
+
+        $('#refresh').click(function () {
+            $('#ddlCulvert').trigger('change');
+        });
+    });
+
+</script>

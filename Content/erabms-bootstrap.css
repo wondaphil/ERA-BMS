@@ -1,0 +1,461 @@
+/****
+/****
+   This is a modified of Bootstrap for ERA-BMS
+***/
+
+.nav-tabs > li {
+    /*border-color: #337ab7;*/
+    /*border-width: 3px;*/
+    border-bottom-width: thin;
+    border-bottom-color: #f79422;
+}
+
+/* Selected/active tab*/
+.nav-tabs > li.active > a,
+.nav-tabs > li.active > a:hover,
+.nav-tabs > li.active > a:focus {
+    color: white;
+    background-color: #f79422;
+    font-weight: bold;
+    border: medium none;
+    /*border-radius: 5px;*/
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+}
+
+/* Unselected tab */
+.nav-tabs > li > a {
+    border-radius: 5px;
+    /*border-color: #337ab7;*/
+    background-color: #f0dec8;
+    color: black;
+    /*border-width: 3px;*/
+}
+
+/* Unselected tab hover or get focus */
+.nav-tabs > li > a:hover,
+.nav-tabs > li > a:focus {
+    border-radius: 5px;
+    /*border-color: #337ab7;*/
+    background-color: #f0dec8;
+    /*border-width: 3px;*/
+    color: white;
+}
+
+.navbar-inverse {
+    background-color: whitesmoke;
+    /*border-color: #337ab7;*/
+}
+
+/* Menu hovering or getting focus */
+.navbar-inverse .navbar-nav > li > :hover,
+.navbar-inverse .navbar-nav > li > :focus {
+    color: black !important;
+    font-weight: bolder;
+}
+
+/* Menu whose submenu is opened */
+.navbar-inverse .navbar-nav > .open > a, 
+.navbar-inverse .navbar-nav > .open > a:hover, 
+.navbar-inverse .navbar-nav > .open > a:focus {
+    color: black !important;
+    font-weight:bolder;
+    background-color: #f0dec8;
+}
+
+.navbar-inverse .navbar-nav > li > a {
+    color: black;
+}
+
+/* Collpased menu button */
+.navbar-toggle {
+    background-color: #fa9622;
+    color: black;
+}
+
+/* Disabled dropdown menu item*/
+.dropdown-menu > .disabled > a,
+.dropdown-menu > .disabled > a:hover,
+.dropdown-menu > .disabled > a:focus {
+    pointer-events: none;
+    color: lightgray;
+    cursor: not-allowed;
+}
+
+#heading-1 {
+    background-color: cyan;
+    border-color: #ddd;
+}
+
+#heading-2 {
+    background-color: lemonchiffon;
+    border-color: #ddd;
+}
+
+.btn {
+    border-radius: 15px;
+}
+
+.btn:focus {
+    border-radius: 15px;
+    border-color: #de851f;
+    border-style:ridge;
+    border-width:thin;
+    
+    outline: none !important;
+    box-shadow: none;
+}
+
+.btn-primary,
+.btn-primary > a {
+    background-color: #f79422 !important;
+    border-color: #f79422;
+    color: white !important;
+}
+
+.btn-primary:hover,
+.btn-primary:active {
+    background-color: #de851f !important;
+    border-color: #de851f !important;
+}
+
+.panel-primary > .panel-heading {
+    background-color: #f79422;
+    border-color: #2e6da4;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.panel-default > .panel-heading {
+    background-color: #f0dec8;
+    border-color: darkgray;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.panel-default {
+    background-color: #f5f5f5;
+    border-color: darkgray;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.panel-primary {
+    background-color: #f5f5f5;
+    border-color: darkgray;
+}
+
+.panel-heading {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+.panel-body {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+.bg-primary {
+    background-color: #f79422;
+    border-color: #2e6da4;
+}
+
+/* To make glyphicons bigger*/
+.glyphicon {
+    font-size: 16px;
+}
+
+/* Required items in form Edit/New */
+.form-group.required .control-label:after {
+    content: " *";
+    color: red;
+    font-size: large;
+}
+
+/* For button, strip, etc colors colors */
+/*.btn .btn-primary {
+    color: #fff;
+    background-color: #f79422;
+    border-color: #2e6da4;
+}
+
+
+*/
+
+#searchbydistrict, #searchbysection, #searchbysegment {
+    margin-top: 10px;
+}
+
+.btn .btn-primary {
+    margin: 10px 10px 10px 10px;
+}
+
+.padding-button {
+    margin-top: 10px;
+}
+
+.dl-horizontal {
+    font-size: larger;
+}
+
+/* For a centered table */
+table.centeredtable td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+table.centeredtable th {
+    text-align: center;
+    vertical-align: middle;
+}
+
+/* For a table cells with no padding and margin */
+.compacttable {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+h2 {
+    width: 100%;
+    text-align: center;
+    color: #ef5821;
+    font-family: 'Century Gothic';
+}
+
+.homeimage {
+    border: 3px solid #ddd;
+    border-radius: 4px;
+    padding: 5px;
+    width: 100%;
+    height: auto;
+    /*float: left;
+    clear: left;*/
+}
+
+/* Grid system to be divide into 5 equal parts */
+.col-lg-15 {
+    position: relative;
+    min-height: 1px;
+    padding-right: 10px;
+    padding-left: 10px;
+}
+
+@media (min-width: 1200px) {
+    .col-lg-15 {
+        width: 20%;
+        float: left;
+    }
+}
+
+@media only screen and (max-width: 701px) {
+    .homeimage {
+        width: 49.99999%;
+        margin: 6px 0;
+        padding: 6px !important;
+    }
+}
+
+@media only screen and (max-width: 700px) {
+    .homeimage {
+        width: 100%;
+        margin: 0px;
+        padding: 0px !important;
+        border: 6px !important;
+    }
+}
+
+/* For Bridge book view and print */
+@media only screen and (min-width: 1001px) {
+    img.bridgebook {
+        height: 260px;
+        width: auto;
+        margin: 6px 0;
+    }
+}
+
+@media only screen and (max-width: 1000px) {
+    img.bridgebook {
+        height: 100px;
+        width: auto;
+    }
+}
+
+@media print {
+    img.bridgebook {
+        height: 200px;
+        width: auto;
+    }
+
+    /*@page {
+        size: A4 landscape !important
+    }*/
+
+    @page {
+        size: auto !important
+    }
+}
+
+/*img.bridgebook {
+    width: 10px;
+    height: auto;
+}*/
+
+/* To hide overflow text in screen only */
+/*@media only screen and (max-width: 600px) {
+    td.shortentext {
+        max-width: 80px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}*/
+
+.shortentext {
+    max-width: 90px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.redtextbox {
+    color: red;
+    font-weight: bold;
+}
+
+.jumbotron {
+    background: url("../images/background-2.jpg") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    /*background-color: #8c6278;*/
+}
+
+
+/* For dropdown box to appear like List box on mobile phones */
+/*@media only screen and (max-height:480px) and (orientation:portrait) {
+    .my-list-box {
+        width: 100%;
+        size: 5;
+    }*/
+
+    @media screen and (min-width: 1101px) {
+        .hometext {
+            font-size: 40px;
+        }
+    }
+
+    @media screen and (max-width: 1100px) {
+        .hometext {
+            font-size: 25px;
+        }
+    }
+
+    @media screen and (min-width: 1201px) {
+        .homelogo {
+            width: 150px;
+        }
+    }
+
+    @media screen and (max-width: 1200px) {
+        .homelogo {
+            width: 80px;
+        }
+    }
+
+    @media screen and (min-width: 1201px) {
+        .menulogo {
+            width: 130px;
+        }
+    }
+
+    @media screen and (max-width: 1200px) {
+        .menulogo {
+            width: 90px;
+        }
+    }
+
+    /* Parts of a page that should be printed or not */
+    @media print {
+        .panel-default {
+            display: none;
+        }
+
+        .panel {
+            border: none;
+        }
+
+        #noprint {
+            display: none;
+        }
+
+        #printonly {
+            display: block;
+        }
+    }
+
+    /* Parts of a page that should not be visible in screen but printed */
+    @media screen {
+        #printonly {
+            display: none;
+        }
+    }
+
+    /* Default bootstrap printing in scale is "xs" but the following changes it to "sm" */
+    @media print {
+        .col-sm-1, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-10, .col-sm-11, .col-sm-12 {
+            float: left;
+        }
+
+        .col-sm-12 {
+            width: 100%;
+        }
+
+        .col-sm-11 {
+            width: 91.66666667%;
+        }
+
+        .col-sm-10 {
+            width: 83.33333333%;
+        }
+
+        .col-sm-9 {
+            width: 75%;
+        }
+
+        .col-sm-8 {
+            width: 66.66666667%;
+        }
+
+        .col-sm-7 {
+            width: 58.33333333%;
+        }
+
+        .col-sm-6 {
+            width: 50%;
+        }
+
+        .col-sm-5 {
+            width: 41.66666667%;
+        }
+
+        .col-sm-4 {
+            width: 33.33333333%;
+        }
+
+        .col-sm-3 {
+            width: 25%;
+        }
+
+        .col-sm-2 {
+            width: 16.66666667%;
+        }
+
+        .col-sm-1 {
+            width: 8.33333333%;
+        }
+    }

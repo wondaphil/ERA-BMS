@@ -1,0 +1,146 @@
+﻿@model IEnumerable<ERA_BMS.Models.BridgePartDmgWt>
+
+@{
+    ViewBag.Title = "Bridge Parts Damage Weight";
+}
+
+
+<table class="table table-striped table-condensed table-responsive display compact hover" id="bridgepartdmgwt">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.BridgePartId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BridgePart.BridgePartName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DmgWt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Remark)
+            </th>
+            <th>Edit</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="BridgePartId">
+                   <span> @item.BridgePartId</span>
+                </td>
+                <td class="BridgePartName">
+                    <span>@item.BridgePart.BridgePartName</span>
+                </td>
+                <td class="DmgWt">
+                    <span>@item.DmgWt</span>
+                    <input type="text" value="@item.DmgWt" style="display:none" size="3" />
+                </td>
+                <td class="Remark">
+                    <span>@item.Remark</span>
+                    <input type="text" value="@item.Remark" style="display:none" />
+                </td>
+                <td>
+                    <a class="Edit glyphicon glyphicon-edit" href="javascript:;" data-toggle="tooltip" title="Edit"></a>
+                    <a class="Update glyphicon glyphicon-ok" href="javascript:;" style="display:none" data-toggle="tooltip" title="Update"></a>
+                </td>
+                <td>
+                    <a class="Cancel glyphicon glyphicon-remove" href="javascript:;" style="display:none" data-toggle="tooltip" title="Cancel"></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div class="panel-footer">
+    <h3 class="panel-title">No. of Bridge Parts: <b>@Model.Count()</b> </h3>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        //Edit event handler.
+        $("body").on("click", "#bridgepartdmgwt .Edit", function () {
+            var row = $(this).closest("tr");
+            $("td", row).each(function () {
+                if ($(this).find("input").length > 0) {
+                    $(this).find("input").show();
+                    $(this).find("span").hide();
+                }
+                if ($(this).find("textarea").length > 0) {
+                    $(this).find("textarea").show();
+                    $(this).find("span").hide();
+                }
+            });
+            row.find(".Update").show();
+            row.find(".Cancel").show();
+            $(this).hide();
+        });
+
+        //Update event handler.
+        $("body").on("click", "#bridgepartdmgwt .Update", function () {
+            var row = $(this).closest("tr");
+            $("td", row).each(function () {
+                if ($(this).find("input").length > 0) {
+                    var span = $(this).find("span");
+                    var input = $(this).find("input");
+                    span.html(input.val());
+                    span.show();
+                    input.hide();
+                }
+                if ($(this).find("textarea").length > 0) {
+                    var span = $(this).find("span");
+                    var textarea = $(this).find("textarea");
+                    span.html(textarea.html());
+                    $('#status').text(textarea.html());
+                    span.show();
+                    textarea.hide();
+                }
+            });
+            row.find(".Edit").show();
+            row.find(".Cancel").hide();
+            $(this).hide();
+
+            var BridgePartDmgWt = {};
+            BridgePartDmgWt.BridgePartId = row.find(".BridgePartId").find("span").html();
+            BridgePartDmgWt.DmgWt = row.find(".DmgWt").find("span").html();
+            BridgePartDmgWt.Remark = row.find(".Remark").find("span").html();
+
+            //alert(JSON.stringify(BridgePartDmgWt));
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("UpdateBridgePartDmgWt", "DamageWeightAndCostRate")',
+                data: '{bridgePartDmgWt:' + JSON.stringify(BridgePartDmgWt) + '}',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'text', //'html',
+                error: function (xhr) {
+                    //$('#status').text(xhr.status);
+                }
+            });
+        });
+
+        //Cancel event handler.
+        $("body").on("click", "#bridgepartdmgwt .Cancel", function () {
+            var row = $(this).closest("tr");
+            $("td", row).each(function () {
+                if ($(this).find("input").length > 0) {
+                    var span = $(this).find("span");
+                    var input = $(this).find("input");
+                    input.val(span.html());
+                    span.show();
+                    input.hide();
+                }
+                if ($(this).find("textarea").length > 0) {
+                    var span = $(this).find("span");
+                    var textarea = $(this).find("textarea");
+                    textarea.html(span.html());
+                    span.show();
+                    textarea.hide();
+                }
+            });
+            row.find(".Edit").show();
+            row.find(".Update").hide();
+            $(this).hide();
+        });
+    });
+</script>

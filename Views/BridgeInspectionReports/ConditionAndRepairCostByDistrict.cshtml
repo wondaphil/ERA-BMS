@@ -1,0 +1,68 @@
+﻿
+@{
+    ViewBag.Title = "Bridge Condition & Repair Cost By District";
+}
+
+<h2>Bridge Condition and Repair Cost By District</h2>
+
+@using (Html.BeginForm())
+{
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title panel-info">Please select <b>Inspection Year</b> from the dropdown list</h3>
+        </div>
+        <div class="panel-body">
+
+            @Html.AntiForgeryToken()
+
+            <div class="row form-group form-group-sm">
+                <div class="col-md-offset-0 col-md-7">
+                    <label for="ddlInspectionYear" class="control-label col-md-3">Inspection Year</label>
+                    @Html.DropDownList("ddlInspectionYear", (List<SelectListItem>)ViewBag.InspectionYear, new { @class = "form-control col-md-2" })
+
+                </div>
+                <div class="col-sm-1 navbar-right">
+                    <a href="javascript:$('#ddlInspectionYear').trigger('change')" class="btn btn-primary" data-toggle="tooltip" title="Refresh" id="refresh"> <span class="glyphicon glyphicon-refresh"></span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="bridgeconditionandrepaircost">
+        <!-- Bridge condition and repair cost display here -->
+    </div>
+}
+
+<div id="wait" align="center" style="display: none">
+    <img src="~/images/ajax-loader-big.gif" />
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#ddlInspectionYear').change(function () {
+            var selInspectionYear = $('#ddlInspectionYear option:selected').val();
+            $('#bridgeconditionandrepaircost').empty(); // clear the bridge condition and budget placeholder
+            //alert(selInspectionYear);
+            if (selInspectionYear != "0") { // Some inspection year is selected
+                $('#bridgeconditionandrepaircost').empty(); // clear the bridge condition and budget placeholder
+
+                $.ajax({
+                    url: '@Url.Action("_GetConditionAndRepairCostByDistrict", "BridgeReportsInspection")',
+                    data: { inspectionyear: selInspectionYear },
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () { $('#wait').show(); },
+                    complete: function () { $('#wait').hide(); },
+                    success: function (data) {
+                        $('#bridgeconditionandrepaircost').html(data);
+                    }
+                });
+            }
+        });
+
+        $('#refresh').click(function () {
+            $('#ddlInspectionYear').trigger('change');
+        });
+    });
+
+</script>
+

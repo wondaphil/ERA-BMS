@@ -4,225 +4,183 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - ERA BCMS</title>
+
+    <!-- I added this so that the page loads always from server rather than from cache-->
+    @*<meta http-equiv=“Pragma” content=”no-cache”>
+        <meta http-equiv=“Expires” content=”-1″>
+        <meta http-equiv=“CACHE-CONTROL” content=”NO-CACHE”>*@
+    <!-- my code ends here -->
+
+    <title>@ViewBag.Title - ERA-BMS</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jqueryval")
-</head>
-<body style="font-size:small">
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <div class="navbar-header">
-                    <a class="navbar-brand" href="@Url.Action("Index", "Home")">
-                        <img src="~/images/logo.png" alt="Site Logo" style="height:60px; width: 120px" />
-                    </a>
-                </div>
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                @*@Html.ActionLink("ERA BCMS", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })*@
-            </div>
+    @Styles.Render("~/Content/dataTables")
 
-            @*  Hide the menu items if used not logged in *@
-            @if (User.Identity.IsAuthenticated)
-            {
-                <div class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav">
-                        <li>@Html.ActionLink("Home", "Index", "Home", new { area = "" }, null)</li>
-                        <li class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                Data Entry <b class="caret"></b>
-                            </a>
-                            <ul class="dropdown-menu multi-level" role="menu">
-                                <li class="dropdown dropdown-submenu">
-                                    <a class="dropdown-toggle">Bridge</a>
-                                    <ul class="dropdown-menu">
-                                        <li>@Html.ActionLink("Bridge Registration", "New", "Bridges", new { area = "" }, null)</li> <!-- Data Entry -> Bridge -> Bridge Registation -->
-                                        <li>@Html.ActionLink("Bridge Inventory", "Index", "BridgeInventory", new { area = "" }, null)</li> <!-- Data Entry -> Bridge -> Bridge Inventory -->
-                                        <li role="separator" class="divider"></li>
-                                        <li class="disabled">@Html.ActionLink("Inspection Regular/Emergency", "#", "Home", new { area = "" }, null)</li> <!-- Data Entry -> Bridge -> Bridge Inspection Regular/Emergency -->
-                                        <li class="disabled">@Html.ActionLink("Inspection Major", "#", "Home", new { area = "" }, null)</li> <!-- Data Entry -> Bridge -> Bridge Inspection Major -->
-                                    </ul>
-                                </li>
+    @* To disable arrows from Number input *@
+    <style>
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
 
-                                <li role="separator" class="divider"></li>
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+    </style>
 
-                                <li class="dropdown dropdown-submenu">
-                                    <a class="dropdown-toggle">Culvert</a>
-                                    <ul class="dropdown-menu">
-                                        <li>@Html.ActionLink("Culvert Registration", "New", "Culverts", new { area = "" }, null)</li> <!-- Data Entry -> Culvert -> Culvert Registation -->
-                                        <li class="disabled">@Html.ActionLink("Culvert Inventory", "#", "Home", new { area = "" }, null)</li> <!-- Data Entry -> Culvert -> Culvert Inventory -->
-                                        <li role="separator" class="divider"></li>
-                                        <li class="disabled">@Html.ActionLink("Repair History", "#", "Home", new { area = "" }, null)</li> <!-- Data Entry -> Culvert -> Repair History -->
-                                        <li class="disabled">@Html.ActionLink("Inspection", "#", "Home", new { area = "" }, null)</li> <!-- Data Entry -> Culvert -> Inspection -->
-                                    </ul>
-                                </li>
-                                <li role="separator" class="divider"></li>
-                            </ul>
-                        </li>
+    <script>
+        $(document).ready(function () {
+            // This function traverses all "link" elements and checks two things
+            //		1. If href of the "link" element is the page itself
+            //		2. If the parent of the "link" element has class "menuitem"
+            // If both condictions are fullfilled (i.e. the "link" is the current menu item), it adds it to "highlight" class
+            //
+            // To get the complete address of the current window, use "window.location.href":
+            //      e.g. "https://localhost:44388/Admin/UserManagement?message=Error"
+            //
+            // To remove the query string:
+            //  use: loc.protocol + "//" + loc.hostname.toLowerCase() + ":" + loc.port + loc.pathname;
+            //      e.g. "https:" + "//" + "localhost" + ":" + "44388" + "/Admin/UserManagement"
+            $("[href]").each(function () {
+                //if (this.href.toLowerCase() == window.location.href.toLowerCase() && $(this).parent().hasClass("menuitem")) {
+                var loc = window.location;
+                var addr = loc.protocol + "//" + loc.hostname.toLowerCase() + ":" + loc.port + loc.pathname;
+                
+                if (this.href.toLowerCase() == addr.toLowerCase() && $(this).parent().hasClass("menuitem")) {
+                    $(this).addClass("highlightitem"); // highlight currently selected menu item
+                    //$(this).addClass("highlightmenu"); // highlight currently selected menu item
+                    $(this).closest("li.dropdown-submenu").children("a").addClass("highlightsubmenu"); // highlight the dropdown-submenu of currently selected menu item
+                    $(this).closest("li.mainmenu").children("a").addClass("highlightmenu"); // highlight the dropdown menu of currently selected menu item
+                }
+            });
 
-                        <li class="dropdown disa">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                Improvement Action
-                                <b class="caret"></b>
-                            </a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li class="disabled">@Html.ActionLink("Bridge Improvement History", "#", "Home", new { area = "" }, null)</li>
-
-                            </ul>
-                        </li>
-
-                        <li class="dropdown disa">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                Priority for Improvement
-                                <b class="caret"></b>
-                            </a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li class="disabled">@Html.ActionLink("By Bridge Parts Damage", "#", "Home", new { area = "" }, null)</li>
-
-                            </ul>
-                        </li>
-
-                        <li class="dropdown disa">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                View
-                                <b class="caret"></b>
-                            </a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li>@Html.ActionLink("Bridge", "Index", "Bridges", new { area = "" }, null)</li>
-                                <li>@Html.ActionLink("Bridge Profile", "Index", "BridgeProfile", new { area = "" }, null)</li>
-                                <li class="disabled">@Html.ActionLink("Bridge Book", "#", "Home", new { area = "" }, null)</li>
-                                <li role="separator" class="divider"></li>
-                                <li>@Html.ActionLink("Culvert", "Index", "Culverts", new { area = "" }, null)</li>
-                                <li class="disabled">@Html.ActionLink("Culvert Profile", "#", "Home", new { area = "" }, null)</li>
-                            </ul>
-                        </li>
-
-                        @*  Hide the Settings menu if used is not admin *@
-                        @if (User.IsInRole("Admin"))
-                        {
-                            <li class="dropdown">
-                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                    Settings
-                                    <b class="caret"></b>
-                                </a>
-                                <ul class="dropdown-menu multi-level" role="menu">
-                                    <li class="disabled">@Html.ActionLink("Damage Weight % and Cost", "#", "Home", new { area = "Admin" }, null)</li>
-                                    <li class="disabled">@Html.ActionLink("Damage Priority", "#", "Home", new { area = "Admin" }, null)</li>
-                                    <li role="separator" class="divider"></li>
-                                    <li class="disabled">@Html.ActionLink("Culvert Structure Type Material", "#", "Home", new { area = "Admin" }, null)</li>
-                                    <li class="disabled">@Html.ActionLink("Culvert Structure", "#", "Home", new { area = "Admin" }, null)</li>
-                                    <li class="disabled">@Html.ActionLink("Culvert Damage Type and Unit Rate", "#", "Home", new { area = "Admin" }, null)</li>
-                                    <li role="separator" class="divider"></li>
-
-                                    <li class="dropdown dropdown-submenu">
-                                        <a class="dropdown-toggle">Locations</a>
-                                        <ul class="dropdown-menu">
-                                            <li>@Html.ActionLink("Districts", "Index", "Districts", new { area = "Admin" }, null)</li>
-                                            <li>@Html.ActionLink("Sections", "Index", "Sections", new { area = "Admin" }, null)</li>
-                                            <li>@Html.ActionLink("Segments", "Index", "Segments", new { area = "Admin" }, null)</li>
-                                        </ul>
-                                    </li>
-
-                                    <li role="separator" class="divider"></li>
-
-                                    <li class="dropdown dropdown-submenu">
-                                        <a class="dropdown-toggle">Super Structure Types</a>
-                                        <ul class="dropdown-menu">
-                                            <li>@Html.ActionLink("Bridge Types", "Index", "BridgeTypes", new { area = "Admin" }, null)</li>
-                                            <li>@Html.ActionLink("Deck Slab Types", "Index", "DeckSlabTypes", new { area = "Admin" }, null)</li>
-                                            <li>@Html.ActionLink("Span Support Types", "Index", "SpanSupportTypes", new { area = "Admin" }, null)</li>
-                                        </ul>
-                                    </li>
-
-                                    <li class="dropdown dropdown-submenu">
-                                        <a class="dropdown-toggle">Abutment</a>
-                                        <ul class="dropdown-menu">
-                                            <li>@Html.ActionLink("Abutment Types", "Index", "AbutmentTypes", new { area = "Admin" }, null)</li>
-                                            <li>@Html.ActionLink("Foundation Types", "Index", "FoundationTypes", new { area = "Admin" }, null)</li>
-                                        </ul>
-                                    </li>
-
-                                    <li class="dropdown dropdown-submenu">
-                                        <a class="dropdown-toggle">Pier</a>
-                                        <ul class="dropdown-menu">
-                                            <li>@Html.ActionLink("Pier Types", "Index", "PierTypes", new { area = "Admin" }, null)</li>
-                                            <li>@Html.ActionLink("Foundation Types", "Index", "FoundationTypes", new { area = "Admin" }, null)</li>
-                                        </ul>
-                                    </li>
-
-                                    <li class="dropdown dropdown-submenu">
-                                        <a class="dropdown-toggle">Component Types</a>
-                                        <ul class="dropdown-menu">
-                                            <li>@Html.ActionLink("Expansion Joint Type", "Index", "ExpansionJointTypes", new { area = "Admin" }, null)</li>
-                                            <li>@Html.ActionLink("Bearing Types", "Index", "BearingTypes", new { area = "Admin" }, null)</li>
-                                            <li>@Html.ActionLink("Guard Railing Types", "Index", "GuardRailingTypes", new { area = "Admin" }, null)</li>
-                                            <li>@Html.ActionLink("Surface Types", "Index", "SurfaceTypes", new { area = "Admin" }, null)</li>
-                                        </ul>
-                                    </li>
-
-                                    <li role="separator" class="divider"></li>
-
-                                    <li>@Html.ActionLink("Girder Types", "Index", "GirderTypes", new { area = "Admin" }, null)</li>
-                                    <li>@Html.ActionLink("Road Alignment Types", "Index", "RoadAlignmentTypes", new { area = "Admin" }, null)</li>
-                                    <li role="separator" class="divider"></li>
-
-
-                                    <li class="disabled">@Html.ActionLink("Route", "#", "Home", new { area = "Admin" }, null)</li>
-
-                                    <li role="separator" class="divider"></li>
-
-                                    <li class="dropdown dropdown-submenu">
-                                        <a class="dropdown-toggle">User Administration</a> <!-- Settings -> User Administration -->
-                                        <ul class="dropdown-menu">
-                                            <li>@Html.ActionLink("All Users", "Create", "Bridges", new { area = "" }, null)</li> <!-- Settings -> User Administratio -> All Users -->
-                                            <li>@Html.ActionLink("Add New User", "Register", "Account", new { area = "" }, null)</li> <!-- Settings -> User Administratio -> Add New User -->
-                                            <li role="separator" class="divider"></li>
-                                            <li>@Html.ActionLink("User Roles", "#", "Home", new { area = "" }, null)</li> <!-- Settings -> User Administratio -> User Roles -->
-                                        </ul>
-                                    </li>
-                                    <li role="separator" class="divider"></li>
-                                </ul>
-                            </li>
-                        }
-
-                        <li class="dropdown disa">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                Help
-                                <b class="caret"></b>
-                            </a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="~/docs/bms_about.pdf" target="_blank">Software Development History</a></li> <!-- opens pdf file in another tab -->
-                                <li><a href="~/docs/bms_user_manual_dec_2020.pdf" target="_blank">User Manual</a></li> <!-- opens pdf file in another tab -->
-                                <li role="separator" class="divider"></li>
-                                <li>@Html.ActionLink("Contact", "Contact", "Help", new { area = "" }, null)</li>
-                                <li>@Html.ActionLink("About", "About", "Help", new { area = "" }, null)</li>
-                            </ul>
-                        </li>
-                    </ul>
-                    @Html.Partial("_LoginPartial")
-                </div>
+            //If it home page, highlight the home menu
+            if (document.location.pathname == "/") {
+                var homeMenu = document.getElementById("home");
+                homeMenu.classList.add("highlightmenu");
             }
+
+            $(".dropdown-submenu").click(function () {
+                $(".dropdown-menu").first.toggle();
+            });
+
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
+</head>
+<body style="font-size:small" class="@ViewBag.MenuSelection">
+
+    @Html.Partial("_MenuBar")
+
+    <!-- Pages excluded from having ERA logo and heading -->
+    @{
+        List<string> noHeadingPages = new List<string>();
+
+        // Adding pages to the no heading pages List
+        noHeadingPages.Add("Home Page");
+        noHeadingPages.Add("Log in");
+        noHeadingPages.Add("Manage");
+        noHeadingPages.Add("About");
+        noHeadingPages.Add("Contact");
+        noHeadingPages.Add("Change Password");
+        noHeadingPages.Add("Create Password");
+        noHeadingPages.Add("Create New User");
+        noHeadingPages.Add("Bridge Book");
+        noHeadingPages.Add("Annual Bridge Book");
+        noHeadingPages.Add("Bridge Image Gallery");
+    }
+
+    @if (!noHeadingPages.Contains(ViewBag.Title))
+    {
+        <!-- Do NOT show ERA Heading on no heading pages-->
+
+        List<string> headingPrintOnlyPages = new List<string>();
+
+        // Adding pages to the heading print only List
+        headingPrintOnlyPages.Add("Bridge Map");
+        headingPrintOnlyPages.Add("Bridge Map by Segment");
+        headingPrintOnlyPages.Add("Bridge Map by Sub Route");
+        headingPrintOnlyPages.Add("Culvert Map");
+        headingPrintOnlyPages.Add("Culvert Map by Segment");
+        headingPrintOnlyPages.Add("Culvert Map by Sub Route");
+        headingPrintOnlyPages.Add("Pile Foundation Bridges Map");
+        headingPrintOnlyPages.Add("Abandoned Bridges Map");
+        headingPrintOnlyPages.Add("Road Map");
+        headingPrintOnlyPages.Add("Roads Map by Section");
+        headingPrintOnlyPages.Add("Roads Map by District");
+
+        string printOnly = "";
+
+        // Add the 'printonly' id to heading print only pages
+        if (headingPrintOnlyPages.Contains(ViewBag.Title))
+        {
+            printOnly = "printonly";
+        }
+
+        <div align="center" id="@printOnly">
+            <img src="~/images/era_logo.png" alt="ERA logo" width="65" height="65" align="middle">
+            <h4 align="center">
+                Ethiopian Roads Administration - Bridge Management System <br />
+                የኢትዮጵያ መንገዶች አስተዳደር - የድልድይ ሀብት አስተዳደር ሥርዓት
+            </h4>
         </div>
-    </div>
-    <div class="container body-content">
+    }
+
+    @* Set the class of pages that should fill the entire page to 'container-fluid' *@
+    @{
+        List<string> fillPages = new List<string>();
+
+        fillPages.Add("Bridge Book");
+        fillPages.Add("Bridge Map");
+        fillPages.Add("Bridge Map by Segment");
+        fillPages.Add("Bridge Map by Sub Route");
+        fillPages.Add("Culvert Map");
+        fillPages.Add("Culvert Map by Segment");
+        fillPages.Add("Culvert Map by Sub Route");
+        fillPages.Add("Pile Foundation Bridges Map");
+        fillPages.Add("Abandoned Bridges Map");
+        fillPages.Add("Road Map");
+        fillPages.Add("Roads Map by Section");
+        fillPages.Add("Roads Map by District");
+
+        string containerClass = "container body-content";
+
+        if (fillPages.Contains(ViewBag.Title))
+        {
+            containerClass = "container-fluid body-content";
+        }
+    }
+
+    <div class="@containerClass" id="main">
         @RenderBody()
         <hr />
-        <hr />
-        <footer style="text-align: center;">
-            <p>&copy; @DateTime.Now.Year - Ethiopian Roads Authority - BCMS. All rights reserved.</p>
+
+        @* Do NOT show the footer on print out *@
+        <footer style="text-align: center;" id="noprint">
+            <p style="color:#ef5821; font-size:medium">&copy; @DateTime.Now.Year - Ethiopian Roads Administration - BMS. All rights reserved.</p>
         </footer>
     </div>
+
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @Styles.Render("~/Content/dataTables") @*my bundles*@
     @Scripts.Render("~/bundles/dataTables") @*my bundles*@
     @Styles.Render("~/Content/dropdownsubmenu") @*my bundles*@
+    @*@Styles.Render("~/Content/leftmenu")*@ @*my bundles*@
+    @Styles.Render("~/Content/css") @*my bundles*@
+    @Styles.Render("~/Content/themes/base/css") @*my bundles*@
+    @Scripts.Render("~/bundles/modernizr") @*my bundles*@
+    @Styles.Render("~/Content/jqueryui") @*my bundles*@
+    @Scripts.Render("~/bundles/jqueryui") @*my bundles*@
+    @Scripts.Render("~/bundles/jeditable") @*my bundles*@
+    @Scripts.Render("~/bundles/canvasjs") @*my bundles*@
+    @Scripts.Render("~/bundles/chartjs") @*my bundles*@
+    @Scripts.Render("~/bundles/unobtrusive-ajax") @*my bundles*@
+    @Scripts.Render("~/bundles/Proj4js") @*my bundles*@
 
     @RenderSection("scripts", required: false)
 </body>

@@ -1,0 +1,129 @@
+﻿
+@{
+    ViewBag.Title = "Roads Information";
+}
+
+<h2>Roads Information</h2>
+
+@using (Html.BeginForm())
+{
+    <div class="panel panel-default">
+        <div class="panel-body">
+
+            @Html.AntiForgeryToken()
+
+            <div class="row">
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group">
+                            <label class="control-label col-md-2 col-sm-4">District</label>
+                            <div class="col-md-5 col-sm-8">
+                                @Html.DropDownList("ddlDistrict", new SelectList(ViewBag.Districts, "Value", "Text"), new { @class = "form-control" })
+                                <div class="clearfix visible-lg visible-md visible-sm visible-xs"></div> <!-- Add clearfix (or new line break) for only the sm -->
+                                <button type="button" class="btn btn-primary glyphicon glyphicon-search search" id="searchbydistrict" data-toggle="tooltip" title="Search by District"></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group">
+                            <label class="control-label col-md-2 col-sm-4">Section</label>
+                            <div class="col-md-5 col-sm-8">
+                                <select class="form-control" id="ddlSection">
+                                    <!-- Sections list populates here -->
+                                </select>
+                                <div class="clearfix visible-lg visible-md visible-sm visible-xs"></div> <!-- Add clearfix (or new line break) for only the sm -->
+                                <button type="button" class="btn btn-primary glyphicon glyphicon-search" id="searchbysection" data-toggle="tooltip" title="Search by Section"></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="segmentsPartial">
+        <!-- Road Segment list displays here -->
+    </div>
+}
+
+<div id="wait" align="center" style="display: none">
+    <img src="~/images/ajax-loader-big.gif" />
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#ddlDistrict').change(function () {
+            var selDistrictId = $('#ddlDistrict option:selected').val();
+            $('#ddlSection option').remove(); //empty the section dropdown list
+            $('#segmentsPartial').empty(); // clear the segments place holder
+            
+            if (selDistrictId != "0") //if some district is selected
+            {
+                $.ajax({
+                    url: '@Url.Action("_GetSections", "LocationsDDL")',
+                    data: { districtid: selDistrictId },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        var markup = '<option value="0" id="noselect"> --Select Section --</option>';
+                        $.each(data, function (i, section) {
+                            markup += '<option value="' + section.Value + '">' + section.Text + '</option>'
+                            $('#ddlSection').html(markup);
+                        });
+                    }
+                });
+            }
+        });
+
+        $('#ddlSection').change(function () {
+            var selSectionId = $('#ddlSection option:selected').val();
+            $('#segmentsPartial').empty(); // clear the segment place holder
+            
+            if (selSectionId != "0") //if some section is selected
+            {
+                $.ajax({
+                    url: '@Url.Action("_GetSegmentsListBySection", "BridgeLocation")',
+                    data: { sectionid: selSectionId },
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () { $('#wait').show(); },
+                    complete: function () { $('#wait').hide(); },
+                    success: function (data) {
+                        $('#segmentsPartial').html(data);
+                    }
+                });
+            }
+        });
+
+        $('#searchbydistrict').click(function () {
+            var selDistrictId = $('#ddlDistrict option:selected').val();
+            if (selDistrictId != "0" && typeof selDistrictId != 'undefined') //if some district is selected
+            {
+                $('#segmentsPartial').empty(); // clear the segments place holder
+
+                $.ajax({
+                    url: '@Url.Action("_GetSegmentsListByDistrict", "BridgeLocation")',
+                    data: { districtid: selDistrictId },
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () { $('#wait').show(); },
+                    complete: function () { $('#wait').hide(); },
+                    success: function (data) {
+                        $('#segmentsPartial').html(data);
+                    }
+                });
+            }
+        });
+
+        $('#searchbysection').click(function () {
+            var selSectionId = $('#ddlSection option:selected').val();
+            if (selSectionId != "0" && typeof selSectionId != 'undefined') //if some section is selected
+            {
+                $('#ddlSection').trigger('change');
+            }
+        });
+    });
+
+</script>

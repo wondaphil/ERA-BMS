@@ -1,0 +1,54 @@
+﻿
+@{
+    ViewBag.Title = "Similar Segment and Kml Files";
+}
+
+<h2>Similar Segment and Kml Files</h2>
+
+<div id="wait" align="center" style="display: none">
+    <img src="~/images/ajax-loader-big.gif" />
+</div>
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title panel-info">List of Segments with Correspoding Similar Map KML File (<b>Similarity >= @ViewBag.SimilarityPercentage %</b>)</h3>
+    </div>
+    <div class="panel-body">
+        <table class="table table-bordered table-condensed table-hover table-striped" id="segments">
+            <thead>
+                <tr>
+                    <th>No.</th>
+                    <th>Kml File</th>
+                    <th>Segment Name</th>
+                </tr>
+            </thead>
+            <tbody id="rows"></tbody>
+        </table>
+    </div>
+    <div class="panel-footer">
+        <h3 class="panel-title">Total No. of Similarities: <b id="count"></b></h3>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            url: '@Url.Action("NoOfSimilarSegmentKml", "Kml")',
+            type: "GET",
+            dataType: "json",
+            beforeSend: function () { $('#wait').show(); },
+            complete: function () { $('#wait').hide(); },
+            success: function (data) {
+                var markup = '';
+                $.each(data, function (i, name) {
+                    markup += '<tr><td>' + (i+1) + '</td><td>' + name.FileName + '</td><td>' + name.SegmentName + '</td></tr>'
+                    $('#rows').html(markup);
+                    $('#count').html(i+1);
+                });
+            },
+            error: function () {
+                //alert("Error");
+            }
+        });
+    });
+</script>

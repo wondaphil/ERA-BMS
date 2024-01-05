@@ -8,9 +8,9 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
-using ERA_BCMS.Models;
+using ERA_BMS.Models;
 
-namespace ERA_BCMS.Controllers
+namespace ERA_BMS.Controllers
 {
     [Authorize]
     public class AccountController : Controller
@@ -106,9 +106,9 @@ namespace ERA_BCMS.Controllers
             //I added this
             //For user registration we will not display the Admin roles. 
             //User can select rest of any role type during registration. 
-            ViewBag.Name = new SelectList(context.Roles.Where(u => !u.Name.Contains("Admin"))
+            ViewBag.Roles = new SelectList(context.Roles.Where(u => !u.Name.Contains("Admin"))
                                     .ToList(), "Name", "Name");
-
+            
             return View();
         }
 
@@ -136,7 +136,7 @@ namespace ERA_BCMS.Controllers
                     //return RedirectToAction("Index", "Users");
                     return RedirectToAction("Index", "Home");
                 }
-                ViewBag.Name = new SelectList(context.Roles.Where(u => !u.Name.Contains("Admin"))
+                ViewBag.Roles = new SelectList(context.Roles.Where(u => !u.Name.Contains("Admin"))
                                   .ToList(), "Name", "Name");
 
                 AddErrors(result);

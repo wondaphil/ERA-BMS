@@ -1,0 +1,212 @@
+﻿
+@{
+    ViewBag.Title = "Search Bridge/Culvert";
+}
+
+<h2>Search Bridge/Culvert</h2>
+<div class="row">
+    <hr />
+    <div class="col-md-4 col-xs-12" style="font-size:medium">
+        <table>
+            <tr>
+                <td style="padding: 5px">
+                    <b>Choose search type</b>
+                    <br />&nbsp;
+                <td>
+                <td style="padding: 15px">
+                    <input type="radio" id="searchbridge" name="searchtype" class="control-label" /> Bridge
+                    <br />
+                    <input type="radio" id="searchculvert" name="searchtype" @*class="col-md-3"*@ /> Culvert
+                    @*</div>*@
+                </td>
+            </tr>
+        </table>
+    </div>
+
+
+    <div class="col-md-8 col-xs-12">
+        <table>
+            <tr id="bybridge" style="display: none">
+                <td style="padding: 5px; font-size:medium"><b>Type Bridge Name/Id: </b></td>
+                <td style="padding: 5px; font-size:medium">@Html.TextBox("BridgeTerm", null, new { @class = "control-control", style = "width:350px"  })</td>
+                <td style="padding: 5px">
+                    <button type="button" id="showInfoByBridge" class="btn btn-primary"><span class="glyphicon glyphicon-search"></span> Search</button>
+                </td>
+            </tr>
+        
+            <tr id="byculvert" style="display: none">
+                <td style="padding: 5px; font-size:medium"><b>Type Culvert Id: </b></td>
+                <td style="padding: 5px; font-size:medium">@Html.TextBox("CulvertTerm", null, new { @class = "control-control" })</td>
+                <td style="padding: 5px">
+                    <button type="button" class="btn btn-primary" id="showInfoByCulvert" style="width: 100px"><span class="glyphicon glyphicon-search"></span> Search</button>
+                </td>
+            </tr>
+    
+            <tr id="mapdiv" style="display: none">
+                <td></td>
+                <td></td>
+                <td>
+                    <a href="" target="_blank" class="btn btn-primary" id="map" style="width: 90px" data-toggle="tooltip" title="Go to Map" align="right"><span class="glyphicon glyphicon-map-marker"></span> Map</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div class="col-xs-12">
+    <div id="bridgeCulvertInfoPartial">
+        <!-- Bridge/culvert info displays here -->
+    </div>
+</div>
+
+<div id="wait" align="center" style="display: none">
+    <img src="~/images/searching.gif" width="65" height="65" />
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('input[type=radio][name=searchtype]').change(function () {
+            $('#bridgeCulvertInfoPartial').empty(); // clear the bridge info place holder
+
+            if ($('#searchbridge').prop("checked")) {
+                $('#bybridge').show();
+                $('#byculvert').hide();
+                document.getElementById("BridgeTerm").focus();
+                $('#mapdiv').hide();
+            }
+            else if ($('#searchculvert').prop("checked")){
+                $('#bybridge').hide();
+                $('#byculvert').show();
+                document.getElementById("CulvertTerm").focus();
+                $('#mapdiv').hide();
+            }
+        });
+
+        $('#BridgeTerm').autocomplete({
+            source: '@Url.Action("GetBridgeListContaining", "Search")',
+            minLength: 3, // works only after 4 character are entered
+            select: function (event, ui) {
+                $('#BridgeTerm').val(ui.item.value);
+                $('#showInfoByBridge').trigger('click');
+            }
+        });
+
+        // Select all text on focus
+        $("#BridgeTerm").click(function () {
+            $(this).select();
+        });
+
+        $('#CulvertTerm').autocomplete({
+            source: '@Url.Action("GetCulvertListContaining", "Search")',
+            minLength: 5, // works only after 5 character are entered
+            select: function (event, ui) {
+                $('#CulvertTerm').val(ui.item.value);
+                $('#showInfoByCulvert').trigger('click');
+            }
+        });
+
+        // Select all text on focus
+        $("#CulvertTerm").click(function () {
+            $(this).select();
+        });
+
+        document.querySelector('#BridgeTerm').addEventListener('input', function () {
+            $('#mapdiv').hide();
+        });
+
+        document.querySelector('#CulvertTerm').addEventListener('input', function () {
+            $('#mapdiv').hide();
+        });
+
+        $('#showInfoByBridge').click(function () {
+            var enteredBridgeTerm = $('#BridgeTerm').val();
+
+            $('#error').text("");
+            $('#bridgeCulvertInfoPartial').empty(); // clear the bridge/culvert info place holder
+            $('#mapdiv').hide();
+
+            if (enteredBridgeTerm == "") // if input is not entered
+            {
+                $('#error').text("Please enter Bridge Name or Id!");
+            }
+            else {
+                $.ajax({
+                    url: '@Url.Action("_FindBridge", "Search")',
+                    data: { term: enteredBridgeTerm },
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () { $('#wait').show(); },
+                    complete: function () { $('#wait').hide(); },
+                    success: function (data) {
+                        $('#bridgeCulvertInfoPartial').html(data);
+
+                        // Find the Bridge Id of the selected bridge from it's Bridge No
+                        $.ajax({
+                            url: '@Url.Action("GetBridgeIdFromNumber", "Search")',
+                            data: { revisedbridgeno: enteredBridgeTerm },
+                            type: 'GET',
+                            dataType: 'json',
+                            success: function (data) {
+                                $.each(data, function (i, item) {
+                                    // Unhide the 'Map' button and set it's link to the map page of the selected bridge
+                                    $('#mapdiv').show();
+                                    //alert(item.BridgeId);
+                                    var url = '@Url.Action("BridgeMap", "BridgeLocation", new { id = "brgid" })'
+                                                .replace("brgid", encodeURIComponent(item.BridgeId));
+
+                                    $('#map').attr("href", url);
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        });
+
+        $('#showInfoByCulvert').click(function () {
+            var enteredCulvertTerm = $('#CulvertTerm').val();
+            //alert(enteredCulvertTerm);
+            $('#error').text("");
+            $('#bridgeCulvertInfoPartial').empty(); // clear the bridge/culvert info place holder
+            $('#mapdiv').hide();
+
+            if (enteredCulvertTerm == "") // if input is not entered
+            {
+                $('#error').text("Please enter Culvert No.!");
+            }
+            else {
+                $.ajax({
+                    url: '@Url.Action("_FindCulvert", "Search")',
+                    data: { term: enteredCulvertTerm },
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () { $('#wait').show(); },
+                    complete: function () { $('#wait').hide(); },
+                    success: function (data) {
+                        $('#bridgeCulvertInfoPartial').html(data);
+
+                        // Find the Culvert Id of the selected culvert from it's Culvert No
+                        $.ajax({
+                            url: '@Url.Action("GetCulvertIdFromNumber", "Search")',
+                            data: { revisedculvertno: enteredCulvertTerm },
+                            type: 'GET',
+                            dataType: 'json',
+                            success: function (data) {
+                                $.each(data, function (i, item) {
+                                    // Unhide the 'Map' button and set it's link to the map page of the selected culvert
+                                    $('#mapdiv').show();
+                                    var url = '@Url.Action("CulvertMap", "CulvertLocation", new { id = "culid" })'
+                                                .replace("culid", encodeURIComponent(item.CulvertId));
+
+                                    $('#map').attr("href", url);
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+

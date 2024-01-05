@@ -7,17 +7,15 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ERA_BCMS.Models
+namespace ERA_BMS.Models
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-
+    
     public partial class Pier
     {
-        [Key]
-        public string BridgePierId { get; set; }
+        public string Id { get; set; }
+        public string BridgeId { get; set; }
         public int PierNo { get; set; }
         public Nullable<int> PierTypeId { get; set; }
         public Nullable<double> HeightOfPier { get; set; }
@@ -26,9 +24,11 @@ namespace ERA_BCMS.Models
         public string FoundationDimension { get; set; }
         public Nullable<int> NoOfPierPiles { get; set; }
         public Nullable<double> PierPileDepth { get; set; }
+        public Nullable<System.DateTime> ModifiedOn { get; set; }
+        public byte[] Flag { get; set; }
     
-        public virtual Bridge Bridge { get; set; }
         public virtual FoundationType FoundationType { get; set; }
         public virtual PierType PierType { get; set; }
+        public virtual Bridge Bridge { get; set; }
     }
 }

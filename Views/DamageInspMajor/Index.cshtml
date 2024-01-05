@@ -1,0 +1,482 @@
+﻿@model ERA_BMS.ViewModels.MajorInspectionViewModel
+
+@{
+    ViewBag.Title = "Bridge Inspection Major";
+}
+
+<h2>Bridge Inspection Major</h2>
+
+@using (Html.BeginForm())
+{
+    <div class="panel panel-default">
+        @*<div class="panel-heading">
+                <h3 class="panel-title panel-info">Please select <b>Inspection Year</b> & <b>Inspection Date</b> and then <b>District</b>, <b>Section</b>, <b>Road Segment</b> and <b>Bridge</b> from the dropdown list</h3>
+            </div>*@
+        <div class="panel-body">
+
+            @Html.AntiForgeryToken()
+
+            <div class="row">
+                <div class="col-lg-5 col-md-6 col-sm-7 col-xs-11">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group-sm">
+                            <label for="ddlInspectionYear" class="control-label col-lg-3 col-md-3 col-sm-2 col-xs-2">Inspection Year</label>
+                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                @*@Html.DropDownList("ddlInspectionYear", (List<SelectListItem>)ViewBag.InspectionYear, new { @class = "form-control" })*@
+                                @Html.DropDownList("ddlInspectionYear", new SelectList(ViewBag.InspectionYearList, "Value", "Text", ViewBag.InspectionYear), htmlAttributes: new { @class = "form-control" })
+                            </div>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+                                    <a href="@Url.Action("Index", "MajorInspectionYear", new { area = "Admin" })" data-toggle="tooltip" title="New Major Inspection Year" 
+                                       class="glyphicon glyphicon-plus-sign" style="text-decoration: none; font-size: 28px; color: #f79422" target="_blank"></a>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-5 col-lg-offset-0 col-md-offset-1 col-md-4 col-sm-4 col-xs-10">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group-sm">
+                            <label for="InspectionDate" class="control-label col-md-5 col-sm-5 col-xs-4">Inspection Date</label>
+                            @*@Html.TextBox("InspectionDate", DateTime.Now.ToString("dd MMM yyyy"), new { htmlAttributes = new { @class = "form-control", @readonly="readonly" } })*@
+                            <input type="date" id="InspectionDate" class="form-control-static col-md-5 col-sm-7 col-xs-4" value="@DateTime.Now.ToShortDateString()" />
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-2 col-md-1 col-sm-1 col-xs-2" align="right">
+                    <a class="btn btn-primary" data-toggle="tooltip" title="Refresh" id="refresh"> <span class="glyphicon glyphicon-refresh"></span> </a>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group-sm">
+                            <label for="ddlDistrict" class="control-label col-md-3 col-sm-4 col-xs-8">District</label>
+                            <div class="col-md-9 col-sm-7 col-xs-11">
+                                @*@Html.DropDownList("ddlDistrict", (List<SelectListItem>)ViewBag.Districts, new { @class = "form-control" })*@
+                                @Html.DropDownList("ddlDistrict", new SelectList(ViewBag.Districts, "Value", "Text", ViewBag.DistrictId), htmlAttributes: new { @class = "form-control" })
+                                <!--<label class="control-label" id="distrIdDIV">--> <!-- District id appears here --> <!--</label>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group-sm">
+                            <label for="ddlSection" class="control-label col-md-3 col-sm-4 col-xs-8">Section</label>
+                            <div class="col-md-9 col-sm-7 col-xs-11">
+                                @*@Html.DropDownList("ddlSection", new SelectList(ViewBag.Sections, "Value", "Text", ViewBag.SectionId), htmlAttributes: new { @class = "form-control" })*@
+                                @Html.DropDownList("ddlSection", new SelectList(ViewBag.Sections, "Value", "Text", ViewBag.SectionId), htmlAttributes: new { @class = "form-control" })
+                                <!--<select class="form-control" id="ddlSection">-->
+                                <!-- Sections list populates here -->
+                                <!--</select>-->
+                                <!--<label class="control-label" id="secIdDIV">--> <!-- Section id appears here --> <!--</label>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="clearfix visible-sm"></div> <!-- Add clearfix (or new line break) for only the sm -->
+                <div class="clearfix visible-xs"></div> <!-- Add clearfix (or new line break) for only the xs -->
+
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group-sm">
+                            <label for="ddlSegment" class="control-label col-md-3 col-sm-4 col-xs-8">Road Segment</label>
+                            <div class="col-md-9 col-sm-7 col-xs-11">
+                                @Html.DropDownList("ddlSegment", new SelectList(ViewBag.Segments, "Value", "Text", ViewBag.SegmentId), htmlAttributes: new { @class = "form-control" })
+                                <!--<select class="form-control" id="ddlSegment">-->
+                                <!-- Segments list populates here -->
+                                <!--</select>-->
+                                <!--<label class="control-label" id="segIdDIV">--> <!-- Segment id appears here --> <!--</label>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group-sm">
+                            <label for="ddlBridge" class="control-label col-md-3 col-sm-4 col-xs-8">Bridge</label>
+                            <div class="col-md-9 col-sm-7 col-xs-11">
+                                @Html.DropDownList("ddlBridge", new SelectList(ViewBag.Bridges, "Value", "Text", TempData["BridgeId"]), htmlAttributes: new { @class = "form-control" })
+                                <!--<select class="form-control" id="ddlBridge">-->
+                                <!-- Bridges list populates here -->
+                                <!--</select>-->
+                                <!--<label class="control-label" id="brgIdDIV">--> <!-- Bridge id appears here --> <!--</label>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Tab Buttons -->
+<ul id="tabstrip" class="nav nav-tabs" role="tablist">
+    <li class="active">
+        <a href="#_SubStructureTab" role="tab" data-toggle="tab">Sub Structure</a>
+    </li>
+    <li>
+        <a href="#_SuperStructureTab" role="tab" data-toggle="tab">Super structure</a>
+    </li>
+    <li>
+        <a href="#_AncillariesTab" role="tab" data-toggle="tab">Ancillaries</a>
+    </li>
+    <li>
+        <a href="#_RecommendationAndCommentsTab" role="tab" data-toggle="tab">Recommendation & Comments</a>
+    </li>
+</ul>
+
+<!-- Tab Content Containers -->
+<div class="tab-content">
+    <div class="tab-pane fade in active" id="_SubStructureTab">
+        <div id="subStructures">
+            <!-- Sub Structures display here -->
+            @if (Model != null)
+            {
+                if (Model.SubStructure != null)
+                {
+                    @Html.Partial("SubStructure", Model.SubStructure, new ViewDataDictionary());
+                }
+            }
+        </div>
+    </div>
+    <div class="tab-pane fade" id="_SuperStructureTab">
+        <div id="superStructures">
+            <!-- Superstructures display here -->
+            @if (Model != null)
+            {
+                if (Model.SuperStructure != null)
+                {
+                    @Html.Partial("SuperStructure", Model.SuperStructure, new ViewDataDictionary());
+                }
+            }
+        </div>
+    </div>
+    <div class="tab-pane fade" id="_AncillariesTab">
+        <div id="ancillaries">
+            <!-- Ancillaries display here -->
+            @if (Model != null)
+            {
+                if (Model.Ancillaries != null)
+                {
+                    @Html.Partial("Ancillaries", Model.Ancillaries, new ViewDataDictionary());
+                }
+            }
+        </div>
+    </div>
+    <div class="tab-pane fade" id="_RecommendationAndCommentsTab">
+        <div id="commentsandbservations">
+            <!-- Comments and Observations display here -->
+            @if (Model != null)
+            {
+                @Html.Partial("RecommendationAndComments");
+            }
+        </div>
+    </div>
+</div>
+
+<div id="wait" align="center" style="display: none">
+    <img src="~/images/ajax-loader-big.gif" />
+</div>
+
+<br />
+<br />
+<div class="form-group form-group-sm">
+    <button type="button" id="view" class="btn btn-primary" disabled="disabled"><span class="glyphicon glyphicon-print"></span> View</button>
+</div>
+
+<div id="waitreport" align="center" style="display: none">
+    <img src="~/images/ajax-loader-big.gif" />
+</div>
+
+<div id="report">
+    @*Report displays here*@
+</div>
+
+<script>
+    $(document).ready(function () {
+        //// If some district is selected, show district id
+        //if ($('#ddlDistrict option:selected').val() != 0)
+        //    $('#distrIdDIV').text("District No. = " + $('#ddlDistrict option:selected').val());
+
+        //// If section list is populated and some section is selected, show section id
+        //if ($('#ddlSection').has('option').length > 0 && $('#ddlSection option:selected').val() != 0)
+        //    $('#secIdDIV').text("Section No. = " + $('#ddlSection option:selected').val());
+
+        //// If segment list is populated and some segment is selected, show segment id
+        //if ($('#ddlSegment').has('option').length > 0 && $('#ddlSegment option:selected').val() != 0)
+        //    $('#segIdDIV').text("Road Id = " + $('#ddlSegment option:selected').val());
+
+        //// If bridge list is populated and some bridge is selected, show bridge id
+        //if ($('#ddlBridge').has('option').length > 0 && $('#ddlBridge option:selected').val() != 0) {
+        //    var bridgeNo = $('#ddlBridge option:selected').text().split('[').pop().split(']')[0]; // extract the bridge no
+        //    $('#brgIdDIV').text("Bridge No = " + bridgeNo);
+        //}
+
+        var today = new Date().toJSON().slice(0, 10);
+        $('#InspectionDate').val(today);
+
+        // Show "View" button if some bridge is selected
+        if (typeof $('#ddlBridge option:selected').val() != 'undefined' && $('#ddlBridge option:selected').val() != "0")
+            $('#view').prop("disabled", false);
+
+
+        function ClearAll() {
+            $('#subStructures').empty(); // clear the sub structure tab
+            $('#superStructures').empty(); // clear the super structure tab
+            $('#ancillaries').empty(); // clear the ancillaries tab
+            $('#commentsandbservations').empty(); // clear the comments and observations tab
+            $('#report').empty(); // clear the report place holder
+            $('#view').prop("disabled", true);
+        }
+
+        $('#saveNewInspYear').click(function () {
+            // save inspection year
+
+        });
+
+        $('#ddlDistrict').change(function () {
+            var selDistrictId = $('#ddlDistrict option:selected').val();
+            $('#ddlSection option').remove(); //empty the section dropdown list
+            $('#secIdDIV').text(""); //clear section no. indicator
+            $('#ddlSegment option').remove(); //empty the segment dropdown list
+            $('#segIdDIV').text(""); //clear segment no. indicator
+            $('#ddlBridge option').remove(); //empty the bridge dropdown list
+            $('#brgIdDIV').text(""); //clear bridge no. indicator
+            ClearAll();
+            if (selDistrictId == "0") //if no district is selected
+            {
+                $('#distrIdDIV').text(""); //clear district no. indicator
+            }
+            else {
+                $('#distrIdDIV').text("District No. = " + selDistrictId );
+                $.ajax({
+                    url: '@Url.Action("_GetSections", "LocationsDDL")',
+                    data: { districtid: selDistrictId },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        var markup = '<option value="0" id="noselect"> --Select Section --</option>';
+                        $.each(data, function (i, section) {
+                            markup += '<option value="' + section.Value + '">' + section.Text + '</option>'
+                            $('#ddlSection').html(markup);
+                        });
+                    }
+                });
+            }
+        });
+
+        $('#ddlSection').change(function () {
+            var selSectionId = $('#ddlSection option:selected').val();
+            $('#ddlSegment option').remove(); //empty the segment dropdown list
+            $('#segIdDIV').text(""); //clear segment no. indicator
+            $('#ddlBridge option').remove(); //empty the bridge dropdown list
+            $('#brgIdDIV').text(""); //clear bridge no. indicator
+            ClearAll();
+            if (selSectionId == "0") //if no section is selected
+            {
+                $('#secIdDIV').text(""); //clear section no. indicator
+            }
+            else {
+                $('#secIdDIV').text("Section No. = " + selSectionId);
+
+                $.ajax({
+                    url: '@Url.Action("_GetSegments", "LocationsDDL")',
+                    data: { sectionid: selSectionId },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        var markup = '<option value="0" id="noselect"> --Select Segment --</option>';
+                        $.each(data, function (i, segment) {
+                            markup += '<option value="' + segment.Value + '">' + segment.Text + '</option>'
+                            $('#ddlSegment').html(markup);
+                        });
+                    }
+                });
+            }
+        });
+
+        $('#ddlSegment').change(function () {
+            var selSegmentId = $('#ddlSegment option:selected').val();
+            $('#ddlBridge option').remove(); //empty the bridge dropdown list
+            $('#brgIdDIV').text(""); //clear bridge no. indicator
+            ClearAll();
+            if (selSegmentId == "0") //if no segment is selected
+            {
+                $('#segIdDIV').text(""); //clear section no. indicator
+            }
+            else {
+                $('#segIdDIV').text("Road Id = " + selSegmentId);
+                $.ajax({
+                    url: '@Url.Action("_GetBridges", "LocationsDDL")',
+                    data: { segmentid: selSegmentId },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        var markup = '<option value="0" id="noselect"> --Select Bridge --</option>';
+                        $.each(data, function (i, bridge) {
+                            markup += '<option value="' + bridge.Value + '">' + bridge.Text + '</option>'
+                            $('#ddlBridge').html(markup);
+                        });
+                    }
+                });
+            }
+        });
+
+        $('#ddlBridge').change(function () {
+            var selBridgeId = $('#ddlBridge option:selected').val();
+            var selInspectionYear = $('#ddlInspectionYear').val();
+            var selInspectionDate = $('#InspectionDate').val();
+
+            $('#report').empty();
+
+            // If no date is selected, just use today's date
+            if (!selInspectionDate) {
+                date = new Date();
+                selInspectionDate = date.toISOString().split('T')[0];
+            }
+
+            //alert(selInspectionDate);
+            ClearAll();
+            $('#brgIdDIV').text("");
+            if (selBridgeId != "0") //if no bridge is selected
+            {
+                var bridgeNo = $('#ddlBridge option:selected').text().split('[').pop().split(']')[0]; // extract the bridge no
+                $('#brgIdDIV').text("Bridge No = " + bridgeNo);
+                $('#view').prop("disabled", false);
+
+                $.ajax({
+                    url: '@Url.Action("SubStructure", "DamageInspMajor")',
+                    data: { bridgeid: selBridgeId, inspectionyear: selInspectionYear, inspectiondate: selInspectionDate },
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () { $('#wait').show(); },
+                    complete: function () { $('#wait').hide(); },
+                    success: function (data) {
+                        $('#subStructures').html(data);
+                    }
+                });
+
+                $.ajax({
+                    url: '@Url.Action("SuperStructure", "DamageInspMajor")',
+                    data: { bridgeid: selBridgeId, inspectionyear: selInspectionYear, inspectiondate: selInspectionDate },
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () { $('#wait').show(); },
+                    complete: function () { $('#wait').hide(); },
+                    success: function (data) {
+                        $('#superStructures').html(data);
+                    }
+                });
+
+                $.ajax({
+                    url: '@Url.Action("Ancillaries", "DamageInspMajor")',
+                    data: { bridgeid: selBridgeId, inspectionyear: selInspectionYear, inspectiondate: selInspectionDate },
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () { $('#wait').show(); },
+                    complete: function () { $('#wait').hide(); },
+                    success: function (data) {
+                        $('#ancillaries').html(data);
+                    }
+                });
+
+                $.ajax({
+                    url: '@Url.Action("RecommendationAndComments", "DamageInspMajor")',
+                    data: { bridgeid: selBridgeId, inspectionyear: selInspectionYear, inspectiondate: selInspectionDate },
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () { $('#wait').show(); },
+                    complete: function () { $('#wait').hide(); },
+                    success: function (data) {
+                        $('#commentsandbservations').html(data);
+                    }
+                });
+            }
+        });
+
+        $('#view').click(function () {
+            // clear report area first
+            $('#report').html("");
+
+            var selBridgeId = $('#ddlBridge option:selected').val();
+
+            // Show "View" button only if some bridge is selected
+            if (typeof selBridgeId != 'undefined' && selBridgeId != "0") 
+            {
+                $.ajax({
+                    url: '@Url.Action("_GetMajorInspectionDetails", "BridgeInspectionReports")',
+                    data: { bridgeid: $('#ddlBridge option:selected').val(), inspectionyear: $('#ddlInspectionYear').val() },
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () { $('#waitreport').show(); },
+                    complete: function () { $('#waitreport').hide(); },
+                    success: function (data) {
+                        $('#report').html(data);
+                    }
+                });
+            }
+        });
+
+        $('#ddlInspectionYear').change(function () {
+            var selInspectionYr = $('#ddlInspectionYear option:selected').val();
+            if (selInspectionYr == "0") //if no inspection year is selected
+            {
+                $('#ddlDistrict').val("0");
+                //$('#ddlDistrict option').remove(); //empty the district dropdown list
+                $('#distrIdDIV').text(""); //clear district no. indicator
+                $('#ddlSection option').remove(); //empty the section dropdown list
+                $('#secIdDIV').text(""); //clear section no. indicator
+                $('#ddlSegment option').remove(); //empty the segment dropdown list
+                $('#segIdDIV').text(""); //clear segment no. indicator
+                $('#ddlBridge option').remove(); //empty the bridge dropdown list
+                $('#brgIdDIV').text(""); //clear bridge no. indicator
+
+                ClearAll(); //clear district no. indicator
+            }
+            else {
+                if ($('#ddlBridge').has('option').length > 0) {
+                    $('#ddlBridge').trigger('change');
+                }
+            }
+        });
+
+        $('#refresh').click(function () {
+            $('#ddlBridge').trigger('change');
+        });
+
+        //$(".damage-rank").each(function () {
+        //    $(this).editable("/DamageInspMajor/UpdateDamageData", {
+        //        callback: function (value, settings) {
+        //            $(this).html(jQuery.parseJSON(settings.data)[value]);
+        //        },
+        //        submitdata: function () {
+        //            return {
+        //                // Pass parameters to "UpdateDamageData" controller action
+        //                id: $(this).attr("name"),
+        //                origvalue: this.revert,
+        //                bridgeid: $('#bridgeId').val(),
+        //                inspyear: $('#inspectionYear').val(),
+        //                inspdate: $('#inspectionDate').val(),
+        //                stritemid: $(this).attr("data-structureitem"),
+        //                dmgtypeid: $(this).attr("data-damagetype"),
+        //                dmgrank: $(this).attr("data-damagerank")
+        //            };
+        //        },
+        //        tooltip: 'Click/Tap to edit...',
+        //        indicator: 'Saving...',
+        //        select: true, // highlight all text after editable
+        //        size: 1
+        //    });
+        //});
+    });
+
+</script>

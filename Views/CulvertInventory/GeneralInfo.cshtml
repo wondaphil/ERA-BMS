@@ -1,0 +1,273 @@
+﻿@model ERA_BMS.Models.CulvertGeneralInfo
+
+@{
+    ViewBag.Title = "General Info Culvert Inventory";
+}
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "genInfoForm" }))
+{
+    <hr />
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @*@Html.HiddenFor(model => model.CulvertId)*@
+        <input type="hidden" id="CulvertId" value="@TempData["CulvertId"]" />
+
+        <div class="row">
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.KMFromAddis, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.KMFromAddis, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.KMFromAddis, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.XCoord, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.XCoord, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.XCoord, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.YCoord, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.YCoord, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.YCoord, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.UtmZoneId, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.DropDownList("UtmZoneId", new SelectList((List<SelectListItem>)TempData["UtmZoneId"], "Value", "Text", Model.UtmZoneId), htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.UtmZoneId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm required">
+                    @Html.LabelFor(model => model.ConstructionYear, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.ConstructionYear, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.ConstructionYear, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm required">
+                    @Html.LabelFor(model => model.ConstructionCost, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.ConstructionCost, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.ConstructionCost, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.AssetReplacementCost, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.AssetReplacementCost, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.AssetReplacementCost, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.Designer, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.Designer, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Designer, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.Contractor, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.Contractor, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Contractor, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.Supervisor, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.Supervisor, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Supervisor, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.DetourPossible, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        <div class="checkbox">
+                            @Html.RadioButtonFor(model => model.DetourPossible, "true", new { @class = "text-danger" }) Yes &nbsp; &nbsp;
+                            @Html.RadioButtonFor(model => model.DetourPossible, "false", new { @class = "text-danger" }) No
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.Altitude, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.Altitude, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Altitude, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.RoadWidth, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.RoadWidth, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.RoadWidth, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                <div class="form-group form-group-sm">
+                    <div class="form-group form-group-sm">
+                        @Html.LabelFor(model => model.HeadWallLength, htmlAttributes: new { @class = "control-label col-md-5" })
+                        <div class="col-md-6">
+                            @Html.EditorFor(model => model.HeadWallLength, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.HeadWallLength, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    
+                    @Html.LabelFor(model => model.FillHeight, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.FillHeight, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.FillHeight, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.ParapetMaterialTypeId, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @*@Html.DropDownList("ParapetMaterialTypeId", null, htmlAttributes: new { @class = "form-control" })*@
+                        @Html.DropDownList("ParapetMaterialTypeId", new SelectList((List<SelectListItem>)TempData["ParapetMaterialTypeId"], "Value", "Text", Model.ParapetMaterialTypeId), htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.ParapetMaterialTypeId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.ParapetLength, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.ParapetLength, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.ParapetLength, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.NoOfLanes, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.NoOfLanes, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.NoOfLanes, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr />
+    <div class="row">
+        <div class="col-xs-6">
+            <div class="form-group form-group-sm">
+                @Html.LabelFor(model => model.Remark, "Culvert Remark", htmlAttributes: new { @class = "control-label col-md-3 col-sm-5 col-xs-10" })
+                <div class="col-md-9 col-xs-12">
+                    @Html.TextAreaFor(model => model.Remark, htmlAttributes: new { @class = "form-control", @rows = 5, style = "width: 100%; max-width: 100%" })
+                    @Html.ValidationMessageFor(model => model.Remark, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="col-xs-6">
+            <div class="form-group form-group-sm">
+                <div class="col-md-offset-2 col-md-6">
+                    <br /><br />
+                    <button type="button" id="saveGenInfo" class="btn btn-primary"><span class="glyphicon glyphicon-save"></span> Save</button>
+                    <button type="reset" id="resetGenInfo" class="btn btn-primary"><span class="glyphicon glyphicon-refresh"></span> Reset</button>
+                    <div id="statusGenInfo" class="success">
+                        <!-- Save success or failure status text appears here-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<script>
+    $(document).ready(function () {
+        function ValidateDataEntry(genInfo) {
+            if (genInfo.ConstructionYear == "" || genInfo.ConstructionCost == "")
+                return false;
+
+            return true;
+        }
+
+        $('#saveGenInfo').on('click', function () {
+            var genInfo = {};
+
+            genInfo.CulvertId = $('#CulvertId').val();
+            genInfo.KMFromAddis = $('#KMFromAddis').val();
+            genInfo.XCoord = $('#XCoord').val();
+            genInfo.YCoord = $('#YCoord').val();
+            genInfo.UtmZoneId = $('#UtmZoneId').val();
+            genInfo.ConstructionYear = $('#ConstructionYear').val();
+            genInfo.ConstructionCost = $('#ConstructionCost').val();
+            genInfo.AssetReplacementCost = $('#AssetReplacementCost').val();
+            genInfo.Designer = $('#Designer').val();
+            genInfo.Contractor = $('#Contractor').val();
+            genInfo.Supervisor = $('#Supervisor').val();
+            genInfo.Altitude = $('#Altitude').val();
+            genInfo.RoadWidth = $('#RoadWidth').val();
+            genInfo.HeadWallLength = $('#HeadWallLength').val();
+            genInfo.FillHeight = $('#FillHeight').val();
+            genInfo.ParapetMaterialTypeId = $('#ParapetMaterialTypeId').val();
+            genInfo.ParapetLength = $('#ParapetLength').val();
+            genInfo.NoOfLanes = $('#NoOfLanes').val();
+            genInfo.Remark = $('#Remark').val();
+
+            // Set value based on checked status of checkbox
+            genInfo.DetourPossible = ($('#DetourPossible').prop("checked")) ? "true" : "false";
+
+            //alert(JSON.stringify(genInfo));
+
+            if (ValidateDataEntry(genInfo)) {
+                $.ajax({
+                    type: 'POST',
+                    cache: false,
+                    url: '@Url.Action("GeneralInfoSave", "CulvertInventory")',
+                    data: '{genInfo:' + JSON.stringify(genInfo) + '}',
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'html',
+                    success: function (data) {
+                        if ($('#statusGenInfo').hasClass("text-danger"))
+                            $('#statusGenInfo').removeClass("text-danger");
+                        $('#statusGenInfo').addClass("text-success");
+                        $('#statusGenInfo').text("Data is saved successfully");
+                    },
+                    error: function (xhr) {
+                        if ($('#statusGenInfo').hasClass("text-success"))
+                            $('#statusGenInfo').removeClass("text-success");
+                        $('#statusGenInfo').addClass("text-danger");
+                        $('#statusGenInfo').text("Data is NOT saved!!");
+                    }
+                });
+            }
+            else {
+                if ($('#statusGenInfo').hasClass("text-success"))
+                    $('#statusGenInfo').removeClass("text-success");
+                $('#statusGenInfo').addClass("text-danger");
+                $('#statusGenInfo').text("Please enter all boxes marked with *");
+            }
+        });
+
+        $('#resetGenInfo').on('click', function () {
+            $('#genInfoForm').trigger("reset"); // triger the normal reset function
+        });
+    });
+</script>

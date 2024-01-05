@@ -1,4 +1,4 @@
-﻿@model ERA_BCMS.Models.SurfaceType
+﻿@model ERA_BMS.Models.SurfaceType
 
 @{
     ViewBag.Title = "Surface Type Details";
@@ -38,5 +38,5 @@
 </div>
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.SurfaceTypeId }, new { @class = "btn btn-primary" })
-    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+    <a href="@Url.Action("Index")" class="btn btn-primary"><span class="glyphicon glyphicon-backward"></span> Go to List</a>
 </p>

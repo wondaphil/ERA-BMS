@@ -1,0 +1,223 @@
+﻿
+@{
+    ViewBag.Title = "Bridge Location Information";
+}
+
+<h2>Bridge Location Information</h2>
+
+@using (Html.BeginForm())
+{
+    <div class="panel panel-default">
+        <div class="panel-body">
+
+            @Html.AntiForgeryToken()
+
+            <div class="row">
+                <div class="col-sm-4 col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group">
+                            <label class="control-label col-md-2">District</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("ddlDistrict", new SelectList(ViewBag.Districts, "Value", "Text"), new { @class = "form-control" })
+                                <div class="clearfix visible-lg visible-md visible-sm visible-xs"></div> <!-- Add clearfix (or new line break) for only the sm -->
+                                <button type="button" class="btn btn-primary glyphicon glyphicon-search search" id="searchbydistrict" data-toggle="tooltip" title="Search by District"></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-4 col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group">
+                            <label class="control-label col-md-2">Section</label>
+                            <div class="col-md-8">
+                                <select class="form-control" id="ddlSection">
+                                    <!-- Sections list populates here -->
+                                </select>
+                                <div class="clearfix visible-lg visible-md visible-sm visible-xs"></div> <!-- Add clearfix (or new line break) for only the sm -->
+                                <button type="button" class="btn btn-primary glyphicon glyphicon-search" id="searchbysection" data-toggle="tooltip" title="Search by Section"></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="clearfix visible-xs"></div> <!-- Add clearfix (or new line break) for only the xs -->
+
+                <div class="col-sm-4 col-xs-12">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group">
+                            <label class="control-label col-md-2 col-sm-6 col-xs-6">Road Segment</label>
+                            <div class="clearfix visible-xs"></div> <!-- Add clearfix (or new line break) for only the xs -->
+                            <div class="col-md-8 col-sm-12 col-xs-6">
+                                <select class="form-control" id="ddlSegment">
+                                    <!-- Segments list populates here -->
+                                </select>
+                                <div class="clearfix visible-lg visible-md visible-sm visible-xs"></div> <!-- Add clearfix (or new line break) for only the sm -->
+                                <button type="button" class="btn btn-primary glyphicon glyphicon-search" id="searchbysegment" data-toggle="tooltip" title="Search by Road Segment"></button>
+                            </div>
+                            <div align="right" class="col-lg-12 col-md-12 col-sm-12 col-xs-6">
+                                <div class="col-lg-4 col-md-3 col-sm-0 col-xs-0">
+                                </div>
+                                <div class="col-lg-2 col-md-3 col-sm-5 col-xs-6" id="mapdiv" style="display: none">
+                                    <a href="" target="_blank" class="btn btn-primary" data-toggle="tooltip"  id="mapbysegment" title="Map by Road Segment" align="right"><span class="glyphicon glyphicon-map-marker"></span> Map</a>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                    <a href="@Url.Action("BridgeLocationByRoute", "BridgeLocation")" class="btn btn-primary" id="bymainroute" data-toggle="tooltip" title="Bridge Location Info by Route"><span class="glyphicon glyphicon-new-window"></span> By Route</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    <div id="bridgesPartial">
+        <!-- Bridges list displays here -->
+    </div>
+}
+
+<div id="wait" align="center" style="display: none">
+    <img src="~/images/ajax-loader-big.gif" />
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#ddlDistrict').change(function () {
+            var selDistrictId = $('#ddlDistrict option:selected').val();
+            $('#ddlSection option').remove(); //empty the section dropdown list
+            $('#ddlSegment option').remove(); //empty the segment dropdown list
+            $('#bridgesPartial').empty(); // clear the bridges place holder
+            $('#mapdiv').hide();
+
+            if (selDistrictId != "0") //if some district is selected
+            {
+                $.ajax({
+                    url: '@Url.Action("_GetSections", "LocationsDDL")',
+                    data: { districtid: selDistrictId },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        var markup = '<option value="0" id="noselect"> --Select Section --</option>';
+                        $.each(data, function (i, section) {
+                            markup += '<option value="' + section.Value + '">' + section.Text + '</option>'
+                            $('#ddlSection').html(markup);
+                        });
+                    }
+                });
+            }
+        });
+
+        $('#ddlSection').change(function () {
+            var selSectionId = $('#ddlSection option:selected').val();
+            $('#ddlSegment option').remove(); //empty the segment dropdown list
+            $('#bridgesPartial').empty(); // clear the bridges place holder
+            $('#mapdiv').hide();
+
+            if (selSectionId != "0") //if some section is selected
+            {
+                $.ajax({
+                    url: '@Url.Action("_GetSegments", "LocationsDDL")',
+                    data: { sectionid: selSectionId },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        var markup = '<option value="0" id="noselect"> --Select Segment --</option>';
+                        $.each(data, function (i, segment) {
+                            markup += '<option value="' + segment.Value + '">' + segment.Text + '</option>'
+                            $('#ddlSegment').html(markup);
+                        });
+                    }
+                });
+            }
+        });
+
+        $('#ddlSegment').change(function () {
+            var selSegmentId = $('#ddlSegment option:selected').val();
+            $('#bridgesPartial').empty(); //clear the bridges place holder
+            $('#mapdiv').hide();
+
+            if (selSegmentId != "0") //if no segment is selected
+            {
+                $.ajax({
+                    url: '@Url.Action("_GetBridgeLocationBySegment", "BridgeLocation")',
+                    data: { segmentid: selSegmentId },
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () { $('#wait').show(); },
+                    complete: function () { $('#wait').hide(); },
+                    success: function (data) {
+                        // Unhide the 'Map' button and set it's link
+                        $('#mapdiv').show();
+                        var url = '@Url.Action("BridgeMapBySegment", "BridgeLocation", new { id = "segid" })'
+                                    .replace("segid", encodeURIComponent(selSegmentId));
+
+                        $('#mapbysegment').attr("href", url);
+
+                        $('#bridgesPartial').html(data);
+                    }
+                });
+            }
+        });
+
+        $('#searchbydistrict').click(function () {
+            var selDistrictId = $('#ddlDistrict option:selected').val();
+            $('#bridgesPartial').empty(); // clear the bridges place holder
+
+            if (selDistrictId == "0") { //if 'All Districts' is selected
+                $.ajax({
+                    url: '@Url.Action("_GetBridgeLocationAll", "BridgeLocation")',
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () { $('#wait').show(); },
+                    complete: function () { $('#wait').hide(); },
+                    success: function (data) {
+                        $('#bridgesPartial').html(data);
+                    }
+                });
+            }
+            else {
+                $.ajax({
+                    url: '@Url.Action("_GetBridgeLocationByDistrict", "BridgeLocation")',
+                    data: { districtid: selDistrictId },
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () { $('#wait').show(); },
+                    complete: function () { $('#wait').hide(); },
+                    success: function (data) {
+                        $('#bridgesPartial').html(data);
+                    }
+                });
+            }
+        });
+
+        $('#searchbysection').click(function () {
+            var selSectionId = $('#ddlSection option:selected').val();
+            if (selSectionId != "0" && typeof selSectionId != 'undefined') //if some section is selected
+            {
+                $('#bridgesPartial').empty(); // clear the bridges place holder
+
+                $.ajax({
+                    url: '@Url.Action("_GetBridgeLocationBySection", "BridgeLocation")',
+                    data: { sectionid: selSectionId },
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () { $('#wait').show(); },
+                    complete: function () { $('#wait').hide(); },
+                    success: function (data) {
+                        $('#bridgesPartial').html(data);
+                    }
+                });
+            }
+        });
+
+        $('#searchbysegment').click(function () {
+            var selSegmentId = $('#ddlSegment option:selected').val();
+            if (selSegmentId != "0" && typeof selSegmentId != 'undefined') //if some segment is selected
+            {
+                $('#ddlSegment').trigger('change');
+            }
+        });
+    });
+
+</script>

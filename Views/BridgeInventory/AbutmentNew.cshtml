@@ -1,0 +1,255 @@
+﻿@model ERA_BMS.Models.Abutment
+
+@{
+    ViewBag.Title = "Abutment Inventory";
+}
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "abutmentForm" }))
+{
+    <hr />
+    <h5 align="center" class="text-danger"><b>Abutment and Foundation data is empty for this bridge. Please enter data and save.</b></h5>
+    <hr />
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @*@Html.HiddenFor(model => model.BridgeId)*@
+        <input type="hidden" id="BridgeId" value="@TempData["BridgeId"]" />
+
+        <div class="row">
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.AbutmentTypeIdA1, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @*@Html.DropDownList("AbutmentTypeIdA1", null, "", htmlAttributes: new { @class = "form-control" })*@
+                        @Html.DropDownList("AbutmentTypeIdA1", (List<SelectListItem>)TempData["AbutmentTypeIdA1"], htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.AbutmentTypeIdA1, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.AbutmentHeightA1, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.AbutmentHeightA1, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.AbutmentHeightA1, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.AbutmentWidthA1, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.AbutmentWidthA1, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.AbutmentWidthA1, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.FoundationTypeIdA1, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @*@Html.DropDownList("FoundationTypeIdA1", null, "", htmlAttributes: new { @class = "form-control" })*@
+                        @Html.DropDownList("FoundationTypeIdA1", (List<SelectListItem>)TempData["FoundationTypeIdA1"], htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.FoundationTypeIdA1, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.FoundationSizeA1, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.FoundationSizeA1, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.FoundationSizeA1, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.WingWallLengthA1, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.WingWallLengthA1, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.WingWallLengthA1, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.NoOfAbutmentPilesA1, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.NoOfAbutmentPilesA1, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.NoOfAbutmentPilesA1, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.AbutmentPileDepthA1, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.AbutmentPileDepthA1, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.AbutmentPileDepthA1, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.SoilTypeA1, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @*@Html.DropDownList("SoilTypeIdA1", null, "", htmlAttributes: new { @class = "form-control" })*@
+                        @Html.DropDownList("SoilTypeIdA1", (List<SelectListItem>)TempData["SoilTypeIdA1"], htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.SoilTypeA1, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.NoOfpier, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.NoOfpier, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.NoOfpier, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.AbutmentTypeIdA2, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @*@Html.DropDownList("AbutmentTypeIdA2", null, "", htmlAttributes: new { @class = "form-control" })*@
+                        @Html.DropDownList("AbutmentTypeIdA2", (List<SelectListItem>)TempData["AbutmentTypeIdA2"], htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.AbutmentTypeIdA2, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.AbutmentHeightA2, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.AbutmentHeightA2, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.AbutmentHeightA2, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.AbutmentWidthA2, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.AbutmentWidthA2, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.AbutmentWidthA2, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.FoundationTypeIdA2, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @*@Html.DropDownList("FoundationTypeIdA2", null, "", htmlAttributes: new { @class = "form-control" })*@
+                        @Html.DropDownList("FoundationTypeIdA2", (List<SelectListItem>)TempData["FoundationTypeIdA2"], htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.FoundationTypeIdA2, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.FoundationSizeA2, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.FoundationSizeA2, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.FoundationSizeA2, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.WingWallLengthA2, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.WingWallLengthA2, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.WingWallLengthA2, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.NoOfAbutmentPilesA2, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.NoOfAbutmentPilesA2, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.NoOfAbutmentPilesA2, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.AbutmentPileDepthA2, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.AbutmentPileDepthA2, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.AbutmentPileDepthA2, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.SoilTypeA1, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @*@Html.DropDownList("SoilTypeIdA2", null, "", htmlAttributes: new { @class = "form-control" })*@
+                        @Html.DropDownList("SoilTypeIdA2", (List<SelectListItem>)TempData["SoilTypeIdA2"], htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.SoilTypeA2, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class=" form-group form-group-sm">
+            <div class="col-md-offset-2 col-md-5">
+                <button type="button" id="saveAbutment" class="btn btn-primary"><span class="glyphicon glyphicon-save"></span> Save</button>
+                <button type="reset" id="resetAbutment" class="btn btn-primary"><span class="glyphicon glyphicon-refresh"></span> Reset</button>
+                <div id="statusAbutment" class="success">
+                    <!-- Save success or failure status text appears here-->
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#saveAbutment').on('click', function () {
+            var abutment = {};
+
+            abutment.BridgeId = $('#BridgeId').val();
+            abutment.AbutmentTypeIdA1 = $('#AbutmentTypeIdA1').val();
+            abutment.AbutmentTypeIdA2 = $('#AbutmentTypeIdA2').val();
+            abutment.AbutmentHeightA1 = $('#AbutmentHeightA1').val();
+            abutment.AbutmentHeightA2 = $('#AbutmentHeightA2').val();
+            abutment.AbutmentWidthA1 = $('#AbutmentWidthA1').val();
+            abutment.AbutmentWidthA2 = $('#AbutmentWidthA2').val();
+            abutment.WingWallLengthA1 = $('#WingWallLengthA1').val();
+            abutment.WingWallLengthA2 = $('#WingWallLengthA2').val();
+            abutment.FoundationTypeIdA1 = $('#FoundationTypeIdA1').val();
+            abutment.FoundationTypeIdA2 = $('#FoundationTypeIdA2').val();
+            abutment.FoundationSizeA1 = $('#FoundationSizeA1').val();
+            abutment.FoundationSizeA2 = $('#FoundationSizeA2').val();
+            abutment.NoOfAbutmentPilesA1 = $('#NoOfAbutmentPilesA1').val();
+            abutment.NoOfAbutmentPilesA2 = $('#NoOfAbutmentPilesA2').val();
+            abutment.AbutmentPileDepthA1 = $('#AbutmentPileDepthA1').val();
+            abutment.AbutmentPileDepthA2 = $('#AbutmentPileDepthA2').val();
+            abutment.SoilTypeA1 = $('#SoilTypeIdA2').val();
+            abutment.SoilTypeA2 = $('#SoilTypeIdA2').val();
+            abutment.NoOfpier = $('#NoOfpier').val();
+
+            //alert(JSON.stringify(abutment));
+
+            $.ajax({
+                type: 'POST',
+                cache: false,
+                url: '@Url.Action("AbutmentNew", "BridgeInventory")',
+                data: '{abutment:' + JSON.stringify(abutment) + '}',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'html', 
+                success: function (data) {
+                    if ($('#statusAbutment').hasClass("text-danger"))
+                        $('#statusAbutment').removeClass("text-danger");
+                    $('#statusAbutment').addClass("text-success");
+                    $('#statusAbutment').text("Data is saved successfully");
+                },
+                error: function (xhr) {
+                    if ($('#statusAbutment').hasClass("text-success"))
+                        $('#statusAbutment').removeClass("text-success");
+                    $('#statusAbutment').addClass("text-danger");
+                    $('#statusAbutment').text("Data is NOT saved!!");
+                }
+            });
+        });
+
+        $('#resetAbutment').on('click', function () {
+            $('#abutmentForm').trigger("reset"); // triger the normal reset function
+        });
+    });
+</script>
+
+

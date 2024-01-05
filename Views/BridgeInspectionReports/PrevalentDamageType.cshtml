@@ -1,0 +1,67 @@
+﻿
+@{
+    ViewBag.Title = "Prevalent Damage Type";
+}
+
+<h2>Prevalent Damage Type</h2>
+
+
+@using (Html.BeginForm())
+{
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title panel-info">Please select <b>Inspection Year</b> from the dropdown list</h3>
+        </div>
+        <div class="panel-body">
+
+            @Html.AntiForgeryToken()
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group-sm">
+                            <label class="control-label col-md-5">Inspection Year</label>
+                            <div class="col-md-5">
+                                @Html.DropDownList("ddlInspectionYear", (List<SelectListItem>)ViewBag.InspectionYear, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div id="prevalentdamagetypepartial">
+        <!-- Bridges prevalent damage type displays here -->
+    </div>
+}
+
+<div id="wait" align="center" style="display: none">
+    <img src="~/images/ajax-loader-big.gif" />
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#ddlInspectionYear').change(function () {
+            var selInspectionYear = $('#ddlInspectionYear option:selected').val();
+            $('#prevalentdamagetypepartial').empty(); // clear the prevalent damage type place holder
+            if (selInspectionYear != "0") //if some inspection year is selected
+            {
+                $.ajax({
+                    url: '@Url.Action("_GetPrevalentDamageType", "BridgeReportsInspection")',
+                    data: { inspectionyear: selInspectionYear },
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () { $('#wait').show(); },
+                    complete: function () { $('#wait').hide(); },
+                    success: function (data) {
+                        $('#prevalentdamagetypepartial').html(data);
+                    }
+                });
+            }
+        });
+    });
+
+</script>
+
+

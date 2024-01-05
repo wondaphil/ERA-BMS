@@ -1,0 +1,50 @@
+﻿@model IEnumerable<ERA_BMS.Models.CulvertMedia>
+
+@{
+    ViewBag.Title = "Culvert Image";
+}
+
+@*<div style="display: flex;">*@
+<div class="row">
+    @if (Model.Count() == 0)
+    {
+        <div class="col-xs-12">
+            <h5><i>No images for Culvert: <b>@TempData["CulvertNo"]</b></i></h5>
+        </div>
+    }
+    else
+    {
+        foreach (var culvertimage in Model.Select((value, index) => new { index, value }))
+        {
+
+            string fullPath = culvertimage.value.MediaFilePath;
+            string filename = Path.GetFileName(fullPath); //extract the file name from the full path
+            string description = culvertimage.value.Description;
+
+            @*<div style="clear: left;">*@
+            <div class="col-md-3 col-sm-6 col-xs-6">
+                <table>
+                    @*<tr><td><a href="@fullPath" target="_blank"><img src="@fullPath" alt="nopic" style="height:auto; width: 100px; margin: 20px;" /></a></td></tr>*@
+                    <tr>
+                        <td>
+                            <a href="@Url.Action("CulvertAllImages", "ImageGallery", new { id = culvertimage.value.CulvertId, val = culvertimage.index })" target="_blank">
+                                <img src="@fullPath" alt="not-found" style="height:auto; width: 100px; margin: 20px;" onerror="this.onerror = null; this.src = '../../images/error_2.png'; this.style.width = '20px'; this.title = 'Image Not Found';" data-toggle="tooltip" title="Preview Photo" />
+                            </a>
+                        </td>
+                    </tr>
+                    <tr><td><p align="center">@description</p></td></tr>
+                    <tr><td><p align="center">@filename</p></td></tr>
+                </table>
+            </div>
+            if ((culvertimage.index + 1) % 4 == 0)
+            {
+                <div class="clearfix visible-lg visible-md"></div>
+            }
+            if ((culvertimage.index + 1) % 2 == 0)
+            {
+                <div class="clearfix visible-sm visible-xs"></div>
+            }
+        }
+    }
+</div>
+

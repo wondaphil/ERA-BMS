@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ERA_BCMS.Models
+namespace ERA_BMS.Models
 {
     using System;
     using System.Collections.Generic;
@@ -19,6 +19,7 @@ namespace ERA_BCMS.Models
         {
             this.Abutments = new HashSet<Abutment>();
             this.Abutments1 = new HashSet<Abutment>();
+            this.CulvertStructures = new HashSet<CulvertStructure>();
         }
     
         public int AbutmentTypeId { get; set; }
@@ -29,5 +30,7 @@ namespace ERA_BCMS.Models
         public virtual ICollection<Abutment> Abutments { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Abutment> Abutments1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<CulvertStructure> CulvertStructures { get; set; }
     }
 }

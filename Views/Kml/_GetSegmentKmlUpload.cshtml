@@ -1,0 +1,104 @@
+﻿@*@model ERA_BMS.Models.SegmentMap*@
+
+@{
+    ViewBag.Title = "Upload Kml File";
+}
+
+@*<h3>Road Segment KML Upload (<b>@ViewBag.SegmentNo | @ViewBag.RoadId | @ViewBag.SegmentName</b>)</h3>*@
+<h3>Road Segment KML Upload (<b>@Model.SegmentNo | @Model.RoadId | @Model.SegmentName</b>)</h3>
+
+@{
+    string msg = "";
+    bool haskmlfile = (bool) TempData["HasKmlFile"];
+    if (haskmlfile)
+    {
+        msg = "Road already has Kml file. It will be replaced by the new upload.";
+    }
+}
+<p id="statusmessage" class="text-danger" style="font-size: 15px">@msg</p>
+<input type="hidden" id="SegmentId" value="@Model.SegmentId" />
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "kmlFileUploadForm", enctype = "multipart/form-data" }))
+{
+
+    <div class="row">
+        <div class="col-md-2 col-sm-3 col-xs-4">
+            <b>Map Date:</b><br />
+            <input type="date" id="txtMapDate" style="width:100%; max-width:100% " />
+        </div>
+        <div class="col-md-4 col-sm-5 col-xs-8">
+            <b>Description:</b><br />
+            <input type="text" id="txtDescription" style="width:100%; max-width:100% " />
+        </div>
+        <div class="col-md-3 col-sm-4 col-xs-6">
+            <b>Map File (Kml):</b><br />
+            <input type="file" id="txtMapFilePath" accept=".kml" style="width:100%; max-width:100% " />
+            <br />
+            <button type="button" id="btnUpload" class="btn btn-primary"><span class="glyphicon glyphicon-save"></span> Upload</button>
+            <div id="uploadprogress" style="display: none">
+                <img src="~/images/ajax-loader-small.gif" /> Uploading...
+            </div>
+        </div>
+    </div>
+}
+
+<div id="status"></div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var today = new Date().toJSON().slice(0, 10);
+        $('#txtMapDate').val(today);
+
+        //Add event handler
+        $("#btnUpload").on("click", function () {
+            $('#statusmessage').removeClass("text-success");
+            $('#statusmessage').removeClass("text-danger");
+            $('#statusmessage').text("");
+
+            if (window.FormData == undefined) {
+                $('#statusmessage').addClass("text-danger");
+                $('#statusmessage').text("FormData is not supported.");
+            }
+            else {
+                var SegmentId = $('#SegmentId').val();
+                var MapFilePath = $('#txtMapFilePath').val();
+                var mapFileName = MapFilePath.replace(/^.*[\\\/]/, '');
+                var MapDate = $("#txtMapDate").val();
+                var MapDescription = $("#txtDescription").val();
+                var fullMapFilePath = '/kml/segments/' + mapFileName;
+
+                var fileUpload = $("#txtMapFilePath").get(0);
+                var files = fileUpload.files;
+                var formData = new FormData();
+
+                formData.append(files[0].name, files[0]);
+
+                // Add member data as keys to FormData object
+                formData.append('SegmentId', SegmentId);
+                formData.append('MapFilePath', fullMapFilePath);
+                formData.append('MapDate', MapDate);
+                formData.append('Description', MapDescription);
+
+                $.ajax({
+                    url: '@Url.Action("SegmentKmlSave", "Kml")',
+                    type: 'POST',
+                    data: formData,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    beforeSend: function () { $('#uploadprogress').show(); },
+                    complete: function () { $('#uploadprogress').hide(); },
+                    success: function (data) {
+                        $('#statusmessage').addClass("text-success");
+                        $('#statusmessage').text("Road Kml file uploaded successfully");
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        $('#statusmessage').addClass("text-danger");
+                        $('#statusmessage').text("Road Kml file upload failure");
+                        //$('#statusmessage').text(textStatus);
+                    },
+                });
+            }
+        });
+    });
+</script>

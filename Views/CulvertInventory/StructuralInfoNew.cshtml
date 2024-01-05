@@ -1,0 +1,181 @@
+﻿@model ERA_BMS.Models.CulvertStructure
+
+@{
+    ViewBag.Title = "StructuralInfoNew";
+}
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "strInfoForm" }))
+{
+    <hr />
+    <h5 align="center" class="text-danger"><b>Structural Information data is empty for this culvert. Please enter data and save.</b></h5>
+    <hr />
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @*@Html.HiddenFor(model => model.CulvertId)*@
+        <input type="hidden" id="CulvertId" value="@TempData["CulvertId"]" />
+        <div class="row">
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                <div class="form-group form-group-sm required">
+                    @Html.LabelFor(model => model.CulvertTypeId, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @*@Html.DropDownList("CulvertTypeId", null, htmlAttributes: new { @class = "form-control" })*@
+                        @Html.DropDownList("CulvertTypeId", (List<SelectListItem>)TempData["CulvertTypeId"], htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.CulvertTypeId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.Height, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.Height, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Height, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.LengthInside, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.LengthInside, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.LengthInside, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.NoOfBarrels, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.NoOfBarrels, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.NoOfBarrels, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.BarrelsDistance, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.BarrelsDistance, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.BarrelsDistance, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm required">
+                    @Html.LabelFor(model => model.LengthTotal, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.LengthTotal, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.LengthTotal, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.AbutmentTypeId, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @*@Html.DropDownList("AbutmentTypeId", null, htmlAttributes: new { @class = "form-control" })*@
+                        @Html.DropDownList("AbutmentTypeId", (List<SelectListItem>)TempData["AbutmentTypeId"], htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.AbutmentTypeId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.AbutmentHeight, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.AbutmentHeight, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.AbutmentHeight, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.EndWallTypeIdOut, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @*@Html.DropDownList("EndWallTypeIdOut", null, htmlAttributes: new { @class = "form-control" })*@
+                        @Html.DropDownList("EndWallTypeIdOut", (List<SelectListItem>)TempData["EndWallTypeIdOut"], htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.EndWallTypeIdOut, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.EndWallTypeIdIn, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @*@Html.DropDownList("EndWallTypeIdIn", null, htmlAttributes: new { @class = "form-control" })*@
+                        @Html.DropDownList("EndWallTypeIdIn", (List<SelectListItem>)TempData["EndWallTypeIdIn"], htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.EndWallTypeIdIn, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <div class="col-md-offset-2 col-md-5">
+                    <button type="button" id="saveStrInfo" class="btn btn-primary"><span class="glyphicon glyphicon-save"></span> Save</button>
+                    <button type="reset" id="resetStrInfo" class="btn btn-primary"><span class="glyphicon glyphicon-refresh"></span> Reset</button>
+                    <div id="statusStrInfo" class="text-info">
+                        <!-- Save success or failure status text appears here-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<script>
+    $(document).ready(function () {
+        function ValidateDataEntry(strInfo) {
+            if (strInfo.LengthTotal == "")
+                return false;
+
+            return true;
+        }
+
+        $('#saveStrInfo').on('click', function () {
+            var strInfo = {};
+
+            strInfo.CulvertId = $('#CulvertId').val();
+            strInfo.Height = $('#Height').val();
+            strInfo.LengthInside = $('#LengthInside').val();
+            strInfo.NoOfBarrels = $('#NoOfBarrels').val();
+            strInfo.BarrelsDistance = $('#BarrelsDistance').val();
+            strInfo.LengthTotal = $('#LengthTotal').val();
+            strInfo.CulvertTypeId = $('#CulvertTypeId').val();
+            strInfo.AbutmentTypeId = $('#AbutmentTypeId').val();
+            strInfo.AbutmentHeight = $('#AbutmentHeight').val();
+            strInfo.EndWallTypeIdOut = $('#EndWallTypeIdOut').val();
+            strInfo.EndWallTypeIdIn = $('#EndWallTypeIdIn').val();
+
+            //alert(JSON.stringify(strInfo));
+
+            if (ValidateDataEntry(strInfo)) {
+                $.ajax({
+                    type: 'POST',
+                    cache: false,
+                    url: '@Url.Action("StructuralInfoNew", "CulvertInventory")',
+                    data: '{strInfo:' + JSON.stringify(strInfo) + '}',
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'html',
+                    success: function (data) {
+                        if ($('#statusStrInfo').hasClass("text-danger"))
+                            $('#statusStrInfo').removeClass("text-danger");
+                        $('#statusStrInfo').addClass("text-success");
+                        $('#statusStrInfo').text("Data is saved successfully");
+                    },
+                    error: function (xhr) {
+                        if ($('#statusStrInfo').hasClass("text-success"))
+                            $('#statusStrInfo').removeClass("text-success");
+                        $('#statusStrInfo').addClass("text-danger");
+                        $('#statusStrInfo').text("Data is NOT saved!!");
+                    }
+                });
+            }
+            else {
+                if ($('#statusStrInfo').hasClass("text-success"))
+                    $('#statusStrInfo').removeClass("text-success");
+                $('#statusStrInfo').addClass("text-danger");
+                $('#statusStrInfo').text("Please enter all boxes marked with *");
+            }
+        });
+
+        $('#resetStrInfo').on('click', function () {
+            $('#strInfoForm').trigger("reset"); // triger the normal reset function
+        });
+    });
+</script>

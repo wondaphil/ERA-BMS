@@ -1,0 +1,64 @@
+﻿@model IEnumerable<ERA_BMS.ViewModels.BridgeTypeViewModel>
+
+<hr />
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title panel-info">Bridge Count By <b>Bridge Type</b></h3>
+    </div>
+
+    <div class="panel-body">
+        <table class="table table-striped table-condensed table-responsive table-bordered display compact hover" id="bridgescountbybridgetype">
+            <thead>
+                <tr>
+                    <th>Bridge Type Id</th>
+                    <th>Bridge Type Name</th>
+                    <th>No. of Bridges</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{int totalCount = 0; }
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.BridgeTypes.BridgeTypeId</td>
+                        <td>@item.BridgeTypes.BridgeTypeName</td>
+                        <td>@item.BridgeCount</td>
+                    </tr>
+                    totalCount += item.BridgeCount;
+                }
+
+            </tbody>
+        </table>
+    </div>
+    <div class="panel-footer">
+        <h3 class="panel-title">No. of Bridge Types: <b>@Model.Count()</b> | No. of Bridges: <b>@totalCount</b></h3>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#bridgescountbybridgetype').dataTable({
+            paging: false,
+            bLengthChange: true,
+            scrollY: 400,
+            
+            searching: true,
+            select: true,
+            dom: 'lBfrtip',
+            //buttons: ['copy', 'excel', 'pdf', 'print']
+            buttons: [
+                { extend: 'copy', className: 'btn btn-sm btn-primary' },
+                { extend: 'excel', className: 'btn btn-sm btn-primary', text: 'Export Excel' },
+                { extend: 'pdf', className: 'btn btn-sm btn-primary', text: 'Export PDF' },
+                { extend: 'print', className: 'btn btn-sm btn-primary' }
+            ]
+        }).columnFilter({
+            "aoColumns": [
+                { "type": "number-range" },
+                { "type": "text" },
+                { "type": "select" },
+                { "type": "date-range" }
+            ]
+        });
+    });
+</script>

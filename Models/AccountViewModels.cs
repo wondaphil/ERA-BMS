@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace ERA_BCMS.Models
+namespace ERA_BMS.Models
 {
     public class ExternalLoginConfirmationViewModel
     {

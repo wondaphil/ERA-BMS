@@ -1,0 +1,126 @@
+﻿<hr />
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="row">
+        <div class="col-md-5">
+            <div class="form-horizontal">
+                <div class="form-group form-group">
+                    @*<label class="control-label col-md-2">Criteria</label>*@
+                    <div class="col-md-12">
+                        <label>Prioritization Criteria:</label>
+                        @Html.DropDownList("ddlPrioritizationCriteria", (List<SelectListItem>)ViewBag.PrioritizationCriteria, new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-7" id="damageWeight">
+            <!-- Damage weights display here -->
+        </div>
+    </div>
+}
+
+<script>
+    $(document).ready(function () {
+
+        $('#ddlPrioritizationCriteria').change(function () {
+            //alert("Hello");
+            var selPriorCriteriaId = $('#ddlPrioritizationCriteria option:selected').val();
+            $('#damageWeight').empty();
+            if (selPriorCriteriaId != "0") //if some prioritization criteria is selected
+            {
+                $('#damageWeight').empty(); // clear the priority details place holder
+
+                // For priorities that display "From" and "To" options and "Weight"
+                if (selPriorCriteriaId == 1)
+                {
+                    $.ajax({
+                        url: '@Url.Action("_GetDamagePercDetails", "DamagePriority", new { area = "Admin" })',
+                        data: { priorCriteriaId: selPriorCriteriaId },
+                        type: 'GET',
+                        dataType: 'html',
+                        success: function (data) {
+                            $('#damageWeight').html(data);
+                        }
+                    });
+                }
+                // For inspector's recommendation priority
+                else if (selPriorCriteriaId == 2) {
+                    $.ajax({
+                        url: '@Url.Action("_GetMaintenanceUrgencyWeightDetails", "DamagePriority", new { area = "Admin" })',
+                        data: { priorCriteriaId: selPriorCriteriaId },
+                        type: 'GET',
+                        dataType: 'html',
+                        success: function (data) {
+                            $('#damageWeight').html(data);
+                        }
+                    });
+                }
+                // For road class priority
+                else if (selPriorCriteriaId == 4) {
+                    $.ajax({
+                        url: '@Url.Action("_GetRoadClassWeightDetails", "DamagePriority", new { area = "Admin" })',
+                        data: { priorCriteriaId: selPriorCriteriaId },
+                        type: 'GET',
+                        dataType: 'html',
+                        success: function (data) {
+                            $('#damageWeight').html(data);
+                        }
+                    });
+                }
+                // For year of construction priority
+                else if (selPriorCriteriaId == 6) {
+                    $.ajax({
+                        url: '@Url.Action("_GetConstructionYearDetails", "DamagePriority", new { area = "Admin" })',
+                        data: { priorCriteriaId: selPriorCriteriaId },
+                        type: 'GET',
+                        dataType: 'html',
+                        success: function (data) {
+                            $('#damageWeight').html(data);
+                        }
+                    });
+                }
+                // For averarage daily traffic priority
+                else if (selPriorCriteriaId == 8) {
+                    $.ajax({
+                        url: '@Url.Action("_GetADTDetails", "DamagePriority", new { area = "Admin" })',
+                        data: { priorCriteriaId: selPriorCriteriaId },
+                        type: 'GET',
+                        dataType: 'html',
+                        success: function (data) {
+                            $('#damageWeight').html(data);
+                        }
+                    });
+                }
+                // For priorities that display "From" and "To" options and "Weight"
+                else if (selPriorCriteriaId == 5) {
+                    $.ajax({
+                        url: '@Url.Action("_GetBridgeLengthDetails", "DamagePriority", new { area = "Admin" })',
+                        data: { priorCriteriaId: selPriorCriteriaId },
+                        type: 'GET',
+                        dataType: 'html',
+                        success: function (data) {
+                            $('#damageWeight').html(data);
+                        }
+                    });
+                }
+                // For priorities that display "Yes" and "No" options and "Weight"
+                else if (selPriorCriteriaId == 3 || selPriorCriteriaId == 7) {
+                    $.ajax({
+                        url: '@Url.Action("_GetYesNoWeightDetails", "DamagePriority", new { area = "Admin" })',
+                        data: { priorCriteriaId: selPriorCriteriaId },
+                        type: 'GET',
+                        dataType: 'html',
+                        success: function (data) {
+                            $('#damageWeight').html(data);
+                        }
+                    });
+                }
+            }
+        });
+    });
+</script>
+

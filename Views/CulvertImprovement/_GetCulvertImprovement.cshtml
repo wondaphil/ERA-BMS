@@ -1,0 +1,443 @@
+﻿@model IEnumerable<ERA_BMS.Models.CulvertImprovement>
+@using ERA_BMS.Models
+
+<input type="hidden" id="culvertId" value="@TempData["CulvertId"]" /> <!-- Culvert Id -->
+<!--Change TempData to ViewBag for easy use-->
+@{
+    ViewBag.Culvert = (Culvert)TempData["Culvert"];
+}
+
+<table class="table table-striped table-condensed table-responsive table-bordered" id="tblCulvertImprovement">
+    <tr>
+        <th></th>
+        <th>Improvement Date</th>
+        <th>Improvement Year</th>
+        <th>Improvement Action</th>
+        <th>Improvement Cost</th>
+        <th>Activities</th>
+        <th></th>
+        <th></th>
+    </tr>
+    @foreach (var improvement in Model)
+    {
+        <tr class="form-group form-group-sm">
+            <td class="Id">
+                <input type="hidden" id="Id" value="@improvement.Id" size="3" /> <!-- Unique Identity (key) -->
+            </td>
+            <td class="ImprovementDate">
+                @if (improvement.ImprovementDate != null)
+                {
+                    <span id="datespan">@improvement.ImprovementDate.Value.ToString("dd/MM/yyyy")</span>
+                }
+                else
+                {
+                    <span id="datespan">@DateTime.Now.ToString("dd/MM/yyyy")</span>
+                }
+                @*<input type="date" value="@improvement.ImprovementDate" id="datepicker" style="display:none" size="3" />*@
+            </td>
+            <td class="ImprovementYear">
+                <span>@improvement.ImprovementYear</span>
+                <input type="number" value="@improvement.ImprovementYear" style="display:none; max-width: 100%" size="3" />
+            </td>
+            <td class="ImprovementTypeId">
+                <span>@improvement.ImprovementType.ImprovementTypeName</span>
+                @*@Html.DropDownList("ddlImprovementTypeId", new SelectList(ViewBag.ImprovementTypeSelectList, "Value", "Text", improvement.ImprovementTypeId), new { @class = "form-control PierTypeId", style = "display: none" })*@
+                @Html.DropDownList("ddlImprovementTypeId", new SelectList((List<SelectListItem>)TempData["ImrpovementTypeId"], "Value", "Text", @improvement.ImprovementTypeId), new { @class = "form-control FoundationTypeId", style = "display: none; width: 150px;" })
+            </td>
+            <td class="ImprovementCost">
+                <span>@improvement.ImprovementCost</span>
+                <input type="number" value="@improvement.ImprovementCost" style="display:none" />
+            </td>
+            <td class="ImprovementAction">
+                <span>@improvement.ImprovementAction</span>
+                <textarea type="text" rows="4" cols="200" style="display:none; width:100%; max-width:100%">@improvement.ImprovementAction</textarea>
+            </td>
+            <td>
+                <a class="Edit glyphicon glyphicon-edit" href="javascript:;" data-toggle="tooltip" title="Edit"></a>
+                <a class="Update glyphicon glyphicon-ok" href="javascript:;" style="display:none" data-toggle="tooltip" title="Update"></a>
+                <a class="Confirm glyphicon glyphicon-ok" href="javascript:;" style="display:none" data-toggle="tooltip" title="Confirm"></a>
+            </td>
+            <td>
+                <a class="Cancel glyphicon glyphicon-remove" href="javascript:;" style="display:none" data-toggle="tooltip" title="Cancel"></a>
+                <a class="Delete glyphicon glyphicon-trash" href="javascript:;" data-toggle="tooltip" title="Delete"></a>
+            </td>
+        </tr>
+    }
+</table>
+
+<div class="form-horizontal">
+    <div class="row">
+        <div class="col-lg-2 col-md-2 col-sm-3 col-xs-4">
+            <div class="form-group form-group-sm">
+                <label for="txtNewImprovementDate" class="col-md-10 col-sm-10 col-xs-10">Date</label>
+                <input type="date" class="col-md-10 col-sm-10 col-xs-10" id="txtNewImprovementDate" size="2" />
+            </div>
+        </div>
+
+        <div class="col-lg-1 col-md-1 col-sm-2 col-xs-3">
+            <div class="form-group form-group-sm">
+                <label for="txtNewImprovementYear" class="col-md-10 col-sm-10 col-xs-10" style="color: red;">Year</label>
+                <input type="number" class="col-md-10 col-sm-10 col-xs-10" id="txtNewImprovementYear" style="border: 2px solid red;" />
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-5">
+            <div class="form-group form-group-sm">
+                <label for="ddlNewImprovementTypeId" class="col-md-10 col-sm-10 col-xs-12">Improvement Action</label>
+                <div class="col-md-10 col-sm-12">
+                    @*@Html.DropDownList("ddlNewImprovementTypeId", (List<SelectListItem>)ViewBag.ImprovementTypeSelectList, new { @class = "form-control" })*@
+                    @Html.DropDownList("ddlNewImprovementTypeId", (List<SelectListItem>)TempData["ImrpovementTypeId"], new { @class = "form-control" })
+                    @*@Html.DropDownList("ddlNewImprovementTypeId", new SelectList((List<SelectListItem>)TempData["ImrpovementTypeId"], "Value", "Text"), new { @class = "form-control FoundationTypeId", style = "display: none; width: 150px;" })*@
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-1 col-md-1 col-sm-2 col-xs-3">
+            <div class="form-group form-group-sm">
+                <label for="txtNewImprovementCost" class="col-md-10 col-sm-10 col-xs-10" style="color: red;">Cost</label>
+                <input type="number" class="col-md-10 col-sm-10 col-xs-10" id="txtNewImprovementCost" style="border: 2px solid red;" />
+            </div>
+        </div>
+
+        <div class="clearfix visible-sm"></div> <!-- Add clearfix (or new line break) for only the sm -->
+
+        <div class="col-lg-4 col-md-4 col-sm-5 col-xs-6">
+            <div class="form-group form-group-sm">
+                <label for="txtNewImprovementAction" class="col-md-10 col-sm-10 col-xs-10">Activities</label>
+                <textarea type="text" id="txtNewImprovementAction" class="col-md-10 col-sm-10 col-xs-10" rows="4" cols="200" width:100%; max-width:100%"></textarea>
+            </div>
+        </div>
+
+        <div class="col-lg-1 col-md-1 col-sm-2 col-xs-3">
+            <div class="form-group form-group-sm">
+                <br />
+                <button type="button" id="btnAddImprovement" class="btn btn-primary"><span class="glyphicon glyphicon-save"></span> Save</button>
+                <div id="status" class="text-danger">
+                    <!-- Save failure status text appears here-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var emptyRow =
+            "<tr class='form-group form-group-sm'>" +
+            "<td class='Id'>" +
+            "<input type='hidden' id='Id' size='3'> <!-- Unique Identity (key) -->" +
+            "</td>" +
+            "<td class='ImprovementDate'>" +
+            "<span id='datespan'>&nbsp;</span>" +
+            "<input type='date' id='datepicker' style='display:none' size='3'>" +
+            "</td>" +
+            "<td class='ImprovementYear'>" +
+            "<span>&nbsp;</span>" +
+            "<input type='text' style='display:none' size='3'>" +
+            "</td>" +
+            "<td class='ImprovementTypeId'>" +
+            "<span>&nbsp;</span>" +
+            "<select class='form-control PierTypeId' id='ddlImprovementTypeId' name='ddlImprovementTypeId' style='display: none'>" +
+            "<option selected='selected' value='1'>Rehabilitation</option>" +
+            "<option value='2'>Replacement</option>" +
+            "</select>" +
+            "</td>" +
+            "<td class='ImprovementCost'>" +
+            "<span>&nbsp;</span>" +
+            "<input type='text' style='display:none' >" +
+            "</td>" +
+            "<td class='ImprovementAction'>" +
+            "<span>&nbsp;</span>" +
+            "<textarea type='text'' rows='4'' cols='200'' style='display:none; width:100%; max-width:100%''></textarea>" +
+            "</td>" +
+            "<td>" +
+            "<a class='Edit glyphicon glyphicon-edit' href='javascript:;' style='display:none' data-toggle='tooltip' title='Edit'></a>" +
+            "<a class='Update glyphicon glyphicon-ok' href='javascript:;' style='display:none' data-toggle='tooltip' title='Update'></a>" +
+            "<a class='Confirm glyphicon glyphicon-ok' href='javascript:;' style='display:none' data-toggle='tooltip' title='Confirm'></a>" +
+            "</td>" +
+            "<td>" +
+            "<a class='Cancel glyphicon glyphicon-remove' href='javascript:;' style='display:none' data-toggle='tooltip' title='Cancel'></a>" +
+            "<a class='Delete glyphicon glyphicon-trash' href='javascript:;' style='display:none' data-toggle='tooltip' title='Delete'></a>" +
+            "</td>" +
+            "</tr>";
+
+        addEmptyRow();
+
+        function addEmptyRow() {
+            if ($("#tblCulvertImprovement tr").length == 1) {
+                $("#tblCulvertImprovement").append("<tr>" + emptyRow + "</tr>");
+            }
+        }
+
+        var today = new Date().toJSON().slice(0, 10);
+        $('#txtNewImprovementDate').val(today);
+
+        //Add event handler
+        $("#btnAddImprovement").on("click", function () {
+            var CulvertId = $("#culvertId");
+            var ImprovementDate = $("#txtNewImprovementDate");
+            var ImprovementYear = $("#txtNewImprovementYear");
+            var ImprovementTypeId = $("#ddlNewImprovementTypeId option:selected");
+            var ImprovementCost = $("#txtNewImprovementCost");
+            var ImprovementAction = $("#txtNewImprovementAction");
+
+            //alert(ImprovementTypeId.val());
+            //alert('{CulvertId: "' + CulvertId.val() + '", ImprovementDate: "' + ImprovementDate.val() + '", ImprovementYear: "' + ImprovementYear.val() + '", ImprovementTypeId: "' + ImprovementTypeId.val()
+            //    + '", ImprovementCost: "' + ImprovementCost.val() + '", ImprovementAction: "' + ImprovementAction.val() + '" }');
+
+            // Process data only if correct values are entered
+            if ($.trim(ImprovementYear.val()) != "" && $.trim(ImprovementCost.val()) != "" && $.isNumeric(ImprovementYear.val()) && $.isNumeric(ImprovementCost.val()))
+            {
+                $('#status').text(""); // clear the status text
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("InsertCulvertImprovement", "CulvertImprovement")',
+                    data: '{CulvertId: "' + CulvertId.val() + '", ImprovementDate: "' + ImprovementDate.val() + '", ImprovementYear: "' + ImprovementYear.val() + '", ImprovementTypeId: "' + ImprovementTypeId.val() + '", ImprovementCost: "' + ImprovementCost.val() + '", ImprovementAction: "' + ImprovementAction.val() + '" }',
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    success: function (data) {
+                        //alert("first success");
+                        $.ajax({
+                            type: 'GET',
+                            url: '@Url.Action("GetLastCulvertImprovement", "CulvertImprovement")',
+                            data: { culvertid: CulvertId.val() },
+                            datatype: 'json',
+                            success: function (data) {
+                                //alert("Second success");
+                                var row = $("#tblCulvertImprovement tr:last-child");
+                                if ($("#tblCulvertImprovement tr:last-child span").eq(0).html() != "&nbsp;") {
+                                    row = row.clone();
+                                }
+                                var Id = data.Id;
+                                //alert(row);
+                                //Bind Id
+                                row.find('input[type=hidden]').val(Id);
+
+                                //Bind all rows
+                                $(".ImprovementDate", row).find("span").html(ImprovementDate.val());
+                                $(".ImprovementDate", row).find("input").val(ImprovementDate.val());
+
+                                $(".ImprovementYear", row).find("span").html(ImprovementYear.val());
+                                $(".ImprovementYear", row).find("input").val(ImprovementYear.val());
+
+                                $(".ImprovementTypeId", row).find("span").html($("#ddlNewImprovementTypeId option:selected").text());
+                                $(".ImprovementTypeId", row).find("select").val(ImprovementTypeId.val());
+
+                                $(".ImprovementCost", row).find("span").html(ImprovementCost.val());
+                                $(".ImprovementCost", row).find("input").val(ImprovementCost.val());
+
+                                $(".ImprovementAction", row).find("span").html(ImprovementAction.val());
+                                $(".ImprovementAction", row).find("textarea").val(ImprovementAction.val());
+
+                                row.find(".Edit").show();
+                                row.find(".Delete").show();
+                                //alert(row);
+
+                                // Reset all elements
+                                ImprovementDate.val(today);
+                                ImprovementYear.val("");
+                                $("#ddlNewImprovementTypeId").val("1");
+                                ImprovementCost.val("");
+                                ImprovementAction.val("");
+
+                                $("#tblCulvertImprovement").append(row);
+                            },
+                            error: function (xhr) {
+                                //$('#status').text(xhr.status);
+                                //alert("Second error: " + xhr.status);
+                            }
+                        });
+                    },
+                    error: function (xhr) {
+                        //$('#status').text(xhr.status);
+                    }
+                });
+            }
+            else
+            {
+                $('#status').text("Please enter all RED boxes")
+
+                // Do not process data but reset all elements
+                ImprovementDate.val(today);
+                ImprovementYear.val("");
+                $("#ddlNewImprovementTypeId").val("1");
+                ImprovementCost.val("");
+                ImprovementAction.val("");
+            }
+        });
+
+        //Edit event handler.
+        $("body").on("click", "#tblCulvertImprovement .Edit", function () {
+            var row = $(this).closest("tr");
+            $("td", row).each(function () {
+                if ($(this).find("input").length > 0) {
+                    $(this).find("input").show();
+                    $(this).find("span").hide();
+                }
+                if ($(this).find("select").length > 0) {
+                    $(this).find("select").show();
+                    $(this).find("span").hide();
+                }
+                if ($(this).find("textarea").length > 0) {
+                    $(this).find("textarea").show();
+                    $(this).find("span").hide();
+                }
+            });
+
+            //var dateSplitted = $("#datespan").html().split("/");
+            //var dt = new Date(dateSplitted[2], dateSplitted[1] - 1, dateSplitted[0]);
+
+            //var date = dt.toJSON().slice(0, 10);
+
+            //alert(date);
+            //$('#datepicker').val(date);
+
+            row.find(".Update").show();
+            row.find(".Cancel").show();
+            row.find(".Delete").hide();
+            $(this).hide();
+        });
+
+        //Update event handler.
+        $("body").on("click", "#tblCulvertImprovement .Update", function () {
+            var row = $(this).closest("tr");
+            $("td", row).each(function () {
+                // assign all input box's texts in the current row to the corresponding span
+                if ($(this).find("input").length > 0) {
+                    var span = $(this).find("span");
+                    var input = $(this).find("input");
+                    span.html(input.val());
+                    span.show();
+                    input.hide();
+                }
+
+                // assign the pier dropdown list's text in the current row to the corresponding span
+                if ($(this).find("select").length > 0) {
+                    var span = $(this).find("span");
+                    var select = $(this).find('#ddlImprovementTypeId');
+                    span.html($(this).find('#ddlImprovementTypeId option:selected').text());
+                    span.show();
+                    select.hide();
+                }
+
+                // assign textarea's text in the current row to the corresponding description value span
+                if ($(this).find("textarea").length > 0) {
+                    var span = $(this).find("span");
+                    var textarea = $(this).find("textarea");
+                    span.html(textarea.val());
+                    span.show();
+                    textarea.hide();
+                }
+            });
+            row.find(".Edit").show();
+            row.find(".Delete").show();
+            row.find(".Cancel").hide();
+            $(this).hide();
+
+            var culImprovement = {};
+
+            culImprovement.CulvertId = $("#culvertId").val();
+            //alert("CuvlertId = " + $("#culvertId").val());
+
+            culImprovement.Id = row.find('input[type=hidden]').val();
+            culImprovement.ImprovementDate = row.find(".ImprovementDate").find("span").html();
+            culImprovement.ImprovementYear = row.find(".ImprovementYear").find("span").html();
+            culImprovement.ImprovementCost = row.find(".ImprovementCost").find("span").html();
+            culImprovement.ImprovementAction = row.find(".ImprovementAction").find("span").html();
+            ImprovementTypeName = row.find(".ImprovementTypeId").find("span").html();
+            // Iterate through improvement type list to find the corresponding ImprovementTypeId of the ImprovementTypeName
+            var imprJsonObj = @Html.Raw(Json.Encode(TempData["ImprovementTypeList"]));
+            for (i = 0; i < imprJsonObj.length; i++) {
+                if (imprJsonObj[i].Text == ImprovementTypeName)
+                    improvementTypeId = imprJsonObj[i].Value;
+            }
+
+            culImprovement.ImprovementTypeId = improvementTypeId;
+            //alert(improvementTypeId);
+
+            //alert(JSON.stringify(culImprovement));
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("UpdateCulvertImprovement", "CulvertImprovement")',
+                data: '{culImprovement:' + JSON.stringify(culImprovement) + '}',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'text', //'html',
+                error: function (xhr) {
+                    //$('#status').text(xhr.status);
+                }
+            });
+        });
+
+        //Cancel event handler.
+        $("body").on("click", "#tblCulvertImprovement .Cancel", function () {
+            var row = $(this).closest("tr");
+            $("td", row).each(function () {
+                if ($(this).find("input").length > 0) {
+                    var span = $(this).find("span");
+                    var input = $(this).find("input");
+                    input.val(span.html());
+                    span.show();
+                    input.hide();
+                }
+                if ($(this).find("select").length > 0) {
+                    $(this).find("select").hide();
+                    $(this).find("span").show();
+                }
+                if ($(this).find("textarea").length > 0) {
+                    var span = $(this).find("span");
+                    var textarea = $(this).find("textarea");
+                    textarea.val(span.html());
+                    span.show();
+                    textarea.hide();
+                }
+            });
+
+            row.find(".Edit").show();
+            row.find(".Delete").show();
+            row.find(".Update").hide();
+            row.find(".Confirm").hide();
+            $(this).hide();
+        });
+
+        //Delete event handler.
+        $("body").on("click", "#tblCulvertImprovement .Delete", function () {
+            var row = $(this).closest("tr");
+            row.find(".Edit").hide();
+            row.find(".Confirm").show();
+            row.find(".Cancel").show();
+            row.find(".Delete").hide();
+            $(this).hide();
+        });
+
+        //Confirm event handler.
+        $("body").on("click", "#tblCulvertImprovement .Confirm", function () {
+            var row = $(this).closest("tr");
+            var id = row.find('input[type=hidden]').val();
+            //alert(id);
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("DeleteCulvertImprovement", "CulvertImprovement")',
+                data: '{id: "' + id + '"}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (response) {
+                    if ($("#tblCulvertImprovement tr").length > 2) {
+                        row.remove();
+
+                    } else {
+                        row.find(".Edit").hide();
+                        row.find(".Delete").hide();
+                        row.find(".Confirm").hide();
+                        row.find(".Cancel").hide();
+                        row.find("span").html('&nbsp;');
+                    }
+                },
+                error: function (xhr) {
+                    //$('#status').text(xhr.status);
+                }
+            });
+        });
+    });
+</script>

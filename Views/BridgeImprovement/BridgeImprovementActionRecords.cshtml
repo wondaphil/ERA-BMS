@@ -1,0 +1,99 @@
+﻿
+@{
+    ViewBag.Title = "Bridge Improvement Action Records";
+}
+
+<h2>Bridge Improvement Action Records</h2>
+
+@using (Html.BeginForm())
+{
+    <div class="panel panel-default">
+        @*<div class="panel-heading">
+            <h3 class="panel-title panel-info">Please select <b>Action Taken</b> and <b>Improvement Year</b> from the dropdown list</h3>
+        </div>*@
+        <div class="panel-body">
+
+            @Html.AntiForgeryToken()
+
+            <div class="row">
+                <div class="col-md-4 col-sm-5 col-xs-5">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group">
+                            <label for="ddlImprovementType" class="control-label col-md-4 col-sm-5 col-xs-8">Action Taken</label>
+                            <div class="col-md-8 col-sm-10 col-sm-9 col-xs-10">
+                                @Html.DropDownList("ddlImprovementType", (List<SelectListItem>)ViewBag.ImprovementTypeSelectList, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-5 col-xs-5">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group">
+                            <label for="ddlImprovementYear" class="control-label col-md-6 col-sm-7 col-xs-12">Improvement Year</label>
+                            <div class="col-md-5 col-sm-9 col-xs-12">
+                                @Html.DropDownList("ddlImprovementYear", (List<SelectListItem>)ViewBag.ImprovementYearSelectList, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-1 col-sm-2 col-xs-2 navbar-right">
+                    <a class="btn btn-primary" data-toggle="tooltip" title="Refresh" id="refresh"> <span class="glyphicon glyphicon-refresh"></span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="bridgeImprovement">
+        <!-- Bridge improvement display here -->
+    </div>
+}
+
+<div id="wait" align="center" style="display: none">
+    <img src="~/images/ajax-loader-big.gif" />
+</div>
+
+<script>
+    $(document).ready(function () {
+        // e.g. yearRange = "2006 - 2010"
+        function getYears(yearRange) {
+            var startYear = yearRange.substring(0, 4);
+            var endYear = yearRange.substring(7, 11);
+            return [startYear, endYear];
+        }
+
+        $('#ddlImprovementYear').change(function () {
+            var selYearRangeId = $('#ddlImprovementYear option:selected').val();
+            var selYearRange = $('#ddlImprovementYear option:selected').val();
+            var years = getYears(selYearRange);
+            var selStartYear = years[0];
+            var selEndYear = years[1];
+            var selImprovementType = $('#ddlImprovementType option:selected').val();
+            $('#bridgeImprovement').empty(); // clear the bridge improvement place holder
+
+            if (selYearRangeId != "0") //if some improvement year range is selected
+            {
+                $.ajax({
+                    url: '@Url.Action("_GetBridgeImprovementActionRecords", "BridgeImprovement")',
+                    //data: { improvementyear: selImprovementYear, improvementtypeid: selImprovementType },
+                    data: { startyear: selStartYear, endyear: selEndYear, improvementtypeid: selImprovementType },
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () { $('#wait').show(); },
+                    complete: function () { $('#wait').hide(); },
+                    success: function (data) {
+                        $('#bridgeImprovement').html(data);
+                    }
+                });
+            }
+        });
+
+        $('#refresh').click(function () {
+            $('#ddlImprovementYear').trigger("change");
+        });
+
+        $('#ddlImprovementType').change(function () {
+            $('#ddlImprovementYear').trigger("change");
+        });
+    });
+
+</script>

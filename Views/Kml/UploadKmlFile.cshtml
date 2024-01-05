@@ -1,0 +1,62 @@
+﻿
+<p id="statusmessage" class="text-success" style="font-size: 15px"></p>
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "kmlFileUploadForm", enctype = "multipart/form-data" }))
+{
+    <div>
+        File Path:<br />
+        <input type="file" id="txtFilePath" accept=".kml" style="width:100%; max-width:100% " />
+        <br />
+        <button type="button" id="btnUpload" class="btn btn-primary"><span class="glyphicon glyphicon-save"></span> Upload</button>
+    </div>
+}
+
+<div id="status"></div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        //Add event handler
+        $("#btnUpload").on("click", function () {
+            $('#statusmessage').removeClass("text-success");
+            $('#statusmessage').removeClass("text-danger");
+
+            if (window.FormData == undefined) {
+                $('#statusmessage').addClass("text-danger");
+                $('#statusmessage').text("FormData is not supported.");
+            }
+            else {
+                var fileUpload = $("#txtFilePath").get(0);
+                var files = fileUpload.files;
+                var formData = new FormData();
+
+                formData.append(files[0].name, files[0]);
+
+                $.ajax({
+                    url: '@Url.Action("_UploadKmlFile", "Kml")',
+                    type: 'POST',
+                    data: formData,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        if (data == 'True') {
+                            $('#statusmessage').addClass("text-success");
+                            $('#statusmessage').text("Kml file uploaded successfully");
+                        }
+                        else {
+                            $('#statusmessage').addClass("text-danger");
+                            $('#statusmessage').text("Upload failure");
+                        }
+                        
+                        $('#statusmessage').text(obj.Message);
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        $('#statusmessage').addClass("text-danger");
+                        $('#statusmessage').text(textStatus);
+                    },
+                });
+            }
+        });
+    });
+</script>

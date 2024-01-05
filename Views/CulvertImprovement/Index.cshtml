@@ -1,0 +1,258 @@
+﻿@model IEnumerable<ERA_BMS.Models.CulvertImprovement>
+
+@{
+    ViewBag.Title = "Culvert Improvement Registration";
+}
+
+<h2>Culvert Improvement Registration</h2>
+
+@using (Html.BeginForm())
+{
+    <div class="panel panel-default">
+        @*<div class="panel-heading">
+                <h3 class="panel-title panel-info">Please select <b>District</b>, <b>Section</b>, <b>Road Segment</b> and <b>Culvert</b> from the dropdown list</h3>
+            </div>*@
+
+        <div class="panel-body">
+
+            @Html.AntiForgeryToken()
+
+            <div class="row">
+                <div class="col-md-3 col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group-sm">
+                            <label class="control-label col-md-3 col-sm-4">District</label>
+                            <div class="col-md-9 col-sm-8">
+                                @*@Html.DropDownList("ddlDistrict", (List<SelectListItem>)ViewBag.Districts, new { @class = "form-control" })*@
+                                @Html.DropDownList("ddlDistrict", new SelectList(ViewBag.Districts, "Value", "Text", ViewBag.DistrictId), htmlAttributes: new { @class = "form-control" })
+                                <!--<label class="control-label" id="distrIdDIV">--> <!-- District id appears here --> <!--</label>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group-sm">
+                            <label class="control-label col-md-3 col-sm-4">Section</label>
+                            <div class="col-md-9 col-sm-8">
+                                @*@Html.DropDownList("ddlSection", new SelectList(ViewBag.Sections, "Value", "Text", ViewBag.SectionId), htmlAttributes: new { @class = "form-control" })*@
+                                @Html.DropDownList("ddlSection", new SelectList(ViewBag.Sections, "Value", "Text", ViewBag.SectionId), htmlAttributes: new { @class = "form-control" })
+                                <!--<select class="form-control" id="ddlSection">-->
+                                <!-- Sections list populates here -->
+                                <!--</select>-->
+                                <!--<label class="control-label" id="secIdDIV">--> <!-- Section id appears here --> <!--</label>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="clearfix visible-sm"></div> <!-- Add clearfix (or new line break) for only the sm -->
+                <div class="clearfix visible-xs"></div> <!-- Add clearfix (or new line break) for only the xs -->
+
+                <div class="col-md-3 col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group-sm">
+                            <label class="control-label col-md-3 col-sm-4">Road Segment</label>
+                            <div class="col-md-9 col-sm-8">
+                                @Html.DropDownList("ddlSegment", new SelectList(ViewBag.Segments, "Value", "Text", ViewBag.SegmentId), htmlAttributes: new { @class = "form-control" })
+                                <!--<select class="form-control" id="ddlSegment">-->
+                                <!-- Segments list populates here -->
+                                <!--</select>-->
+                                <!--<label class="control-label" id="segIdDIV">--> <!-- Segment id appears here --> <!--</label>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group-sm">
+                            <label class="control-label col-md-3 col-sm-4">Culvert</label>
+                            <div class="col-md-9 col-sm-8">
+                                @Html.DropDownList("ddlCulvert", new SelectList(ViewBag.Culverts, "Value", "Text", TempData["CulvertId"]), htmlAttributes: new { @class = "form-control" })
+                                <!--<select class="form-control" id="ddlCulvert">-->
+                                <!-- Culverts list populates here -->
+                                <!--</select>-->
+                                <!--<label class="control-label" id="brgIdDIV">-->
+                                <!-- Culvert id appears here --> <!--</label>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-10">
+                <button type="button" id="printImprovement" class="btn btn-primary"><span class="glyphicon glyphicon-print"></span> Print/Export</button>
+            </div>
+            <div class="col-sm-4 navbar-right" align="right">
+                <a class="btn btn-primary" data-toggle="tooltip" title="Refresh" id="refresh"> <span class="glyphicon glyphicon-refresh"></span></a>
+            </div>
+        </div>
+    </div>
+    <div id="culvertImprovement">
+        <!-- Culvert improvement display here -->
+        @if (Model != null)
+        {
+            @Html.Partial("_GetCulvertImprovement", Model);
+        }
+    </div>
+}
+
+<div id="wait" align="center" style="display: none">
+    <img src="~/images/ajax-loader-big.gif" />
+</div>
+
+<div id="print">
+    <!-- Printable version display here -->
+</div>
+
+<script>
+    $(document).ready(function () {
+        // Initializing tooltip
+        $(document).ready(function () {
+
+        });
+
+        function ClearAll() {
+            $('#culvertImprovement').empty(); // clear the culvert improvement data
+            $('#print').empty(); // clear the printable data
+        }
+
+        $('#ddlDistrict').change(function () {
+            var selDistrictId = $('#ddlDistrict option:selected').val();
+            $('#ddlSection option').remove(); //empty the section dropdown list
+            $('#secIdDIV').text(""); //clear section no. indicator
+            $('#ddlSegment option').remove(); //empty the segment dropdown list
+            $('#segIdDIV').text(""); //clear segment no. indicator
+            $('#ddlCulvert option').remove(); //empty the culvert dropdown list
+            $('#brgIdDIV').text(""); //clear culvert no. indicator
+            $('#culvertImprovement').empty(); // clear the culvert improvement place holder
+
+            if (selDistrictId == "0") //if no district is selected
+            {
+                $('#distrIdDIV').text(""); //clear district no. indicator
+            }
+            else {
+                $('#distrIdDIV').text("District No. = " + selDistrictId );
+                $.ajax({
+                    url: '@Url.Action("_GetSections", "LocationsDDL")',
+                    data: { districtid: selDistrictId },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        var markup = '<option value="0" id="noselect"> --Select Section --</option>';
+                        $.each(data, function (i, section) {
+                            markup += '<option value="' + section.Value + '">' + section.Text + '</option>'
+                            $('#ddlSection').html(markup);
+                        });
+                    }
+                });
+            }
+        });
+
+        $('#ddlSection').change(function () {
+            var selSectionId = $('#ddlSection option:selected').val();
+            $('#ddlSegment option').remove(); //empty the segment dropdown list
+            $('#segIdDIV').text(""); //clear segment no. indicator
+            $('#ddlCulvert option').remove(); //empty the culvert dropdown list
+            $('#brgIdDIV').text(""); //clear culvert no. indicator
+            $('#culvertImprovement').empty(); // clear the culvert improvement place holder
+
+            if (selSectionId == "0") //if no section is selected
+            {
+                $('#secIdDIV').text(""); //clear section no. indicator
+            }
+            else {
+                $('#secIdDIV').text("Section No. = " + selSectionId);
+
+                $.ajax({
+                    url: '@Url.Action("_GetSegments", "LocationsDDL")',
+                    data: { sectionid: selSectionId },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        var markup = '<option value="0" id="noselect"> --Select Segment --</option>';
+                        $.each(data, function (i, segment) {
+                            markup += '<option value="' + segment.Value + '">' + segment.Text + '</option>'
+                            $('#ddlSegment').html(markup);
+                        });
+                    }
+                });
+            }
+        });
+
+        $('#ddlSegment').change(function () {
+            var selSegmentId = $('#ddlSegment option:selected').val();
+            $('#ddlCulvert option').remove(); //empty the culvert dropdown list
+            $('#brgIdDIV').text(""); //clear culvert no. indicator
+            $('#culvertImprovement').empty(); // clear the culvert improvement place holder
+
+            if (selSegmentId == "0") //if no segment is selected
+            {
+                $('#segIdDIV').text(""); //clear section no. indicator
+            }
+            else {
+                $('#segIdDIV').text("Road Id = " + selSegmentId);
+                $.ajax({
+                    url: '@Url.Action("_GetCulverts", "LocationsDDL")',
+                    data: { segmentid: selSegmentId },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        var markup = '<option value="0" id="noselect"> --Select Culvert --</option>';
+                        $.each(data, function (i, culvert) {
+                            markup += '<option value="' + culvert.Value + '">' + culvert.Text + '</option>'
+                            $('#ddlCulvert').html(markup);
+                        });
+                    }
+                });
+            }
+        });
+
+        $('#ddlCulvert').change(function () {
+            ClearAll();
+             selCulvertId = $('#ddlCulvert option:selected').val();
+            $('#culvertImprovement').empty(); // clear the culvert improvement place holder
+            $('#brgIdDIV').text("");
+
+            if (selCulvertId != "0") //if no culvert is selected
+            {
+                $('#brgIdDIV').text("Culvert Id = " + selCulvertId);
+
+                $.ajax({
+                    url: '@Url.Action("_GetCulvertImprovement", "CulvertImprovement")',
+                    data: { culvertid: selCulvertId },
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () { $('#wait').show(); },
+                    complete: function () { $('#wait').hide(); },
+                    success: function (data) {
+                        $('#culvertImprovement').html(data);
+                    }
+                });
+            }
+        });
+
+        $('#refresh').click(function () {
+            $('#ddlCulvert').trigger("change");
+        });
+
+        $('#printImprovement').click(function () {
+            var selCulvertId = $('#ddlCulvert option:selected').val();
+            ClearAll();
+
+            $.ajax({
+                url: '@Url.Action("PrintImprovement", "CulvertImprovement")',
+                data: { culvertid: selCulvertId },
+                type: 'GET',
+                dataType: 'html',
+                beforeSend: function () { $('#wait').show(); },
+                complete: function () { $('#wait').hide(); },
+                success: function (data) {
+                    $('#print').html(data);
+                },
+            });
+        });
+    });
+
+</script>

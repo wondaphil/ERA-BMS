@@ -1,0 +1,128 @@
+﻿@model IEnumerable<ERA_BMS.Models.RequiredAction>
+
+@{
+    ViewBag.Title = "RequiredAction";
+}
+
+<hr />
+<table class="table table-striped table-condensed table-bordered centeredtable" id="tblRequiredAction">
+    <tr>
+        <th></th>
+        <th></th>
+        <th colspan="2">
+            Indicator's Weight
+        </th>
+        <th></th>
+    </tr>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.RequiredActionId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RequiredActionName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ValueFrom)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ValueTo)
+        </th>
+        <th>Edit</th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td class="RequiredActionId">
+                <span>@Html.DisplayFor(modelItem => item.RequiredActionId)</span>
+            </td>
+            <td id="RequiredActionName">
+                @Html.DisplayFor(modelItem => item.RequiredActionName)
+            </td>
+            <td class="ValueFrom">
+                <span>@Html.DisplayFor(modelItem => item.ValueFrom)</span>
+                <input type="text" value="@item.ValueFrom" style="display:none" size="3" />
+            </td>
+            <td class="ValueTo">
+                <span>@Html.DisplayFor(modelItem => item.ValueTo)</span>
+                <input type="text" value="@item.ValueTo" style="display:none" size="3" />
+            </td>
+            <td>
+                <a class="Edit glyphicon glyphicon-edit" href="javascript:;" data-toggle="tooltip" title="Edit"></a>
+                <a class="Update glyphicon glyphicon-ok" href="javascript:;" style="display:none" data-toggle="tooltip" title="Update"></a>
+                &nbsp;&nbsp;&nbsp;<a class="Cancel glyphicon glyphicon-remove" href="javascript:;" style="display:none" data-toggle="tooltip" title="Cancel"></a>
+            </td>
+        </tr>
+    }
+
+</table>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        //Edit event handler.
+        $("body").on("click", "#tblRequiredAction .Edit", function () {
+            var row = $(this).closest("tr");
+            $("td", row).each(function () {
+                if ($(this).find("input").length > 0) {
+                    $(this).find("input").show();
+                    $(this).find("span").hide();
+                }
+             });
+            row.find(".Update").show();
+            row.find(".Cancel").show();
+            $(this).hide();
+        });
+
+        //Update event handler.
+        $("body").on("click", "#tblRequiredAction .Update", function () {
+            var row = $(this).closest("tr");
+            $("td", row).each(function () {
+                if ($(this).find("input").length > 0) {
+                    var span = $(this).find("span");
+                    var input = $(this).find("input");
+                    span.html(input.val());
+                    span.show();
+                    input.hide();
+                }
+            });
+            row.find(".Edit").show();
+            row.find(".Cancel").hide();
+            $(this).hide();
+            
+            var ReqAction = {};
+            ReqAction.RequiredActionId = row.find(".RequiredActionId").find("span").html();
+            ReqAction.ValueFrom = row.find(".ValueFrom").find("span").html();
+            ReqAction.ValueTo = row.find(".ValueTo").find("span").html();
+
+            //alert(JSON.stringify(ReqAction));
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("UpdateRequiredAction", "DamagePriority")',
+                data: '{reqAction:' + JSON.stringify(ReqAction) + '}',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'text', //'html',
+                error: function (xhr) {
+                    //$('#status').text(xhr.status);
+                }
+            });
+        });
+
+        //Cancel event handler.
+        $("body").on("click", "#tblRequiredAction .Cancel", function () {
+            var row = $(this).closest("tr");
+            $("td", row).each(function () {
+                if ($(this).find("input").length > 0) {
+                    var span = $(this).find("span");
+                    var input = $(this).find("input");
+                    input.val(span.html());
+                    span.show();
+                    input.hide();
+                }
+            });
+            row.find(".Edit").show();
+            row.find(".Update").hide();
+            $(this).hide();
+        });
+    });
+</script>

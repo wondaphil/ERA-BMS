@@ -1,0 +1,259 @@
+﻿@model IEnumerable<ERA_BMS.Models.BridgeImprovement>
+
+@{
+    ViewBag.Title = "Bridge Improvement Registration";
+}
+
+<h2>Bridge Improvement Registration</h2>
+
+@using (Html.BeginForm())
+{
+    <div class="panel panel-default">
+        @*<div class="panel-heading">
+                <h3 class="panel-title panel-info">Please select <b>District</b>, <b>Section</b>, <b>Road Segment</b> and <b>Bridge</b> from the dropdown list</h3>
+            </div>*@
+
+        <div class="panel-body">
+
+            @Html.AntiForgeryToken()
+
+            <div class="row">
+                <div class="col-md-3 col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group-sm">
+                            <label class="control-label col-md-3 col-sm-4">District</label>
+                            <div class="col-md-9 col-sm-8">
+                                @*@Html.DropDownList("ddlDistrict", (List<SelectListItem>)ViewBag.Districts, new { @class = "form-control" })*@
+                                @Html.DropDownList("ddlDistrict", new SelectList(ViewBag.Districts, "Value", "Text", ViewBag.DistrictId), htmlAttributes: new { @class = "form-control" })
+                                <!--<label class="control-label" id="distrIdDIV">--> <!-- District id appears here --> <!--</label>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group-sm">
+                            <label class="control-label col-md-3 col-sm-4">Section</label>
+                            <div class="col-md-9 col-sm-8">
+                                @*@Html.DropDownList("ddlSection", new SelectList(ViewBag.Sections, "Value", "Text", ViewBag.SectionId), htmlAttributes: new { @class = "form-control" })*@
+                                @Html.DropDownList("ddlSection", new SelectList(ViewBag.Sections, "Value", "Text", ViewBag.SectionId), htmlAttributes: new { @class = "form-control" })
+                                <!--<select class="form-control" id="ddlSection">-->
+                                <!-- Sections list populates here -->
+                                <!--</select>-->
+                                <!--<label class="control-label" id="secIdDIV">--> <!-- Section id appears here --> <!--</label>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="clearfix visible-sm"></div> <!-- Add clearfix (or new line break) for only the sm -->
+                <div class="clearfix visible-xs"></div> <!-- Add clearfix (or new line break) for only the xs -->
+
+                <div class="col-md-3 col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group-sm">
+                            <label class="control-label col-md-3 col-sm-4">Road Segment</label>
+                            <div class="col-md-9 col-sm-8">
+                                @Html.DropDownList("ddlSegment", new SelectList(ViewBag.Segments, "Value", "Text", ViewBag.SegmentId), htmlAttributes: new { @class = "form-control" })
+                                <!--<select class="form-control" id="ddlSegment">-->
+                                <!-- Segments list populates here -->
+                                <!--</select>-->
+                                <!--<label class="control-label" id="segIdDIV">--> <!-- Segment id appears here --> <!--</label>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group-sm">
+                            <label class="control-label col-md-3 col-sm-4">Bridge</label>
+                            <div class="col-md-9 col-sm-8">
+                                @Html.DropDownList("ddlBridge", new SelectList(ViewBag.Bridges, "Value", "Text", TempData["BridgeId"]), htmlAttributes: new { @class = "form-control" })
+                                <!--<select class="form-control" id="ddlBridge">-->
+                                <!-- Bridges list populates here -->
+                                <!--</select>-->
+                                <!--<label class="control-label" id="brgIdDIV">--> 
+                                <!-- Bridge id appears here --> <!--</label>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-10">
+                <button type="button" id="printImprovement" class="btn btn-primary"><span class="glyphicon glyphicon-print"></span> Print / Export</button>
+            </div>
+            <div class="col-sm-4 navbar-right" align="right">
+                <a class="btn btn-primary" data-toggle="tooltip" title="Refresh" id="refresh"> <span class="glyphicon glyphicon-refresh"></span></a>
+            </div>
+        </div>
+    </div>
+    <div id="bridgeImprovement">
+        <!-- Bridge improvement display here -->
+        @if (Model != null)
+        {
+            @Html.Partial("_GetBridgeImprovement", Model);
+        }
+    </div>
+}
+
+<div id="wait" align="center" style="display: none">
+    <img src="~/images/ajax-loader-big.gif" />
+</div>
+
+<div id="print">
+    <!-- Printable version display here -->
+</div>
+
+<script>
+    $(document).ready(function () {
+        // Initializing tooltip
+        $(document).ready(function () {
+
+        });
+
+        function ClearAll() {
+            $('#bridgeImprovement').empty(); // clear the bridge improvement data
+            $('#print').empty(); // clear the printable data
+        }
+
+        $('#ddlDistrict').change(function () {
+            var selDistrictId = $('#ddlDistrict option:selected').val();
+            $('#ddlSection option').remove(); //empty the section dropdown list
+            $('#secIdDIV').text(""); //clear section no. indicator
+            $('#ddlSegment option').remove(); //empty the segment dropdown list
+            $('#segIdDIV').text(""); //clear segment no. indicator
+            $('#ddlBridge option').remove(); //empty the bridge dropdown list
+            $('#brgIdDIV').text(""); //clear bridge no. indicator
+            $('#bridgeImprovement').empty(); // clear the bridge improvement place holder
+
+            if (selDistrictId == "0") //if no district is selected
+            {
+                $('#distrIdDIV').text(""); //clear district no. indicator
+            }
+            else {
+                $('#distrIdDIV').text("District No. = " + selDistrictId );
+                $.ajax({
+                    url: '@Url.Action("_GetSections", "LocationsDDL")',
+                    data: { districtid: selDistrictId },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        var markup = '<option value="0" id="noselect"> --Select Section --</option>';
+                        $.each(data, function (i, section) {
+                            markup += '<option value="' + section.Value + '">' + section.Text + '</option>'
+                            $('#ddlSection').html(markup);
+                        });
+                    }
+                });
+            }
+        });
+
+        $('#ddlSection').change(function () {
+            var selSectionId = $('#ddlSection option:selected').val();
+            $('#ddlSegment option').remove(); //empty the segment dropdown list
+            $('#segIdDIV').text(""); //clear segment no. indicator
+            $('#ddlBridge option').remove(); //empty the bridge dropdown list
+            $('#brgIdDIV').text(""); //clear bridge no. indicator
+            $('#bridgeImprovement').empty(); // clear the bridge improvement place holder
+
+            if (selSectionId == "0") //if no section is selected
+            {
+                $('#secIdDIV').text(""); //clear section no. indicator
+            }
+            else {
+                $('#secIdDIV').text("Section No. = " + selSectionId);
+
+                $.ajax({
+                    url: '@Url.Action("_GetSegments", "LocationsDDL")',
+                    data: { sectionid: selSectionId },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        var markup = '<option value="0" id="noselect"> --Select Segment --</option>';
+                        $.each(data, function (i, segment) {
+                            markup += '<option value="' + segment.Value + '">' + segment.Text + '</option>'
+                            $('#ddlSegment').html(markup);
+                        });
+                    }
+                });
+            }
+        });
+
+        $('#ddlSegment').change(function () {
+            var selSegmentId = $('#ddlSegment option:selected').val();
+            $('#ddlBridge option').remove(); //empty the bridge dropdown list
+            $('#brgIdDIV').text(""); //clear bridge no. indicator
+            $('#bridgeImprovement').empty(); // clear the bridge improvement place holder
+
+            if (selSegmentId == "0") //if no segment is selected
+            {
+                $('#segIdDIV').text(""); //clear section no. indicator
+            }
+            else {
+                $('#segIdDIV').text("Road Id = " + selSegmentId);
+                $.ajax({
+                    url: '@Url.Action("_GetBridges", "LocationsDDL")',
+                    data: { segmentid: selSegmentId },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        var markup = '<option value="0" id="noselect"> --Select Bridge --</option>';
+                        $.each(data, function (i, bridge) {
+                            markup += '<option value="' + bridge.Value + '">' + bridge.Text + '</option>'
+                            $('#ddlBridge').html(markup);
+                        });
+                    }
+                });
+            }
+        });
+
+        $('#ddlBridge').change(function () {
+            ClearAll();
+            var selBridgeId = $('#ddlBridge option:selected').val();
+            $('#bridgeImprovement').empty(); // clear the bridge improvement place holder
+            $('#brgIdDIV').text("");
+
+            if (selBridgeId != "0") //if no bridge is selected
+            {
+                var bridgeNo = $('#ddlBridge option:selected').text().split('[').pop().split(']')[0]; // extract the bridge no
+                $('#brgIdDIV').text("Bridge No = " + bridgeNo);
+
+                $.ajax({
+                    url: '@Url.Action("_GetBridgeImprovement", "BridgeImprovement")',
+                    data: { bridgeid: selBridgeId },
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () { $('#wait').show(); },
+                    complete: function () { $('#wait').hide(); },
+                    success: function (data) {
+                        $('#bridgeImprovement').html(data);
+                    }
+                });
+            }
+        });
+
+        $('#refresh').click(function () {
+            $('#ddlBridge').trigger("change");
+        });
+
+        $('#printImprovement').click(function () {
+            var selBridgeId = $('#ddlBridge option:selected').val();
+            ClearAll();
+
+            $.ajax({
+                url: '@Url.Action("PrintImprovement", "BridgeImprovement")',
+                data: { bridgeid: selBridgeId },
+                type: 'GET',
+                dataType: 'html',
+                beforeSend: function () { $('#wait').show(); },
+                complete: function () { $('#wait').hide(); },
+                success: function (data) {
+                    $('#print').html(data);
+                },
+            });
+        });
+    });
+
+</script>

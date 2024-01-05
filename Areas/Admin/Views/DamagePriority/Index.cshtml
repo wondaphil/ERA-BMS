@@ -1,0 +1,90 @@
+﻿
+
+@{
+    ViewBag.Title = "Prioritization Criteria";
+}
+
+<h2>Prioritization Criteria</h2>
+<hr />
+@using (Html.BeginForm())
+{
+    <div class="row">
+        <div class="col-md-4 col-sm-8 col-xs-10">
+            <div id="criteriaWeightsSum">
+                <!-- Criteria weight's sum display here -->
+            </div>
+            <div>
+                <a href="javascript:LoadCriteriaWeightsSum" class="btn btn-primary" data-toggle="tooltip" title="Check" id="check"> <span class="glyphicon glyphicon-refresh"></span> Check Indicator's Wt</a>
+            </div>
+            <br />
+        </div>
+
+        <div class="clearfix visible-sm"></div> <!-- Add clearfix (or new line break) for only the sm -->
+
+        <div class="col-md-8 col-sm-12">
+            <!-- Tab Buttons -->
+            <ul id="tabstrip" class="nav nav-tabs" role="tablist">
+                <li class="active">
+                    <a href="#_CriteriaTypesTab" role="tab" data-toggle="tab">Prioritization Criteria Types</a>
+                </li>
+                <li>
+                    <a href="#_RequiredActionTab" role="tab" data-toggle="tab">Required Action</a>
+                </li>
+            </ul>
+
+            <!-- Tab Content Containers -->
+            <div class="tab-content">
+                <div class="tab-pane fade in active" id="_CriteriaTypesTab">
+                    <div id="criteriaTypes">
+                        <!-- Criteria Types display here -->
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="_RequiredActionTab">
+                    <div id="requiredAction">
+                        <!-- Required Actions display here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<script>
+    $(document).ready(function () {
+        function LoadCriteriaWeightsSum() {
+            $.ajax({
+                url: '@Url.Action("CriteriaWeightsSum", "DamagePriority", new { area = "Admin" })',
+                type: 'GET',
+                dataType: 'html',
+                success: function (data) {
+                    $('#criteriaWeightsSum').html(data);
+                }
+            });
+        }
+
+        LoadCriteriaWeightsSum();
+
+        $.ajax({
+            url: '@Url.Action("CriteriaTypes", "DamagePriority", new { area = "Admin" })',
+            type: 'GET',
+            dataType: 'html',
+            success: function (data) {
+                $('#criteriaTypes').html(data);
+            }
+        });
+
+        $.ajax({
+            url: '@Url.Action("RequiredAction", "DamagePriority", new { area = "Admin" })',
+            type: 'GET',
+            dataType: 'html',
+            success: function (data) {
+                $('#requiredAction').html(data);
+            }
+        });
+
+        $('#check').click(function () {
+            LoadCriteriaWeightsSum();
+        });
+    });
+</script>
+

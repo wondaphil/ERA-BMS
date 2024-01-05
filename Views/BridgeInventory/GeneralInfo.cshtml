@@ -1,163 +1,337 @@
-﻿@model ERA_BCMS.Models.BridgeGeneralInfo
+﻿@model ERA_BMS.Models.BridgeGeneralInfo
 
 @{
-    ViewBag.Title = "BridgeGeneralInfo";
+    ViewBag.Title = "General Info Bridge Inventory";
 }
 
-<div>
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "genInfoForm" }))
+{
     <hr />
-    <dl>
-        <dt>
-            @Html.DisplayNameFor(model => model.BridgeLength)
-        </dt>
+    @Html.AntiForgeryToken()
 
-        <dd>
-            @Html.DisplayFor(model => model.BridgeLength)
-        </dd>
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @*@Html.HiddenFor(model => model.BridgeId)*@
+        <input type="hidden" id="BridgeId" value="@TempData["BridgeId"]" />
 
-        <dt>
-            @Html.DisplayNameFor(model => model.TotBridgeLength)
-        </dt>
+        <div class="row">
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.KMFromAddis, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.KMFromAddis, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.KMFromAddis, "", new { @class = "text-danger" })
+                    </div>
+                </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.TotBridgeLength)
-        </dd>
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.XCoord, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.XCoord, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.XCoord, "", new { @class = "text-danger" })
+                    </div>
+                </div>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.BridgeWidth)
-        </dt>
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.YCoord, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.YCoord, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.YCoord, "", new { @class = "text-danger" })
+                    </div>
+                </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.BridgeWidth)
-        </dd>
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.UtmZoneId, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.DropDownList("UtmZoneId", new SelectList((List<SelectListItem>)TempData["UtmZoneId"], "Value", "Text", Model.UtmZoneId), htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.UtmZoneId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.RiverWidth)
-        </dt>
+                <div class="form-group form-group-sm required">
+                    @Html.LabelFor(model => model.BridgeLength, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.BridgeLength, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.BridgeLength, "", new { @class = "text-danger" })
+                    </div>
+                </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.RiverWidth)
-        </dd>
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.BridgeWidth, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.BridgeWidth, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.BridgeWidth, "", new { @class = "text-danger" })
+                    </div>
+                </div>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.PresentWaterLevel)
-        </dt>
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.RiverWidth, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.RiverWidth, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.RiverWidth, "", new { @class = "text-danger" })
+                    </div>
+                </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.PresentWaterLevel)
-        </dd>
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.PresentWaterLevel, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.PresentWaterLevel, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.PresentWaterLevel, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.HighestWaterLevel)
-        </dt>
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.HighestWaterLevel, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.HighestWaterLevel, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.HighestWaterLevel, "", new { @class = "text-danger" })
+                    </div>
+                </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.HighestWaterLevel)
-        </dd>
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.DesignCapacity, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.DesignCapacity, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.DesignCapacity, "", new { @class = "text-danger" })
+                    </div>
+                </div>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.LoadCapacity)
-        </dt>
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.BearingCapacity, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        <div class="checkbox">
+                            @Html.RadioButtonFor(model => model.BearingCapacity, "true", new { @class = "text-danger" }) Yes &nbsp; &nbsp;
+                            @Html.RadioButtonFor(model => model.BearingCapacity, "false", new { @class = "text-danger" }) No
+                        </div>
+                    </div>
+                </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.LoadCapacity)
-        </dd>
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.Topography, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.Topography, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Topography, "", new { @class = "text-danger" })
+                    </div>
+                </div>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.DailyTraffic)
-        </dt>
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.Altitude, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.Altitude, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Altitude, "", new { @class = "text-danger" })
+                    </div>
+                </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.DailyTraffic)
-        </dd>
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.Before1935, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        <div class="checkbox">
+                            @Html.RadioButtonFor(model => model.Before1935, "true", new { @class = "text-danger" }) Yes &nbsp; &nbsp;
+                            @Html.RadioButtonFor(model => model.Before1935, "false", new { @class = "text-danger" }) No
+                        </div>
+                    </div>
+                </div>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Topography)
-        </dt>
+                <div class="form-group form-group-sm required">
+                    @Html.LabelFor(model => model.ConstructionYear, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.ConstructionYear, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.ConstructionYear, "", new { @class = "text-danger" })
+                    </div>
+                </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.Topography)
-        </dd>
+                <div class="form-group form-group-sm required">
+                    @Html.LabelFor(model => model.ReplacedYear, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.ReplacedYear, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.ReplacedYear, "If bridge is not replaced, enter construction year again here", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Altitude)
-        </dt>
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
 
-        <dd>
-            @Html.DisplayFor(model => model.Altitude)
-        </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.ConstructionYear)
-        </dt>
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.Contractor, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.Contractor, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Contractor, "", new { @class = "text-danger" })
+                    </div>
+                </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.ConstructionYear)
-        </dd>
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.Designer, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.Designer, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Designer, "", new { @class = "text-danger" })
+                    </div>
+                </div>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.BeforeYear)
-        </dt>
+                <div class="form-group form-group-sm required">
+                    @Html.LabelFor(model => model.ConstructionCost, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.ConstructionCost, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.ConstructionCost, "", new { @class = "text-danger" })
+                    </div>
+                </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.BeforeYear)
-        </dd>
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.AssetReplacementCost, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.AssetReplacementCost, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.AssetReplacementCost, "", new { @class = "text-danger" })
+                    </div>
+                </div>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Contractor)
-        </dt>
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.RoadAlignmentId, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        @*@Html.DropDownList("RoadAlignmentId", null, htmlAttributes: new { @class = "form-control" })*@
+                        @*@Html.DropDownList("RoadAlignmentId", (List<SelectListItem>)TempData["RoadAlignmentId"], htmlAttributes: new { @class = "form-control" })*@
+                        @Html.DropDownList("RoadAlignmentId", new SelectList((List<SelectListItem>)TempData["RoadAlignmentId"], "Value", "Text", Model.RoadAlignmentId), htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.RoadAlignmentId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.Contractor)
-        </dd>
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.SafetySign, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        <div class="checkbox">
+                            @Html.RadioButtonFor(model => model.SafetySign, "true", new { @class = "text-danger" }) Yes &nbsp; &nbsp;
+                            @Html.RadioButtonFor(model => model.SafetySign, "false", new { @class = "text-danger" }) No
+                        </div>
+                    </div>
+                </div>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Designer)
-        </dt>
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.DetourPossible, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-6">
+                        <div class="checkbox">
+                            @Html.RadioButtonFor(model => model.DetourPossible, "true", new { @class = "text-danger" }) Yes &nbsp; &nbsp;
+                            @Html.RadioButtonFor(model => model.DetourPossible, "false", new { @class = "text-danger" }) No
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <hr />
+        <div class="row">
+            <div class="col-xs-6">
+                <div class="form-group form-group-sm">
+                    @Html.LabelFor(model => model.Remark, "Bridge Remark", htmlAttributes: new { @class = "control-label col-md-3 col-sm-5 col-xs-10" })
+                    <div class="col-md-9 col-xs-12">
+                        @Html.TextAreaFor(model => model.Remark, htmlAttributes: new { @class = "form-control", @rows = 5, style = "width: 100%; max-width: 100%" } )
+                        @Html.ValidationMessageFor(model => model.Remark, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.Designer)
-        </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.BridgeCost)
-        </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.BridgeCost)
-        </dd>
+            <div class="col-xs-6">
+                <div class="form-group form-group-sm">
+                    <div class="col-md-offset-2 col-md-6">
+                        <br /><br />
+                        <button type="button" id="saveGenInfo" class="btn btn-primary"><span class="glyphicon glyphicon-save"></span> Save</button>
+                        <button type="reset" id="resetGenInfo" class="btn btn-primary"><span class="glyphicon glyphicon-refresh"></span> Reset</button>
+                        <div id="statusGenInfo" class="success">
+                            <!-- Save success or failure status text appears here-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 
-        <dt>
-            @Html.DisplayNameFor(model => model.SafetySign)
-        </dt>
+<script>
+    $(document).ready(function () {
+        //$('#statusGenInfo').text("doc ready");
+        function ValidateDataEntry(genInfo) {
+            if (genInfo.BridgeLength == "" || genInfo.ConstructionYear == "" ||
+                genInfo.ReplacedYear == "" || genInfo.ConstructionCost == "")
+                return false;
 
-        <dd>
-            @Html.DisplayFor(model => model.SafetySign)
-        </dd>
+            return true;
+        }
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Detour)
-        </dt>
+        $('#saveGenInfo').on('click', function () {
+            var genInfo = {};
 
-        <dd>
-            @Html.DisplayFor(model => model.Detour)
-        </dd>
+            genInfo.BridgeId = $('#BridgeId').val();
+            genInfo.KMFromAddis = $('#KMFromAddis').val();
+            genInfo.XCoord = $('#XCoord').val();
+            genInfo.YCoord = $('#YCoord').val();
+            genInfo.UtmZoneId = $('#UtmZoneId').val();
+            genInfo.BridgeLength = $('#BridgeLength').val();
+            genInfo.TotalLength = $('#TotalLength').val();
+            genInfo.BridgeWidth = $('#BridgeWidth').val();
+            genInfo.RiverWidth = $('#RiverWidth').val();
+            genInfo.PresentWaterLevel = $('#PresentWaterLevel').val();
+            genInfo.HighestWaterLevel = $('#HighestWaterLevel').val();
+            genInfo.DesignCapacity = $('#DesignCapacity').val();
+            genInfo.Topography = $('#Topography').val();
+            genInfo.Altitude = $('#Altitude').val();
+            genInfo.RoadAlignmentId = $('#RoadAlignmentId').val();
+            genInfo.ConstructionYear = $('#ConstructionYear').val();
+            genInfo.ReplacedYear = $('#ReplacedYear').val();
+            genInfo.Contractor = $('#Contractor').val();
+            genInfo.Designer = $('#Designer').val();
+            genInfo.ConstructionCost = $('#ConstructionCost').val();
+            genInfo.AssetReplacementCost = $('#AssetReplacementCost').val();
+            genInfo.Remark = $('#Remark').val();
 
-        @*<dt>
-            @Html.DisplayNameFor(model => model.Bridge.BridgeName)
-        </dt>
+            // Set value based on checked status of checkbox
+            genInfo.BearingCapacity = ($('#BearingCapacity').prop("checked")) ? "true" : "false";
+            genInfo.Before1935 = ($('#Before1935').prop("checked")) ? "true" : "false";
+            genInfo.SafetySign = ($('#SafetySign').prop("checked")) ? "true" : "false";
+            genInfo.DetourPossible = ($('#DetourPossible').prop("checked")) ? "true" : "false";
 
-        <dd>
-            @Html.DisplayFor(model => model.Bridge.BridgeName)
-        </dd>*@
+            //alert(JSON.stringify(genInfo));
 
-        <dt>
-            @Html.DisplayNameFor(model => model.RoadAlignmentType.RoadAlignmentTypeName)
-        </dt>
+            if (ValidateDataEntry(genInfo)) {
+                $.ajax({
+                    type: 'POST',
+                    cache: false,
+                    url: '@Url.Action("GeneralInfoSave", "BridgeInventory")',
+                    data: '{genInfo:' + JSON.stringify(genInfo) + '}',
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'html',
+                    success: function (data) {
+                        if ($('#statusGenInfo').hasClass("text-danger"))
+                            $('#statusGenInfo').removeClass("text-danger");
+                        $('#statusGenInfo').addClass("text-success");
+                        $('#statusGenInfo').text("Data is saved successfully");
+                    },
+                    error: function (xhr) {
+                        if ($('#statusGenInfo').hasClass("text-success"))
+                            $('#statusGenInfo').removeClass("text-success");
+                        $('#statusGenInfo').addClass("text-danger");
+                        $('#statusGenInfo').text("Data is NOT saved!!");
+                    }
+                });
+            }
+            else {
+                if ($('#statusGenInfo').hasClass("text-success"))
+                    $('#statusGenInfo').removeClass("text-success");
+                $('#statusGenInfo').addClass("text-danger");
+                $('#statusGenInfo').text("Please enter all boxes marked with *");
+            }
+        });
 
-        <dd>
-            @Html.DisplayFor(model => model.RoadAlignmentType.RoadAlignmentTypeName)
-        </dd>
+        $('#resetGenInfo').on('click', function () {
+            $('#genInfoForm').trigger("reset"); // triger the normal reset function
+        });
 
-    </dl>
-</div>
+        /* If Before 1935 is yes, then set construction year to 1935 automatically*/
+        $('#Before1935').on('click', function () {
+            if ($('#Before1935').prop("checked")) {
+                $('#ConstructionYear').val(1935);
+            }
+        });
+    });
+</script>

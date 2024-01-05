@@ -1,0 +1,486 @@
+﻿
+@{
+    ViewBag.Title = "Bridge Map by Sub Route";
+}
+<style>
+    .floating-panel {
+        position: relative;
+        z-index: 5;
+        padding: 5px;
+        text-align: center;
+        line-height: 30px;
+        padding-left: 10px;
+    }
+</style>
+
+<h2>Bridge Map by Sub Route</h2>
+
+<div class="panel panel-primary title">
+    <div class="panel-heading">
+        <h3 class="panel-title panel-info" id="title">Sub Route: <b>@ViewBag.SubRouteName</b></h3>
+    </div>
+    <div class="panel-body">
+        <div id="divStatus" style="font-size:small; font-weight: bold; padding: 10px; display: none;">
+            <label id="lblSelectedBridge" style="background-color: whitesmoke; float: right"></label>
+            <br />
+            <label id="lblNewCoordinates" style="background-color: whitesmoke; float: right "></label>
+            <br />
+            <!-- Only logged in users are allowed to update coordinates-->
+            @if (User.Identity.IsAuthenticated)
+            {
+                <button type="button" id="btnUpdateCoordinate" onclick="UpdateCoordinate()"
+                        style="background-color: white; border-color: whitesmoke; padding: 10px; float: right; display: none">
+                    Update Coordinate
+                </button>
+                <br />
+                <button type="button" id="btnMoveAllToNextZone" onclick="MoveAllToNextZone()"
+                        style="background-color: white; border-color: whitesmoke; padding: 10px; float: right;">
+                    Move All To Next Zone
+                </button>
+            }
+
+        </div>
+
+        <div id="Map" style="height: 600px; border: 1px solid #999;">
+            <!-- Map displays here -->
+        </div>
+    </div>
+</div>
+
+<script>
+    // Get all the bridges in the selected road segment
+    var bridgeLocList = @(Html.Raw(new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(ViewBag.BridgeLocationList)));
+
+    var map, selectedBridgeMarker, newmarker;
+    //var markers = new Array();
+    var infowindow;
+    var selectedBridge;
+    var newXCoord, newYCoord, newUtmZone;
+
+    $(document).ready(function () {
+        // Go through all bridges till the first bridge which has complete coordinate info is found
+        var j, centerBridge;
+        for (j = 0; j < bridgeLocList.length; j++) {
+            if (bridgeLocList[j].XCoord == null || bridgeLocList[j].YCoord == null || bridgeLocList[j].UtmZone == null)
+                continue;
+
+            // First bridge with complete coordinate is found. So take it as a center bridge
+            centerBridge = bridgeLocList[j];
+            break;
+        }
+
+        // If all bridges have no inventory or no coordinate info, then prompt error message and do not go to the map page
+        if (centerBridge == null) {
+            document.getElementById('Map').innerHTML = "<h3 style='padding-left: 20px'>Map cannot be displayed</h3>" +
+                                                        "<h4 style='padding-left: 20px; color:red'>There are no bridges in the selected road segment or all bridges in the selected road segment have no or incomplete coordinate information.</h4>";
+            return;
+        }
+
+
+        // Center the map to the first bridge which has complete coordinate info
+        map = new google.maps.Map(document.getElementById('Map'), {
+            zoom: 10,
+            center: {
+                lat: centerBridge.LatitudeDecimal,
+                lng: centerBridge.LongitudeDecimal
+            },
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            draggableCursor: 'crosshair'
+        });
+
+        infowindow = new google.maps.InfoWindow();
+        var marker, i, noofPins = 0;
+
+
+        // Loop through all bridges in the list and place markers
+        for (i = 0; i < bridgeLocList.length; i++) {
+            // if currrent bridge has no or incomplete coordinate info, do not put pin and continue the loop to the next iteration
+            if (bridgeLocList[i].XCoord == null || bridgeLocList[i].YCoord == null || bridgeLocList[i].UtmZone == null)
+                continue;
+
+            marker = new google.maps.Marker({
+                position: new google.maps.LatLng(bridgeLocList[i].LatitudeDecimal, bridgeLocList[i].LongitudeDecimal),
+                map: map,
+                icon: { url: '/images/bridge_map_marker_orange.png', scaledSize: new google.maps.Size(35, 40) },
+            });
+
+            // increment no. of pins
+            noofPins++;
+
+            // Can also use 'doubleclick', 'rightclick' or 'mouseover' instead of 'click'
+            // If 'mouseover' is used, we need a corresponding 'mouseout' and use infowindow.close()
+            google.maps.event.addListener(marker, 'click', (function (marker, i) {
+                return function () {
+                    // Clicking on the image will open the image in another tab
+                    // If image is missing, "Image Not Found" icon will be shown and the link to open the image will be disabled
+                    contentString = "<h4 style='font-size: 20px'>Bridge Location Information</h4>" +
+                        "<div style='float:left; padding: 5px 15px 5px 5px;'><a href='" + bridgeLocList[i].ImageFilePath + "' target='_blank'>" +
+                        "<img src='" + bridgeLocList[i].ImageFilePath + "' onerror='this.parentNode.onclick=function() {return(false);}; this.onerror = null; this.src = \"/images/error_2.png\"; this.style.width = \"60px\"; this.title = \"Image Not Found\";' alt='Photo' width='160'></a>" +
+                        "@if (User.Identity.IsAuthenticated) { <br /><br /><div><button onclick='ChangeZone()'>Move to Next Zone</button></div>}" +
+                        "</div><div style='float:right'>" +
+                        "<div>Old Bridge Id: <b>" + bridgeLocList[i].OldBridgeId + "</b></div>" +
+                        "<div>Revised Bridge Id: <b>" + bridgeLocList[i].RevisedBridgeId + "</b></div>" +
+                        "<div>Bridge Name: <b>" + bridgeLocList[i].BridgeName + "</b></div>" +
+                        "<div>District: <b>" + bridgeLocList[i].District + "</b></div>" +
+                        "<div>Segment: <b>" + bridgeLocList[i].Segment + "</b></div>" +
+                        "<div>Length (m): <b>" + bridgeLocList[i].BridgeLength + "</b></div>" +
+                        "<div>Bridge Type: <b>" + bridgeLocList[i].BridgeType + "</b></div>" +
+                        "<div>X-Coordinate: <b>" + parseFloat(bridgeLocList[i].XCoord).toFixed(3) + "</b></div>" +
+                        "<div>Y-Coordinate: <b>" + parseFloat(bridgeLocList[i].YCoord).toFixed(3) + "</b></div>" +
+                        "<div>UTM Zone: <b>" + bridgeLocList[i].UtmZone + "</b></div>" +
+                        "<div>Latitude: <b>" + parseFloat(bridgeLocList[i].LatitudeDecimal).toFixed(6) + "</b></div>" +
+                        "<div>Longitude: <b>" + parseFloat(bridgeLocList[i].LongitudeDecimal).toFixed(6) + "</b></div>" +
+                        //"<div>Latitude (DMS): <b>" + bridgeLocList[i].LatitudeDMS + "</b></div>" +
+                        //"<div>Longitude (DMS): <b>" + bridgeLocList[i].LongitudeDMS + "</b></div>" +
+                        @*"@if (User.Identity.IsAuthenticated) { <br /><div><a href='../../BridgeInventory/Index/" + bridgeLocList[i].BridgeId + "' target='_blank'>Go to Inventory</a></div>}" +*@
+                        "</div>";
+
+                    infowindow.setContent(contentString);
+                    infowindow.open(map, marker);
+
+                    selectedBridge = bridgeLocList[i];
+                    document.getElementById('lblSelectedBridge').innerHTML = selectedBridge.BridgeNo + " - " + selectedBridge.BridgeName;
+                    selectedBridgeMarker = marker;
+
+                    // Show the 'Update Coordinate' button if new coordinate is already selected
+                    if (document.getElementById('lblNewCoordinates').innerHTML != "")
+                        document.getElementById('btnUpdateCoordinate').style.display = "";
+
+                    ResetMarkerColors();
+
+                    // Set selected marker color to Green
+                    marker.setIcon({ url: '/images/bridge_map_marker_green.png', scaledSize: new google.maps.Size(35, 40) });
+                }
+            })(marker, i));
+
+            bridgeLocList[i].marker = marker;
+        }
+
+        newmarker = null;
+        var newinfowindow = new google.maps.InfoWindow({
+            size: new google.maps.Size(150, 50)
+        });
+
+        // Gets a new marker to be placed where the user has clicked
+        function GetNewMarker(latlng, contentString) {
+            var marker = new google.maps.Marker({
+                position: latlng,
+                map: map,
+                icon: { url: '/images/map_marker_new.png', scaledSize: new google.maps.Size(60, 45) },
+                zIndex: Math.round(latlng.lat() * -100000) << 5
+            });
+
+            //map.setCenter(location);
+
+            google.maps.event.addListener(marker, 'click', function () {
+                infowindow.setContent(contentString);
+                infowindow.open(map, marker);
+            });
+
+            google.maps.event.trigger(marker, 'click');
+            return marker;
+        }
+
+        google.maps.event.addListener(map, 'click', function () {
+            newinfowindow.close();
+        });
+
+        google.maps.event.addListener(map, 'click', function (event) {
+            var latLngObj = event.latLng.toJSON();
+            var newContentString;
+
+            // Convert UTM (x/y coordinate) to latitude/longitude
+            $.ajax({
+                url: '@Url.Action("ConvertToUTM", "BridgeLocation")',
+                data: { latitude: latLngObj.lat, longitude: latLngObj.lng },
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    $.each(data, function (i, item) {
+                        newXCoord = item.XCoordinate;
+                        newYCoord = item.YCoordinate;
+                        newUtmZone = item.UtmZone;
+
+                        newContentString = "Lat: <b>" + parseFloat(latLngObj.lat).toFixed(8) + "</b><br>" +
+                                            "Long: <b>" + parseFloat(latLngObj.lng).toFixed(8) + "</b><br>" +
+                                            "UTM Zone: <b>" + newUtmZone + "</b><br>" +
+                                            "X: <b>" + parseFloat(newXCoord).toFixed(6) + "</b><br>" +
+                                            "Y: <b>" + parseFloat(newYCoord).toFixed(6) + "</b>";
+
+                        document.querySelector("#lblNewCoordinates").innerHTML =
+                                            "[ x: " + parseFloat(newXCoord).toFixed(3) +
+                                            ", y: " + parseFloat(newYCoord).toFixed(3) +
+                                            ", zone: " + newUtmZone + " ]";
+
+                        // Show the 'Update Coordinate' button if some bridge is already selected
+                        if (document.getElementById('lblSelectedBridge').innerHTML != "")
+                            document.getElementById('btnUpdateCoordinate').style.display = "";
+                    });
+                    if (newmarker) {
+                        newmarker.setMap(null);
+                        newmarker = null;
+                    }
+                    newmarker = GetNewMarker(event.latLng, newContentString);
+                },
+            });
+
+
+        });
+
+
+        // append no. of total bridges in the road segment vs no. of pins (i.e. bridges which have coordinate info)
+        document.getElementById("title").insertAdjacentHTML("beforeend", " | No of Bridges: <b>" + noofPins + "</b> of <b>" + i + "</b>");
+
+        // Put update controls inside the map
+        map.controls[google.maps.ControlPosition.TOP_RIGHT].push(document.getElementById('divStatus'));
+        document.getElementById('divStatus').style.display = "";
+    });
+
+    // Change all marker colors to Orange
+    function ResetMarkerColors() {
+        // Go through each bridge marker and change its color to orange
+        for (let i = 0; i < bridgeLocList.length; i++) {
+            bridgeLocList[i].marker.setIcon({ url: '/images/bridge_map_marker_orange.png', scaledSize: new google.maps.Size(35, 40) });
+        }
+    }
+
+    function UpdateCoordinate() {
+        // If some bridge is selected and a new coordinate place has been chosen by clicking on it
+        if (document.querySelector("#lblSelectedBridge").innerHTML != "" && document.querySelector("#lblNewCoordinates").innerHTML != "") {
+            // Save updated X-Y coordinate values into database through Ajax call
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("UpdateCoordinate", "BridgeLocation")',
+                data: '{ BridgeId: "' + selectedBridge.BridgeId + '", XCoordinate: ' + newXCoord + ', YCoordinate: ' + newYCoord + ', UtmZone: ' + newUtmZone + ' }',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'html',
+                success: function (data) {
+                    // Convert X-Y coordinates (UTM) to lat/lang coordinates
+                    $.ajax({
+                        url: '@Url.Action("ConvertToLatLang", "BridgeLocation")',
+                        data: { xcoord: newXCoord, ycoord: newYCoord, longzone: newUtmZone, DMS: 0 },
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (data) {
+                            $.each(data, function (i, item) {
+                                // Capture the lat/lang coordinate values of the updated coordinate values
+                                var updatedlatDb = item.Latitude;
+                                var updatedlongDb = item.Longitude;
+
+                                // move marker to the updated coordinate postion
+                                var newLatLng = new google.maps.LatLng(updatedlatDb, updatedlongDb);
+                                selectedBridgeMarker.setPosition(newLatLng);
+
+                                // remove the new marker
+                                newmarker.setMap(null);
+                                newmarker = null;
+                                infowindow.close(); // close old infowindow if it is open
+
+                                google.maps.event.addListener(selectedBridgeMarker, 'click', (function (selectedBridgeMarker, i) {
+                                    return function () {
+                                        // reconstruct a new content string and info window
+                                        var contentString = "<h4 style='font-size: 20px'>Bridge Location Information</h4>" +
+                                                        "<div style='float:left; padding: 5px 15px 5px 5px;'><a href='" + selectedBridge.ImageFilePath + "' target='_blank'>" +
+                                                        "<img src='" + selectedBridge.ImageFilePath + "' onerror='this.parentNode.onclick=function() {return(false);}; this.onerror = null; this.src = \"/images/error_2.png\"; this.style.width = \"60px\"; this.title = \"Image Not Found\";' alt='Photo' width='160'></a>" +
+                                                        "@if (User.Identity.IsAuthenticated) { <br /><br /><div><button onclick='ChangeZone()'>Move to Next Zone</button></div>}" +
+                                                        "</div><div style='float:right'>" +
+                                                        "<div>Old Bridge Id: <b>" + selectedBridge.OldBridgeId + "</b></div>" +
+                                                        "<div>Revised Bridge Id: <b>" + selectedBridge.RevisedBridgeId + "</b></div>" +
+                                                        "<div>Bridge Name: <b>" + selectedBridge.BridgeName + "</b></div>" +
+                                                        "<div>District: <b>" + selectedBridge.District + "</b></div>" +
+                                                        "<div>Segment: <b>" + selectedBridge.Segment + "</b></div>" +
+                                                        "<div>Length (m): <b>" + selectedBridge.BridgeLength + "</b></div>" +
+                                                        "<div>Bridge Type: <b>" + selectedBridge.BridgeType + "</b></div>" +
+                                                        "<div>X-Coordinate: <b>" + parseFloat(newXCoord).toFixed(3) + "</b></div>" +
+                                                        "<div>Y-Coordinate: <b>" + parseFloat(newYCoord).toFixed(3) + "</b></div>" +
+                                                        "<div>UTM Zone: <b>" + newUtmZone + "</b></div>" +
+                                                        "<div>Latitude: <b>" + parseFloat(updatedlatDb).toFixed(6) + "</b></div>" +
+                                                        "<div>Longitude: <b>" + parseFloat(updatedlongDb).toFixed(6) + "</b></div>" +
+                                                        //"<div>Latitude (DMS): <b>" + item.LatitudeDMS + "</b></div>" +
+                                                        //"<div>Longitude (DMS): <b>" + item.LongitudeDMS + "</b></div>" +
+                                                        @*"@if (User.Identity.IsAuthenticated) { <br /><div><a href='../../BridgeInventory/Index/" + selectedBridge.BridgeId + "' target='_blank'>Go to Inventory</a></div>}" +*@
+                                                        "</div>";
+                                        infowindow.setContent(contentString);
+                                        infowindow.open(map, selectedBridgeMarker);
+                                    }
+                                })(selectedBridgeMarker, i));
+
+                                // clear the new coordinate label and selected bridge label
+                                document.querySelector("#lblNewCoordinates").innerHTML = "";
+                                document.querySelector("#lblSelectedBridge").innerHTML = "";
+
+                                // Hide the 'Update Coordinate' button
+                                document.getElementById('btnUpdateCoordinate').style.display = "none";
+                                ResetMarkerColors();
+                            });
+                        }
+                    });
+                },
+                error: function (xhr) {
+                    //alert("Coordinate NOT updated");
+                }
+            });
+        }
+    }
+
+    function ChangeZone() {
+        var nextUtmZone = (selectedBridge.UtmZone < 38) ? selectedBridge.UtmZone + 1 : selectedBridge.UtmZone - 2;
+        //alert(nextUtmZone);
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("ChangeZone", "BridgeLocation")',
+            data: '{ BridgeId: "' + selectedBridge.BridgeId + '", NextUtmZone: ' + nextUtmZone + ' }',
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'html',
+            success: function (data) {
+                $.ajax({
+                    url: '@Url.Action("ConvertToLatLang", "BridgeLocation")',
+                    data: { xcoord: selectedBridge.XCoord, ycoord: selectedBridge.YCoord, longzone: nextUtmZone, DMS: 0 },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        $.each(data, function (i, item) {
+                            // Capture the lat/lang coordinate values of the updated coordinate values
+                            var updatedlatDb = item.Latitude;
+                            var updatedlongDb = item.Longitude;
+
+                            // Update UTM zone of selected bridge
+                            selectedBridge.UtmZone = nextUtmZone;
+
+                            // move marker to the updated coordinate postion
+                            var newLatLng = new google.maps.LatLng(updatedlatDb, updatedlongDb);
+                            selectedBridgeMarker.setPosition(newLatLng);
+
+                            infowindow.close(); // close old infowindow if it is open
+
+                            google.maps.event.addListener(selectedBridgeMarker, 'click', (function (selectedBridgeMarker, i) {
+                                return function () {
+                                    // reconstruct a new content string and info window
+                                    var contentString = "<h4 style='font-size: 20px'>Bridge Location Information</h4>" +
+                                                    "<div style='float:left; padding: 5px 15px 5px 5px;'><a href='" + selectedBridge.ImageFilePath + "' target='_blank'>" +
+                                                    "<img src='" + selectedBridge.ImageFilePath + "' onerror='this.parentNode.onclick=function() {return(false);}; this.onerror = null; this.src = \"/images/error_2.png\"; this.style.width = \"60px\"; this.title = \"Image Not Found\";' alt='Photo' width='160'></a>" +
+                                                    "@if (User.Identity.IsAuthenticated) { <br /><br /><div><button onclick='ChangeZone()'>Move to Next Zone</button></div>}" +
+                                                    "</div><div style='float:right'>" +
+                                                    "<div>Old Bridge Id: <b>" + selectedBridge.OldBridgeId + "</b></div>" +
+                                                    "<div>Revised Bridge Id: <b>" + selectedBridge.RevisedBridgeId + "</b></div>" +
+                                                    "<div>Bridge Name: <b>" + selectedBridge.BridgeName + "</b></div>" +
+                                                    "<div>District: <b>" + selectedBridge.District + "</b></div>" +
+                                                    "<div>Segment: <b>" + selectedBridge.Segment + "</b></div>" +
+                                                    "<div>Length (m): <b>" + selectedBridge.BridgeLength + "</b></div>" +
+                                                    "<div>Bridge Type: <b>" + selectedBridge.BridgeType + "</b></div>" +
+                                                    "<div>X-Coordinate: <b>" + selectedBridge.XCoord + "</b></div>" +
+                                                    "<div>Y-Coordinate: <b>" + selectedBridge.YCoord + "</b></div>" +
+                                                    "<div>UTM Zone: <b>" + selectedBridge.UtmZone + "</b></div>" +
+                                                    "<div>Latitude: <b>" + parseFloat(updatedlatDb).toFixed(6) + "</b></div>" +
+                                                    "<div>Longitude: <b>" + parseFloat(updatedlongDb).toFixed(6) + "</b></div>" +
+                                                    //"<div>Latitude (DMS): <b>" + item.LatitudeDMS + "</b></div>" +
+                                                    //"<div>Longitude (DMS): <b>" + item.LongitudeDMS + "</b></div>" +
+                                                    @*"@if (User.Identity.IsAuthenticated) { <br /><div><a href='../../BridgeInventory/Index/" + selectedBridge.BridgeId + "' target='_blank'>Go to Inventory</a></div>}" +*@
+                                                    "</div>";
+                                    infowindow.setContent(contentString);
+                                    infowindow.open(map, selectedBridgeMarker);
+                                }
+                            })(selectedBridgeMarker, i));
+
+                            // clear the new coordinate label and selected bridge label
+                            document.querySelector("#lblNewCoordinates").innerHTML = "";
+                            document.querySelector("#lblSelectedBridge").innerHTML = "";
+
+                            // Hide the 'Update Coordinate' button
+                            document.getElementById('btnUpdateCoordinate').style.display = "none";
+                        });
+                    }
+                });
+            },
+            error: function (xhr) {
+                //alert("Coordinate NOT updated");
+            }
+        });
+     }
+
+    // Move all bridges in the road segment to the next zone
+    function MoveAllToNextZone() {
+        for (let i = 0; i < bridgeLocList.length; i++) {
+            ChangeZoneOneByOne(bridgeLocList[i], bridgeLocList[i].marker);
+        }
+    }
+
+    // Move a bridge to next zone 36 -> 37 -> 38 -> 36 -> 37 -> 38 -> and so on
+    function ChangeZoneOneByOne(thisbridge, thismarker) {
+        var nextUtmZone = (thisbridge.UtmZone < 38) ? thisbridge.UtmZone + 1 : thisbridge.UtmZone - 2;
+        //alert(nextUtmZone);
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("ChangeZone", "BridgeLocation")',
+            data: '{ BridgeId: "' + thisbridge.BridgeId + '", NextUtmZone: ' + nextUtmZone + ' }',
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'html',
+            success: function (data) {
+                $.ajax({
+                    url: '@Url.Action("ConvertToLatLang", "BridgeLocation")',
+                    data: { xcoord: thisbridge.XCoord, ycoord: thisbridge.YCoord, longzone: nextUtmZone, DMS: 0 },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        $.each(data, function (i, item) {
+                            // Capture the lat/lang coordinate values of the updated coordinate values
+                            var updatedlatDb = item.Latitude;
+                            var updatedlongDb = item.Longitude;
+
+                            // Update UTM zone of selected bridge
+                            thisbridge.UtmZone = nextUtmZone;
+
+                            // move marker to the updated coordinate postion
+                            var newLatLng = new google.maps.LatLng(updatedlatDb, updatedlongDb);
+                            thismarker.setPosition(newLatLng);
+
+                            infowindow.close(); // close old infowindow if it is open
+
+                            google.maps.event.addListener(thismarker, 'click', (function (thismarker, i) {
+                                return function () {
+                                    // reconstruct a new content string and info window
+                                    var contentString = "<h4 style='font-size: 20px'>Bridge Location Information</h4>" +
+                                                    "<div style='float:left; padding: 5px 15px 5px 5px;'><a href='" + thisbridge.ImageFilePath + "' target='_blank'>" +
+                                                    "<img src='" + thisbridge.ImageFilePath + "' onerror='this.parentNode.onclick=function() {return(false);}; this.onerror = null; this.src = \"/images/error_2.png\"; this.style.width = \"60px\"; this.title = \"Image Not Found\";' alt='Photo' width='160'></a>" +
+                                                    "@if (User.Identity.IsAuthenticated) { <br /><br /><div><button onclick='ChangeZone()'>Move to Next Zone</button></div>}" +
+                                                    "</div><div style='float:right'>" +
+                                                    "<div>Old Bridge Id: <b>" + thisbridge.OldBridgeId + "</b></div>" +
+                                                    "<div>Revised Bridge Id: <b>" + thisbridge.RevisedBridgeId + "</b></div>" +
+                                                    "<div>Bridge Name: <b>" + thisbridge.BridgeName + "</b></div>" +
+                                                    "<div>District: <b>" + thisbridge.District + "</b></div>" +
+                                                    "<div>Segment: <b>" + thisbridge.Segment + "</b></div>" +
+                                                    "<div>Length (m): <b>" + thisbridge.BridgeLength + "</b></div>" +
+                                                    "<div>Bridge Type: <b>" + thisbridge.BridgeType + "</b></div>" +
+                                                    "<div>X-Coordinate: <b>" + thisbridge.XCoord + "</b></div>" +
+                                                    "<div>Y-Coordinate: <b>" + thisbridge.YCoord + "</b></div>" +
+                                                    "<div>UTM Zone: <b>" + thisbridge.UtmZone + "</b></div>" +
+                                                    "<div>Latitude: <b>" + parseFloat(updatedlatDb).toFixed(6) + "</b></div>" +
+                                                    "<div>Longitude: <b>" + parseFloat(updatedlongDb).toFixed(6) + "</b></div>" +
+                                                    //"<div>Latitude (DMS): <b>" + item.LatitudeDMS + "</b></div>" +
+                                                    //"<div>Longitude (DMS): <b>" + item.LongitudeDMS + "</b></div>" +
+                                                    @*"@if (User.Identity.IsAuthenticated) { <br /><div><a href='../../BridgeInventory/Index/" + thisbridge.BridgeId + "' target='_blank'>Go to Inventory</a></div>}" +*@
+                                                    "</div>";
+                                    infowindow.setContent(contentString);
+                                    infowindow.open(map, thismarker);
+                                }
+                            })(thismarker, i));
+
+                            // clear the new coordinate label and selected bridge label
+                            document.querySelector("#lblNewCoordinates").innerHTML = "";
+                            document.querySelector("#lblSelectedBridge").innerHTML = "";
+
+                            // Hide the 'Update Coordinate' button
+                            document.getElementById('btnUpdateCoordinate').style.display = "none";
+                        });
+                    }
+                });
+            },
+            error: function (xhr) {
+                //alert("Coordinate NOT updated");
+            }
+        });
+    }
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAE0qRfcQ0xxZq5mWSMOtxT3G_cWkHpBAA&callback=InitializeMap" async defer></script>
+@*<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDIfcdDWC9egWYIRM6FPBCbIC8AqMkzAkw&callback=InitializeMap" async defer></script>*@

@@ -1,0 +1,184 @@
+﻿@model ERA_BMS.Models.Bridge
+
+<div>
+    @if (@ViewBag.Success)
+    {
+        <hr />
+
+        <div class="container">
+            <div class="row mb-10">
+                <div class="col-sm-4 col-xs-6">
+                    <table class="table table-condensed">
+                        <tr>
+                            <td>Revised Bridge Id</td>
+                            <th>@Model.RevisedBridgeNo</th>
+                        </tr>
+                        <tr>
+                            <td>Bridge Name</td>
+                            <th>@Model.BridgeName</th>
+                        </tr>
+
+                        <tr>
+                            <td>Road Segment</td>
+                            <th>[@Model.Segment.RevisedRoadId] @Model.Segment.SegmentName</th>
+                        </tr>
+
+                        <tr>
+                            <td>Section</td>
+                            <th>[@Model.Segment.Section.SectionNo] @Model.Segment.Section.SectionName</th>
+                        </tr>
+
+                        <tr>
+                            <td>District</td>
+                            <th>[@Model.Segment.Section.District.DistrictNo] @Model.Segment.Section.District.DistrictName</th>
+                        </tr>
+
+                        <tr>
+                            <td>Main Route</td>
+                            <th>[@Model.SubRoute.MainRoute.MainRouteNo] @Model.SubRoute.MainRoute.MainRouteName</th>
+                        </tr>
+
+                        <tr>
+                            <td>Sub Route</td>
+                            <th>[@Model.SubRoute.SubRouteNo] @Model.SubRoute.SubRouteName</th>
+                        </tr>
+                    </table>
+                </div>
+
+                @if (!ViewBag.NoInventory)
+                {
+                    <div class="col-sm-4 col-xs-6">
+                        <table class="table table-condensed">
+                            <tr>
+                                <td>Distance from AA (Km)</td>
+                                <th>@Model.BridgeGeneralInfo.KMFromAddis</th>
+                            </tr>
+                            <tr>
+                                <td>Coordinates (Lat/Lon)</td>
+                                <th>@Model.BridgeGeneralInfo.LatitudeDMS <br /> @Model.BridgeGeneralInfo.LongitudeDMS</th>
+                            </tr>
+                            <tr>
+                                <td>Bridge Length (m)</td>
+                                <th>@Model.SuperStructure.TotalSpanLength</th>
+                            </tr>
+                            <tr>
+                                <td>Bridge Type</td>
+                                <th>@Model.SuperStructure.BridgeType.BridgeTypeName</th>
+                            </tr>
+                            <tr>
+                                <td>No. of Span</td>
+                                <th>@Model.SuperStructure.NoOfSpan</th>
+                            </tr>
+                            <tr>
+                                <td>Girder Type</td>
+                                <th>@Model.SuperStructure.GirderType.GirderTypeName</th>
+                            </tr>
+                            <tr>
+                                <td>Road Alignment</td>
+                                <th>@Model.BridgeGeneralInfo.RoadAlignmentType.RoadAlignmentTypeName</th>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="clearfix visible-xs"></div> <!-- Add clearfix (or new line break) for only the xs -->
+
+                    <div class="col-sm-4 col-xs-8">
+                        <table class="table table-condensed">
+                            <tr>
+                                <td>Construction Year</td>
+                                <th>@Model.BridgeGeneralInfo.ConstructionYear</th>
+                            </tr>
+                            <tr>
+                                <td>Designer / Consultant</td>
+                                <th>@Model.BridgeGeneralInfo.Designer</th>
+                            </tr>
+                            <tr>
+                                <td>Contractor</td>
+                                <th>@Model.BridgeGeneralInfo.Contractor</th>
+                            </tr>
+
+                            <tr>
+                                <td>Design Capacity (Ton)</td>
+                                <th>@Model.BridgeGeneralInfo.DesignCapacity</th>
+                            </tr>
+                            <tr>
+                                <td>Bearing Capacity</td>
+                                <th>
+                                    @{
+                                        string deisgnCapacity = ((bool)Model.BridgeGeneralInfo.BearingCapacity) ? "Yes" : "No";
+                                    }
+                                    @deisgnCapacity
+                                </th>
+                            </tr>
+                            <tr>
+                                <td>Average Daily Traffic</td>
+                                <th>@Model.Segment.AverageDailyTraffic</th>
+                            </tr>
+                            <tr>
+                                <td>Original Cost, ETB</td>
+                                @if (Model.BridgeGeneralInfo.ConstructionCost != null)
+                                {
+                                    <th>@Model.BridgeGeneralInfo.ConstructionCost.Value.ToString("#,#.00")</th>
+                                }
+                                else
+                                {
+                                    <th></th>
+                                }
+                            </tr>
+                            <tr>
+                                <td>Replacement Cost, ETB</td>
+                                @{
+                                    if (Model.BridgeGeneralInfo.AssetReplacementCost != null)
+                                    {
+                                        <th>@Model.BridgeGeneralInfo.AssetReplacementCost.Value.ToString("#,#.00")</th>
+                                    }
+                                    else
+                                    {
+                                        <th></th>
+                                    }
+                                }
+                            </tr>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <h5 class="col-sm-8 col-xs-6">
+                        Inventory data empty or incomplete for bridge: <br /><br />
+                        <b>@Model.BridgeName (@Model.BridgeNo)</b>
+                    </h5>
+                }
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4 padding-button">
+                <a href="@Url.Action("Edit", "Bridges", new { id = Model.BridgeId })" class="btn btn-primary" target="_blank" title="Go to Modify Bridge Data"><span class="glyphicon glyphicon-new-window" data-toggle="tooltip" title="Go to Edit/Modify Bridge Data"></span> Modify Data</a>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4 padding-button">
+                <a href="@Url.Action("Index", "BridgeInventory", new { id = Model.BridgeId })" class="btn btn-primary" target="_blank" title="Go to Bridge Inventory"><span class="glyphicon glyphicon-new-window" data-toggle="tooltip" title="Go to Bridge Inventory"></span> Inventory</a>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4 padding-button">
+                <a href="@Url.Action("Index", "BridgeProfile", new { id = Model.BridgeId })" class="btn btn-primary" target="_blank" title="Go to Bridge Profile"><span class="glyphicon glyphicon-new-window" data-toggle="tooltip" title="Go to Bridge Profile"></span> Profile</a>
+            </div>
+
+            <div class="clearfix visible-sm visible-xs"></div> <!-- Add clearfix (or new line break) for sm  and xs -->
+
+            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4 padding-button">
+                <a href="@Url.Action("Index", "DamageInspMajor", new { id = Model.BridgeId })" class="btn btn-primary" target="_blank" title="Go to Bridge Major Inspection"><span class="glyphicon glyphicon-new-window" data-toggle="tooltip" title="Go to Bridge Major Inspection"></span> Inspection</a>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4 padding-button">
+                <a href="@Url.Action("Index", "BridgeImprovement", new { id = Model.BridgeId })" class="btn btn-primary" target="_blank" title="Go to Bridge Improvement"><span class="glyphicon glyphicon-new-window" data-toggle="tooltip" title="Go to Bridge Improvement"></span> Improvement</a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="text-danger">
+            <h4><b>Bridge not found!</b></h4>
+        </div>
+    }
+</div>
+<br />
+<br />
+

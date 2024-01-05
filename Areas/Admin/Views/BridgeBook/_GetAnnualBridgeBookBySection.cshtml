@@ -1,0 +1,152 @@
+﻿@model IEnumerable<ERA_BMS.ViewModels.BridgeImageListViewModel>
+
+
+<style>
+    img.AnnualBrgBook {
+        /*width: 170px;
+        height: auto;*/
+        width: auto;
+        height: 120px;
+    }
+</style>
+
+
+<div id="noprint" style="background-color: white; color: #ef5821" align="right">
+    <h4>Section: <b>@Model.FirstOrDefault().Bridge.Segment.Section.SectionName</b></h4>
+    @{
+        int noofpages = Convert.ToInt32(Math.Ceiling(Model.Count() / 5.0)) + 1;
+    }
+    <h4> No. of Bridges: <b>@Model.Count()</b> | No. of Pages: <b>@noofpages</b></h4>
+    <h4> (Please select <b>Portrait</b> Layout)</h4>
+    @*<Button class="btn btn-primary" data-toggle="tooltip" title="Please choose 'Portrait' layout" onclick="window.print();return false;"><span class="glyphicon glyphicon-print"></span> Print</Button>
+        <h5 style="color: #ef5821"> Please choose 'Portrait' layout </h5>*@
+</div>
+
+<!-- Show this only on print out -->
+<div id="printonly" align="center">
+    <img src="~/images/era_logo.png" alt="ERA logo" width="150" height="150" align="middle">
+    <h1 align="center">
+        Ethiopian Roads Administration <br /> Bridge Management System <br /><br />
+        የኢትዮጵያ መንገዶች አስተዳደር <br /> የድልድይ ሀብት አስተዳደር ሥርዓት
+    </h1>
+    <h2 style="font-size: 60px; font-weight:bolder"> ANNUAL <br /> BRIDGE BOOK </h2>
+    <h2 style="font-size: 50px; font-weight:bolder">@DateTime.Now.Year</h2>
+
+    <p style="page-break-after: always"></p>
+</div>
+
+@{
+
+    int index = 1;
+
+    foreach (var item in Model)
+    {
+        <!-- Show heading for every 5 bridges -->
+        if ((index - 1) % 5 == 0)
+        {
+            <div class="panel-heading" style="background-color: white; color: black; padding: 0px 0px 0px 0px; border-bottom: solid; border-top: solid; border-left: none; border-right: none; border-width: 1px; ">
+                <div class="row">
+                    <div class="col-md-3 col-sm-2 col-xs-1"></div>
+                    <div class="col-md-2 col-sm-3 col-xs-3" align="right">
+                        <img src="~/images/era_logo.png" alt="ERA logo" width="85" height="85" align="middle">
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-5 col-xs-7" align="center">
+                        <h4 align="center">
+                            <span style="font-size:16px">Ethiopian Roads Administration</span><br />
+                            የኢትዮጵያ መንገዶች አስተዳደር<br />
+                            <span style="font-size:medium">Bridge Management System - BMS</span>
+                        </h4>
+                        <h2 class="panel-title panel-info"><b>ANNUAL BRIDGE BOOK @DateTime.Now.Year</b></h2>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <div style="border-bottom: solid; border-width: 1px;" align="left">
+            <div class="row">
+                <div class="col-lg-2 col-md-1"></div>
+                <div class="col-lg-4 col-md-5 col-sm-6 col-xs-4">
+                    <table class="table-condensed">
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Bridge.Segment.Section.District.DistrictName)
+                            </th>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Bridge.Segment.Section.District.DistrictName)
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Bridge.Segment.SegmentName)
+                            </th>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Bridge.Segment.SegmentName)
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Bridge.RevisedBridgeNo)
+                            </th>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Bridge.RevisedBridgeNo)
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Bridge.BridgeName)
+                            </th>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Bridge.BridgeName)
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Bridge.BridgeGeneralInfo.BridgeLength)
+                            </th>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Bridge.BridgeGeneralInfo.BridgeLength)
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Bridge.SuperStructure.BridgeType.BridgeTypeName)
+                            </th>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Bridge.SuperStructure.BridgeType.BridgeTypeName)
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="col-lg-2 col-md-3 col-sm-3 col-xs-5 " align="center">
+                    @*If the bridge side view image is not null*@
+                    @if (item.ImagesList[0] != null)
+                    {
+                        <img src="@item.ImagesList[0].MediaFilePath" alt="not-found" style="margin: 20px;" class="AnnualBrgBook" onerror="this.onerror = null; this.src = '../../images/error_2.png'; this.style.width = '40px'; this.style.height = '40px'; this.title = 'Image Not Found';" />
+                    }
+                </div>
+
+                <div class="col-lg-2 col-md-3 col-sm-3 col-xs-5" align="center">
+                    @*If the bridge side view image is not null*@
+                    @if (item.ImagesList[1] != null)
+                    {
+                        <img src="@item.ImagesList[1].MediaFilePath" alt="not-found" style="margin: 20px;" class="AnnualBrgBook" onerror="this.onerror = null; this.src = '../../images/error_2.png'; this.style.width = '40px'; this.style.height = '40px'; this.title = 'Image Not Found';" />
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Go to new page after every 5 bridge -->
+        if (index % 5 == 0)
+        {
+            <p style="page-break-after: always"></p>
+        }
+
+        index++;
+    }
+}

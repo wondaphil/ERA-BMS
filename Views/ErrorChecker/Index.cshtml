@@ -1,0 +1,109 @@
+﻿@using ERA_BMS.Models
+
+@{
+    ViewBag.Title = "Duplicates";
+}
+
+<h2>Duplicates</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <!-- Tab Buttons -->
+    <ul id="tabstrip" class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#_BridgesTab" role="tab" data-toggle="tab">Duplicate Bridges</a>
+        </li>
+        <li>
+            <a href="#_CulvertsTab" role="tab" data-toggle="tab">Duplicate Culverts</a>
+        </li>
+        <li>
+            <a href="#_MainRoutesTab" role="tab" data-toggle="tab">Duplicate Main Routes</a>
+        </li>
+        <li>
+            <a href="#_SubRoutesTab" role="tab" data-toggle="tab">Duplicate Sub Routes</a>
+        </li>
+        <li>
+            <a href="#_InvalidInspectionDateTab" role="tab" data-toggle="tab">Invalid Inspection Date</a>
+        </li>
+    </ul>
+
+    <!-- Tab Content Containers -->
+    <div class="tab-content">
+        <div class="tab-pane fade in active" id="_BridgesTab">
+            <div id="duplicateBridges">
+                <!-- Duplicate Bridges display here -->
+            </div>
+        </div>
+        <div class="tab-pane fade in active" id="_CulvertsTab">
+            <div id="duplicateCulverts">
+                <!-- Duplicate Culvert display here -->
+            </div>
+        </div>
+        <div class="tab-pane fade in active" id="_MainRoutesTab">
+            <div id="duplicateMainRoutes">
+                <!-- Duplicate Main Routes display here -->
+            </div>
+        </div>
+        <div class="tab-pane fade" id="_SubRoutesTab">
+            <div id="duplicateSubRoutes">
+                <!-- Duplicate Sub Routes display here -->
+            </div>
+        </div>
+        <div class="tab-pane fade in active" id="_InvalidInspectionDateTab">
+            <div id="invalidInspectionDate">
+                <!-- Culverts with Invalid Inspection Dates display here -->
+            </div>
+        </div>
+        
+    </div>
+}
+
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            url: '@Url.Action("DuplicateBridgeNo", "ErrorChecker")',
+            type: 'GET',
+            dataType: 'html',
+            success: function (data) {
+                $('#duplicateBridges').html(data);
+            }
+        });
+
+        $.ajax({
+            url: '@Url.Action("DuplicateCulvertNo", "ErrorChecker")',
+            type: 'GET',
+            dataType: 'html',
+            success: function (data) {
+                $('#duplicateCulverts').html(data);
+            }
+        });
+
+        $.ajax({
+            url: '@Url.Action("DuplicateMainRouteNo", "ErrorChecker")',
+            type: 'GET',
+            dataType: 'html',
+            success: function (data) {
+                $('#duplicateMainRoutes').html(data);
+            }
+        });
+
+        $.ajax({
+            url: '@Url.Action("DuplicateSubRouteNo", "ErrorChecker")',
+            type: 'GET',
+            dataType: 'html',
+            success: function (data) {
+                $('#duplicateSubRoutes').html(data);
+            }
+        });
+
+        $.ajax({
+            url: '@Url.Action("InvalidCulvertInspectionDate", "ErrorChecker")',
+            type: 'GET',
+            dataType: 'html',
+            success: function (data) {
+                $('#invalidInspectionDate').html(data);
+            }
+        });
+    });
+</script>

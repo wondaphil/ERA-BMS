@@ -1,0 +1,97 @@
+﻿
+@{
+    ViewBag.Title = "Process Bridge Inspection Data";
+}
+
+<h2>Process Bridge Inspection Data</h2>
+
+@using (Html.BeginForm())
+{
+    <div class="panel panel-default">
+        @*<div class="panel-heading">
+                <h3 class="panel-title panel-info">Please select <b>Inspection Year</b> & <b>Inspection Date</b> and then <b>District</b>, <b>Section</b>, <b>Road Segment</b> and <b>Bridge</b> from the dropdown list</h3>
+            </div>*@
+        <div class="panel-body">
+
+            @Html.AntiForgeryToken()
+
+            <div class="row">
+                <div class="col-lg-4 col-md-5 col-xs-8">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group-sm">
+                            <label for="ddlInspectionYear" class="control-label col-lg-5 col-md-5 col-sm-5 col-xs-5">Inspection Year</label>
+                            <div class="col-lg-5 col-md-5 col-sm-5 col-xs-6">
+                                @Html.DropDownList("ddlInspectionYear", new SelectList(ViewBag.InspectionYearList, "Value", "Text", ViewBag.InspectionYear), htmlAttributes: new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                    <div align="center">
+                        <a class="btn btn-primary" data-toggle="tooltip" title="Process" id="process" style="font-size:larger"> <span class="glyphicon glyphicon-cog" style="font-size:larger"></span> Process Data</a>
+                    </div>
+                </div>
+
+                <div class="col-lg-8 col-md-7 col-xs-12">
+                    <h3><u>WARNING:</u></h3>
+                    <h4>Please DO NOT RUN this process unless there are changes made on <b>Damage Percent and Cost Rates</b>.</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="status" align="center">
+        <!--Status info displays here -->
+    </div>
+}
+
+<div id="processing" style="display: none">
+    <div id="processingprogress" align="center">
+        <img src="~/images/processing.gif" />
+    </div>
+    <h4>The processing could take a few minutes.</h4>
+    <h4>PLEASE DO NOT INTERRUPT THE PROCESS <br /> AND DO NOT CLOSE THE BROWSER OR THIS TAB.</h4>
+</div>
+
+<div id="finished" style="display: none">
+    <div id="processingprogress" align="center">
+        <img src="~/images/success_1.gif" height="120" />
+    </div>
+    <h3>Processing inspection data is successfully completed.</h3>
+</div>
+
+<div id="error" style="display: none">
+    <h3>Processing NOT Completed</h3>
+    <div id="processingprogress" align="center">
+        <img src="~/images/error_1.png" height="90" />
+    </div>
+    <h4>Some error occured during processing. Please try again.</h4>
+
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#process').click(function () {
+            var selInspectionYr = $('#ddlInspectionYear option:selected').val();
+            if (selInspectionYr != "0") // if some inspection year is selected
+            {
+                $.ajax({
+                    url: '@Url.Action("_GetProcessBridgeInspectionData", "DamageInspMajor")',
+                    data: { inspectionyear: selInspectionYr },
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () { $('#status').html($('#processing').html()); },
+                    complete: function () { $('#status').html($('#finished').html()); },
+                    success: function (data) {
+                        alert("success");
+                        $('#status').html($('#finished').html());
+                    },
+                    error: function (xhr) {
+                        $('#status').html($('#error').html());
+                    }
+                });
+
+            }
+        });
+    });
+
+</script>
+
+

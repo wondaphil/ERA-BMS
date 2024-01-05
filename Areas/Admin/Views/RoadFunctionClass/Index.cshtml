@@ -1,0 +1,196 @@
+﻿@model IEnumerable<ERA_BMS.Models.RoadClass>
+
+@{
+    ViewBag.Title = "Road Function Class";
+}
+
+<h2>Road Function Class</h2>
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title panel-info"><b>List of Road Function Classes</b></h3>
+    </div>
+
+    <div class="panel-body">
+        <table class="table table-striped table-condensed table-bordered centeredtable" id="tblRoadFunctionClass">
+            <tr>
+                <th></th>
+                <th>
+                    @Html.DisplayNameFor(model => model.RoadClassName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Remark)
+                </th>
+                <th></th>
+                <th></th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="RoadClassId">
+                        <input type="hidden" value="@item.RoadClassId" /> <!-- Unique Id of Road Class -->
+                    </td>
+                    <td class="RoadClassName">
+                        <span>@Html.DisplayFor(modelItem => item.RoadClassName)</span>
+                        <input type="text" value="@item.RoadClassName" style="display:none" size="15" />
+                    </td>
+                    <td class="Remark">
+                        <span>@Html.DisplayFor(modelItem => item.Remark)</span>
+                        <input type="text" value="@item.Remark" style="display:none" size="30" />
+                    </td>
+                    <td>
+                        <a class="Edit glyphicon glyphicon-edit" href="javascript:;" data-toggle="tooltip" title="Edit"></a>
+                        <a class="Update glyphicon glyphicon-ok" href="javascript:;" style="display:none" data-toggle="tooltip" title="Update"></a>
+                        <a class="Confirm glyphicon glyphicon-ok" href="javascript:;" style="display:none" data-toggle="tooltip" title="Confirm"></a>
+                    </td>
+                    <td>
+                        <a class="Cancel glyphicon glyphicon-remove" href="javascript:;" style="display:none" data-toggle="tooltip" title="Cancel"></a>
+                        @*<a class="Delete glyphicon glyphicon-trash" href="javascript:;" data-toggle="tooltip" title="Delete" ></a>*@
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+    <div class="panel-footer">
+        <h3 class="panel-title">Total Road Classes: <b>@Model.Count()</b> </h3>
+    </div>
+</div>
+
+<div id="newPartial">
+    <!-- New road class partial displays here -->
+</div>
+
+<p>
+    <button id="new" class="btn btn-primary" disabled><span class="glyphicon glyphicon-plus"></span> Register New Road Function Class</button>
+</p>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        //New event handler.
+        $("#new").on("click", function () {
+            $.ajax({
+                url: '@Url.Action("NewRoadFunctionClassPartial", "RoadFunctionClass")',
+                type: 'GET',
+                dataType: 'html',
+                success: function (data) {
+                    $('#newPartial').html(data);
+                }
+            });
+            $('#new').hide();
+        });
+
+        //Edit event handler.
+        $("body").on("click", "#tblRoadFunctionClass .Edit", function () {
+            var row = $(this).closest("tr");
+            $("td", row).each(function () {
+                if ($(this).find("input").length > 0) {
+                    $(this).find("input").show();
+                    $(this).find("span").hide();
+                }
+             });
+            row.find(".Update").show();
+            row.find(".Cancel").show();
+            row.find(".Delete").hide();
+            $(this).hide();
+        });
+
+        //Update event handler.
+        $("body").on("click", "#tblRoadFunctionClass .Update", function () {
+            var row = $(this).closest("tr");
+            $("td", row).each(function () {
+                if ($(this).find("input").length > 0) {
+                    var span = $(this).find("span");
+                    var input = $(this).find("input");
+                    span.html(input.val());
+                    span.show();
+                    input.hide();
+                }
+            });
+            row.find(".Edit").show();
+            row.find(".Delete").show();
+            row.find(".Cancel").hide();
+            $(this).hide();
+
+            var roadClass = {};
+            roadClass.RoadClassId = row.find('input[type=hidden]').val();
+            roadClass.RoadClassName = row.find(".RoadClassName").find("span").html();
+            roadClass.Remark = row.find(".Remark").find("span").html();
+
+            //alert(JSON.stringify(roadClass));
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("UpdateRoadFunctionClass", "RoadFunctionClass")',
+                data: '{rdClass:' + JSON.stringify(roadClass) + '}',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'text', //'html',
+                error: function (xhr) {
+                    //$('#status').text(xhr.status);
+                }
+            });
+        });
+
+        //Cancel event handler.
+        $("body").on("click", "#tblRoadFunctionClass .Cancel", function () {
+            var row = $(this).closest("tr");
+            $("td", row).each(function () {
+                if ($(this).find("input").length > 0) {
+                    var span = $(this).find("span");
+                    var input = $(this).find("input");
+                    input.val(span.html());
+                    span.show();
+                    input.hide();
+                }
+                if ($(this).find("select").length > 0) {
+                    $(this).find("select").hide();
+                    $(this).find("span").show();
+                }
+            });
+            row.find(".Edit").show();
+            row.find(".Delete").show();
+            row.find(".Update").hide();
+            row.find(".Confirm").hide();
+            $(this).hide();
+        });
+
+        //Delete event handler.
+        $("body").on("click", "#tblRoadFunctionClass .Delete", function () {
+            var row = $(this).closest("tr");
+            row.find(".Edit").hide();
+            row.find(".Confirm").show();
+            row.find(".Cancel").show();
+            row.find(".Delete").hide();
+            $(this).hide();
+        });
+
+        //Confirm event handler.
+        $("body").on("click", "#tblRoadFunctionClass .Confirm", function () {
+            var row = $(this).closest("tr");
+            var id = row.find('input[type=hidden]').val();
+            //alert(id);
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("DeleteRoadFunctionClass", "RoadFunctionClass")',
+                data: '{id: "' + id + '"}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (response) {
+                    if ($("#tblRoadFunctionClass tr").length > 2) {
+                        row.remove();
+
+                    } else {
+                        row.find(".Edit").hide();
+                        row.find(".Delete").hide();
+                        row.find(".Confirm").hide();
+                        row.find(".Cancel").hide();
+                        row.find("span").html('&nbsp;');
+                    }
+                },
+                error: function (xhr) {
+                    //$('#status').text(xhr.status);
+                }
+            });
+        });
+    });
+</script>

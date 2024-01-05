@@ -1,0 +1,397 @@
+﻿@model ERA_BMS.ViewModels.CulvertInspectionViewModel
+
+@{
+    ViewBag.Title = "Culvert Inspection";
+}
+
+<h2>Culvert Inspection</h2>
+
+@using (Html.BeginForm())
+{
+    <div class="panel panel-default">
+        @*<div class="panel-heading">
+                <h3 class="panel-title panel-info">Please select <b>Inspection Date</b> and then <b>District</b>, <b>Section</b>, <b>Road Segment</b> and <b>Culvert</b> from the dropdown list</h3>
+            </div>*@
+        <div class="panel-body">
+
+            @Html.AntiForgeryToken()
+
+            <div class="row">
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group-sm">
+                            <label for="ddlDistrict" class="control-label col-md-3 col-sm-4">District</label>
+                            <div class="col-md-9 col-sm-8">
+                                @*@Html.DropDownList("ddlDistrict", (List<SelectListItem>)ViewBag.Districts, new { @class = "form-control" })*@
+                                @Html.DropDownList("ddlDistrict", new SelectList(ViewBag.Districts, "Value", "Text", ViewBag.DistrictId), htmlAttributes: new { @class = "form-control" })
+                                <!--<label class="control-label" id="distrIdDIV">--> <!-- District id appears here --> <!--</label>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group-sm">
+                            <label for="ddlSection" class="control-label col-md-3 col-sm-4">Section</label>
+                            <div class="col-md-9 col-sm-8">
+                                @*@Html.DropDownList("ddlSection", new SelectList(ViewBag.Sections, "Value", "Text", ViewBag.SectionId), htmlAttributes: new { @class = "form-control" })*@
+                                @Html.DropDownList("ddlSection", new SelectList(ViewBag.Sections, "Value", "Text", ViewBag.SectionId), htmlAttributes: new { @class = "form-control" })
+                                <!--<select class="form-control" id="ddlSection">-->
+                                <!-- Sections list populates here -->
+                                <!--</select>-->
+                                <!--<label class="control-label" id="secIdDIV">--> <!-- Section id appears here --> <!--</label>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="clearfix visible-sm"></div> <!-- Add clearfix (or new line break) for only the sm -->
+                <div class="clearfix visible-xs"></div> <!-- Add clearfix (or new line break) for only the xs -->
+
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group-sm">
+                            <label for="ddlSegment" class="control-label col-md-3 col-sm-4">Road Segment</label>
+                            <div class="col-md-9 col-sm-8">
+                                @Html.DropDownList("ddlSegment", new SelectList(ViewBag.Segments, "Value", "Text", ViewBag.SegmentId), htmlAttributes: new { @class = "form-control" })
+                                <!--<select class="form-control" id="ddlSegment">-->
+                                <!-- Segments list populates here -->
+                                <!--</select>-->
+                                <!--<label class="control-label" id="segIdDIV">--> <!-- Segment id appears here --> <!--</label>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group-sm">
+                            <label for="ddlCulvert" class="control-label col-md-3 col-sm-4">Culvert</label>
+                            <div class="col-md-9 col-sm-8">
+                                @Html.DropDownList("ddlCulvert", new SelectList(ViewBag.Culverts, "Value", "Text", TempData["CulvertId"]), htmlAttributes: new { @class = "form-control" })
+                                <!--<select class="form-control" id="ddlCulvert">-->
+                                <!-- Culverts list populates here -->
+                                <!--</select>-->
+                                <label class="control-label" id="culIdDiv"> <!-- Culvert id appears here --> </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="clearfix visible-lg"></div> <!-- Add clearfix (or new line break) for only the lg -->
+                <div class="clearfix visible-sm"></div> <!-- Add clearfix (or new line break) for only the sm -->
+
+                <div class="col-lg-6 col-md-8 col-sm-6 col-xs-9">
+                    <div class="form-horizontal">
+                        <div class="form-group form-group-sm">
+                            <label for="InspectionDate" class="control-label col-md-3 col-sm-4">Inspection Date</label>
+                            <div class="col-md-7 col-sm-8">
+                                @*@Html.TextBox("InspectionDate", DateTime.Now.ToString("dd MMM yyyy"), new { htmlAttributes = new { @class = "form-control", @readonly="readonly" } })*@
+                                <input type="date" id="InspectionDate" class="form-control-static" value="@DateTime.Now.ToShortDateString()" readonly="readonly"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 navbar-right" align="right">
+                    <a class="btn btn-primary" data-toggle="tooltip" title="Refresh" id="refresh"> <span class="glyphicon glyphicon-refresh"></span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Tab Buttons -->
+<ul id="tabstrip" class="nav nav-tabs" role="tablist">
+    <li class="active">
+        <a href="#_StructureDamageTab" role="tab" data-toggle="tab">Structure Damage</a>
+    </li>
+    <li>
+        <a href="#_HydraulicAndChannelDamageTab" role="tab" data-toggle="tab">Hydraulic and Channel Damage</a>
+    </li>
+    <li>
+        <a href="#_ObservationAndRecommendationTab" role="tab" data-toggle="tab">Recommendation and Comments</a>
+    </li>
+</ul>
+
+<!-- Tab Content Containers -->
+<div class="tab-content">
+    <div class="tab-pane fade in active" id="_StructureDamageTab">
+        <div id="structuredamage">
+            <!-- Structure damages display here -->
+            @if (Model != null)
+            {
+                if (Model.CulvertStructure != null)
+                {
+                    @Html.Partial("StructureDamage", Model.CulvertStructure, new ViewDataDictionary());
+                }
+            }
+        </div>
+    </div>
+    <div class="tab-pane fade" id="_HydraulicAndChannelDamageTab">
+        <div id="hydraulicandchanneldamage">
+            <!-- Hydraulic and channel damages display here -->
+            @if (Model != null)
+            {
+                if (Model.HydraulicDamage == null)
+                {
+                    @Html.Partial("HydraulicAndChannelDamageNew", Model.HydraulicDamage, new ViewDataDictionary());
+                }
+                else
+                {
+                    @Html.Partial("HydraulicAndChannelDamage", Model.HydraulicDamage);
+                }
+            }
+        </div>
+    </div>
+    <div class="tab-pane fade" id="_ObservationAndRecommendationTab">
+        <div id="observationandrecommendation">
+            <!-- Observation and recommendations display here -->
+            @if (Model != null)
+            {
+                @Html.Partial("ObservationAndRecommendation");
+            }
+        </div>
+    </div>
+</div>
+
+<div id="wait" align="center" style="display: none">
+    <img src="~/images/ajax-loader-big.gif" />
+</div>
+
+<br />
+<br />
+<div class="clearfix visible-lg visible-md"></div> <!-- Add clearfix (or new line break) for lg and md -->
+
+<div class="form-group form-group-sm">
+    <button type="button" id="view" class="btn btn-primary" @*disabled="disabled"*@><span class="glyphicon glyphicon-print"></span> View</button>
+</div>
+
+<div id="report">
+    @*Report displays here*@
+</div>
+
+<script>
+    $(document).ready(function () {
+        // If some district is selected, show district id
+        if ($('#ddlDistrict option:selected').val() != 0)
+            $('#distrIdDIV').text("District No. = " + $('#ddlDistrict option:selected').val());
+
+        // If section list is populated and some section is selected, show section id
+        if ($('#ddlSection').has('option').length > 0 && $('#ddlSection option:selected').val() != 0)
+            $('#secIdDIV').text("Section No. = " + $('#ddlSection option:selected').val());
+
+        // If segment list is populated and some segment is selected, show segment id
+        if ($('#ddlSegment').has('option').length > 0 && $('#ddlSegment option:selected').val() != 0)
+            $('#segIdDIV').text("Road Id = " + $('#ddlSegment option:selected').val());
+
+        // If culvert list is populated and some bridge is selected, show bridge id
+        if ($('#ddlCulvert').has('option').length > 0 && $('#ddlCulvert option:selected').val() != 0)
+            $('#culIdDIV').text("Culvert No = " + $('#ddlCulvert option:selected').text());
+
+        var today = new Date().toJSON().slice(0, 10);
+        $('#InspectionDate').val(today);
+
+        
+
+        function ClearAll() {
+            $('#structuredamage').empty(); // clear the structure damage tab
+            $('#hydraulicandchanneldamage').empty(); // clear the hydraulic and channel damage tab
+            $('#observationandrecommendation').empty(); // clear the observation and recommendation tab
+            $('#report').empty(); // clear the report place holder
+            $('#view').prop("disabled", true);
+        }
+
+        $('#ddlDistrict').change(function () {
+            var selDistrictId = $('#ddlDistrict option:selected').val();
+            $('#ddlSection option').remove(); //empty the section dropdown list
+            $('#secIdDIV').text(""); //clear section no. indicator
+            $('#ddlSegment option').remove(); //empty the segment dropdown list
+            $('#segIdDIV').text(""); //clear segment no. indicator
+            $('#ddlCulvert option').remove(); //empty the culvert dropdown list
+            $('#culIdDIV').text(""); //clear culvert no. indicator
+            ClearAll();
+            if (selDistrictId == "0") //if no district is selected
+            {
+                $('#distrIdDIV').text(""); //clear district no. indicator
+            }
+            else {
+                $('#distrIdDIV').text("District No. = " + selDistrictId );
+                $.ajax({
+                    url: '@Url.Action("_GetSections", "LocationsDDL")',
+                    data: { districtid: selDistrictId },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        var markup = '<option value="0" id="noselect"> --Select Section --</option>';
+                        $.each(data, function (i, section) {
+                            markup += '<option value="' + section.Value + '">' + section.Text + '</option>'
+                            $('#ddlSection').html(markup);
+                        });
+                    }
+                });
+            }
+        });
+
+        $('#ddlSection').change(function () {
+            var selSectionId = $('#ddlSection option:selected').val();
+            $('#ddlSegment option').remove(); //empty the segment dropdown list
+            $('#segIdDIV').text(""); //clear segment no. indicator
+            $('#ddlCulvert option').remove(); //empty the culvert dropdown list
+            $('#culIdDIV').text(""); //clear culvert no. indicator
+            ClearAll();
+            if (selSectionId == "0") //if no section is selected
+            {
+                $('#secIdDIV').text(""); //clear section no. indicator
+            }
+            else {
+                $('#secIdDIV').text("Section No. = " + selSectionId);
+
+                $.ajax({
+                    url: '@Url.Action("_GetSegments", "LocationsDDL")',
+                    data: { sectionid: selSectionId },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        var markup = '<option value="0" id="noselect"> --Select Segment --</option>';
+                        $.each(data, function (i, segment) {
+                            markup += '<option value="' + segment.Value + '">' + segment.Text + '</option>'
+                            $('#ddlSegment').html(markup);
+                        });
+                    }
+                });
+            }
+        });
+
+        $('#ddlSegment').change(function () {
+            var selSegmentId = $('#ddlSegment option:selected').val();
+            $('#ddlCulvert option').remove(); //empty the culvert dropdown list
+            $('#culIdDIV').text(""); //clear culvert no. indicator
+            ClearAll();
+            if (selSegmentId == "0") //if no segment is selected
+            {
+                $('#segIdDIV').text(""); //clear section no. indicator
+            }
+            else {
+                $('#segIdDIV').text("Road Id = " + selSegmentId);
+                $.ajax({
+                    url: '@Url.Action("_GetCulverts", "LocationsDDL")',
+                    data: { segmentid: selSegmentId },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        var markup = '<option value="0" id="noselect"> --Select Culvert --</option>';
+                        $.each(data, function (i, culvert) {
+                            markup += '<option value="' + culvert.Value + '">' + culvert.Text + '</option>'
+                            $('#ddlCulvert').html(markup);
+                        });
+                    }
+                });
+            }
+        });
+
+        $('#ddlCulvert').change(function () {
+            var selCulvertId = $('#ddlCulvert option:selected').val();
+            var selInspectionDate = $('#InspectionDate').val();
+
+            // If no date is selected, just use today's date
+            if (!selInspectionDate) {
+                date = new Date();
+                selInspectionDate = date.toISOString().split('T')[0];
+            }
+
+            ClearAll();
+            $('#culIdDIV').text("");
+            if (selCulvertId != "0") //if no culvert is selected
+            {
+                $('#culIdDIV').text("Culvert Id = " + selCulvertId);
+                var culvertNo = $('#ddlCulvert option:selected').text(); // extract the culvert no
+                $('#culIdDIV').text("Culvert No = " + culvertNo);
+                $('#view').prop("disabled", false);
+
+                $.ajax({
+                    url: '@Url.Action("StructureDamage", "DamageInspCulvert")',
+                    data: { culvertid: selCulvertId, inspectiondate: selInspectionDate },
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () { $('#wait').show(); },
+                    complete: function () { $('#wait').hide(); },
+                    success: function (data) {
+                        $('#structuredamage').html(data);
+                    }
+                });
+
+                $.ajax({
+                    url: '@Url.Action("HydraulicAndChannelDamage", "DamageInspCulvert")',
+                    data: { culvertid: selCulvertId, inspectiondate: selInspectionDate },
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () { $('#wait').show(); },
+                    complete: function () { $('#wait').hide(); },
+                    success: function (data) {
+                        $('#hydraulicandchanneldamage').html(data);
+                    }
+                });
+
+                $.ajax({
+                    url: '@Url.Action("ObservationAndRecommendation", "DamageInspCulvert")',
+                    data: { culvertid: selCulvertId, inspectiondate: selInspectionDate },
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () { $('#wait').show(); },
+                    complete: function () { $('#wait').hide(); },
+                    success: function (data) {
+                        $('#observationandrecommendation').html(data);
+                    }
+                });
+            }
+        });
+
+        $('#view').click(function () {
+            // clear report area first
+            $('#report').html("");
+
+            var selCulvertId = $('#ddlCulvert option:selected').val();
+
+            // Show "View" button only if some culvert is selected
+            if (typeof selCulvertId != 'undefined' && selCulvertId != "0")
+            {
+                $.ajax({
+                    url: '@Url.Action("_GetCulvertInspectionDetails", "CulvertInspectionReports")',
+                    data: { culvertid: $('#ddlCulvert option:selected').val() },
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () { $('#waitreport').show(); },
+                    complete: function () { $('#waitreport').hide(); },
+                    success: function (data) {
+                        $('#report').html(data);
+                    }
+                });
+            }
+        });
+
+        $('#newDate').change(function () {
+            $('#newDate').datepicker(
+                {
+                    showOn: 'button',
+                    buttonImageOnly: true,
+                    buttonText: "",
+                    buttonImage: 'img/calendar.png',
+                    onClose: function (date) {
+                        if (date != "") {
+                            alert(date);
+                        }
+                    }
+                })
+        });
+
+       $('#InspectionDate').change(function () {
+            $('#ddlCulvert').trigger('change');
+        });
+
+        $('#refresh').click(function () {
+            $('#ddlCulvert').trigger('change');
+        });
+    });
+
+</script>

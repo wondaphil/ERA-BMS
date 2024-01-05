@@ -1,0 +1,60 @@
+﻿
+@{
+    ViewBag.Title = "File Upload";
+}
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "fileUploadForm", enctype = "multipart/form-data" }))
+{
+    <div>
+        File Path:<br />
+        <input type="file" id="txtFilePath" accept=".doc, .docx, .pdf, .xls, .xlsx" style="width:100%; max-width:100% " />
+        <br />
+        <button type="button" id="btnUpload" class="btn btn-primary"><span class="glyphicon glyphicon-save"></span> Upload</button>
+    </div>
+}
+
+<div id="status"></div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        //Add event handler
+        $("#btnUpload").on("click", function () {
+            if (window.FormData == undefined) {
+                alert("FormData is not supported.");  
+            }
+            else {
+                var fileUpload = $("#txtFilePath").get(0);
+                var files = fileUpload.files; 
+                var formData = new FormData();
+                //for (var i = 0; i < files.length; i++) {
+                    formData.append(files[0].name, files[0]);
+                //}
+
+                // Adding one more key to FormData object  
+                formData.append('username', 'wonda'); 
+
+                alert(files[0].name);
+                $.ajax({
+                    url: '@Url.Action("_FileUpload", "BridgeInventory")',
+                    type: 'POST',
+                    data: formData,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        if (data == 'True') {
+                            alert("Success");
+                        }
+                        else {
+                            alert("Failure");
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert(textStatus);
+                    },
+                });
+            }
+        });
+    });
+</script>

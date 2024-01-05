@@ -1,21 +1,44 @@
-﻿@model ERA_BCMS.Models.Segment
+﻿@model ERA_BMS.Models.Segment
 
 @{
-    ViewBag.Title = "Segment Details";
+    ViewBag.Title = "Road Segment Details";
 }
 
-<h2>Details</h2>
+<h2>Road Segment Details</h2>
 
-<div>
-    <h4>Segment</h4>
+<div class="row">
     <hr />
-    <dl class="dl-horizontal">
+    <dl class="dl-horizontal col-md-4 col-xs-6">
         <dt>
             @Html.DisplayNameFor(model => model.SegmentId)
         </dt>
 
         <dd>
             @Html.DisplayFor(model => model.SegmentId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SegmentNo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SegmentNo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RoadId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RoadId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RevisedRoadId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RevisedRoadId)
         </dd>
 
         <dt>
@@ -27,19 +50,101 @@
         </dd>
 
         <dt>
-            District @*Label for district*@
-        </dt>
-
-        <dd>
-            @ViewBag.DistrictName @*Dispalys district name*@
-        </dd>
-
-        <dt>
             @Html.DisplayNameFor(model => model.Section.SectionName)
         </dt>
 
         <dd>
             @Html.DisplayFor(model => model.Section.SectionName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Section.District.DistrictName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Section.District.DistrictName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ConstructionYear)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ConstructionYear)
+        </dd>
+    </dl>
+
+    <dl class="dl-horizontal col-md-4 col-xs-6">
+        <dt>
+            @Html.DisplayNameFor(model => model.AsphaltLength)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AsphaltLength)
+        </dd>
+        
+        <dt>
+            @Html.DisplayNameFor(model => model.GravelLength)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.GravelLength)
+        </dd>
+        
+        <dt>
+            @Html.DisplayNameFor(model => model.Length)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Length)
+        </dd>
+        
+        <dt>
+            @Html.DisplayNameFor(model => model.Width)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Width)
+        </dd>
+        
+        <dt>
+            @Html.DisplayNameFor(model => model.RoadClass.RoadClassName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RoadClass.RoadClassName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RoadSurfaceType.RoadSurfaceTypeName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RoadSurfaceType.RoadSurfaceTypeName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DesignStandard.DesignStandardName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DesignStandard.DesignStandardName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AverageDailyTraffic)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AverageDailyTraffic)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RegionalGovernment.RegionalGovernmentName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RegionalGovernment.RegionalGovernmentName)
         </dd>
 
         <dt>
@@ -49,11 +154,10 @@
         <dd>
             @Html.DisplayFor(model => model.Remark)
         </dd>
-
-
     </dl>
 </div>
+
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.SegmentId }, new { @class = "btn btn-primary" })
-    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+    <a href="@Url.Action("Edit", new {area = "Admin", id = Model.SegmentId })" class="btn btn-primary"><span class="glyphicon glyphicon-edit"></span> Edit Segment</a>
+    <a href="@Url.Action("Index", new {area = "Admin", id = ViewBag.SectionId })" class="btn btn-primary"><span class="glyphicon glyphicon-backward"></span> Go to Segments List</a>
 </p>

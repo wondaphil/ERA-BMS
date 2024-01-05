@@ -1,0 +1,62 @@
+﻿@model IEnumerable<ERA_BMS.Models.Segment>
+
+@{
+    ViewBag.Title = "Roads Map";
+}
+
+<h2>Roads Map</h2>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+            <div class="col-lg-offset-3 col-lg-6 col-md-offset-2 col-md-7 col-sm-9 col-xs-8">
+                <div class="form-group form-group">
+                    <label class="control-label col-ss-4 col-xs-3">Road Segment</label>
+                    <div class="col-sm-8 col-xs-9">
+                        @*@Html.DropDownList("ddlSegment", (List<SelectListItem>)ViewBag.Segments, new { @class = "form-control" })*@
+                        @Html.DropDownList("ddlSegment", new SelectList(ViewBag.Segments, "Value", "Text", ViewBag.SegmentId), htmlAttributes: new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-2 col-md-3 col-sm-3 col-xs-4" id="roadsmapdiv" style="display: none">
+                <a href="" target="_blank" class="btn btn-primary" data-toggle="tooltip" id="roadsmapbysegment" title="Map by Road Segment" align="right"><span class="glyphicon glyphicon-map-marker"></span> Show Map</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#ddlSegment').change(function () {
+            var selSegmentId = $('#ddlSegment option:selected').val();
+            $('#roadsMapPartial').empty(); //clear the roads map place holder
+
+            if (selSegmentId != "0") //if some segment is selected
+            {
+                $.ajax({
+                    url: '@Url.Action("_GetRoadsMapBySegment", "BridgeLocation")',
+                    data: { id: selSegmentId },
+                    type: 'GET',
+                    dataType: 'html',
+                    success: function (data) {
+                        // Unhide the 'Map' button and set it's link
+                        $('#roadsmapdiv').show();
+                        var url = '@Url.Action("_GetRoadsMapBySegment", "BridgeLocation", new { id = "segid" })'
+                                    .replace("segid", encodeURIComponent(selSegmentId));
+
+                        $('#roadsmapbysegment').attr("href", url);
+                    }
+                });
+            }
+        });
+    });
+
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAE0qRfcQ0xxZq5mWSMOtxT3G_cWkHpBAA&callback=InitializeMap" async defer></script>
+@*<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDIfcdDWC9egWYIRM6FPBCbIC8AqMkzAkw&callback=InitializeMap" async defer></script>*@
+

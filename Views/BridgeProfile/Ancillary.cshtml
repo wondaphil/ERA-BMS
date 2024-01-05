@@ -1,0 +1,57 @@
+﻿@model ERA_BMS.Models.Ancillary
+
+@{
+    ViewBag.Title = "Ancillaries";
+}
+
+<table class="table table-condensed">
+    <tr>
+        <td>
+            @Html.DisplayNameFor(model => model.BearingType.BearingTypeName)
+        </td>
+
+        <th>
+            @Html.DisplayFor(model => model.BearingType.BearingTypeName)
+        </th>
+    </tr>
+
+    <tr>
+        <td>
+            @Html.DisplayNameFor(model => model.BearingType1.BearingTypeName)
+        </td>
+
+        <th>
+            @Html.DisplayFor(model => model.BearingType1.BearingTypeName)
+        </th>
+    </tr>
+
+    <tr>
+        <td>
+            @Html.DisplayNameFor(model => model.ExpansionJointType.ExpansionJointTypeName)
+        </td>
+
+        <th>
+            @Html.DisplayFor(model => model.ExpansionJointType.ExpansionJointTypeName)
+        </th>
+    </tr>
+
+    <tr>
+        <td>
+            @Html.DisplayNameFor(model => model.GuardRailingType.GuardRailingTypeName)
+        </td>
+
+        <th>
+            @Html.DisplayFor(model => model.GuardRailingType.GuardRailingTypeName)
+        </th>
+    </tr>
+
+    <tr>
+        <td>
+            @Html.DisplayNameFor(model => model.SurfaceType.SurfaceTypeName)
+        </td>
+
+        <th>
+            @Html.DisplayFor(model => model.SurfaceType.SurfaceTypeName)
+        </th>
+    </tr>
+</table>

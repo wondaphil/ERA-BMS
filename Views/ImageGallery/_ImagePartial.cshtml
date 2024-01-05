@@ -1,0 +1,12 @@
+﻿@model ERA_BMS.ViewModels.ImageGalleryModel
+
+@if (Model != null && Model.SelectedImage != null)
+{
+
+    <img src="@Url.Content(Model.SelectedImage.ImagePath)" onerror="this.onerror = null; this.src = '../../../images/error_3.png'; this.style.width = '100px'; this.style.height = '100px'; this.title = 'Image Not Found';" alt="Image Not Found on Server" height="400" style="color:red; font-weight: bold"/>
+    string description = (Model.SelectedImage.ImageDescription != null) ? Model.SelectedImage.ImageDescription.Trim() : "No Description";
+    string damageimage = (Model.SelectedImage.ImageTypeId == 6) ? " (Damage Image)" : "";
+
+    <h4>@description <i>@damageimage</i></h4>
+    <hr />
+}

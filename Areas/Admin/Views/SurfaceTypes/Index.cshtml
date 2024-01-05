@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ERA_BCMS.Models.SurfaceType>
+﻿@model IEnumerable<ERA_BMS.Models.SurfaceType>
 
 @{
     ViewBag.Title = "Surface Types";
@@ -7,7 +7,7 @@
 <h2>Surface Types</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-primary" })
+    <a href="@Url.Action("New")" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> Register New</a>
 </p>
 <div class="panel panel-primary">
     <div class="panel-heading">
@@ -58,29 +58,30 @@
         </table>
     </div>
     <div class="panel-footer">
-        <h3 class="panel-title">Total No. of Districts: <strong>@Model.Count()</strong></h3>
+        <h3 class="panel-title">Total No. of Surface Types": <b>@Model.Count()</b></h3>
     </div>
 </div>
 
 <script>
     $(document).ready(function () {
-        $('[data-toggle="tooltip"]').tooltip();
+        
 
-        $('#surfacetypes').DataTable({
-            paging: true,
-            pageLength: 15,
-            bLengthChange: true,
-            scrollY: 400,
-            searching: true,
-            select: true,
-            dom: 'lBfrtip',
-            //buttons: ['copy', 'excel', 'pdf', 'print']
-            buttons: [
-                { extend: 'copy', className: 'btn btn-sm btn-success' },
-                { extend: 'excel', className: 'btn btn-sm btn-primary', text: 'Export Excel' },
-                { extend: 'pdf', className: 'btn btn-sm btn-primary', text: 'Export PDF' },
-                { extend: 'print', className: 'btn btn-sm btn-primary' }
-            ]
-        });
+        //$('#surfacetypes').DataTable({
+        //    paging: true,
+        //    pageLength: 15,
+        //    bLengthChange: true,
+        //    scrollY: 400, 
+        //    
+        //    searching: true,
+        //    select: true,
+        //    dom: 'lBfrtip',
+        //    //buttons: ['copy', 'excel', 'pdf', 'print']
+        //    buttons: [
+        //        { extend: 'copy', className: 'btn btn-sm btn-primary' },
+        //        { extend: 'excel', className: 'btn btn-sm btn-primary', text: 'Export Excel' },
+        //        { extend: 'pdf', className: 'btn btn-sm btn-primary', text: 'Export PDF' },
+        //        { extend: 'print', className: 'btn btn-sm btn-primary' }
+        //    ]
+        //});
     });
 </script>

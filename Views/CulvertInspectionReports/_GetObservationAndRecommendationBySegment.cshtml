@@ -1,0 +1,93 @@
+﻿@model IEnumerable<ERA_BMS.ViewModels.CulvertDamageInspectionViewModel>
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title panel-info">Culvert Observation and Recommendation (District: <b>@ViewBag.District</b>, Section: <b>@ViewBag.Section</b>, Road Segment: <b>@ViewBag.Segment</b>)</h3>
+    </div>
+
+    <div class="panel-body">
+        <br />
+        <br />
+        <table class="table table-striped table-condensed table-responsive display compact hover" id="tblculvertcommentsandrecommendations">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.culverts.RevisedCulvertNo)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.resultInspCulvert.InspectionDate)
+                    </th>
+                    <th>
+                        @*@Html.DisplayNameFor(model => model.recommendation.MaintenanceUrgency.UrgencyName)*@
+                        Inspector's Recommendation
+                    </th>
+                    <th>
+                        @*@Html.DisplayNameFor(model => model.recommendation.Recommendation)*@
+                        Comments
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.culverts.RevisedCulvertNo)
+                        </td>
+                        <td>
+                            @item.resultInspCulvert.InspectionDate.Value.ToString("dd/MM/yyyy")
+                        </td>
+                        @{
+                            string bg = "";
+                            string fore = "";
+                            if (item.recommendation.MaintenanceUrgency.UrgencyId == 2)
+                            {
+                                bg = "red";
+                                fore = "white";
+                            }
+                        }
+                        <td style="background-color: @bg; color: @fore">
+                            @Html.DisplayFor(model => item.recommendation.MaintenanceUrgency.UrgencyId) - 
+                            @Html.DisplayFor(modelItem => item.recommendation.MaintenanceUrgency.UrgencyName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.recommendation.InspectorRecommendation)
+                        </td>
+                        <td>
+                            <a href="@Url.Action("Index", "DamageInspCulvert", new { id = item.culverts.CulvertId })" target="_blank" class="glyphicon glyphicon-new-window" data-toggle="tooltip" title="Go to Inspection" style="font-size: 14px"></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="panel-footer">
+        <h3 class="panel-title">Total No. of Culverts: <b>@Model.Count()</b></h3>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        
+
+        $('#tblculvertcommentsandrecommendations').dataTable({
+            paging: true,
+            pageLength: 15,
+            bLengthChange: true,
+            scrollY: 400,
+            scrollX: true,
+            searching: true,
+            select: true,
+            dom: 'lBfrtip',
+            //buttons: ['copy', 'excel', 'pdf', 'print']
+            buttons: [
+                { extend: 'copy', className: 'btn btn-sm btn-primary' },
+                { extend: 'excel', className: 'btn btn-sm btn-primary', text: 'Export Excel' },
+                { extend: 'pdf', className: 'btn btn-sm btn-primary', text: 'Export PDF' },
+                { extend: 'print', className: 'btn btn-sm btn-primary' }
+            ]
+        });
+    });
+</script>

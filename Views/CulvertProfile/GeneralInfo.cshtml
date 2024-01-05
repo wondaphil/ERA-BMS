@@ -1,0 +1,160 @@
+﻿@model ERA_BMS.Models.CulvertGeneralInfo
+
+@{
+    ViewBag.Title = "Culvert General Info";
+}
+
+<div class="row">
+    <div class="col-xs-6">
+        <table class="table table-condensed">
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.Designer)
+                </td>
+
+                <th>
+                    @Html.DisplayFor(model => model.Designer)
+                </th>
+            </tr>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.Contractor)
+                </td>
+
+                <th>
+                    @Html.DisplayFor(model => model.Contractor)
+                </th>
+            </tr>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.Supervisor)
+                </td>
+
+                <th>
+                    @Html.DisplayFor(model => model.Supervisor)
+                </th>
+            </tr>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.ConstructionYear)
+                </td>
+
+                <th>
+                    @Html.DisplayFor(model => model.ConstructionYear)
+                </th>
+            </tr>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.ConstructionCost)
+                </td>
+
+                <th>
+                    @Html.DisplayFor(model => model.ConstructionCost)
+                </th>
+            </tr>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.AssetReplacementCost)
+                </td>
+
+                <th>
+                    @Html.DisplayFor(model => model.AssetReplacementCost)
+                </th>
+            </tr>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.DetourPossible)
+                </td>
+
+                <th>
+                    @*@Html.DisplayFor(model => model.DetourPossible)*@
+                    @{
+                        string detourPossible = ((bool)Model.DetourPossible) ? "Yes" : "No";
+                    }
+                    @detourPossible
+                </th>
+            </tr>
+        </table>
+    </div>
+    <div class="col-xs-6">
+        <table class="table table-condensed">
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.Altitude)
+                </td>
+
+                <th>
+                    @Html.DisplayFor(model => model.Altitude)
+                </th>
+            </tr>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.RoadWidth)
+                </td>
+
+                <th>
+                    @Html.DisplayFor(model => model.RoadWidth)
+                </th>
+            </tr>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.HeadWallLength)
+                </td>
+
+                <th>
+                    @Html.DisplayFor(model => model.HeadWallLength)
+                </th>
+            </tr>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.FillHeight)
+                </td>
+
+                <th>
+                    @Html.DisplayFor(model => model.FillHeight)
+                </th>
+            </tr>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.ParapetLength)
+                </td>
+
+                <th>
+                    @Html.DisplayFor(model => model.ParapetLength)
+                </th>
+            </tr>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.NoOfLanes)
+                </td>
+
+                <th>
+                    @Html.DisplayFor(model => model.NoOfLanes)
+                </th>
+            </tr>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.ParapetMaterialType.MaterialTypeName)
+                </td>
+
+                <th>
+                    @Html.DisplayFor(model => model.ParapetMaterialType.MaterialTypeName)
+                </th>
+
+        </table>
+    </div>
+
+    <div class="col-xs-12">
+        <table class="table table-condensed">
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.Remark)
+                </td>
+
+                <th>
+                    @Html.DisplayFor(model => model.Remark)
+                </th>
+            </tr>
+        </table>
+    </div>
+</div>

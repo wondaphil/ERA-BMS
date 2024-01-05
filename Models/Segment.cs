@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ERA_BCMS.Models
+namespace ERA_BMS.Models
 {
     using System;
     using System.Collections.Generic;
@@ -21,15 +21,36 @@ namespace ERA_BCMS.Models
             this.Culverts = new HashSet<Culvert>();
         }
     
-        public int SegmentId { get; set; }
+        public string SegmentId { get; set; }
+        public string SegmentNo { get; set; }
+        public string RoadId { get; set; }
+        public string RevisedRoadId { get; set; }
         public string SegmentName { get; set; }
-        public Nullable<int> SectionId { get; set; }
+        public string SectionId { get; set; }
+        public Nullable<double> Length { get; set; }
+        public Nullable<double> AsphaltLength { get; set; }
+        public Nullable<double> GravelLength { get; set; }
+        public Nullable<double> Width { get; set; }
+        public Nullable<int> ConstructionYear { get; set; }
+        public Nullable<double> ConstructionCost { get; set; }
+        public Nullable<int> RoadClassId { get; set; }
+        public Nullable<int> RoadSurfaceTypeId { get; set; }
+        public Nullable<int> AverageDailyTraffic { get; set; }
+        public Nullable<int> RegionalGovernmentId { get; set; }
+        public Nullable<int> DesignStandardId { get; set; }
         public string Remark { get; set; }
+        public Nullable<System.DateTime> ModifiedOn { get; set; }
+        public byte[] Flag { get; set; }
     
-        public virtual Section Section { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Bridge> Bridges { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Culvert> Culverts { get; set; }
+        public virtual DesignStandard DesignStandard { get; set; }
+        public virtual RegionalGovernment RegionalGovernment { get; set; }
+        public virtual RoadClass RoadClass { get; set; }
+        public virtual RoadSurfaceType RoadSurfaceType { get; set; }
+        public virtual Section Section { get; set; }
+        public virtual SegmentMap SegmentMap { get; set; }
     }
 }

@@ -1,0 +1,57 @@
+﻿@model IEnumerable<ERA_BMS.Models.BridgeMedia>
+
+@{
+    ViewBag.Title = "Bridge Videos";
+}
+
+@*<div style="display: flex; clear: left">*@
+<div class="row">
+    @if (Model.Count() == 0)
+    {
+        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-10" align="center">
+            <h5><i>No vidoes for Bridge: <b>@TempData["BridgeName"]</b></i></h5>
+        </div>
+    }
+    else
+    {
+        foreach (var item in Model)
+        {
+
+            string fullPath = item.MediaFilePath;
+            string filename = Path.GetFileName(fullPath); //extract the file name from the full path
+            string description = item.Description;
+
+            @*<div style="clear: left;">*@
+            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-10" align="center">
+                <table>
+                    <tr>
+                        <td>
+                            @*<video width="200" autoplay> with autoplay*@
+                            <video width="200" controls>
+                                @*with playing controls*@
+                                <source src="@item.MediaFilePath.ToString()" type="video/mp4">
+                                <source src="@item.MediaFilePath.ToString()" type="video/mpeg">
+                                Your browser does not support HTML video.
+                            </video>
+                        </td>
+                    </tr>
+                    <tr><td><p align="center">@description</p></td></tr>
+                    <tr><td><p align="center">(@filename)</p></td></tr>
+                </table>
+            </div>
+
+            <!--<div style="margin: 20px; flex: 0.75; clear: left">-->
+                @*<video width="200" autoplay> with autoplay*@
+                <!--<video width="200" controls>-->
+                    @*with playing controls*@
+                    <!--<source src="@item.MediaFilePath.ToString()" type="video/mp4">
+                    <source src="@item.MediaFilePath.ToString()" type="video/mpeg">
+                    Your browser does not support HTML video.
+                </video>
+                <p align="center">@description</p>
+                <p align="center">(@filename)</p>
+            </div>-->
+        }
+    }
+</div>
+
